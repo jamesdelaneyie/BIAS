@@ -19,7 +19,9 @@ class GameInstance {
         instanceHookAPI(this.instance)
 
         // game-related state
+        
         this.obstacles = setupObstacles(this.instance)
+
         // (the rest is just attached to client objects when they connect)
 
         this.instance.on('connect', ({ client, callback }) => {

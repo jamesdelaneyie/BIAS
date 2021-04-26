@@ -9,7 +9,7 @@ class PlayerCharacter {
         this.rotation = 0
         this.hitpoints = 100
         this.isAlive = true
-        this.speed = 800
+        this.speed = 600
 
         // weapon cooldown!
         // example of a plain data-only component
