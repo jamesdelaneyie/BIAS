@@ -4,6 +4,7 @@ export default (state, renderer ) => {
     return {
         create({ data, entity }) {
             const graphics = new PlayerGraphics(data)
+            
             renderer.middleground.addChild(graphics)
             renderer.entities.set(graphics.nid, graphics)
 

@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js'
 import BackgroundGrid from './BackgroundGrid.js'
 import { Joystick }  from './Joystick.js'
 import p2 from 'p2'
+import Obstacle from '../../common/entity/Obstacle.js'
 
 class PIXIRenderer {
 
@@ -33,8 +34,6 @@ class PIXIRenderer {
 
         this.background.addChild(new BackgroundGrid())
 
-
-
         var wallMaterial = new p2.Material();
         
         function createWall(world, middleground, x, y, w, h, rotation) {
@@ -63,7 +62,14 @@ class PIXIRenderer {
           middleground.addChild(graphic);
           graphic.body = body;
           graphic.shape = shape;
+
+          var physicalWall = new Obstacle({ x: 0, y: 1000, width: 1000, height: 20 })
+         // instance.addEntity(physicalWall)
+         // obstacles.set(physicalWall.nid, physicalWall)
         }
+
+        createWall(this.world, this.middleground, 500, 200, 500, 20, 0.1)
+        createWall(this.world, this.background, 500, 1000, 1020, 20, 0)
 
         var circleMaterial = new p2.Material();
 
@@ -88,8 +94,7 @@ class PIXIRenderer {
             collection.push(circleGraphic);
         }
 
-        createBall(this.world, this.middleground, this.collection, '0x00ff00', 60, 5, 0, 0,0,0);
-        createBall(this.world, this.middleground, this.collection, '0x00ffff', 60, 5, 0, 0,0,0)
+        createBall(this.world, this.middleground, this.collection, '0x00ff00', 60, 5, 500, 0,0,0);
 
         
         var boxVsBall = new p2.ContactMaterial(circleMaterial, wallMaterial, {
@@ -98,7 +103,7 @@ class PIXIRenderer {
         });
         this.world.addContactMaterial(boxVsBall);
 
-        createWall(this.world, this.middleground, 0, 200, 500, 20, 0.1)
+        
 
 
 
@@ -111,8 +116,10 @@ class PIXIRenderer {
         });
         const text = new PIXI.Text('Bias Space, you\'re here!', style);
         this.middleground.addChild(text);
-        text.anchor.x = 0.5;
-        text.anchor.y = 0.5;
+        text.anchor.x = 0;
+        text.anchor.y = 0;
+        text.x = 50;
+        text.y = 50;
 
 
 
@@ -170,8 +177,8 @@ class PIXIRenderer {
         for (var i = this.collection.length - 1; i >= 0; i--) {
             var graphic = this.collection[i];
             if (graphic.body.world && graphic.shape.type == p2.Shape.CIRCLE) {
-                var x = this.world.bodies[i].position[0];
-                var y = this.world.bodies[i].position[1];
+                var x = this.world.bodies[i+2].position[0];
+                var y = this.world.bodies[i+2].position[1];
                 graphic.position.set(x,y)
             }
         }

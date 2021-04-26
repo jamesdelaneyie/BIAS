@@ -8,6 +8,9 @@ import handleInput from './handleInput.js'
 import drawHitscan from './graphics/drawHitscan.js'
 import reconcilePlayer from './reconcilePlayer.js'
 import shouldIgnore from './shouldIgnore.js'
+import p2 from 'p2'
+
+const theWorld = new p2.World({gravity: [0, 9.82]});
 
 const create = () => {
     const client = new nengi.Client(nengiConfig, 100)

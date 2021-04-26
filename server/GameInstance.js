@@ -19,7 +19,7 @@ class GameInstance {
         instanceHookAPI(this.instance)
 
         // game-related state
-        
+
         this.obstacles = setupObstacles(this.instance)
 
         // (the rest is just attached to client objects when they connect)
@@ -27,6 +27,8 @@ class GameInstance {
         this.instance.on('connect', ({ client, callback }) => {
             // create a entity for this client
             const rawEntity = new PlayerCharacter()
+            rawEntity.x = 500
+            rawEntity.y = 500
 
             // make the raw entity only visible to this client
             const channel = this.instance.createChannel()
@@ -57,8 +59,8 @@ class GameInstance {
             client.view = {
                 x: rawEntity.x,
                 y: rawEntity.y,
-                halfWidth: 500,
-                halfHeight: 500
+                halfWidth: 1000,
+                halfHeight: 1000
             }
 
             // accept the connection
