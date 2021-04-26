@@ -1,6 +1,6 @@
 import applyCommand from '../common/applyCommand.js'
 
-export default (predictionErrorFrame, client, entity, obstacles) => {
+export default (predictionErrorFrame, client, entity, obstacles, boxes) => {
     predictionErrorFrame.entities.forEach(predictionErrorEntity => {
         const name = entity.protocol.name
 
@@ -21,7 +21,7 @@ export default (predictionErrorFrame, client, entity, obstacles) => {
             commandSet.forEach(command => {
                 // reapply movements
                 if (command.protocol.name === 'MoveCommand') {
-                    applyCommand(entity, command, obstacles)
+                    applyCommand(entity, command, obstacles, boxes)
                     const prediction = {
                         nid: entity.nid,
                         x: entity.x,

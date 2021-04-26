@@ -30,7 +30,7 @@ export default (entity, command, obstacles, boxes) => {
     entity.y += unitY * entity.speed * command.delta
 
     // readjusts this entities position by uncolliding it from obstacles
-    CollisionSystem.moveWithCollisions(entity, obstacles)
+    CollisionSystem.moveWithCollisions(entity, obstacles, boxes)
 
     // advances the weapon-related timer(s)
     updateWeapon(entity, command.delta)

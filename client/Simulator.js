@@ -98,7 +98,7 @@ class Simulator {
             this.client.addCommand(moveCommand)
 
             // apply moveCommand  to our local entity
-            applyCommand(this.myRawEntity, moveCommand, this.obstacles)
+            applyCommand(this.myRawEntity, moveCommand, this.obstacles, this.boxes)
 
             // save the result of applying the command as a prediction
             const prediction = {

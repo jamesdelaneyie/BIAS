@@ -10,6 +10,7 @@ export default ({ boxes }, renderer) => {
 
             renderer.entities.set(data.nid, graphics)
             renderer.middleground.addChild(graphics)
+            
 
             return graphics
         },

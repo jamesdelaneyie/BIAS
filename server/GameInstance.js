@@ -84,7 +84,7 @@ class GameInstance {
             // move this client's entity
             const rawEntity = client.rawEntity
             const smoothEntity = client.smoothEntity
-            applyCommand(rawEntity, command, this.obstacles)
+            applyCommand(rawEntity, command, this.obstacles, this.boxes)
             client.positions.push({
                 x: rawEntity.x,
                 y: rawEntity.y,
@@ -143,7 +143,12 @@ class GameInstance {
         this.world.step(1/10);
 
         this.boxes.forEach(box => {
-            //console.log(box)
+            box.x = box.body.position[0]
+            box.y = box.body.position[1]
+            box.rotation= box.body.angle
+
+            box.collider.polygon.pos.x = box.body.position[0]
+            box.collider.polygon.pos.y = box.body.position[1]
         })
 
         // when instance.updates, nengi sends out snapshots to every client

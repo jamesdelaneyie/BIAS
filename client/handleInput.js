@@ -8,7 +8,7 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
     const input = inputSystem.frameState
     inputSystem.releaseKeys()
 
-    const { myRawEntity, obstacles} = state
+    const { myRawEntity, obstacles, boxes} = state
 
     /* all of this is just for our own entity */
     if (myRawEntity) {
@@ -28,7 +28,7 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
         client.addCommand(moveCommand)
 
         // apply moveCommand  to our local entity
-        applyCommand(myRawEntity, moveCommand, obstacles)
+        applyCommand(myRawEntity, moveCommand, obstacles, boxes)
 
         // save the result of applying the command as a prediction
         const prediction = {

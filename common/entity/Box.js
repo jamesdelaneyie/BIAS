@@ -9,25 +9,31 @@ class Box {
         this.y = state.y
         this.width = state.width
         this.height = state.height
+        this.rotation = state.rotation
         this.color = state.color
-
+        this.mass = state.mass
+        this.spin = state.spin
+        
         this.boxShape = new p2.Box({
             width: state.width, 
             height: state.height
         });
         this.body = new p2.Body({
-            mass: 5,
-            position: [state.x, state.y]
+            mass: state.mass,
+            position: [state.x, state.y],
+            angularVelocity: state.spin
         });
         this.body.addShape(this.boxShape)
 
-        //this.collider = CollisionSystem.createRectangleCollider(state.x, state.y, state.width, state.height)    
+        this.collider = CollisionSystem.createRectangleCollider(state.x, state.y, state.width, state.height)    
     }
 }
 
 Box.protocol = {
-    x: nengi.UInt16,
-    y: nengi.UInt16,
+    x: { type: nengi.Number, interp: true },
+    y: { type: nengi.Number, interp: true },
+    rotation: { type: nengi.RotationFloat32, interp: true },
+    mass: { type: nengi.Number, interp: true },
     width: nengi.UInt16,
     height: nengi.UInt16,
 }

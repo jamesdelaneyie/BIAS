@@ -42,7 +42,7 @@ class PIXIRenderer {
           });
           var body = new p2.Body({
               mass: 0,
-              position: [x, y + 30],
+              position: [x, y],
               angle: -rotation
           });
           body.addShape(shape);
@@ -62,9 +62,6 @@ class PIXIRenderer {
           graphic.body = body;
           graphic.shape = shape;
 
-          //var physicalWall = new Obstacle({ x: 0, y: 1000, width: 1000, height: 20 })
-         // instance.addEntity(physicalWall)
-         // obstacles.set(physicalWall.nid, physicalWall)
         }
 
         createWall(this.world, this.middleground, 500, 200, 500, 20, 0.1)
@@ -102,16 +99,12 @@ class PIXIRenderer {
         });
         this.world.addContactMaterial(boxVsBall);
 
-        
-
-
-
-
-
         const style = new PIXI.TextStyle({
-            font : '72px Helvetica',
+            font : '12px Helvetica',
             fill : 0xffffff,
-            cacheAsBitmap: false // for better performance
+            cacheAsBitmap: true,
+            width: 200, 
+            height: 100
         });
         const text = new PIXI.Text('Bias Space, you\'re here!', style);
         this.middleground.addChild(text);
@@ -119,9 +112,6 @@ class PIXIRenderer {
         text.anchor.y = 0;
         text.x = 50;
         text.y = 50;
-
-
-
 
 
         this.controller = new Joystick({
@@ -171,7 +161,7 @@ class PIXIRenderer {
         })
 
         // Move physics bodies forward in time
-        this.world.step(1/10);
+        this.world.step(1/20);
 
         for (var i = this.collection.length - 1; i >= 0; i--) {
             var graphic = this.collection[i];
