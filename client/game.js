@@ -10,17 +10,18 @@ import reconcilePlayer from './reconcilePlayer.js'
 import shouldIgnore from './shouldIgnore.js'
 import p2 from 'p2'
 
-const theWorld = new p2.World({gravity: [0, 9.82]});
 
 const create = () => {
     const client = new nengi.Client(nengiConfig, 100)
     const input = new InputSystem()
     const renderer = new PIXIRenderer()
+    const world = new p2.World({gravity: [0, 9.82]});
 
     const state = {
         myRawId: null,
         mySmoothId: null,
-        obstacles: new Map()
+        obstacles: new Map(),
+        boxes: new Map()
     }
 
     clientHookAPI( // API EXTENSION
@@ -57,6 +58,8 @@ const create = () => {
     client.on('disconnected', () => { console.log('connection closed') })
 
     client.connect('ws://localhost:8079')
+    //client.connect('ws://185.92.221.225:8079')
+
 
     const update = (delta, tick, now) => {
         client.readNetworkAndEmit()

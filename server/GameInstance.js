@@ -1,5 +1,6 @@
 import nengi from 'nengi'
 import nengiConfig from '../common/nengiConfig.js'
+import p2 from 'p2'
 import PlayerCharacter from '../common/entity/PlayerCharacter.js'
 import Identity from '../common/message/Identity.js'
 import WeaponFired from '../common/message/WeaponFired.js'
@@ -9,6 +10,7 @@ import damagePlayer from './damagePlayer.js'
 import instanceHookAPI from './instanceHookAPI.js'
 import applyCommand from '../common/applyCommand.js'
 import setupObstacles from './setupObstacles.js'
+import setupBoxes from './setupBoxes.js'
 import { fire } from '../common/weapon.js'
 import Notification from '../common/message/Notification'
 import lagCompensatedHitscanCheck from './lagCompensatedHitscanCheck'
@@ -20,7 +22,10 @@ class GameInstance {
 
         // game-related state
 
+        this.world = new p2.World({gravity: [0, 9.82]});
         this.obstacles = setupObstacles(this.instance)
+        this.boxes = setupBoxes(this.instance, this.world)
+
 
         // (the rest is just attached to client objects when they connect)
 
@@ -133,6 +138,12 @@ class GameInstance {
                 const maximumMovementPerFrameInPixels = 410 * delta
                 followPath(smoothEntity, client.positions, maximumMovementPerFrameInPixels)
             }
+        })
+
+        this.world.step(1/10);
+
+        this.boxes.forEach(box => {
+            //console.log(box)
         })
 
         // when instance.updates, nengi sends out snapshots to every client

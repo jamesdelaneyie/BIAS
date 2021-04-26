@@ -25,6 +25,7 @@ class Simulator {
         this.renderer = new PIXIRenderer()
         this.input = new InputSystem()
         this.obstacles = new Map()
+        this.boxes = new Map()
 
         this.myRawId = -1
         this.mySmoothId = -1
@@ -36,6 +37,7 @@ class Simulator {
             /* dependency injection */
             simulator: this,
             obstacles: this.obstacles,
+            boxes: this.boxes,
             renderer: this.renderer
         })
 

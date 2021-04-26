@@ -6,6 +6,7 @@ import Notification from './message/Notification.js'
 import MoveCommand from './command/MoveCommand.js'
 import FireCommand from './command/FireCommand.js'
 import Obstacle from './entity/Obstacle.js'
+import Box from './entity/Box.js'
 
 const config = {
     UPDATE_RATE: 20, 
@@ -22,7 +23,8 @@ const config = {
     protocols: {
         entities: [
             ['PlayerCharacter', PlayerCharacter],
-            ['Obstacle', Obstacle]
+            ['Obstacle', Obstacle],
+            ['Box', Box]
         ],
         localMessages: [],
         messages: [

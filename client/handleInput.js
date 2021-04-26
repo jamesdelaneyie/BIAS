@@ -8,7 +8,7 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
     const input = inputSystem.frameState
     inputSystem.releaseKeys()
 
-    const { myRawEntity, obstacles } = state
+    const { myRawEntity, obstacles} = state
 
     /* all of this is just for our own entity */
     if (myRawEntity) {

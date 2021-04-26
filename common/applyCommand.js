@@ -1,7 +1,7 @@
 import CollisionSystem from './CollisionSystem.js'
 import { update as updateWeapon } from './weapon.js'
 
-export default (entity, command, obstacles) => {
+export default (entity, command, obstacles, boxes) => {
     if (!entity.isAlive) {
         return
     }

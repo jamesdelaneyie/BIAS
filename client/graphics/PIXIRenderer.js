@@ -2,7 +2,6 @@ import * as PIXI from 'pixi.js'
 import BackgroundGrid from './BackgroundGrid.js'
 import { Joystick }  from './Joystick.js'
 import p2 from 'p2'
-import Obstacle from '../../common/entity/Obstacle.js'
 
 class PIXIRenderer {
 
@@ -63,7 +62,7 @@ class PIXIRenderer {
           graphic.body = body;
           graphic.shape = shape;
 
-          var physicalWall = new Obstacle({ x: 0, y: 1000, width: 1000, height: 20 })
+          //var physicalWall = new Obstacle({ x: 0, y: 1000, width: 1000, height: 20 })
          // instance.addEntity(physicalWall)
          // obstacles.set(physicalWall.nid, physicalWall)
         }

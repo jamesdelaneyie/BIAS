@@ -1,12 +1,12 @@
-import ObstacleGraphics from '../graphics/ObstacleGraphics.js'
+import BoxGraphics from '../graphics/BoxGraphics.js'
 
-export default ({ obstacles }, renderer) => {
+export default ({ boxes }, renderer) => {
     return {
         create({ data, entity }) {
 
-            obstacles.set(data.nid, entity)
+            boxes.set(data.nid, entity)
 
-            const graphics = new ObstacleGraphics(data)
+            const graphics = new BoxGraphics(data)
 
             renderer.entities.set(data.nid, graphics)
             renderer.middleground.addChild(graphics)
@@ -16,6 +16,11 @@ export default ({ obstacles }, renderer) => {
         delete({ nid, graphics }) {
             renderer.entities.delete(nid)
             renderer.middleground.removeChild(graphics)
+        },
+        watch: {
+            //hitpoints({ graphics, value }) {
+            //    graphics.hitpointBar.setHitpointPercentage(value / 100)
+            //}
         }
     }
 }
