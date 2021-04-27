@@ -1,7 +1,9 @@
-import isMobile from 'ismobilejs';
+import { Joystick } from './graphics/Joystick';
+import * as PIXI from 'pixi.js'
+
 
 class InputSystem {
-    constructor() {
+    constructor(renderer) {
         this.canvasEle = document.getElementById('main-canvas')
         this.onmousemove = null
 
@@ -95,7 +97,6 @@ class InputSystem {
                 }
             })
 
-            //bias change: change to mouse down to stop mobile fires
             document.addEventListener('mousedown', event => {
                 this.currentState.mouseDown = true
                 this.frameState.mouseDown = true
@@ -105,6 +106,35 @@ class InputSystem {
             document.addEventListener('mouseup', event => {
                 this.currentState.mouseDown = false
             })
+
+            this.controller = new Joystick({
+            
+                outerScale: { x: 0.5, y: 0.5 },
+                innerScale: { x: 0.8, y: 0.8 },
+                
+                onChange: (data) => {
+                    //console.log(data.angle); // Angle from 0 to 360
+                    var dd = data.direction;
+                    if(dd == 'top') {
+                        console.log('yo')
+                        this.currentState.w = true
+                        this.frameState.w = true
+                        this.currentState.mouseDown = false
+                        this.frameState.mouseDown = false
+                    } else if (dd == 'bottom') {
+                        this.currentState.s = true
+                        this.frameState.s = true
+                        this.currentState.mouseDown = false
+                        this.frameState.mouseDown = false
+                    }
+                },
+                onEnd: () => {
+                    releaseKeys()
+                }
+            });
+            this.controller.position.set(this.controller.width, window.innerHeight - this.controller.height);
+
+            renderer.stage.addChild(this.controller);
 
         //}
     }

@@ -20,6 +20,10 @@ class PIXIRenderer {
             resolution: 1
         })
 
+        PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+
+
+
         this.stage = new PIXI.Container()
         this.camera = new PIXI.Container()
         this.background = new PIXI.Container()
@@ -100,11 +104,13 @@ class PIXIRenderer {
         this.world.addContactMaterial(boxVsBall);
 
         const style = new PIXI.TextStyle({
-            font : '12px Helvetica',
-            fill : 0xffffff,
-            cacheAsBitmap: true,
-            width: 200, 
-            height: 100
+            fontSize: 60,
+            fontWeight: 100,
+            fontFamily: "Helvetica, sans-serif",
+            fill: "black",
+            lineJoin: "round",
+            stroke: "#37ff00",
+            strokeThickness: 4
         });
         const text = new PIXI.Text('Bias Space, you\'re here!', style);
         this.middleground.addChild(text);
@@ -113,12 +119,6 @@ class PIXIRenderer {
         text.x = 50;
         text.y = 50;
 
-
-        this.controller = new Joystick({
-            onStart: () => console.log('start'),
-            onEnd: () => console.log('end'),
-        });
-        this.stage.addChild(this.controller);
 
         window.addEventListener('resize', () => {
             this.resize()
@@ -130,7 +130,6 @@ class PIXIRenderer {
 
     resize() {
         this.renderer.resize(window.innerWidth, window.innerHeight)
-        this.controller.position.set(this.controller.width, window.innerHeight - this.controller.height);
     }
  
     centerCamera(entity) {

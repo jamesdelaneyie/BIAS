@@ -47,6 +47,8 @@ class GameInstance {
 
             // smooth entity is visible to everyone
             const smoothEntity = new PlayerCharacter()
+            smoothEntity.x = 500
+            smoothEntity.y = 500
             smoothEntity.collidable = true
             this.instance.addEntity(smoothEntity)
 
@@ -88,6 +90,7 @@ class GameInstance {
             client.positions.push({
                 x: rawEntity.x,
                 y: rawEntity.y,
+                delta: rawEntity.delta,
                 rotation: rawEntity.rotation
             })
         })
@@ -127,8 +130,7 @@ class GameInstance {
         this.instance.emitCommands()
 
         this.instance.clients.forEach(client => {
-            // move client view to follow the client's entity
-            // (client view is a rectangle used for culling network data)
+
             client.view.x = client.rawEntity.x
             client.view.y = client.rawEntity.y
 
@@ -140,7 +142,7 @@ class GameInstance {
             }
         })
 
-        this.world.step(1/10);
+        this.world.step(1/4);
 
         this.boxes.forEach(box => {
             box.x = box.body.position[0]

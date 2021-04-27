@@ -8,6 +8,14 @@ export default (entity, command, obstacles, boxes) => {
 
     // rotation (not important to movement, purely aesthetic)
     entity.rotation = command.rotation
+    
+    const maxPower = 0.2;
+    const maxReverse = 0.0375;
+    const powerFactor = 0.005;
+    const reverseFactor = 0.0005;
+
+    const drag = 0.95;
+    const angularDrag = 0.95;
 
     // movement logic
     let unitX = 0
@@ -28,6 +36,8 @@ export default (entity, command, obstacles, boxes) => {
 
     entity.x += unitX * entity.speed * command.delta
     entity.y += unitY * entity.speed * command.delta
+
+    //console.log(entity.delta);
 
     // readjusts this entities position by uncolliding it from obstacles
     CollisionSystem.moveWithCollisions(entity, obstacles, boxes)

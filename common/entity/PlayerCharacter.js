@@ -43,6 +43,7 @@ PlayerCharacter.protocol = {
     x: { type: nengi.Float32, interp: true },
     y: { type: nengi.Float32, interp: true },
     rotation: { type: nengi.RotationFloat32, interp: true },
+    delta: nengi.Number,
     isAlive: nengi.Boolean,
     hitpoints: nengi.UInt8
 }

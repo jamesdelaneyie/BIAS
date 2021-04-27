@@ -119,18 +119,7 @@ var Joystick = /** @class */ (function (_super) {
             else {
                 calRadius = that.outerRadius - that.innerRadius;
             }
-            /**
-             * x:   -1 <-> 1
-             * y:   -1 <-> 1
-             *          Y
-             *          ^
-             *          |
-             *     180  |  90
-             *    ------------> X
-             *     270  |  360
-             *          |
-             *          |
-             */
+
             var direction = Direction.LEFT;
             if (sideX == 0) {
                 if (sideY > 0) {
