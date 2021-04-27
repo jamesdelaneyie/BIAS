@@ -149,8 +149,9 @@ class GameInstance {
             box.y = box.body.position[1]
             box.rotation= box.body.angle
 
-            box.collider.polygon.pos.x = box.body.position[0]
-            box.collider.polygon.pos.y = box.body.position[1]
+            box.collider.polygon.pos.x = box.body.position[0] - box.width/2
+            box.collider.polygon.pos.y = box.body.position[1] - box.height/2
+            //box.collider.polygon.
         })
 
         // when instance.updates, nengi sends out snapshots to every client

@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 
+
 class ObstacleGraphics extends PIXI.Container {
     constructor(state) {
         super()
@@ -12,6 +13,7 @@ class ObstacleGraphics extends PIXI.Container {
         this.body = new PIXI.Graphics()
         this.body.beginFill(0xffffff)
         this.body.drawRect(0, 0, state.width, state.height)
+
         this.body.endFill()
         this.body.tint = 0xff0000
         this.addChild(this.body)

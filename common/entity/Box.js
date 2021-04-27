@@ -13,11 +13,13 @@ class Box {
         this.color = state.color
         this.mass = state.mass
         this.spin = state.spin
+        this.material = state.material
         
         this.boxShape = new p2.Box({
             width: state.width, 
             height: state.height
         });
+        this.boxShape.material = state.material;
         this.body = new p2.Body({
             mass: state.mass,
             position: [state.x, state.y],

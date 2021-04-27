@@ -2,6 +2,8 @@ import * as PIXI from 'pixi.js'
 import BackgroundGrid from './BackgroundGrid.js'
 import { Joystick }  from './Joystick.js'
 import p2 from 'p2'
+import {CRTFilter} from '@pixi/filter-crt';
+
 
 class PIXIRenderer {
 
@@ -22,12 +24,17 @@ class PIXIRenderer {
 
         PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 
+        
 
 
         this.stage = new PIXI.Container()
         this.camera = new PIXI.Container()
         this.background = new PIXI.Container()
         this.middleground = new PIXI.Container()
+
+        const blurFilter1 = new CRTFilter(10);
+        this.middleground.filters = [blurFilter1];
+
         this.foreground = new PIXI.Container()
 
         this.camera.addChild(this.background)
@@ -37,7 +44,7 @@ class PIXIRenderer {
 
         this.background.addChild(new BackgroundGrid())
 
-        var wallMaterial = new p2.Material();
+        /*var wallMaterial = new p2.Material();
         
         function createWall(world, middleground, x, y, w, h, rotation) {
           var shape = new p2.Box({
@@ -95,13 +102,13 @@ class PIXIRenderer {
         }
 
         createBall(this.world, this.middleground, this.collection, '0x00ff00', 60, 5, 500, 0,0,0);
-
+        
         
         var boxVsBall = new p2.ContactMaterial(circleMaterial, wallMaterial, {
             friction: 0,
             restitution: 1
         });
-        this.world.addContactMaterial(boxVsBall);
+        this.world.addContactMaterial(boxVsBall);*/
 
         const style = new PIXI.TextStyle({
             fontSize: 60,
