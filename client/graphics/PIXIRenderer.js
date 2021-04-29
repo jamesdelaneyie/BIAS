@@ -119,7 +119,7 @@ class PIXIRenderer {
             stroke: "#37ff00",
             strokeThickness: 4
         });
-        const text = new PIXI.Text('Bias Space, you\'re here!', style);
+        const text = new PIXI.Text('I installed and restarted on my own!', style);
         this.middleground.addChild(text);
         text.anchor.x = 0;
         text.anchor.y = 0;
