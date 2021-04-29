@@ -149,7 +149,7 @@ class GameInstance {
             }
         })
 
-        this.world.step(1/7);
+        this.world.step(1/4);
 
         this.boxes.forEach(box => {
             

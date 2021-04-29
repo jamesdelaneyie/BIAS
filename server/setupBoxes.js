@@ -9,7 +9,7 @@ export default (instance, world) => {
     const circleMaterial = new p2.Material();
     const wallMaterial = new p2.Material();
 
-    const BoxA = new Box({ x: 400, y: 400, width: 200, height: 200, color: 0xffffff, mass: 10, spin: 0, material: circleMaterial})
+    const BoxA = new Box({ x: 400, y: 400, width: 200, height: 200, color: 0xffffff, mass: 20, spin: 1, material: circleMaterial})
     instance.addEntity(BoxA)
     world.addBody(BoxA.body)
     boxes.set(BoxA.nid, BoxA)

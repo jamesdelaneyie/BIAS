@@ -16,11 +16,11 @@ class PlayerCharacter {
         this.material = new p2.Material();
 
         this.circleShape = new p2.Circle({
-            radius: this.size / 2
+            radius: this.size
         });
         this.circleShape.material = this.material;
         this.body = new p2.Body({
-            mass: 20,
+            mass: 90,
             position: [0, 0]
         });
         this.body.addShape(this.circleShape)
@@ -35,7 +35,7 @@ class PlayerCharacter {
 
         // collider!
         // example of a component that involves fancy stuff from another libary
-        this.collider = CollisionSystem.createCircleCollider(0, 0, 0)
+        this.collider = CollisionSystem.createCircleCollider(0, 0, 5)
         
     }
 
