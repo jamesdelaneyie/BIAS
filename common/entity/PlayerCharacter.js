@@ -18,6 +18,9 @@ class PlayerCharacter {
         this.circleShape = new p2.Circle({
             radius: this.size
         });
+
+
+        
         this.circleShape.material = this.material;
         this.body = new p2.Body({
             mass: 90,
