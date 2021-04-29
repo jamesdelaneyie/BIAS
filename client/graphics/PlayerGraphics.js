@@ -20,7 +20,7 @@ class PlayerGraphics extends PIXI.Container {
         this.body.beginFill(0xffffff)
         this.body.drawCircle(0, 0, 25)
         this.body.endFill()
-        this.body.tint = 0xff00ff
+        this.body.tint = 0x00ff00
         this.nose = new PIXI.Graphics()
         this.nose.beginFill(0xff00ff)
         this.nose.moveTo(0, -25)
