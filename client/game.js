@@ -58,8 +58,8 @@ const create = () => {
     client.on('connected', res => { console.log('connection?:', res) })
     client.on('disconnected', () => { console.log('connection closed') })
 
-    client.connect('ws://localhost:8079')
-    //client.connect('ws://185.92.221.225:8079')
+    //client.connect('ws://localhost:8079')
+    client.connect('ws://185.92.221.225:8079')
 
 
     const update = (delta, tick, now) => {
