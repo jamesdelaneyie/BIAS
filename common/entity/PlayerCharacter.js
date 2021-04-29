@@ -38,7 +38,7 @@ class PlayerCharacter {
 
         // collider!
         // example of a component that involves fancy stuff from another libary
-        this.collider = CollisionSystem.createCircleCollider(0, 0, 5)
+        this.collider = CollisionSystem.createCircleCollider(0, 0, 25)
         
     }
 
