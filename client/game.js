@@ -16,7 +16,6 @@ const create = () => {
     
     const renderer = new PIXIRenderer()
     const input = new InputSystem(renderer)
-    const world = new p2.World({gravity: [0, 9.82]});
 
     const state = {
         myRawId: null,
@@ -52,7 +51,7 @@ const create = () => {
     })
 
     client.on('predictionErrorFrame', predictionErrorFrame => {
-        reconcilePlayer(predictionErrorFrame, client, state.myRawEntity, state.obstacles)
+        reconcilePlayer(predictionErrorFrame, client, state.myRawEntity, state.obstacles, state.boxes)
     })
 
     client.on('connected', res => { console.log('connection?:', res) })

@@ -33,7 +33,7 @@ class PIXIRenderer {
         this.middleground = new PIXI.Container()
 
         const blurFilter1 = new CRTFilter(10);
-        this.middleground.filters = [blurFilter1];
+        //this.middleground.filters = [blurFilter1];
 
         this.foreground = new PIXI.Container()
 

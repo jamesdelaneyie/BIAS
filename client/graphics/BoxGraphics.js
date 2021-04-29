@@ -18,7 +18,7 @@ class BoxGraphics extends PIXI.Container {
 
 
         const blurFilter1 = new AsciiFilter(10);
-        this.body.filters = [blurFilter1];
+        //this.body.filters = [blurFilter1];
 
 
         this.body.endFill()

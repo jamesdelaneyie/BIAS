@@ -27,7 +27,7 @@ class Box {
         });
         this.body.addShape(this.boxShape)
 
-        this.collider = CollisionSystem.createRectangleCollider(state.x, state.y, state.width, state.height)    
+        this.collider = CollisionSystem.createRectangleCollider((state.x - state.width/2), (state.y - state.height/2) , state.width, state.height)    
     }
 }
 

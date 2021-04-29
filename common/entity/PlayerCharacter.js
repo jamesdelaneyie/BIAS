@@ -1,5 +1,6 @@
 import nengi from 'nengi'
 import CollisionSystem from '../CollisionSystem.js'
+import p2 from 'p2'
 
 class PlayerCharacter {
     constructor() {
@@ -10,6 +11,19 @@ class PlayerCharacter {
         this.hitpoints = 100
         this.isAlive = true
         this.speed = 600
+        this.size = 25
+        this.mass = 5
+        this.material = new p2.Material();
+
+        this.circleShape = new p2.Circle({
+            radius: this.size / 2
+        });
+        this.circleShape.material = this.material;
+        this.body = new p2.Body({
+            mass: 20,
+            position: [0, 0]
+        });
+        this.body.addShape(this.circleShape)
 
         // weapon cooldown!
         // example of a plain data-only component
@@ -21,7 +35,8 @@ class PlayerCharacter {
 
         // collider!
         // example of a component that involves fancy stuff from another libary
-        this.collider = CollisionSystem.createCircleCollider(0, 0, 25)
+        this.collider = CollisionSystem.createCircleCollider(0, 0, 0)
+        
     }
 
     get x() {

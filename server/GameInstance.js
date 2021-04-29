@@ -22,7 +22,7 @@ class GameInstance {
 
         // game-related state
 
-        this.world = new p2.World({gravity: [0, 9.82]});
+        this.world = new p2.World({gravity: [0, 0]});
         this.obstacles = setupObstacles(this.instance)
         this.boxes = setupBoxes(this.instance, this.world)
 
@@ -34,6 +34,7 @@ class GameInstance {
             const rawEntity = new PlayerCharacter()
             rawEntity.x = 500
             rawEntity.y = 500
+            this.world.addBody(rawEntity.body);
 
             // make the raw entity only visible to this client
             const channel = this.instance.createChannel()
@@ -41,6 +42,7 @@ class GameInstance {
 
             this.instance.message(new Notification('yolo'), client)
             channel.addMessage(new Notification('private channel created'))
+
             channel.addEntity(rawEntity)
             this.instance.addEntity(rawEntity)
             client.channel = channel
@@ -133,6 +135,11 @@ class GameInstance {
 
             client.view.x = client.rawEntity.x
             client.view.y = client.rawEntity.y
+            
+            console.log(client.rawEntity.body.position)
+            client.rawEntity.body.position[0] = client.rawEntity.x
+            client.rawEntity.body.position[1] = client.rawEntity.y
+
 
             // have the smooth entity follow the raw entity
             const smoothEntity = client.smoothEntity
@@ -142,11 +149,13 @@ class GameInstance {
             }
         })
 
-        this.world.step(1/4);
+        this.world.step(1/7);
 
         this.boxes.forEach(box => {
+            
             box.x = box.body.position[0]
             box.y = box.body.position[1]
+            
             box.rotation= box.body.angle
 
             box.collider.polygon.pos.x = box.body.position[0] - box.width/2
