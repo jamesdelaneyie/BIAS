@@ -11,8 +11,8 @@ BIAS uses:
 * nengi.js - @timetocode
 * nice proto – @timetocode
 * PIXI.js joypad  – @endel
-* p2.js physics engine – @schteppe
-* PIXI.js emote selector  – @endel
+* p2.js physics – @schteppe
+* PIXI.js emote  – @endel
 
 MIT
 
