@@ -1,7 +1,7 @@
 # BIAS (bi-dimensional intimate ambient space)
 ```
 
-BIAS is realtime metaphysical 2d social space
+BIAS is a real-time metaphysical 2d social space
 
 npm install
 npm start
