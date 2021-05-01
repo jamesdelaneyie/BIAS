@@ -5,8 +5,9 @@ import p2 from 'p2'
 class PlayerCharacter {
     constructor() {
         // x & y are getters
-        //this.x = 0
-        //this.y = 0
+        this.xV = 0
+        this.yV = 0
+        this.power = 0
         this.rotation = 0
         this.hitpoints = 100
         this.isAlive = true
@@ -34,8 +35,6 @@ class PlayerCharacter {
             acc: 0
         }
 
-        // collider!
-        // example of a component that involves fancy stuff from another libary
         this.collider = CollisionSystem.createCircleCollider(0, 0, 2)
         
     }
@@ -58,6 +57,9 @@ class PlayerCharacter {
 PlayerCharacter.protocol = {
     x: { type: nengi.Float32, interp: true },
     y: { type: nengi.Float32, interp: true },
+    xV: { type: nengi.Float32, interp: true },
+    yV: { type: nengi.Float32, interp: true },
+    power: { type: nengi.Float32, interp: true },
     rotation: { type: nengi.RotationFloat32, interp: true },
     delta: nengi.Number,
     isAlive: nengi.Boolean,

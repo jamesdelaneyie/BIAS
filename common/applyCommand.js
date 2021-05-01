@@ -5,6 +5,7 @@ export default (entity, command, obstacles, boxes) => {
     if (!entity.isAlive) {
         return
     }
+    
 
     // rotation (not important to movement, purely aesthetic)
     entity.rotation = command.rotation

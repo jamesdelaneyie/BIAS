@@ -3,6 +3,7 @@ import FireCommand from '../common/command/FireCommand.js'
 import applyCommand from '../common/applyCommand.js'
 import { fire } from '../common/weapon.js'
 import handleShot from './handleShot.js'
+import isMobile from 'ismobilejs'
 
 const handleInput = (inputSystem, state, client, renderer, delta) => {
     const input = inputSystem.frameState
@@ -22,8 +23,12 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
         const rotation = Math.atan2(dy, dx)
 
         /* begin movement */
-        // the command!
-        const moveCommand = new MoveCommand(input.w, input.a, input.s, input.d, rotation, delta)
+        var rotationAmount = rotation
+        if(isMobile(window.navigator).any === true) {
+            rotationAmount = input.rotation
+        }
+        const moveCommand = new MoveCommand(input.w, input.a, input.s, input.d, rotationAmount, delta)
+
         // send moveCommand to the server
         client.addCommand(moveCommand)
 
@@ -43,8 +48,8 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
         const graphics = client.graphicalEntities.get(prediction.nid)
         graphics.x = prediction.x
         graphics.y = prediction.y
-        graphics.rotation = rotation
-
+        graphics.rotation = rotationAmount
+       
         // make the camera look at our entity
         renderer.centerCamera(graphics)
         /* end movement */
