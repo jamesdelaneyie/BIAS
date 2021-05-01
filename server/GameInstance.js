@@ -26,13 +26,18 @@ class GameInstance {
         this.obstacles = setupObstacles(this.instance)
         this.boxes = setupBoxes(this.instance, this.world)
 
+        this.world.on('postStep', function(event){
+            // Add horizontal spring force
+            //circleBody.force[0] -= 100 * circleBody.position[0];
+        });
+
 
         // (the rest is just attached to client objects when they connect)
 
         this.instance.on('connect', ({ client, callback }) => {
             // create a entity for this client
             const rawEntity = new PlayerCharacter()
-            rawEntity.x = 500
+            rawEntity.x = 2000
             rawEntity.y = 500
             this.world.addBody(rawEntity.body);
 
@@ -49,7 +54,7 @@ class GameInstance {
 
             // smooth entity is visible to everyone
             const smoothEntity = new PlayerCharacter()
-            smoothEntity.x = 500
+            smoothEntity.x = 2000
             smoothEntity.y = 500
             smoothEntity.collidable = true
             this.instance.addEntity(smoothEntity)

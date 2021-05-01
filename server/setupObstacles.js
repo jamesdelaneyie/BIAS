@@ -13,7 +13,7 @@ export default (instance) => {
     instance.addEntity(obsB)
     obstacles.set(obsB.nid, obsB)
 
-    const topWall = new Obstacle({ x: 0, y: 0, width: 1000, height: 20 })
+    /*const topWall = new Obstacle({ x: 0, y: 0, width: 1000, height: 20 })
     instance.addEntity(topWall)
     obstacles.set(topWall.nid, topWall)
 
@@ -27,7 +27,7 @@ export default (instance) => {
 
     const bottomWall = new Obstacle({ x: 0, y: 1000, width: 1000, height: 20 })
     instance.addEntity(bottomWall)
-    obstacles.set(bottomWall.nid, bottomWall)
+    obstacles.set(bottomWall.nid, bottomWall)*/
 
     return obstacles
 }

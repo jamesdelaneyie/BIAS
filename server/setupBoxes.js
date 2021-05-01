@@ -7,7 +7,9 @@ export default (instance, world) => {
     const boxes = new Map()
 
     const circleMaterial = new p2.Material();
+
     const wallMaterial = new p2.Material();
+
 
     const BoxA = new Box({ x: 400, y: 400, width: 200, height: 200, color: 0xffffff, mass: 20, spin: 1, material: circleMaterial})
     instance.addEntity(BoxA)
@@ -23,6 +25,8 @@ export default (instance, world) => {
     instance.addEntity(BoxC)
     world.addBody(BoxC.body)
     boxes.set(BoxC.nid, BoxC)
+
+    
 
     var touch = new p2.ContactMaterial(circleMaterial, wallMaterial, {
         friction: 0,
