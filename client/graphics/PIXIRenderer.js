@@ -19,13 +19,10 @@ class PIXIRenderer {
             view: this.canvas,
             antialias: true,
             transparent: false,
-            resolution: 1
+            resolution: 2
         })
 
-        PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
-
-        
-
+    
 
         this.stage = new PIXI.Container()
         this.camera = new PIXI.Container()

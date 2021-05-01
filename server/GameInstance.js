@@ -37,7 +37,7 @@ class GameInstance {
         this.instance.on('connect', ({ client, callback }) => {
             // create a entity for this client
             const rawEntity = new PlayerCharacter()
-            rawEntity.x = 2000
+            rawEntity.x = 500
             rawEntity.y = 500
             this.world.addBody(rawEntity.body);
 
@@ -54,7 +54,7 @@ class GameInstance {
 
             // smooth entity is visible to everyone
             const smoothEntity = new PlayerCharacter()
-            smoothEntity.x = 2000
+            smoothEntity.x = 500
             smoothEntity.y = 500
             smoothEntity.collidable = true
             this.instance.addEntity(smoothEntity)
