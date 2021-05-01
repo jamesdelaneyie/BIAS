@@ -10,12 +10,12 @@ class BackgroundGrid extends PIXI.Container {
 
         let gridGap = 50
         let halfGrid = gridGap/2
-        let gap = 1
+        let gap = 2
 
         //Horizontal Lines
         for (var i = 0; i < 21; i++) {           
             let line = new PIXI.Graphics()
-            line.lineStyle(gap, 0x666666)
+            line.lineStyle(gap, 0x222222)
             line.moveTo(i * gridGap, 0)
             line.lineTo(i * gridGap, width)
             this.addChild(line)
@@ -24,7 +24,7 @@ class BackgroundGrid extends PIXI.Container {
         //Vertical Lines
         for (var i = 0; i < 21; i++) {           
             let line = new PIXI.Graphics()
-            line.lineStyle(gap, 0x666666)
+            line.lineStyle(gap, 0x222222)
             line.moveTo(0, i * gridGap)
             line.lineTo(height, i * gridGap)
             this.addChild(line)

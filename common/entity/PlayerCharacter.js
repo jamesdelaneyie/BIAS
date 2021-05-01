@@ -19,8 +19,6 @@ class PlayerCharacter {
             radius: this.size
         });
 
-
-        
         this.circleShape.material = this.material;
         this.body = new p2.Body({
             mass: 90,
@@ -38,7 +36,7 @@ class PlayerCharacter {
 
         // collider!
         // example of a component that involves fancy stuff from another libary
-        this.collider = CollisionSystem.createCircleCollider(0, 0, 5)
+        this.collider = CollisionSystem.createCircleCollider(0, 0, 2)
         
     }
 
