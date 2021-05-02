@@ -128,6 +128,7 @@ class InputSystem {
                     //console.log(data.power);
             
                     this.currentState.mouseDown = false
+                    this.frameState.mouseDown = false
                     
                     var dd = data.direction;
             
@@ -250,6 +251,7 @@ class InputSystem {
                 onChange: (data) => {
 
                     this.currentState.mouseDown = false
+                    this.frameState.mouseDown = false
                     this.currentState.rotation = (data.angle)
                     this.frameState.rotation = (data.angle)
                                 

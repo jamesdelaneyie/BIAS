@@ -7,5 +7,13 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, './public/js'),
         filename: 'app-v' + version + '.js'
+    },
+    module: {
+        rules: [
+            {   test: /\.mjs$/,
+                include: /node_modules/,
+                type: "javascript/auto"
+            }
+        ]
     }
 }

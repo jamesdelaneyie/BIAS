@@ -161,7 +161,7 @@ class GameInstance {
             box.x = box.body.position[0]
             box.y = box.body.position[1]
             
-            box.rotation= box.body.angle
+            box.rotation = box.body.angle
 
             box.collider.polygon.pos.x = box.body.position[0] - box.width/2
             box.collider.polygon.pos.y = box.body.position[1] - box.height/2

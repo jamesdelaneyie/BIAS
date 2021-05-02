@@ -8,7 +8,7 @@ import handleInput from './handleInput.js'
 import drawHitscan from './graphics/drawHitscan.js'
 import reconcilePlayer from './reconcilePlayer.js'
 import shouldIgnore from './shouldIgnore.js'
-import p2 from 'p2'
+
 
 
 const create = () => {
@@ -48,6 +48,7 @@ const create = () => {
 
     client.on('message::Notification', message => {
         console.log('Notification', message)
+        
     })
 
     client.on('predictionErrorFrame', predictionErrorFrame => {

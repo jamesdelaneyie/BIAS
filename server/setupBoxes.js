@@ -10,13 +10,12 @@ export default (instance, world) => {
 
     const wallMaterial = new p2.Material();
 
-
-    const BoxA = new Box({ x: 400, y: 400, width: 200, height: 200, color: 0xffffff, mass: 20, spin: 1, material: circleMaterial})
+    const BoxA = new Box({ x: 400, y: 400, width: 200, height: 200, color: 0xffffff, mass: 1, spin: 1, material: circleMaterial})
     instance.addEntity(BoxA)
     world.addBody(BoxA.body)
     boxes.set(BoxA.nid, BoxA)
     
-    const BoxB = new Box({ x: 800, y: 800, width: 50, height: 50, color: 0xffffff, mass: 5, spin: 0, material: circleMaterial})
+    const BoxB = new Box({ x: 800, y: 800, width: 50, height: 50, color: 0xffffff, mass: 1, spin: 0, material: circleMaterial})
     instance.addEntity(BoxB)
     world.addBody(BoxB.body)
     boxes.set(BoxB.nid, BoxB)
@@ -26,12 +25,11 @@ export default (instance, world) => {
     world.addBody(BoxC.body)
     boxes.set(BoxC.nid, BoxC)
 
-    
-
     var touch = new p2.ContactMaterial(circleMaterial, wallMaterial, {
         friction: 0,
-        restitution: 1
+        restitution: 0.5
     });
+
     world.addContactMaterial(touch);
 
     return boxes

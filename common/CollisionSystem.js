@@ -78,6 +78,7 @@ CollisionSystem.createRectangleCollider = (x, y, width, height) => {
 }
 
 CollisionSystem.moveWithCollisions = (entity, obstacles, boxes) => {
+
     obstacles.forEach(obstacle => {
         if (SAT.testCirclePolygon(entity.collider.circle, obstacle.collider.polygon, response)) {
             //console.log('res', response)
@@ -86,6 +87,7 @@ CollisionSystem.moveWithCollisions = (entity, obstacles, boxes) => {
         }
         response.clear()
     })
+    
     boxes.forEach(box => {
         if (SAT.testCirclePolygon(entity.collider.circle, box.collider.polygon, response)) {
             //console.log('res', response)

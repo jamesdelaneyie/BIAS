@@ -15,6 +15,7 @@ class PlayerCharacter {
         this.size = 25
         this.mass = 5
         this.material = new p2.Material();
+        this.footDown = false
 
         this.circleShape = new p2.Circle({
             radius: this.size
@@ -59,6 +60,7 @@ PlayerCharacter.protocol = {
     y: { type: nengi.Float32, interp: true },
     xV: { type: nengi.Float32, interp: true },
     yV: { type: nengi.Float32, interp: true },
+    footDown: nengi.Boolean,
     power: { type: nengi.Float32, interp: true },
     rotation: { type: nengi.RotationFloat32, interp: true },
     delta: nengi.Number,
