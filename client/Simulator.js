@@ -93,8 +93,8 @@ class Simulator {
 
             /* begin movement */
             // the command!
-            console.log(input.w);
-            console.log(input.rotation);
+            //console.log(input.w);
+            //console.log(input.rotation);
 
             const moveCommand = new MoveCommand(input.w, input.a, input.s, input.d, input.rotation, delta)
             // send moveCommand to the server

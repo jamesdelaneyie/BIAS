@@ -5,8 +5,8 @@ import p2 from 'p2'
 class Box {
     constructor(state) {
         this.nid = state.nid
-        this.x = state.x
-        this.y = state.y
+        //this.x = state.x
+        //this.y = state.y
         this.width = state.width
         this.height = state.height
         this.rotation = state.rotation
@@ -28,6 +28,20 @@ class Box {
         this.body.addShape(this.boxShape)
 
         this.collider = CollisionSystem.createRectangleCollider((state.x - state.width/2), (state.y - state.height/2) , state.width, state.height)    
+    }
+
+    get x() {
+        return this.collider.x
+    }
+    set x(value) {
+        this.collider.x = value
+    }
+
+    get y() {
+        return this.collider.y
+    }
+    set y(value) {
+        this.collider.y = value
     }
 }
 

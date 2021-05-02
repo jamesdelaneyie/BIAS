@@ -1,14 +1,24 @@
 import * as PIXI from 'pixi.js'
 import PlayerGraphics from '../graphics/PlayerGraphics.js'
+import PlayerInfoGraphics from '../graphics/PlayerInfoGraphics.js'
 
 export default (state, renderer ) => {
     return {
         create({ data, entity }) {
-            const graphics = new PlayerGraphics(data)
             
-            renderer.middleground.addChild(graphics)
-            renderer.entities.set(graphics.nid, graphics)
+            const graphics = new PlayerGraphics(data)
+            const info = new PlayerInfoGraphics(data)
 
+            const wrapper = new PIXI.Container()
+            
+            wrapper.addChild(graphics);
+            wrapper.addChild(info);
+
+            renderer.middleground.addChild(wrapper)
+
+            renderer.entities.set(info.nid, info)
+            renderer.entities.set(graphics.nid, graphics)
+            
             /* self, raw */
             if (data.nid === state.myRawId) {
                 state.myRawEntity = entity
