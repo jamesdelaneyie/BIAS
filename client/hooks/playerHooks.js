@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js'
 import PlayerGraphics from '../graphics/PlayerGraphics.js'
 
 export default (state, renderer ) => {

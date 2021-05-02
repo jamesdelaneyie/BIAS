@@ -10,11 +10,40 @@ class PlayerGraphics extends PIXI.Container {
         this.isAlive = state.isAlive
         this.hitpoints = state.hitpoints
         this.rotation = state.rotation
-
+        this.count = 0
         this.hitpointBar = new HitpointBar()
         this.hitpointBar.x = -6
         this.hitpointBar.y = -20
         this.hitpointBar.setHitpointPercentage(state.hitpoints/100)
+
+
+        //Give me a new space
+        this.auraContainer = new PIXI.Container();   
+        //select my rendering engine for this, i'll use whats already there
+        var canvasRenderer = PIXI.autoDetectRenderer(120, 120); 
+        //create a etxture object
+        var auraTexture = new PIXI.RenderTexture.create(120, 120);
+        //create a sprite object
+        var auraSprite = new PIXI.Sprite(auraTexture);
+        //add the sprite to the new space
+        this.auraContainer.addChild(auraSprite)
+        
+        //create a holder for our graphhics
+        var auraFrame = new PIXI.Container();
+        //draw graphics   
+        const aura = new PIXI.Graphics();
+        aura.beginFill(0x00FF00);
+        aura.drawCircle(0, 0, 60);
+        aura.endFill();
+        //add the graphics to the frame
+        auraFrame.addChild(aura)
+        //add the frame to the container
+        this.auraContainer.addChild(auraFrame);
+        //render the container
+        canvasRenderer.render(this.auraContainer, auraTexture)
+        //add the rendered container onto the orignal player character
+        this.addChild(this.auraContainer)
+
 
         this.body = new PIXI.Graphics()
         this.body.beginFill(0xffffff)
@@ -37,14 +66,19 @@ class PlayerGraphics extends PIXI.Container {
         this.body.visible = false
         this.hitpointBar.visible = false
         this.nose.visible = false
+        this.auraContainer.visible = false
     }
 
     update(delta) {
+        this.count++
         if (!this.isAlive) {
             this.nose.alpha = 0
         } else {
             this.nose.alpha = 1
         }
+        this.auraContainer.scale.set(0.6 + Math.sin((this.count/10)) * 0.1, 0.6 + Math.sin((this.count/10)) * 0.1);
+        this.auraContainer.alpha = 0.2 + Math.sin((this.count/10)) * 0.1;
+        //console.log(this.auraContainer)
     }
 }
 

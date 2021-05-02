@@ -10,9 +10,6 @@ export default (entity, command, obstacles, boxes) => {
     entity.rotation = command.rotation
     
     const maxPower = 1;
-    const maxReverse = 0.0375;
-    
-    const reverseFactor = 0.0005;
 
     const drag = 0.95;
     const angularDrag = 0.95;
@@ -60,13 +57,8 @@ export default (entity, command, obstacles, boxes) => {
 
     entity.power = Math.max(0, Math.min(maxPower, entity.power));
 
-    //console.log(entity.footDown)
-    //console.log(entity.power)
-
     entity.x += unitX * (entity.speed * entity.power) * command.delta
     entity.y += unitY * (entity.speed * entity.power) * command.delta
-    //entity.rotation = 
-    //console.log(entity.delta);
 
     // readjusts this entities position by uncolliding it from obstacles
     CollisionSystem.moveWithCollisions(entity, obstacles, boxes)
