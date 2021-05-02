@@ -1,8 +1,14 @@
-import * as PIXI from 'pixi.js'
-import BackgroundGrid from './BackgroundGrid.js'
-import { Joystick }  from './Joystick.js'
 import p2 from 'p2'
-import {CRTFilter} from '@pixi/filter-crt';
+import * as PIXI from 'pixi.js'
+import * as PUXI from 'puxi.js'
+import BackgroundGrid from './BackgroundGrid.js'
+
+import { CRTFilter } from '@pixi/filter-crt'
+import { EmoteSelector } from 'pixi-emote-selector'
+import MultiStyleText from 'pixi-multistyle-text'
+import cryptoRandomString from 'crypto-random-string'
+import { TypeFlags } from 'typescript'
+
 
 
 class PIXIRenderer {
@@ -17,111 +23,136 @@ class PIXIRenderer {
             width: window.innerWidth, 
             height: window.innerHeight, 
             view: this.canvas,
+            autoDensity: true,
             antialias: true,
             transparent: false,
             resolution: 2
         })
 
-    
 
         this.stage = new PIXI.Container()
         this.camera = new PIXI.Container()
+
         this.background = new PIXI.Container()
-        this.middleground = new PIXI.Container()
-
+        this.background.addChild(new BackgroundGrid())
         const blurFilter1 = new CRTFilter(10);
-        //this.middleground.filters = [blurFilter1];
+        this.background.filters = [blurFilter1];
 
+
+        this.middleground = new PIXI.Container()
         this.foreground = new PIXI.Container()
+
+        const emoteSelector = new EmoteSelector({
+            options: [
+                PIXI.Sprite.from("emote_exclamation"),
+                PIXI.Sprite.from("emote_laugh"),
+                PIXI.Sprite.from("emote_sleeps"),
+                PIXI.Sprite.from("emote_heart"),
+            ],
+            onItemSelected: (indexSelected) => {
+                console.log("Item selected:", indexSelected);
+                //statusText.text = `${itemSelected} selected.`;
+            },
+        });
+		this.foreground.addChild(emoteSelector);
 
         this.camera.addChild(this.background)
         this.camera.addChild(this.middleground)
         this.camera.addChild(this.foreground)
+
         this.stage.addChild(this.camera)
-
-        this.background.addChild(new BackgroundGrid())
-
-        /*var wallMaterial = new p2.Material();
         
-        function createWall(world, middleground, x, y, w, h, rotation) {
-          var shape = new p2.Box({
-              width: w, 
-              height: h,
-          });
-          var body = new p2.Body({
-              mass: 0,
-              position: [x, y],
-              angle: -rotation
-          });
-          body.addShape(shape);
-          world.addBody(body);
-          
-          shape.material = wallMaterial;
-          
-          var graphic = new PIXI.Graphics();
-          graphic.beginFill(0x666666);
-          graphic.drawRect(-w/2, -h/2, w, h);
-          graphic.endFill();
-          graphic.pivot.set(0.5, 0.5);
-          graphic.x = x;
-          graphic.y = y;
-          graphic.rotation = -rotation;
-          middleground.addChild(graphic);
-          graphic.body = body;
-          graphic.shape = shape;
 
-        }
+        //Build UI
+        this.uiLayer = new PUXI.Stage(window.innerWidth, window.innerHeight);
 
-        createWall(this.world, this.middleground, 500, 200, 500, 20, 0.1)
-        createWall(this.world, this.background, 500, 1000, 1020, 20, 0)
 
-        var circleMaterial = new p2.Material();
+         // Showcase scrolling widget
+        const mockScroll = new PUXI.ScrollWidget({
+            scrollY: true,
+            scrollBars: true,
+        }).setBackground(0xffaabb)
+        .setBackgroundAlpha(0.5)
+        .setElevation(10)
+        //this.uxStage.addChild(mockScroll)
 
-        function createBall(world, location, collection, color, radius, mass, x, y, velX, velY) {
-            var circleShape = new p2.Circle({ radius: radius });
-            circleShape.material = circleMaterial;
-            var circleBody = new p2.Body({
-                mass: mass,
-                position: [x, y],
-                velocity: [velX, velY],
-            });
-            circleBody.addShape(circleShape);
-            world.addBody(circleBody);
-            var circleGraphic = new PIXI.Graphics();
-            circleGraphic.beginFill(color);
-            circleGraphic.drawCircle(0, 0, radius/2);
-            circleGraphic.pivot.set(0.5, 0.5);
-            circleGraphic.endFill();
-            location.addChild(circleGraphic)
-            circleGraphic.body = circleBody;
-            circleGraphic.shape = circleShape;
-            collection.push(circleGraphic);
-        }
+        const frame = new PIXI.Graphics({
+            x: 5,
+            y: 5            
+        })
 
-        createBall(this.world, this.middleground, this.collection, '0x00ff00', 60, 5, 500, 0,0,0);
-        
-        
-        var boxVsBall = new p2.ContactMaterial(circleMaterial, wallMaterial, {
-            friction: 0,
-            restitution: 1
+        const textStyle = new PIXI.TextStyle({
+            fill: 0xffffff,
         });
-        this.world.addContactMaterial(boxVsBall);*/
-
-        const style = new PIXI.TextStyle({
-            fontSize: 60,
-            fontWeight: 100,
-            fontFamily: "Helvetica, sans-serif",
-            fill: "black",
-            lineJoin: "round",
-            stroke: "#37ff00",
-            strokeThickness: 4
+        const words = new PUXI.TextWidget('Hello World', textStyle).setBackground(0xffffff).setBackgroundAlpha(0.5);
+        words.tint = 0xffffff
+       
+        const version = cryptoRandomString({length: 10});
+        const texty = new MultiStyleText('<logo>BIAS</logo>\n<white>○○○○</white>\n\n' + version + '_alpha \n\nbi-dimensional \nintimate ambient \nspace', {
+            "logo": {
+                fontSize: "14px",
+                letterSpacing: 4,
+                leading: 200,
+                lineHeight: 200,
+                fontWeight: 600
+            },
+            "default": {
+                fontFamily: "Helvetica",
+                fontSize: "10px",
+                fill: "#cccccc",
+                valign: "middle",
+                align: "left",
+                fontWeight: 400
+            },
+            "white": {
+                fill: "#ffffff",
+                fontSize: '20px'
+            },
+            "red": {
+                fill: "#ff0000",
+                fontSize: '20px'
+            },
+            "blue": {
+                fill: "#0000ff",
+                fontSize: '20px'
+            },
+            "green": {
+                fill: "#00ff00",
+                fontSize: '20px'
+            }
         });
-        const text = new PIXI.Text('I installed and restarted on my own!', style);
-        this.middleground.addChild(text);
-        text.anchor.x = 0;
-        text.anchor.y = 0;
-        text.x = 50;
-        text.y = 50;
+        this.stage.addChild(texty)
+        texty.x = 10
+        texty.y = 10
+
+        // Add rounded button in center
+        this.mockButton = new PUXI.Button({
+            text: 'MENU',
+        })
+        .setLayoutOptions(new PUXI.FastLayoutOptions({
+            width: PUXI.LayoutOptions.WRAP_CONTENT,
+            height: PUXI.LayoutOptions.WRAP_CONTENT,
+            x: 10,
+            y: 0.5,
+            anchor: PUXI.FastLayoutOptions.LEFT_ANCHOR,
+        }))
+
+        .setPadding(8)
+        .setBackground(0xffffff)
+        .setBackgroundAlpha(0.2)
+        .setElevation(4)
+        this.mockButton.textWidget.textDisplay._style._fontSize = 14
+        this.mockButton.textWidget.textDisplay._style._fontWeight = 700
+        this.mockButton.textWidget.textDisplay._style._letterSpacing = 2
+        this.mockButton.on('hover', () => { 
+            this.mockButton.setBackgroundAlpha(0.5) 
+        });
+
+
+        this.uiLayer.addChild(this.mockButton);
+
+        this.stage.addChild(this.uiLayer)
+        
 
 
         window.addEventListener('resize', () => {

@@ -34,7 +34,7 @@ var Joystick = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         _this.outerRadius = 0;
         _this.innerRadius = 0;
-        _this.innerAlphaStandby = 0.5;
+        _this.innerAlphaStandby = 0.2
         _this.settings = Object.assign({
             outerScale: { x: 1, y: 1 },
             innerScale: { x: 1, y: 1 },
@@ -43,7 +43,7 @@ var Joystick = /** @class */ (function (_super) {
             var outer = new PIXI.Graphics();
             outer.beginFill(0xffffff);
             outer.drawCircle(0, 0, 60);
-            outer.alpha = 0.5;
+            outer.alpha = 0.2;
             _this.settings.outer = outer;
         }
         if (!_this.settings.inner) {

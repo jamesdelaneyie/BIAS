@@ -6,13 +6,12 @@ export default (entity, command, obstacles, boxes) => {
         return
     }
     
-
     // rotation (not important to movement, purely aesthetic)
     entity.rotation = command.rotation
     
-    const maxPower = 0.2;
+    const maxPower = 1;
     const maxReverse = 0.0375;
-    const powerFactor = 0.005;
+    
     const reverseFactor = 0.0005;
 
     const drag = 0.95;
@@ -22,11 +21,28 @@ export default (entity, command, obstacles, boxes) => {
     let unitX = 0
     let unitY = 0
 
-    // create forces from input
-    if (command.forward) { unitY -= 1 }
-    if (command.backward) { unitY += 1 }
-    if (command.left) { unitX -= 1 }
-    if (command.right) { unitX += 1 }
+    entity.footDown = false
+
+    // create forces from input 
+    if (command.forward) { 
+        unitY -= 1 
+        entity.footDown = true
+    }
+
+    if (command.backward) { 
+        unitY += 1
+        entity.footDown = true
+    }
+
+    if (command.left) { 
+        unitX -= 1 
+        entity.footDown = true
+    }
+
+    if (command.right) { 
+        unitX += 1
+        entity.footDown = true
+    }
 
     // normalize
     const len = Math.sqrt(unitX * unitX + unitY * unitY)
@@ -35,9 +51,21 @@ export default (entity, command, obstacles, boxes) => {
         unitY = unitY / len
     }
 
-    entity.x += unitX * entity.speed * command.delta
-    entity.y += unitY * entity.speed * command.delta
+    const powerFactor = 0.1;
+    if (entity.footDown) {
+        entity.power += powerFactor * entity.footDown;
+    } else {
+        entity.power -= powerFactor;
+    }
 
+    entity.power = Math.max(0, Math.min(maxPower, entity.power));
+
+    //console.log(entity.footDown)
+    //console.log(entity.power)
+
+    entity.x += unitX * (entity.speed * entity.power) * command.delta
+    entity.y += unitY * (entity.speed * entity.power) * command.delta
+    //entity.rotation = 
     //console.log(entity.delta);
 
     // readjusts this entities position by uncolliding it from obstacles
