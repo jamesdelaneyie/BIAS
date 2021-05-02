@@ -141,11 +141,12 @@ class GameInstance {
             client.view.x = client.rawEntity.x
             client.view.y = client.rawEntity.y
             
-            console.log(client.rawEntity.body.position)
+            //console.log(client.rawEntity.body.position)
             client.rawEntity.body.position[0] = client.rawEntity.x
             client.rawEntity.body.position[1] = client.rawEntity.y
 
 
+            //console.log(client);
             // have the smooth entity follow the raw entity
             const smoothEntity = client.smoothEntity
             if (smoothEntity) {
@@ -160,7 +161,6 @@ class GameInstance {
             
             box.x = box.body.position[0]
             box.y = box.body.position[1]
-            
             box.rotation = box.body.angle
 
             box.collider.polygon.pos.x = box.body.position[0] - box.width/2

@@ -14,7 +14,7 @@ class BoxGraphics extends PIXI.Container {
         this.body = new PIXI.Graphics()
 
         this.body.beginFill(0xffffff)
-        this.body.drawRect(0, 0, state.width, state.height)
+        this.body.drawRect(state.width/2, state.height/2, state.width, state.height)
 
         this.body.endFill()
         this.pivot.set(state.width/2, state.height/2);

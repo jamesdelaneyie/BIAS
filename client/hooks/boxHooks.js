@@ -10,18 +10,12 @@ export default ({ boxes }, renderer) => {
 
             renderer.entities.set(data.nid, graphics)
             renderer.middleground.addChild(graphics)
-            
 
             return graphics
         },
         delete({ nid, graphics }) {
             renderer.entities.delete(nid)
             renderer.middleground.removeChild(graphics)
-        },
-        watch: {
-            //hitpoints({ graphics, value }) {
-            //    graphics.hitpointBar.setHitpointPercentage(value / 100)
-            //}
         }
     }
 }
