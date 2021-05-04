@@ -14,6 +14,9 @@ import setupBoxes from './setupBoxes.js'
 import { fire } from '../common/weapon.js'
 import Notification from '../common/message/Notification'
 import lagCompensatedHitscanCheck from './lagCompensatedHitscanCheck'
+import P2Pixi from 'p2Pixi'
+
+
 
 class GameInstance {
     constructor() {
@@ -22,6 +25,8 @@ class GameInstance {
 
         // game-related state
 
+       // const newGame = new P2Pixi.Game();
+    
         this.world = new p2.World({gravity: [0, 0]});
         this.obstacles = setupObstacles(this.instance)
         this.boxes = setupBoxes(this.instance, this.world)
@@ -161,10 +166,13 @@ class GameInstance {
             
             box.x = box.body.position[0]
             box.y = box.body.position[1]
-            box.rotation = box.body.angle
+            box.rotation = box.body.angle 
 
-            box.collider.polygon.pos.x = box.body.position[0] - box.width/2
-            box.collider.polygon.pos.y = box.body.position[1] - box.height/2
+            //box.rotation = box.body.angle
+            //box.collider.polygon.pos.x = box.body.position[0] - box.width/2
+            //box.collider.polygon.pos.y = box.body.position[1] - box.height/2
+            //box.collider.polygon.angle = box.body.angle
+            //console.log(box.collider.polygon)
             //box.collider.polygon.
         })
 

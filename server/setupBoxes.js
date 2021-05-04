@@ -9,7 +9,7 @@ export default (instance, world) => {
     const circleMaterial = new p2.Material();
 
     const wallMaterial = new p2.Material();
-
+/*
     const BoxA = new Box({ x: 400, y: 400, width: 200, height: 200, color: 0xffffff, mass: 1, spin: 1, material: circleMaterial})
     instance.addEntity(BoxA)
     world.addBody(BoxA.body)
@@ -19,8 +19,8 @@ export default (instance, world) => {
     instance.addEntity(BoxB)
     world.addBody(BoxB.body)
     boxes.set(BoxB.nid, BoxB)
-
-    const BoxC = new Box({ x: 500, y: 1000, width: 1000, height: 20, color: 0xffffff, mass: 0, spin: 0, material: wallMaterial })
+*/
+    const BoxC = new Box({ x: 0, y: 0, width: 100, height: 100, color: 0xffffff, mass: 1, spin: 0, material: wallMaterial })
     instance.addEntity(BoxC)
     world.addBody(BoxC.body)
     boxes.set(BoxC.nid, BoxC)
