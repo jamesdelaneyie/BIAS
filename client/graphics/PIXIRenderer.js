@@ -1,4 +1,4 @@
-import p2 from 'p2'
+
 import * as PIXI from 'pixi.js'
 import * as PUXI from 'puxi.js'
 import BackgroundGrid from './BackgroundGrid.js'
@@ -16,7 +16,6 @@ class PIXIRenderer {
     constructor() {
         this.canvas = document.getElementById('main-canvas')
         this.entities = new Map()
-        this.world = new p2.World({gravity: [0, 9.82]});
         this.collection = []
 
         this.renderer = PIXI.autoDetectRenderer({
@@ -36,8 +35,12 @@ class PIXIRenderer {
         this.background = new PIXI.Container()
         this.background.addChild(new BackgroundGrid())
 
-        const blurFilter1 = new CRTFilter(1);
-        //this.background.filters = [blurFilter1];
+        const blurFilter1 = new CRTFilter({
+            vignetting: 0.3, 
+            vignettingAlpha: 1,
+            vignettingBlur: 0.2
+        });
+        this.background.filters = [blurFilter1];
 
 
         this.middleground = new PIXI.Container()
@@ -104,6 +107,20 @@ class PIXIRenderer {
         texty.x = 10
         texty.y = 10
 
+
+        
+        const miniMap = new PIXI.Container(
+            new PIXI.Graphics({
+                
+            })
+        )
+
+        var graphics = new PIXI.Graphics();
+        graphics.lineStyle(2, 0xFFFFFF);
+        graphics.drawRect(20, (window.innerHeight - 200), (window.innerWidth / 10), (window.innerHeight / 10));
+
+        this.stage.addChild(graphics)
+
         // Add button in center
         this.mockButton = new PUXI.Button({
             text: 'MENU',
@@ -123,11 +140,12 @@ class PIXIRenderer {
         this.mockButton.textWidget.textDisplay._style._fontWeight = 700
         this.mockButton.textWidget.textDisplay._style._letterSpacing = 4
         this.mockButton.on('click', () => { 
-            if(contentBox.alpha == 1) {
+            this.uiLayer.addChild(contentBox)
+            /*if(contentBox.alpha == 1) {
                 contentBox.alpha = 0
             } else {
                 contentBox.alpha = 1
-            }
+            }*/
         });
         this.uiLayer.addChild(this.mockButton);
 
@@ -175,8 +193,7 @@ class PIXIRenderer {
         .setBackgroundAlpha(0.8)
         .setPadding(50, 50, 50, 50)
         .addChild(text)
-        contentBox.alpha = 0
-        this.uiLayer.addChild(contentBox)
+        //this.uiLayer.addChild(contentBox)
 
         this.stage.addChild(this.uiLayer)
 
@@ -217,8 +234,11 @@ class PIXIRenderer {
     update(delta) {
         this.entities.forEach(entity => {
             entity.update(delta)
-            ///console.log(entity);
+            //console.log(entity);
         })
+
+
+        
 
         if (this.mockButton.isHover) {
             this.mockButton.setBackgroundAlpha(0.5)

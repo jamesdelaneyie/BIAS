@@ -22,12 +22,12 @@ class Box {
         this.boxShape.material = state.material;
         this.body = new p2.Body({
             mass: state.mass,
-            position: [state.x, state.y],
-            angularVelocity: state.spin
+            position: [state.x, state.y]
+            //angularVelocity: state.spin
         });
         this.body.addShape(this.boxShape)
 
-        this.collider = CollisionSystem.createRectangleCollider((state.x - state.width/2), (state.y - state.height/2) , state.width, state.height)    
+        this.collider = CollisionSystem.createRectangleCollider(0, 0, state.width, state.height)    
     }
 
     get x() {
