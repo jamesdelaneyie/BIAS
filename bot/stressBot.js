@@ -47,6 +47,7 @@ const loop = function() {
     bots.forEach(bot => {
         if (bot.websocket) {
             bot.readNetwork()
+            
             // small percent chance of changing which keys are being held down
             // this causes the bots to travel in straight lines, for the most part
             if (Math.random() > 0.95) {

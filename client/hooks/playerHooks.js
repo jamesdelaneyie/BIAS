@@ -7,22 +7,22 @@ export default (state, renderer ) => {
         create({ data, entity }) {
             
             const graphics = new PlayerGraphics(data)
-            const info = new PlayerInfoGraphics(data)
+            //const info = new PlayerInfoGraphics(data)
 
-            const wrapper = new PIXI.Container()
+            //const wrapper = new PIXI.Container()
             
-            wrapper.addChild(graphics);
-            wrapper.addChild(info);
+            //wrapper.addChild(graphics);
+            //wrapper.addChild(info);
 
-            renderer.middleground.addChild(wrapper)
+            renderer.middleground.addChild(graphics)
 
-            renderer.entities.set(info.nid, info)
+            ///enderer.entities.set(info.nid, info)
             renderer.entities.set(graphics.nid, graphics)
             
             /* self, raw */
             if (data.nid === state.myRawId) {
                 state.myRawEntity = entity
-                graphics.body.tint = 0xffffff // debug: turn self white
+                //graphics.body.tint = 0xffffff // debug: turn self white
             }
 
             /* self, smooth */

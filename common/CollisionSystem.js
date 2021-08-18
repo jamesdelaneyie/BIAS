@@ -58,7 +58,7 @@ CollisionSystem.createCircleCollider = (x, y, radius) => {
 CollisionSystem.createRectangleCollider = (x, y, width, height) => {
     return {
         baseType: 'sat-polygon',
-        polygon: new SAT.Box(new SAT.Vector(x, y), width, height).toPolygon(),
+        polygon: new SAT.Box(new SAT.Vector(x - 25, y - 25), width, height).toPolygon(),
 
         get x() {
             return this.polygon.pos.x

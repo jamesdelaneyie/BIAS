@@ -8,7 +8,7 @@ import handleInput from './handleInput.js'
 import drawHitscan from './graphics/drawHitscan.js'
 import reconcilePlayer from './reconcilePlayer.js'
 import shouldIgnore from './shouldIgnore.js'
-
+import addMessage from './graphics/addMessage.js'
 
 
 const create = () => {
@@ -47,9 +47,12 @@ const create = () => {
     })
 
     client.on('message::Notification', message => {
-        console.log('Notification', message)
-
+        //console.log('Notification', message)
+        addMessage(renderer.middleground, message);
     })
+
+    //messages to clients / local for view // spacial structure
+    //channel is list of entities / 
 
     client.on('predictionErrorFrame', predictionErrorFrame => {
         reconcilePlayer(predictionErrorFrame, client, state.myRawEntity, state.obstacles, state.boxes)

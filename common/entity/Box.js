@@ -12,22 +12,43 @@ class Box {
         this.rotation = state.rotation
         this.color = state.color
         this.mass = state.mass
+        this.radius = state.radius
         this.spin = state.spin
         this.material = state.material
         
-        this.boxShape = new p2.Box({
-            width: state.width, 
-            height: state.height
-        });
+       
+
+        if(state.name == "Box 1") {
+            this.boxShape = new p2.Box({
+                width: 100, 
+                height: 100
+            });
+        } else {
+            this.boxShape = new p2.Box({
+                width: state.width, 
+                height: state.height
+            });
+        }
+
         this.boxShape.material = state.material;
-        this.body = new p2.Body({
-            mass: state.mass,
-            position: [state.x, state.y]
-            //angularVelocity: state.spin
-        });
+
+        if(state.name == "Box 1") {
+            this.body = new p2.Body({
+                mass: state.mass,
+                position: [state.x, state.y],
+                angle: 0.785398
+            });
+        } else {
+            this.body = new p2.Body({
+                mass: state.mass,
+                position: [state.x + (state.width / 2), state.y + (state.height / 2)]
+            });
+        }
+        
+        
         this.body.addShape(this.boxShape)
 
-        this.collider = CollisionSystem.createRectangleCollider(0, 0, state.width, state.height)    
+        this.collider = CollisionSystem.createRectangleCollider(state.x, state.y, 50, 50)    
     }
 
     get x() {
@@ -50,6 +71,8 @@ Box.protocol = {
     y: { type: nengi.Number, interp: true },
     rotation: { type: nengi.RotationFloat32, interp: true },
     mass: { type: nengi.Number, interp: true },
+    color: nengi.String,
+    radius: nengi.UInt16,
     width: nengi.UInt16,
     height: nengi.UInt16,
 }

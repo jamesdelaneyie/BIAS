@@ -1,11 +1,17 @@
 import { Joystick } from './graphics/Joystick';
 import * as PIXI from 'pixi.js'
-
+import isMobile from 'ismobilejs'
+import UIBuilder from './graphics/UIBuilder.js'
 
 class InputSystem {
+
     constructor(renderer) {
         this.canvasEle = document.getElementById('main-canvas')
         this.onmousemove = null
+
+        this.UIBuilder = new UIBuilder();
+        renderer.stage.addChild(this.UIBuilder);
+
 
         this.currentState = {
             w: false,
@@ -17,7 +23,8 @@ class InputSystem {
             rotation: 0,
             mx: 0,
             my: 0,
-            mouseDown: false
+            mouseDown: false,
+            message: ""
         }
 
         this.frameState = {
@@ -29,13 +36,29 @@ class InputSystem {
             rotation: 0,
             r: false,
             mouseDown: false,
-            justReleasedR: false
+            justReleasedR: false,
+            message: ""
         }
 
+        
+
+        this.isMobile = isMobile();
+
         // disable right click
-        document.addEventListener('contextmenu', event =>
+        /*document.addEventListener('contextmenu', event =>
             event.preventDefault()
-        )
+        )*/
+
+        let iframe = "";
+
+        document.body.addEventListener("mousedown", function(e) {
+            console.log(e.target.nodeName, e.target.id)
+            if (e.target.nodeName === "DIV"){
+              document.getElementById("iframe").remove()
+              e.target.remove()
+            }
+          }, false)
+
 
         //if(isMobile == false) {
 
@@ -67,6 +90,31 @@ class InputSystem {
                     this.currentState.r = true
                     this.frameState.r = true
                 }
+
+                if (event.keyCode === 13) {
+                    console.log(this.UIBuilder)
+                    //this.frameState.message = this.UIBuilder.getText();
+                    this.currentState.message = this.UIBuilder.getText();//this.frameState.message;
+                    this.UIBuilder.clearText();
+                } 
+
+                if (event.keyCode === 16) {
+                    iframe = document.createElement('iframe');
+                    iframe.src = "http://vylevylevyle.com/drk_webvr_test/"
+                    iframe.style = "position:absolute;top:50%;left:50%;transform:translateX(-50%)translateY(-50%);border:0;width:1120px;height:630px"
+                    iframe.allow = "autoplay"
+                    iframe.id = "iframe"
+                    iframe.allowfullscreen = "allowfullscreen"
+                    //document.body.appendChild(iframe);
+
+                    var close = document.createElement('div');
+                    close.style = "position:absolute;50px;top:50px;right:50px;background-color:red;width:20px;height:20px"
+                    //document.body.appendChild(close);
+                    
+                    
+                    
+                } 
+
             })
 
             document.addEventListener('keyup', event => {
@@ -91,6 +139,11 @@ class InputSystem {
                     }
                     this.currentState.r = false
                 }
+                if (event.keyCode === 13) {
+                    this.frameState.message = ""
+                    this.currentState.message = ""
+                    
+                }
             })
 
             document.addEventListener('mousemove', event => {
@@ -109,12 +162,22 @@ class InputSystem {
 
             document.addEventListener('mouseup', event => {
                 this.currentState.mouseDown = false
+                
             })
 
+            if(this.isMobile) {
+                var joypadSize = 1
+            } else {
+                var joypadSize = 0.5
+            }
+
+            console.log(this.isMobile.any)
+
+
             this.leftController = new Joystick({
-            
-                outerScale: { x: 0.5, y: 0.5 },
-                innerScale: { x: 0.5, y: 0.5 },
+                
+                outerScale: { x: joypadSize, y: joypadSize },
+                innerScale: { x: joypadSize, y: joypadSize },
             
                 onStart: (data) => {
                     this.currentState.mouseDown = false
@@ -231,17 +294,16 @@ class InputSystem {
                     this.currentState.d = false
                 }
             });
-            this.leftController.position.set(this.leftController.width, window.innerHeight - this.leftController.height);
-            
-            renderer.stage.addChild(this.leftController);
-
-            
-
+           
+            if(this.isMobile.any || window.innerWidth < 600) {
+                this.leftController.position.set(this.leftController.width, window.innerHeight - this.leftController.height);
+                renderer.stage.addChild(this.leftController);
+            }
 
             this.rightController = new Joystick({
             
-                outerScale: { x: 0.5, y: 0.5 },
-                innerScale: { x: 0.5, y: 0.5 },
+                outerScale: { x: joypadSize, y: joypadSize },
+                innerScale: { x: joypadSize, y: joypadSize },
             
                 onStart: (data) => {
                     this.currentState.mouseDown = false
@@ -260,13 +322,25 @@ class InputSystem {
                     this.currentState.mouseDown = false
                 }
             });
-            this.rightController.position.set(window.innerWidth - this.rightController.width, window.innerHeight - this.rightController.height);
+            if(this.isMobile.any || window.innerWidth < 600) {
+                this.rightController.position.set(window.innerWidth - this.rightController.width, window.innerHeight - this.rightController.height);
+                renderer.stage.addChild(this.rightController);
+            }
+           
             
-            renderer.stage.addChild(this.rightController);
 
 
         //}
     }
+
+    isMobile(){
+        if(isMobile(window.navigator).any === true) {
+            return true
+        } else {
+            return false
+        }
+    }
+
 
     releaseKeys() {
         this.frameState.w = this.currentState.w
@@ -276,7 +350,9 @@ class InputSystem {
         this.frameState.r = this.currentState.r
         this.frameState.rotation = this.currentState.rotation
         this.frameState.mouseDown = this.currentState.mouseDown
+        this.frameState.message = this.currentState.message
         this.frameState.justReleasedR = false
+        this.frameState.message = this.currentState.message
     }
 }
 

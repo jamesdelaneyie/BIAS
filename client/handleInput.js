@@ -1,15 +1,23 @@
 import MoveCommand from '../common/command/MoveCommand.js'
 import FireCommand from '../common/command/FireCommand.js'
+import SpeakCommand from '../common/command/SpeakCommand.js'
 import applyCommand from '../common/applyCommand.js'
 import { fire } from '../common/weapon.js'
 import handleShot from './handleShot.js'
 import isMobile from 'ismobilejs'
+import UIBuilder from './graphics/UIBuilder.js'
 
 const handleInput = (inputSystem, state, client, renderer, delta) => {
     const input = inputSystem.frameState
     inputSystem.releaseKeys()
 
     const { myRawEntity, obstacles, boxes} = state
+
+    /*const UI = new UIBuilder();
+    var message = UI.getText();
+    console.log(message)*/
+
+    
 
     /* all of this is just for our own entity */
     if (myRawEntity) {
@@ -28,9 +36,16 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
             rotationAmount = input.rotation
         }
         const moveCommand = new MoveCommand(input.w, input.a, input.s, input.d, rotationAmount, delta)
-
-        // send moveCommand to the server
         client.addCommand(moveCommand)
+
+        //console.log(input.message);
+        if(input.message != "") {
+            const speakCommand = new SpeakCommand(input.message, myRawEntity.x, myRawEntity.y)
+            client.addCommand(speakCommand)
+        }
+       
+
+
 
         // apply moveCommand  to our local entity
         applyCommand(myRawEntity, moveCommand, obstacles, boxes)

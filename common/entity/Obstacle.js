@@ -8,7 +8,7 @@ class Obstacle {
         this.y = state.y
         this.width = state.width
         this.height = state.height
-        this.collider = CollisionSystem.createRectangleCollider(state.x, state.y, state.width, state.height)    }
+        this.collider = CollisionSystem.createRectangleCollider(state.x + 25, state.y + 25, state.width, state.height)    }
 }
 
 Obstacle.protocol = {
