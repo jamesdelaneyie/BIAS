@@ -5,6 +5,7 @@ import WeaponFired from './message/WeaponFired.js'
 import Notification from './message/Notification.js'
 import MoveCommand from './command/MoveCommand.js'
 import FireCommand from './command/FireCommand.js'
+import SpeakCommand from './command/SpeakCommand.js'
 import Obstacle from './entity/Obstacle.js'
 import Box from './entity/Box.js'
 
@@ -34,7 +35,8 @@ const config = {
         ],
         commands: [
             ['MoveCommand', MoveCommand],
-            ['FireCommand', FireCommand]
+            ['FireCommand', FireCommand],
+            ['SpeakCommand', SpeakCommand]
         ],
         basics: []
     }

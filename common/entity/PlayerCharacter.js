@@ -3,7 +3,7 @@ import CollisionSystem from '../CollisionSystem.js'
 import p2 from 'p2'
 
 class PlayerCharacter {
-    constructor() {
+    constructor(state) {
         // x & y are getters
         this.xV = 0
         this.yV = 0
@@ -11,11 +11,14 @@ class PlayerCharacter {
         this.rotation = 0
         this.hitpoints = 100
         this.isAlive = true
-        this.speed = 600
+        this.speed = 400
         this.size = 25
         this.mass = 5
         this.material = new p2.Material();
         this.footDown = false
+        this.color = state.color
+        this.name = state.name
+        this.self = state.self;
 
         this.circleShape = new p2.Circle({
             radius: this.size
@@ -36,7 +39,7 @@ class PlayerCharacter {
             acc: 0
         }
 
-        this.collider = CollisionSystem.createCircleCollider(0, 0, 2)
+        this.collider = CollisionSystem.createCircleCollider(0, 0, 25)
         
     }
 
@@ -65,6 +68,9 @@ PlayerCharacter.protocol = {
     rotation: { type: nengi.RotationFloat32, interp: true },
     delta: nengi.Number,
     isAlive: nengi.Boolean,
+    color: nengi.String,
+    name: nengi.String,
+    self: nengi.Boolean,
     hitpoints: nengi.UInt8
 }
 

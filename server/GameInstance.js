@@ -1,6 +1,7 @@
 import nengi from 'nengi'
 import nengiConfig from '../common/nengiConfig.js'
 import p2 from 'p2'
+import axios from 'axios';
 import PlayerCharacter from '../common/entity/PlayerCharacter.js'
 import Identity from '../common/message/Identity.js'
 import WeaponFired from '../common/message/WeaponFired.js'
@@ -14,7 +15,8 @@ import setupBoxes from './setupBoxes.js'
 import { fire } from '../common/weapon.js'
 import Notification from '../common/message/Notification'
 import lagCompensatedHitscanCheck from './lagCompensatedHitscanCheck'
-import P2Pixi from 'p2Pixi'
+import censoring from 'chat-censoring'
+//import P2Pixi from 'p2Pixi'
 
 
 
@@ -23,13 +25,31 @@ class GameInstance {
         this.instance = new nengi.Instance(nengiConfig, { port: 8079 })
         instanceHookAPI(this.instance)
 
-        // game-related state
-
-       // const newGame = new P2Pixi.Game();
     
-        this.world = new p2.World({gravity: [0, 0]});
-        this.obstacles = setupObstacles(this.instance)
-        this.boxes = setupBoxes(this.instance, this.world)
+        this.world = new p2.World({gravity: [0, 9]});
+        
+        this.room = {
+            width: 800,
+            height: 500,
+            backgroundColor: "#00ff00",
+            borderColor: "#FFFFFF",
+            borderWidth: 20,
+            objects: [
+                {
+                    name: "Box 1",
+                    x: 0,
+                    y: 0,
+                    w: 100,
+                    h: 100,
+                    mass: 1,
+                    color: "#0000FF"
+                }
+            ]
+        }
+        
+        this.boxes = setupBoxes(this.instance, this.world, this.room)
+
+        this.obstacles = setupObstacles(this.instance, this.room)
 
         this.world.on('postStep', function(event){
             // Add horizontal spring force
@@ -38,27 +58,54 @@ class GameInstance {
 
 
         // (the rest is just attached to client objects when they connect)
+        this.instance.on('command::createCommand', ({ command, client, tick }) => {
+            
+            // create a entity for this client
+            /*const playerColor = Math.floor(Math.random()*16777215).toString(16);
+            //const playerName = "NEW BOY";
+            const rawEntity = new PlayerCharacter({color: playerColor, self: true })
+            rawEntity.x = 500
+            rawEntity.y = 500
+            this.world.addBody(rawEntity.body);*/
+
+        })
 
         this.instance.on('connect', ({ client, callback }) => {
+            //console.log(client);
             // create a entity for this client
-            const rawEntity = new PlayerCharacter()
+            const playerColor = Math.floor(Math.random()*16777215).toString(16);
+
+            /*axios({
+                method: 'get',
+                url: 'https://randomuser.me/api/'
+            })
+            .then(function (response) {
+                  console.log(response.data.results[0]['name']['first']);
+            });*/
+
+            const playerName = "NEW BOY";
+            const rawEntity = new PlayerCharacter({color: playerColor, name: playerName, self: true })
             rawEntity.x = 500
             rawEntity.y = 500
             this.world.addBody(rawEntity.body);
+
+            
 
             // make the raw entity only visible to this client
             const channel = this.instance.createChannel()
             channel.subscribe(client)
 
-            this.instance.message(new Notification('yolo'), client)
-            channel.addMessage(new Notification('private channel created'))
+
+
+            //this.instance.message(new Notification('yolo'), client)
+            //channel.addMessage(new Notification('private channel created'))
 
             channel.addEntity(rawEntity)
             this.instance.addEntity(rawEntity)
             client.channel = channel
 
             // smooth entity is visible to everyone
-            const smoothEntity = new PlayerCharacter()
+            const smoothEntity = new PlayerCharacter({color: playerColor, name: playerName, self: false })
             smoothEntity.x = 500
             smoothEntity.y = 500
             smoothEntity.collidable = true
@@ -66,6 +113,7 @@ class GameInstance {
 
             // tell the client which entities it controls
             this.instance.message(new Identity(rawEntity.nid, smoothEntity.nid), client)
+            
 
             // establish a relation between this entity and the client
             rawEntity.client = client
@@ -82,6 +130,8 @@ class GameInstance {
                 halfHeight: 1000
             }
 
+            this.instance.messageAll(new Notification('welcome to:', 200, 200))
+
             // accept the connection
             callback({ accepted: true, text: 'Welcome!' })
         })
@@ -93,6 +143,32 @@ class GameInstance {
             this.instance.removeEntity(client.smoothEntity)
             client.channel.destroy()
         })
+
+        this.instance.on('command::SpeakCommand', ({ command, client, tick }) => {
+            
+            if(command.text != "") {
+                //console.log(command);
+                //console.log(command)
+                let polite = censoring.checkMessage(command.text, '*');
+                let friendlyMessage = censoring.censorMessage(command.text, '*');
+                this.instance.messageAll(new Notification(friendlyMessage, command.x, command.y))
+                console.log(polite);
+
+               /* this.instance.clients.forEach(client => {
+
+                    
+                    console.log(client);
+                    //client.addMessage(new Notification(command.text))
+
+                })*/
+                //this.instance.message(new Notification(command.text), client)
+
+                //channel.addMessage(new Notification(command.text))
+                //client.channel.message(new Notification(command.text), client)
+            }
+        })
+
+        
 
         this.instance.on('command::MoveCommand', ({ command, client, tick }) => {
             // move this client's entity
@@ -111,6 +187,8 @@ class GameInstance {
             // shoot from the perspective of this client's entity
             const rawEntity = client.rawEntity
             const smoothEntity = client.smoothEntity
+
+            
 
             if (fire(rawEntity)) {
                 let endX = command.x
@@ -160,7 +238,7 @@ class GameInstance {
             }
         })
 
-        this.world.step(1/4);
+        this.world.step(1/5);
 
         this.boxes.forEach(box => {
             
@@ -168,6 +246,8 @@ class GameInstance {
             box.y = box.body.position[1]
             box.rotation = box.body.angle 
 
+            //console.log(box.body.position[0], box.body.position[1]);
+            //console.log(box.collider.polygon)
             //box.rotation = box.body.angle
             //box.collider.polygon.pos.x = box.body.position[0] - box.width/2
             //box.collider.polygon.pos.y = box.body.position[1] - box.height/2

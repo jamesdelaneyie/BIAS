@@ -2,7 +2,7 @@
 import create from './game.js'
 
 window.onload = function() {
-    console.log('window loaded')
+    //console.log('window loaded')
     const update = create()
     let tick = 0
     let previous = performance.now()
