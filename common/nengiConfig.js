@@ -6,8 +6,10 @@ import Notification from './message/Notification.js'
 import MoveCommand from './command/MoveCommand.js'
 import FireCommand from './command/FireCommand.js'
 import SpeakCommand from './command/SpeakCommand.js'
+import RespawnCommand from './command/RespawnCommand.js'
 import Obstacle from './entity/Obstacle.js'
 import Box from './entity/Box.js'
+import Floor from './entity/Floor.js'
 
 const config = {
     UPDATE_RATE: 20, 
@@ -23,6 +25,7 @@ const config = {
 
     protocols: {
         entities: [
+            ['Floor', Floor],
             ['PlayerCharacter', PlayerCharacter],
             ['Obstacle', Obstacle],
             ['Box', Box]
@@ -36,7 +39,8 @@ const config = {
         commands: [
             ['MoveCommand', MoveCommand],
             ['FireCommand', FireCommand],
-            ['SpeakCommand', SpeakCommand]
+            ['SpeakCommand', SpeakCommand],
+            ['RespawnCommand', RespawnCommand]
         ],
         basics: []
     }

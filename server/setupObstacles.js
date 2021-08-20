@@ -5,34 +5,58 @@ export default (instance, room) => {
 
     const obstacles = new Map()
 
-    /*const obsA = new Obstacle({ x: 150, y: 150, width: 250, height: 150 })
-    instance.addEntity(obsA)
-    obstacles.set(obsA.nid, obsA)
+    let roomX = room.x
+    let roomY = room.y 
+    let roomWidth = room.width
+    let roomHeight = room.height
+    let borderWidth = room.borderWidth
+    let backgroundColor = room.backgroundColor
 
-    const obsB = new Obstacle({ x: 450, y: 600, width: 60, height: 150 })
-    instance.addEntity(obsB)
-    obstacles.set(obsB.nid, obsB)*/
-
-    const roomWidth = room.width
-    const roomHeight = room.height
-    const borderWidth = room.borderWidth
-
-
-    const topWall = new Obstacle({ x: 0, y: 0, width: roomWidth, height: borderWidth })
+    const topWall = new Obstacle({ 
+        x: roomX, 
+        y: roomY, 
+        width: roomWidth + borderWidth, 
+        height: borderWidth, 
+        border: borderWidth,
+        color: backgroundColor
+    })
     instance.addEntity(topWall)
     obstacles.set(topWall.nid, topWall)
 
-   const rightWall = new Obstacle({ x: roomWidth, y: 0, width: borderWidth, height: roomHeight  + borderWidth })
+    const rightWall = new Obstacle({ 
+        x: roomX + roomWidth + borderWidth, 
+        y: roomY, 
+        width: borderWidth, 
+        height: roomHeight + borderWidth,
+        border: borderWidth,
+        color: backgroundColor 
+        })
     instance.addEntity(rightWall)
     obstacles.set(rightWall.nid, rightWall)
 
-    const leftWall = new Obstacle({ x: 0, y: 0, width: borderWidth, height: roomHeight })
+    const bottomWall = new Obstacle({ 
+        x: roomX, 
+        y: roomHeight + (borderWidth) + roomY, 
+        width: roomWidth + (borderWidth*2), 
+        height: borderWidth, 
+        border: borderWidth,
+        color: backgroundColor
+    })
+    instance.addEntity(bottomWall)
+    obstacles.set(bottomWall.nid, bottomWall)
+
+    const leftWall = new Obstacle({ 
+        x: roomX,
+        y: roomY,
+        width: borderWidth,
+        height: roomHeight + (borderWidth),
+        border: borderWidth,
+        color: backgroundColor
+    })
     instance.addEntity(leftWall)
     obstacles.set(leftWall.nid, leftWall)
 
-    const bottomWall = new Obstacle({ x: 0, y: roomHeight, width: roomWidth, height: borderWidth})
-    instance.addEntity(bottomWall)
-    obstacles.set(bottomWall.nid, bottomWall)
+ 
 
     return obstacles
 }

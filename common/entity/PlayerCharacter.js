@@ -12,7 +12,7 @@ class PlayerCharacter {
         this.hitpoints = 100
         this.isAlive = true
         this.speed = 400
-        this.size = 25
+        this.size = 30
         this.mass = 5
         this.material = new p2.Material();
         this.footDown = false

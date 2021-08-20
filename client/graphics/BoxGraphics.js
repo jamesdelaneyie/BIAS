@@ -1,6 +1,4 @@
 import * as PIXI from 'pixi.js'
-import {AsciiFilter} from '@pixi/filter-ascii';
-
 
 class BoxGraphics extends PIXI.Container {
     constructor(state) {
@@ -20,7 +18,7 @@ class BoxGraphics extends PIXI.Container {
         this.body.beginFill(this.color)
 
         this.body.drawRect(-state.width/2, -state.height/2, state.width, state.height)
-        this.body.pivot.set(0, 0)
+        //this.body.pivot.set(0, 0)
         this.body.endFill()
 
         /*if(this.radius > 0) {

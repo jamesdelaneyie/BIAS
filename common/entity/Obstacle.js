@@ -8,7 +8,12 @@ class Obstacle {
         this.y = state.y
         this.width = state.width
         this.height = state.height
-        this.collider = CollisionSystem.createRectangleCollider(state.x + 25, state.y + 25, state.width, state.height)    }
+        this.border = state.border
+        //console.log(this.border)
+        this.collider = CollisionSystem.createRectangleCollider(state.x, state.y, state.width, state.height)  
+        //        this.collider = CollisionSystem.createRectangleCollider(this.x + this.border*2, this.y + this.border*2, state.width - this.border, state.height - this.border)    }
+  
+    }
 }
 
 Obstacle.protocol = {
@@ -16,6 +21,7 @@ Obstacle.protocol = {
     y: nengi.UInt16,
     width: nengi.UInt16,
     height: nengi.UInt16,
+    border: nengi.UInt16
 }
 
 export default Obstacle

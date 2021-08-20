@@ -92,15 +92,29 @@ class InputSystem {
                 }
 
                 if (event.keyCode === 13) {
-                    console.log(this.UIBuilder)
+                    //console.log(this.UIBuilder)
                     //this.frameState.message = this.UIBuilder.getText();
                     this.currentState.message = this.UIBuilder.getText();//this.frameState.message;
                     this.UIBuilder.clearText();
                 } 
 
+                if (event.keyCode === 9) {
+                    //console.log(this.UIBuilder)
+                    //this.frameState.message = this.UIBuilder.getText();
+                    //this.currentState.message = this.UIBuilder.getText();//this.frameState.message;
+                    //this.UIBuilder.clearText();
+                }
+
+                
+
                 if (event.keyCode === 16) {
                     iframe = document.createElement('iframe');
+                    //"https://stealingurfeelin.gs/"
+                    //iframe.allow = "camera"
+                    //                    
+
                     iframe.src = "http://vylevylevyle.com/drk_webvr_test/"
+                    iframe.src = "https://www.youtube.com/embed/daixJKnzc4o?autoplay=1&modestbranding=1&showinfo=0&rel=0&fs=0&color=white&controls=0"
                     iframe.style = "position:absolute;top:50%;left:50%;transform:translateX(-50%)translateY(-50%);border:0;width:1120px;height:630px"
                     iframe.allow = "autoplay"
                     iframe.id = "iframe"
@@ -162,7 +176,6 @@ class InputSystem {
 
             document.addEventListener('mouseup', event => {
                 this.currentState.mouseDown = false
-                
             })
 
             if(this.isMobile) {
@@ -171,7 +184,7 @@ class InputSystem {
                 var joypadSize = 0.5
             }
 
-            console.log(this.isMobile.any)
+            //console.log(this.isMobile.any)
 
 
             this.leftController = new Joystick({

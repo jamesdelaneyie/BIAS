@@ -1,38 +1,47 @@
 import * as PIXI from 'pixi.js'
 
-class BackgroundGrid extends PIXI.Container {
-    constructor() {
+class FloorGraphics extends PIXI.Container {
+    constructor(state) {
         super()
 
-        let height = 1000;
-        let width = 1000;
-        let floorColor = PIXI.utils.string2hex('#4DFA66')
-        let gridColor = PIXI.utils.string2hex('#000000')
-        
-        let gridGap = 50
-        //let halfGrid = gridGap/2
-        let gap = 1
+        this.x = state.x
+        this.y = state.y
+        this.width = state.width
+        this.height = state.height
+        this.color = state.color
+
+        // /console.log(this.x)
+        //this.x = this.x/2
+        //this.y = this.y/2
 
         let abyss = new PIXI.Graphics()
-        let abyssColor = PIXI.utils.string2hex('#414141');
+        let abyssColor = PIXI.utils.string2hex(this.color);
         abyss.beginFill(abyssColor)
-        abyss.drawRect(-1000, -1000, 3000, 3000)
+        abyss.drawRect(state.x, state.y, state.width, state.height)
         abyss.endFill()
         this.addChild(abyss)
 
-        let floor = new PIXI.Graphics()
+
+        //let floorColor = PIXI.utils.string2hex('#4DFA66')
+        //let gridColor = PIXI.utils.string2hex('#000000')
+        //console.log(height)
+        //let gridGap = 50
+        //let halfGrid = gridGap/2
+        //let gap = 1
+
+        /*let floor = new PIXI.Graphics()
         floor.beginFill(floorColor)
         floor.drawRect(0, 0, 1000, 1000)
         floor.endFill()
-        this.addChild(floor)
+        this.addChild(floor)*/
 
 
         //Horizontal Lines
-        for (var i = 0; i < 21; i++) {           
+        /*for (var i = 0; i < 21; i++) {           
             let line = new PIXI.Graphics()
             line.lineStyle(gap, 0x222222)
             line.moveTo(i * gridGap, 0)
-            line.lineTo(i * gridGap, width)
+            line.lineTo(i * gridGap, this.width)
             line.alpha = 0.1
             this.addChild(line)
         }
@@ -42,10 +51,10 @@ class BackgroundGrid extends PIXI.Container {
             let line = new PIXI.Graphics()
             line.lineStyle(gap, 0x222222)
             line.moveTo(0, i * gridGap)
-            line.lineTo(height, i * gridGap)
+            line.lineTo(this.height, i * gridGap)
             line.alpha = 0.1
             this.addChild(line)
-        }
+        }*/
 
         //Grid Dots
         /*for (var i = 1; i < 21; i++) { 
@@ -63,6 +72,9 @@ class BackgroundGrid extends PIXI.Container {
         }*/
 
     }
+    update(delta) {
+
+    }
 }
 
-export default BackgroundGrid
+export default FloorGraphics

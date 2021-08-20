@@ -18,37 +18,22 @@ class Box {
         
        
 
-        if(state.name == "Box 1") {
-            this.boxShape = new p2.Box({
-                width: 100, 
-                height: 100
-            });
-        } else {
-            this.boxShape = new p2.Box({
-                width: state.width, 
-                height: state.height
-            });
-        }
 
+        this.boxShape = new p2.Box({
+            width: state.width, 
+            height: state.height
+        });
         this.boxShape.material = state.material;
+        this.body = new p2.Body({
+            mass: state.mass,
+            position: [state.x, state.y],
+            //angularVelocity: 0.1
+        });
 
-        if(state.name == "Box 1") {
-            this.body = new p2.Body({
-                mass: state.mass,
-                position: [state.x, state.y],
-                angle: 0.785398
-            });
-        } else {
-            this.body = new p2.Body({
-                mass: state.mass,
-                position: [state.x + (state.width / 2), state.y + (state.height / 2)]
-            });
-        }
-        
         
         this.body.addShape(this.boxShape)
 
-        this.collider = CollisionSystem.createRectangleCollider(state.x, state.y, 50, 50)    
+        this.collider = CollisionSystem.createRectangleCollider(0,0,0,0)    
     }
 
     get x() {

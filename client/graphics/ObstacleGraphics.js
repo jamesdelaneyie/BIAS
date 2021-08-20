@@ -9,12 +9,18 @@ class ObstacleGraphics extends PIXI.Container {
         this.y = state.y
         this.width = state.width
         this.height = state.height
+        this.border = state.border
 
-        this.wrapper = new PIXI.Container()
+        //this.wrapper = new PIXI.Container()
         
         this.body = new PIXI.Graphics()
-        this.body.beginFill(0xffffff)
-        this.body.drawRect(0, 0, state.width, state.height)
+        const color = PIXI.utils.string2hex("#343434");
+        this.body.beginFill(color)
+        this.body.drawRect(-this.border, -this.border, state.width, state.height)
+        this.body.endFill()
+        this.addChild(this.body)
+        
+        //this.addChild(this.wrapper)
 
         /*let texture = PIXI.Texture.from('images/pattern-1.png');
         if(state.width == 60) {
@@ -31,10 +37,7 @@ class ObstacleGraphics extends PIXI.Container {
         this.wrapper.addChild(bunny);*/
 
 
-        this.body.endFill()
-        this.body.tint = 0xff0000
-        this.addChild(this.body)
-        this.addChild(this.wrapper)
+        
     }
 
     update(delta) {
