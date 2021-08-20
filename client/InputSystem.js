@@ -24,7 +24,8 @@ class InputSystem {
             mx: 0,
             my: 0,
             mouseDown: false,
-            message: ""
+            message: "",
+            viewArt: false,
         }
 
         this.frameState = {
@@ -37,7 +38,8 @@ class InputSystem {
             r: false,
             mouseDown: false,
             justReleasedR: false,
-            message: ""
+            message: "",
+            viewArt: false
         }
 
         
@@ -86,7 +88,7 @@ class InputSystem {
                 }
 
                 // r
-                if (event.keyCode === 82) {
+                if (event.keyCode === 219) {
                     this.currentState.r = true
                     this.frameState.r = true
                 }
@@ -105,24 +107,36 @@ class InputSystem {
                     //this.UIBuilder.clearText();
                 }
 
-                
-
-                if (event.keyCode === 16) {
+                //Right Bracket
+                if(event.keyCode === 221) {
+                    this.currentState.viewArt = true
+                    this.frameState.viewArt = true
                     iframe = document.createElement('iframe');
-                    //"https://stealingurfeelin.gs/"
-                    //iframe.allow = "camera"
-                    //                    
-
-                    iframe.src = "http://vylevylevyle.com/drk_webvr_test/"
                     iframe.src = "https://www.youtube.com/embed/daixJKnzc4o?autoplay=1&modestbranding=1&showinfo=0&rel=0&fs=0&color=white&controls=0"
                     iframe.style = "position:absolute;top:50%;left:50%;transform:translateX(-50%)translateY(-50%);border:0;width:1120px;height:630px"
                     iframe.allow = "autoplay"
                     iframe.id = "iframe"
                     iframe.allowfullscreen = "allowfullscreen"
-                    //document.body.appendChild(iframe);
+                    document.body.appendChild(iframe);
 
                     var close = document.createElement('div');
                     close.style = "position:absolute;50px;top:50px;right:50px;background-color:red;width:20px;height:20px"
+                    document.body.appendChild(close);
+                }
+
+                    //shift
+                if (event.keyCode === 16) {
+                    //iframe = document.createElement('iframe');
+                    //"https://stealingurfeelin.gs/"
+                    //iframe.allow = "camera"
+                    //                    
+
+                    //iframe.src = "http://vylevylevyle.com/drk_webvr_test/"
+                    
+                    //document.body.appendChild(iframe);
+
+                   // var close = document.createElement('div');
+                    //close.style = "position:absolute;50px;top:50px;right:50px;background-color:red;width:20px;height:20px"
                     //document.body.appendChild(close);
                     
                     
@@ -146,7 +160,7 @@ class InputSystem {
                     this.currentState.d = false
                 }
 
-                if (event.keyCode === 82) {
+                if (event.keyCode === 219) {
                     if (this.currentState.r === true) {
                         // used to implement reload on keyup instead of keydown
                         this.frameState.justReleasedR = true
@@ -156,8 +170,14 @@ class InputSystem {
                 if (event.keyCode === 13) {
                     this.frameState.message = ""
                     this.currentState.message = ""
-                    
                 }
+
+                //Right Bracket
+                if(event.keyCode === 221) {
+                    this.currentState.viewArt = false
+                }
+
+
             })
 
             document.addEventListener('mousemove', event => {
@@ -366,6 +386,7 @@ class InputSystem {
         this.frameState.message = this.currentState.message
         this.frameState.justReleasedR = false
         this.frameState.message = this.currentState.message
+        this.frameState.viewArt = this.currentState.viewArt
     }
 }
 
