@@ -1,8 +1,9 @@
 import nengi from 'nengi'
 
 class Notification {
-    constructor(text, x, y) {
+    constructor(text, type, x, y) {
         this.text = text
+        this.type = type
         this.x = x
         this.y = y
     }
@@ -10,6 +11,7 @@ class Notification {
 
 Notification.protocol = {
     text: nengi.String,
+    type: nengi.String,
     x: nengi.Int32,
     y: nengi.Int32
 }

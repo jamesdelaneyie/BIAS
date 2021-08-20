@@ -8,8 +8,10 @@ import WeaponFired from '../common/message/WeaponFired.js'
 import CollisionSystem from '../common/CollisionSystem.js'
 import followPath from './followPath.js'
 import damagePlayer from './damagePlayer.js'
+import respawnPlayer from './respawnPlayer.js'
 import instanceHookAPI from './instanceHookAPI.js'
 import applyCommand from '../common/applyCommand.js'
+import setupFloors from './setupFloors.js'
 import setupObstacles from './setupObstacles.js'
 import setupBoxes from './setupBoxes.js'
 import { fire } from '../common/weapon.js'
@@ -25,31 +27,67 @@ class GameInstance {
         this.instance = new nengi.Instance(nengiConfig, { port: 8079 })
         instanceHookAPI(this.instance)
 
-    
-        this.world = new p2.World({gravity: [0, 9]});
-        
+        this.world = new p2.World({gravity: [0, 0]});
         this.room = {
+            x: 0,
+            y: 0,
             width: 800,
-            height: 500,
+            height: 800,
+            backgroundColor: "#ff0000",
+            borderColor: "#FFFFFF",
+            borderWidth: 25,
+        }
+        this.floors = setupFloors(this.instance, this.room)
+        this.obstacles = setupObstacles(this.instance, this.room)
+        
+        
+        this.room2 = {
+            x: 900,
+            y: 150,
+            width: 600,
+            height: 600,
             backgroundColor: "#00ff00",
             borderColor: "#FFFFFF",
-            borderWidth: 20,
-            objects: [
-                {
-                    name: "Box 1",
-                    x: 0,
-                    y: 0,
-                    w: 100,
-                    h: 100,
-                    mass: 1,
-                    color: "#0000FF"
-                }
-            ]
+            borderWidth: 40,
         }
+        this.floors = setupFloors(this.instance, this.room2)
+        this.obstacles2 = setupObstacles(this.instance, this.room2)
         
-        this.boxes = setupBoxes(this.instance, this.world, this.room)
+        this.room3 = {
+            x: 0,
+            y: 900,
+            width: 800,
+            height: 800,
+            backgroundColor: "#0000ff",
+            borderColor: "#FFFFFF",
+            borderWidth: 25,
+        }
+        this.floors = setupFloors(this.instance, this.room3)
+        this.obstacles3 = setupObstacles(this.instance, this.room3)
 
-        this.obstacles = setupObstacles(this.instance, this.room)
+        this.room4 = {
+            x: 850,
+            y: 850,
+            width: 600,
+            height: 200,
+            backgroundColor: "#ff00ff",
+            borderColor: "#FFFFFF",
+            borderWidth: 10
+        }
+        this.floors = setupFloors(this.instance, this.room4)
+        this.obstacles4 = setupObstacles(this.instance, this.room4)
+
+        
+
+        const boxes = new Map()
+        this.boxes = setupBoxes(this.instance, this.world, this.room, boxes)
+        this.boxesTwo = setupBoxes(this.instance, this.world, this.room2, boxes)
+        this.boxesThree = setupBoxes(this.instance, this.world, this.room3, boxes)
+        this.boxesFour = setupBoxes(this.instance, this.world, this.room4, boxes)
+
+        this.boxes = boxes
+
+        
 
         this.world.on('postStep', function(event){
             // Add horizontal spring force
@@ -58,7 +96,7 @@ class GameInstance {
 
 
         // (the rest is just attached to client objects when they connect)
-        this.instance.on('command::createCommand', ({ command, client, tick }) => {
+        this.instance.on('command::joinCommand', ({ command, client, tick }) => {
             
             // create a entity for this client
             /*const playerColor = Math.floor(Math.random()*16777215).toString(16);
@@ -73,8 +111,11 @@ class GameInstance {
         this.instance.on('connect', ({ client, callback }) => {
             //console.log(client);
             // create a entity for this client
-            const playerColor = Math.floor(Math.random()*16777215).toString(16);
+            // playerColor = Math.floor(Math.random()*16777215).toString(16);
 
+            const rndInt = Math.floor(Math.random() * 6) + 0;
+            const playerColor = Math.floor(Math.random()*16777215).toString(16);//this.room.playerColors[rndInt]
+            console.log(playerColor)
             /*axios({
                 method: 'get',
                 url: 'https://randomuser.me/api/'
@@ -84,12 +125,13 @@ class GameInstance {
             });*/
 
             const playerName = "NEW BOY";
-            const rawEntity = new PlayerCharacter({color: playerColor, name: playerName, self: true })
-            rawEntity.x = 500
-            rawEntity.y = 500
+            const rawEntity = new PlayerCharacter({color: ""+playerColor+"", name: playerName, self: true })
+            
+            rawEntity.x = this.room.width/2
+            rawEntity.y = this.room.height/2
+            
             this.world.addBody(rawEntity.body);
 
-            
 
             // make the raw entity only visible to this client
             const channel = this.instance.createChannel()
@@ -126,8 +168,8 @@ class GameInstance {
             client.view = {
                 x: rawEntity.x,
                 y: rawEntity.y,
-                halfWidth: 1000,
-                halfHeight: 1000
+                halfWidth: 2000,
+                halfHeight: 2000
             }
 
             this.instance.messageAll(new Notification('welcome to:', 200, 200))
@@ -146,27 +188,24 @@ class GameInstance {
 
         this.instance.on('command::SpeakCommand', ({ command, client, tick }) => {
             
-            if(command.text != "") {
-                //console.log(command);
-                //console.log(command)
+            if(command.text == "<3") {
+                this.instance.messageAll(new Notification('❤️', 'talk', command.x, command.y))
+            } else {
                 let polite = censoring.checkMessage(command.text, '*');
                 let friendlyMessage = censoring.censorMessage(command.text, '*');
-                this.instance.messageAll(new Notification(friendlyMessage, command.x, command.y))
+
+                this.instance.messageAll(new Notification(friendlyMessage, 'text', command.x, command.y))
                 console.log(polite);
 
-               /* this.instance.clients.forEach(client => {
-
-                    
-                    console.log(client);
-                    //client.addMessage(new Notification(command.text))
-
-                })*/
-                //this.instance.message(new Notification(command.text), client)
-
-                //channel.addMessage(new Notification(command.text))
-                //client.channel.message(new Notification(command.text), client)
             }
         })
+
+        this.instance.on('command::RespawnCommand', ({ command, client, tick }) => {
+            const rawEntity = client.rawEntity
+            const smoothEntity = client.smoothEntity
+            respawnPlayer(rawEntity, smoothEntity);
+        })
+
 
         
 
@@ -175,6 +214,7 @@ class GameInstance {
             const rawEntity = client.rawEntity
             const smoothEntity = client.smoothEntity
             applyCommand(rawEntity, command, this.obstacles, this.boxes)
+            
             client.positions.push({
                 x: rawEntity.x,
                 y: rawEntity.y,
@@ -245,15 +285,7 @@ class GameInstance {
             box.x = box.body.position[0]
             box.y = box.body.position[1]
             box.rotation = box.body.angle 
-
-            //console.log(box.body.position[0], box.body.position[1]);
-            //console.log(box.collider.polygon)
-            //box.rotation = box.body.angle
-            //box.collider.polygon.pos.x = box.body.position[0] - box.width/2
-            //box.collider.polygon.pos.y = box.body.position[1] - box.height/2
-            //box.collider.polygon.angle = box.body.angle
-            //console.log(box.collider.polygon)
-            //box.collider.polygon.
+            
         })
 
         // when instance.updates, nengi sends out snapshots to every client

@@ -36,7 +36,7 @@ class PlayerGraphics extends PIXI.Container {
 
         //draw graphics   
         const aura = new PIXI.Graphics();
-        const auraColor = PIXI.utils.string2hex("#"+this.color+"");;
+        const auraColor = PIXI.utils.string2hex(""+this.color+"");
         
 
         aura.beginFill(auraColor);
@@ -105,10 +105,14 @@ class PlayerGraphics extends PIXI.Container {
             this.nose.alpha = 0
             this.body.visible = 0;
             this.auraContainer.visible = 0
+            this.info.visible = 0
         } else {
-            this.nose.alpha = 1
-           // this.body.visible = 1;
-            //this.auraContainer.visible = 1
+            if(!this.self == false) {
+                this.nose.alpha = 1
+                this.body.visible = 1;
+                this.auraContainer.visible = 1
+                this.info.visible = 1
+            }
         }
         this.auraContainer.scale.set(0.6 + Math.sin((this.count/10)) * 0.1, 0.6 + Math.sin((this.count/10)) * 0.1);
         this.auraContainer.alpha = 0.2 + Math.sin((this.count/10)) * 0.1;

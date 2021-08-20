@@ -1,7 +1,6 @@
 
 import * as PIXI from 'pixi.js'
 import * as PUXI from 'puxi.js'
-import BackgroundGrid from './BackgroundGrid.js'
 import UIBuilder from './UIBuilder.js'
 
 
@@ -10,8 +9,6 @@ import { EmoteSelector } from 'pixi-emote-selector'
 import MultiStyleText from 'pixi-multistyle-text'
 import cryptoRandomString from 'crypto-random-string'
 
-//pass a port via argument
-//parse url NODE
 
 class PIXIRenderer {
 
@@ -30,7 +27,6 @@ class PIXIRenderer {
             resolution: 2
         })
 
-
         this.stage = new PIXI.Container()
         this.camera = new PIXI.Container()
 
@@ -44,26 +40,17 @@ class PIXIRenderer {
 
         this.stage.addChild(this.camera)
 
-
-
-        this.background.addChild(new BackgroundGrid({name:'Lobby', width:1000, height:1000}));
-
-        const blurFilter1 = new CRTFilter({
-            vignetting: 0.3, 
-            vignettingAlpha: 1,
+        /*const blurFilter1 = new CRTFilter({
+            vignetting: 0.5, 
+            vignettingAlpha: 0.,
             vignettingBlur: 0.2
         });
-        //this.background.filters = [blurFilter1];
-
-        //Build UI
-        //this.UILayer = new UIBuilder(); 
-
-        //this.stage.addChild(this.UILayer)
+        this.foreground.filters = [blurFilter1];
+        //this.background.filters = [blurFilter1];*/
 
 
         window.addEventListener('resize', () => {
             this.resize()
-            //this.UILayer.resize();
         })
     }
 
@@ -99,7 +86,6 @@ class PIXIRenderer {
             entity.update(delta)
         })
         
-        //this.UILayer.update();
         this.renderer.render(this.stage)
     }
 }

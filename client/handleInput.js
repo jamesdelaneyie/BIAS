@@ -1,6 +1,7 @@
 import MoveCommand from '../common/command/MoveCommand.js'
 import FireCommand from '../common/command/FireCommand.js'
 import SpeakCommand from '../common/command/SpeakCommand.js'
+import RespawnCommand from '../common/command/RespawnCommand.js'
 import applyCommand from '../common/applyCommand.js'
 import { fire } from '../common/weapon.js'
 import handleShot from './handleShot.js'
@@ -11,14 +12,11 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
     const input = inputSystem.frameState
     inputSystem.releaseKeys()
 
-    const { myRawEntity, obstacles, boxes} = state
+    const { myRawEntity, obstacles, boxes, floors} = state
 
     /*const UI = new UIBuilder();
     var message = UI.getText();
     console.log(message)*/
-
-    
-
     /* all of this is just for our own entity */
     if (myRawEntity) {
         // which way are we pointing?
@@ -42,6 +40,11 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
         if(input.message != "") {
             const speakCommand = new SpeakCommand(input.message, myRawEntity.x, myRawEntity.y)
             client.addCommand(speakCommand)
+        }
+
+        if(input.r == true) {
+            const respawnCommand = new RespawnCommand(true)
+            client.addCommand(respawnCommand)
         }
        
 

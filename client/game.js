@@ -21,7 +21,8 @@ const create = () => {
         myRawId: null,
         mySmoothId: null,
         obstacles: new Map(),
-        boxes: new Map()
+        boxes: new Map(),
+        floors: new Map()
     }
 
     clientHookAPI( // API EXTENSION
@@ -48,8 +49,20 @@ const create = () => {
 
     client.on('message::Notification', message => {
         //console.log('Notification', message)
-        addMessage(renderer.middleground, message);
+        if(message.type == "notification") {
+            message.x = 0
+            message.y = 0
+            addMessage(renderer.foreground, message);
+        }
+        if(message.type == "text") {
+            addMessage(renderer.middleground, message);
+        }
+        if(message.type == "talk") {
+            addMessage(renderer.middleground, message);
+        }
+        
     })
+    
 
     //messages to clients / local for view // spacial structure
     //channel is list of entities / 
@@ -61,8 +74,8 @@ const create = () => {
     client.on('connected', res => { console.log('connection?:', res) })
     client.on('disconnected', () => { console.log('connection closed') })
 
-    client.connect('ws://localhost:8079')
-    //client.connect('ws://185.92.221.225:8079')
+    //client.connect('ws://localhost:8079')
+    client.connect('ws://185.92.221.225:8079')
 
 
     const update = (delta, tick, now) => {

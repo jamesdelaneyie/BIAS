@@ -2,7 +2,6 @@ import * as PIXI from 'pixi.js'
 
 const addMessage = (layer, message) => {
 
-    //console.log(layer)
     var visible = false;
     layer.children.some(function(child) {
         if(child.isMessage == true) {
@@ -12,20 +11,6 @@ const addMessage = (layer, message) => {
     });
 
     if(!visible) {
-
-       /* const textBox = new PIXI.Graphics();
-        
-        textBoxShape.beginFill("0XFFFFFF");
-        */
-        //const textBox = new PIXI.Graphics();
-        //const textBoxShape = new PIXI.RoundedRectangle(message.x - 200, message.y - 200, 200, 800, 20)
-        //textBox.addChild(textBoxShape);
-        //layer.addChild(textBox)
-
-
-
-        
-
 
         const style = new PIXI.TextStyle({
             fontFamily: 'Roboto Mono',
@@ -38,22 +23,36 @@ const addMessage = (layer, message) => {
             wordWrapWidth: 250,
             leading: 1
         });
+
+        let text = ""
+        let textBox = ""
+
         
-        const text = new PIXI.Text(message.text, style);
-        text.x = message.x - 50 //(Math.floor(Math.random() * 80) + 20))
-        text.y = message.y - (50 + text.height)// (text.height)//(Math.floor(Math.random() * 80) + 20))
-        text.alpha = 0;
-        text.isMessage = true;
+        if(message.type == 'talk') {
+            text = new PIXI.Text("❤️", style);
+            text.x = message.x - Math.floor(Math.random() * 80) + 20
+            text.y = message.y - Math.floor(Math.random() * 80) + 20
+            text.alpha = 1;
+            text.isMessage = false;
+            layer.addChild(text)
+        } else {
+            text = new PIXI.Text(message.text, style);
+            text.x = message.x - 50 
+            text.y = message.y - (50 + text.height)
+            text.alpha = 0;
+            text.isMessage = true;
 
 
-        const textBox = new PIXI.Graphics()
-        textBox.beginFill(0xFFFFFF)
-        textBox.drawRoundedRect(message.x - 70, message.y - (68 + text.height), text.width+45, text.height+25, 20)
-        textBox.endFill()
-        textBox.alpha = 0
-        
-        layer.addChild(textBox);
-        layer.addChild(text)
+            textBox = new PIXI.Graphics()
+            textBox.beginFill(0xFFFFFF)
+            textBox.drawRoundedRect(message.x - 70, message.y - (68 + text.height), text.width+40, text.height+25, 20)
+            textBox.endFill()
+            textBox.alpha = 0
+            
+            layer.addChild(textBox);
+            layer.addChild(text)
+
+        }
 
 
         var id = setInterval(frame, 10);
