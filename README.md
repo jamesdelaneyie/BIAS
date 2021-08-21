@@ -1,20 +1,22 @@
-# Working Title: B.I.A.S. 
+# B.I.A.S. 
 
-B.I.A.S. 
-Bi-directional Intimate Ambient Space is a real-time 2d social space. 
+Bi-directional Intimate Ambient Space is a little real-time physical 2d social world. 
 
 It's a place you make. You can go there and interaction with other people and things. 
 
-The founding pillars of the project are that lowering the fidelity of real time digital communication and building an interaction pallete suited to screen devices. 
+The founding pillars of the project are that lowering the visual fidelity of real time digital communication and building an interaction pallete suited to screen devices, while at all times seeking to _faithly transpose_ IRL interactions into a screen-first world. 
 
+For more information about where I'm coming at this from, check out this presentation: https://bit.ly/3j3J77b
 
-Show me what you got:
+*Show me what you got:*
 
 ```
 nvm use 12
 npm install
 npm start
 ```
+
+TO DO: A lot. I'll also try update this with some of the concepts and design choices as I build it. Here's a teaser:
 
 BIAS is composed of warped and curropted versions of these masterful creations: 
 * nengi.js - @timetocode
@@ -24,7 +26,7 @@ BIAS is composed of warped and curropted versions of these masterful creations:
 * PIXI.js emote  – @endel
 * PUXI.js UI Framework – @bQvle @SukantPal
 
-Built by James Delaney for Science Gallery Dublin's commision of "Can you build a _good_ online gallery".
+Being built right now in the open by James Delaney for Science Gallery Dublin's commision of "Can you build us an online gallery?".
 
 License: Open Source BSD-3-Clause
 
