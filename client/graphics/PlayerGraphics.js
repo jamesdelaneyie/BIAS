@@ -21,35 +21,28 @@ class PlayerGraphics extends PIXI.Container {
         this.self = state.self;
 
         
-        //Give me a new space to draw something
+        
         this.auraContainer = new PIXI.Container();   
-        //select my rendering engine for this, i'll use whats already there
-        var canvasRenderer = PIXI.autoDetectRenderer(120, 120); 
-        //create a texture object
-        var auraTexture = new PIXI.RenderTexture.create(120, 120);
-        //create a sprite object
-        var auraSprite = new PIXI.Sprite(auraTexture);
-        //add the sprite to the new space
-        this.auraContainer.addChild(auraSprite)
+        //let canvasRenderer = PIXI.autoDetectRenderer(120, 120); 
+        //let auraTexture = new PIXI.RenderTexture.create(120, 120);
+        //let auraSprite = new PIXI.Sprite(auraTexture);
+        //this.auraContainer.addChild(auraSprite)
         
-        //console.log();
-
-        //draw graphics   
-        const aura = new PIXI.Graphics();
-        const auraColor = PIXI.utils.string2hex(""+this.color+"");
-        
-
-        aura.beginFill(auraColor);
-        aura.drawCircle(0, 0, 60);
-        aura.endFill();
-        //add the frame to the container
+        this.aura = new PIXI.Graphics();
+        let auraColor = PIXI.utils.string2hex(""+this.color+"");
+        this.aura.beginFill(auraColor);
+        this.aura.drawCircle(0, 0, 10);
+        this.aura.endFill();
         this.auraContainer.addChild(aura);
 
 
         //render the container
         canvasRenderer.render(this.auraContainer, auraTexture)
+
         //add the rendered container's output onto the orignal player character
         this.addChild(this.auraContainer)
+
+
 
         this.body = new PIXI.Graphics()
         this.body.beginFill(auraColor)

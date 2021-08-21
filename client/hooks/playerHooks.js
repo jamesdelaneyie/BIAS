@@ -7,12 +7,8 @@ export default (state, renderer ) => {
         create({ data, entity }) {
             
             const graphics = new PlayerGraphics(data)
-            //const info = new PlayerInfoGraphics(data)
-
-            //const wrapper = new PIXI.Container()
             
-            //wrapper.addChild(graphics);
-            //wrapper.addChild(info);
+            
 
             renderer.middleground.addChild(graphics)
 
