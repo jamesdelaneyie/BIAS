@@ -1,3 +1,5 @@
+![screenshot-bias](https://user-images.githubusercontent.com/5830894/130322063-39100c13-a738-43aa-a607-aa78ac564081.png)
+
 # B.I.A.S. 
 
 Bi-directional Intimate Ambient Space is a little real-time physical 2d social world. 
