@@ -28,7 +28,7 @@ BIAS is composed of warped and curropted versions of these masterful creations:
 * PIXI.js emote  – @endel
 * PUXI.js UI Framework – @bQvle @SukantPal
 
-Being built right now in the open by James Delaney for Science Gallery Dublin's commision of "Can you build us an online gallery?".
+Being built right now in the open by James Delaney for Science Gallery Dublin's commision of "Can you build us an online gallery?" for their year-long season of exhibitions, events and education, questioning the social, psychological and technological aspects of bias in AI, Ethics, Trust and Justice.
 
 License: Open Source BSD-3-Clause
 
