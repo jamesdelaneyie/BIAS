@@ -84,70 +84,30 @@ export default (instance, world, room, boxes) => {
     world.addBody(leftWall.body)
     boxes.set(leftWall.nid, leftWall)
     
-        /*
     
 
     
-    // Add objects to the room
-    /*const objects = room.objects
-    console.log(objects);
-
-    objects.forEach(object => {
-        console.log(object.name)
-        let objectProps = new Box({
-            name: object.name,
-            x: object.x + room.x,
-            y: object.y + room.y,
-            width: object.w,
-            height: object.h,
-            mass: object.mass,
-            color: object.color,
-            spin: 0, 
-            material: wallMaterial 
-        })
-        instance.addEntity(objectProps)
-        world.addBody(objectProps.body)
-        boxes.set(objectProps.nid, objectProps)
-    });*/
-
-
-
-
-    
-
-
-    /*onst BoxD = new Box({ name: 'Floor', x: 0, y: 1000, width: 1000, height: 20, color: "#0000ff", mass: 0, spin: 0, material: wallMaterial })
-    instance.addEntity(BoxD)
-    world.addBody(BoxD.body)
-    boxes.set(BoxD.nid, BoxD)*/
-
-
-    /*const BoxA = new Box({ x: 400, y: 400, width: 200, height: 200, color: 0xffffff, mass: 1, spin: 1, material: circleMaterial})
-    instance.addEntity(BoxA)
-    world.addBody(BoxA.body)
-    boxes.set(BoxA.nid, BoxA)
-    
-    const BoxB = new Box({ x: 800, y: 800, width: 50, height: 50, color: 0xffffff, mass: 1, spin: 0, material: circleMaterial})
-    instance.addEntity(BoxB)
-    world.addBody(BoxB.body)
-    boxes.set(BoxB.nid, BoxB)*/
-
-    
-    /**/
-
-
-
-   /* const BoxF = new Box({ name: 'Floor2', x: 0, y: 0, width: 20, height: 1000, color: "#ffffff", mass: 0, spin: 0, material: wallMaterial })
-    instance.addEntity(BoxF)
-    world.addBody(BoxF.body)
-    boxes.set(BoxF.nid, BoxF)
-*/
-   
-
-    /*const BoxC = new Box({ name: 'gallery', x: 200, y: 500, width: 100, height: 100, color: "#000000", mass: 1, spin: 0, material: wallMaterial })
-    instance.addEntity(BoxC)
-    world.addBody(BoxC.body)
-    boxes.set(BoxC.nid, BoxC)*/
+    //Add objects to the room
+    const objects = room.objects
+    if(objects) {
+        objects.forEach(object => {
+            console.log(object.name)
+            let objectProps = new Box({
+                name: object.name,
+                x: object.x + room.x,
+                y: object.y + room.y,
+                width: object.w,
+                height: object.h,
+                mass: object.mass,
+                color: object.color,
+                spin: 0, 
+                material: wallMaterial 
+            })
+            instance.addEntity(objectProps)
+            world.addBody(objectProps.body)
+            boxes.set(objectProps.nid, objectProps)
+        });
+    }
 
     setInterval(function(){
         let newBox = new Box({ name: 'gallery', x: roomX+ 100, y: roomY + 200, width: 50, height: 50, color: "#ffffff", mass: 5, spin: 0.2, material: circleMaterial })
@@ -161,13 +121,8 @@ export default (instance, world, room, boxes) => {
             boxes.delete(newBox.nid)
         }, 20000)
     }, 2000)
+    
 
-    /*setInterval(function(){
-        let BoxE = new Box({ name: 'science', x: 300, y: 200, width: 101, height: 100, radius: 70, color: "#1A171B", mass: 1, spin: 0, material: wallMaterial })
-        instance.addEntity(BoxE)
-        world.addBody(BoxE.body)
-        boxes.set(BoxE.nid, BoxE)
-    }, 3000)*/
 
     var touch = new p2.ContactMaterial(circleMaterial, wallMaterial, {
         friction: 0,

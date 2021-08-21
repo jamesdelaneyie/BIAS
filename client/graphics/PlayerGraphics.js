@@ -21,34 +21,41 @@ class PlayerGraphics extends PIXI.Container {
         this.self = state.self;
 
         
-        
+        //Give me a new space to draw something
         this.auraContainer = new PIXI.Container();   
-        //let canvasRenderer = PIXI.autoDetectRenderer(120, 120); 
-        //let auraTexture = new PIXI.RenderTexture.create(120, 120);
-        //let auraSprite = new PIXI.Sprite(auraTexture);
-        //this.auraContainer.addChild(auraSprite)
+        //select my rendering engine for this, i'll use whats already there
+        var canvasRenderer = PIXI.autoDetectRenderer(120, 120); 
+        //create a texture object
+        var auraTexture = new PIXI.RenderTexture.create(120, 120);
+        //create a sprite object
+        var auraSprite = new PIXI.Sprite(auraTexture);
+        //add the sprite to the new space
+        this.auraContainer.addChild(auraSprite)
         
-        this.aura = new PIXI.Graphics();
-        let auraColor = PIXI.utils.string2hex(""+this.color+"");
-        this.aura.beginFill(auraColor);
-        this.aura.drawCircle(0, 0, 10);
-        this.aura.endFill();
+        //console.log();
+
+        //draw graphics   
+        const aura = new PIXI.Graphics();
+        const auraColor = PIXI.utils.string2hex(""+this.color+"");
+        
+
+        aura.beginFill(auraColor);
+        aura.drawCircle(0, 0, 60);
+        aura.endFill();
+        //add the frame to the container
         this.auraContainer.addChild(aura);
 
 
         //render the container
         canvasRenderer.render(this.auraContainer, auraTexture)
-
         //add the rendered container's output onto the orignal player character
         this.addChild(this.auraContainer)
-
-
 
         this.body = new PIXI.Graphics()
         this.body.beginFill(auraColor)
         this.body.drawCircle(0, 0, 25)
         this.body.endFill()
-        //this.body.tint = auraColor
+        this.addChild(this.body)
 
         this.nose = new PIXI.Graphics()
         this.nose.moveTo(0, -25)
@@ -57,12 +64,13 @@ class PlayerGraphics extends PIXI.Container {
         this.nose.lineTo(40, 0)
         this.nose.lineTo(0, 25)
         this.nose.endFill()
+        this.addChild(this.nose)
 
         
 
         this.info = new PUXI.Stage(20,100)
         const textStyle = new PIXI.TextStyle({fill: 0xffffff, fontSize: '12px', fontWeight: 400});
-        const nameText = new PUXI.TextWidget(''+this.nid+'', textStyle)
+        const nameText = new PUXI.TextWidget(''+this.name+'', textStyle)
         nameText.tint = 0xffffff
         this.info.x = -20
         this.info.y = -40
@@ -70,25 +78,22 @@ class PlayerGraphics extends PIXI.Container {
         this.info.addChild(nameText)
         this.addChild(this.info)
         
-        this.addChild(this.nose)
-        this.addChild(this.body)
 
-        console.log(this.self)
 
         if(this.self == false) {
-            this.body.visible = 0;
-            this.info.visible = 0;
+            this.body.visible = 0
+            this.info.visible = 0
+            this.nose.visible = 0
             this.auraContainer.visible = 0
         }
-        //this.addChild(this.hitpointBar)
+        
     }
 
     hide() {
-        this.body.visible = false
-        this.hitpointBar.visible = false
-        this.nose.visible = false
-        this.auraContainer.visible = false
-        this.info.visible = false
+        this.body.visible = 0
+        this.nose.visible = 0
+        this.auraContainer.visible  = 0
+        this.info.visible = 0
     }
 
     update(delta) {

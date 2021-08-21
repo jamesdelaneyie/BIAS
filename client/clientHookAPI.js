@@ -49,6 +49,7 @@ export default (client, hooks) => {
     })
 
     client.on('create', data => {
+        
         // construct the entity (nengiConfig constructor)
         const name = data.protocol.name
         const constructor = constructors[name]

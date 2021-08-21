@@ -96,93 +96,82 @@ class GameInstance {
 
 
         // (the rest is just attached to client objects when they connect)
-        this.instance.on('command::joinCommand', ({ command, client, tick }) => {
+        this.instance.on('command::JoinCommand', ({ command, client }) => {
+
+            //console.log('join firing');
+            //if(client.rawEntity)
+
+            const rawEntity = client.rawEntity
+            const smoothEntity = client.smoothEntity
+
+            rawEntity.x = this.room.width/2
+            rawEntity.y = this.room.height/2
+            this.world.addBody(rawEntity.body);
+            this.instance.addEntity(rawEntity)
+            client.channel.addEntity(rawEntity)
+
+            smoothEntity.x = this.room.width/2
+            smoothEntity.y = this.room.height/2
+            smoothEntity.collidable = true
+            this.instance.addEntity(smoothEntity)
+
+            smoothEntity.name = command.name
+            rawEntity.name = command.name
+
+            this.instance.message(new Identity(rawEntity.nid, smoothEntity.nid), client)
+
             
-            // create a entity for this client
-            /*const playerColor = Math.floor(Math.random()*16777215).toString(16);
-            //const playerName = "NEW BOY";
-            const rawEntity = new PlayerCharacter({color: playerColor, self: true })
-            rawEntity.x = 500
-            rawEntity.y = 500
-            this.world.addBody(rawEntity.body);*/
 
         })
 
         this.instance.on('connect', ({ client, callback }) => {
-            //console.log(client);
-            // create a entity for this client
-            // playerColor = Math.floor(Math.random()*16777215).toString(16);
+            
 
-            const rndInt = Math.floor(Math.random() * 6) + 0;
+            /*const rndInt = Math.floor(Math.random() * 6) + 0;
             const playerColor = Math.floor(Math.random()*16777215).toString(16);//this.room.playerColors[rndInt]
             console.log(playerColor)
-            /*axios({
-                method: 'get',
-                url: 'https://randomuser.me/api/'
-            })
-            .then(function (response) {
-                  console.log(response.data.results[0]['name']['first']);
-            });*/
-
-            const playerName = "NEW BOY";
-            const rawEntity = new PlayerCharacter({color: ""+playerColor+"", name: playerName, self: true })
-            
-            rawEntity.x = this.room.width/2
-            rawEntity.y = this.room.height/2
-            
-            this.world.addBody(rawEntity.body);
+            */
 
 
             // make the raw entity only visible to this client
             const channel = this.instance.createChannel()
             channel.subscribe(client)
+            client.channel = channel
 
+            const playerColor = Math.floor(Math.random()*16777215).toString(16);
+            //this.room.playerColors[rndInt]
+            const rawEntity = new PlayerCharacter({self: true })
+            const smoothEntity = new PlayerCharacter({self: false })
 
+            
+
+            rawEntity.client = client
+            client.rawEntity = rawEntity
+            
+            smoothEntity.client = client
+            client.smoothEntity = smoothEntity
+            
+            client.positions = []
 
             //this.instance.message(new Notification('yolo'), client)
             //channel.addMessage(new Notification('private channel created'))
-
-            channel.addEntity(rawEntity)
-            this.instance.addEntity(rawEntity)
-            client.channel = channel
-
-            // smooth entity is visible to everyone
-            const smoothEntity = new PlayerCharacter({color: playerColor, name: playerName, self: false })
-            smoothEntity.x = 500
-            smoothEntity.y = 500
-            smoothEntity.collidable = true
-            this.instance.addEntity(smoothEntity)
-
-            // tell the client which entities it controls
-            this.instance.message(new Identity(rawEntity.nid, smoothEntity.nid), client)
-            
-
-            // establish a relation between this entity and the client
-            rawEntity.client = client
-            client.rawEntity = rawEntity
-            smoothEntity.client = client
-            client.smoothEntity = smoothEntity
-            client.positions = []
-
-            // define the view (the area of the game visible to this client, all else is culled)
+           
             client.view = {
-                x: rawEntity.x,
-                y: rawEntity.y,
+                x: 0,
+                y: 0,
                 halfWidth: 2000,
                 halfHeight: 2000
             }
 
-            this.instance.messageAll(new Notification('welcome to:', 200, 200))
-
-            // accept the connection
+            //this.instance.messageAll(new Notification('welcome to:', 200, 200))
             callback({ accepted: true, text: 'Welcome!' })
         })
 
         this.instance.on('disconnect', client => {
             // clean up per client state
-            client.channel.removeEntity(client.rawEntity)
-            this.instance.removeEntity(client.rawEntity)
-            this.instance.removeEntity(client.smoothEntity)
+            //client.channel.removeEntity(client.rawEntity)
+            //this.instance.removeEntity(client.rawEntity)
+            //this.instance.removeEntity(client.smoothEntity)
             client.channel.destroy()
         })
 
@@ -261,14 +250,15 @@ class GameInstance {
 
         this.instance.clients.forEach(client => {
 
-            client.view.x = client.rawEntity.x
-            client.view.y = client.rawEntity.y
+            if(client.rawEntity) {
+                client.view.x = client.rawEntity.x
+                client.view.y = client.rawEntity.y
+                
+                //console.log(client.rawEntity.body.position)
+                client.rawEntity.body.position[0] = client.rawEntity.x
+                client.rawEntity.body.position[1] = client.rawEntity.y
+            }
             
-            //console.log(client.rawEntity.body.position)
-            client.rawEntity.body.position[0] = client.rawEntity.x
-            client.rawEntity.body.position[1] = client.rawEntity.y
-
-
             //console.log(client);
             // have the smooth entity follow the raw entity
             const smoothEntity = client.smoothEntity
