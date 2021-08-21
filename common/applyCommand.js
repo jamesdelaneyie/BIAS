@@ -55,7 +55,7 @@ export default (entity, command, obstacles, boxes) => {
         entity.power -= powerFactor;
     }
 
-    entity.power = 0 //Math.max(0, Math.min(maxPower, entity.power));
+    entity.power = Math.max(0, Math.min(maxPower, entity.power));
 
     entity.x += unitX * (entity.speed * entity.power) * command.delta
     entity.y += unitY * (entity.speed * entity.power) * command.delta

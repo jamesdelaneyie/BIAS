@@ -1,6 +1,4 @@
-import * as PIXI from 'pixi.js'
 import PlayerGraphics from '../graphics/PlayerGraphics.js'
-import PlayerInfoGraphics from '../graphics/PlayerInfoGraphics.js'
 
 export default (state, renderer ) => {
     return {
@@ -8,23 +6,18 @@ export default (state, renderer ) => {
             
             const graphics = new PlayerGraphics(data)
             
-            
-
             renderer.middleground.addChild(graphics)
-
-            ///enderer.entities.set(info.nid, info)
             renderer.entities.set(graphics.nid, graphics)
             
             /* self, raw */
             if (data.nid === state.myRawId) {
                 state.myRawEntity = entity
-                //graphics.body.tint = 0xffffff // debug: turn self white
             }
 
             /* self, smooth */
             if (data.nid === state.mySmoothId) {
                 state.mySmoothEntity = entity
-                graphics.hide() // hide our second entity
+                graphics.hide()
             }
 
             return graphics
