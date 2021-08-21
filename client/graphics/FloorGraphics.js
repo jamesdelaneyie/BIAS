@@ -10,10 +10,6 @@ class FloorGraphics extends PIXI.Container {
         this.height = state.height
         this.color = state.color
 
-        // /console.log(this.x)
-        //this.x = this.x/2
-        //this.y = this.y/2
-
         let abyss = new PIXI.Graphics()
         let abyssColor = PIXI.utils.string2hex(this.color);
         abyss.beginFill(abyssColor)

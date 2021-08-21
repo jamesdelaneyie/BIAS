@@ -18,6 +18,8 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
     var message = UI.getText();
     console.log(message)*/
     /* all of this is just for our own entity */
+
+    
     if (myRawEntity) {
         // which way are we pointing?
         const worldCoord = renderer.toWorldCoordinates(
