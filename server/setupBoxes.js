@@ -94,10 +94,10 @@ export default (instance, world, room, boxes) => {
             console.log(object.name)
             let objectProps = new Box({
                 name: object.name,
-                x: object.x + room.x,
-                y: object.y + room.y,
-                width: object.w,
-                height: object.h,
+                x: object.x + roomX,
+                y: object.y + roomY,
+                width: object.width,
+                height: object.height,
                 mass: object.mass,
                 color: object.color,
                 spin: 0, 

@@ -9,10 +9,17 @@ import handleShot from './handleShot.js'
 import isMobile from 'ismobilejs'
 
 const handleInput = (inputSystem, state, client, renderer, delta) => {
+
     const input = inputSystem.frameState
     inputSystem.releaseKeys()
 
     const { myRawEntity, obstacles, boxes, floors} = state
+
+    //console.log(renderer.stage.children[1]);
+
+   
+
+
 
     if (myRawEntity) {
         // which way are we pointing?
@@ -77,10 +84,12 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
     } else {
 
         //console.log('test')
-        //console.log(input);
-        if(input.a == true) {
-            //const JoinCommand = 
-            client.addCommand(new JoinCommand('James', 'Red'))
+        //console.log(input.spacebarRelease);
+        //console.log(input.spacebar)
+        //console.log(input.justReleasedR)
+
+        if(input.spacebar == true) {
+            //client.addCommand(new JoinCommand(input.message, 'Red'))
         }
 
     }

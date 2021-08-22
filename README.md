@@ -29,5 +29,11 @@ BIAS is composed of warped and curropted versions of these masterful creations b
 
 Being built right now in the open by James Delaney for Science Gallery Dublin's commision of "Can you build us an online gallery?" for their year-long season of exhibitions, events and education, questioning the social, psychological and technological aspects of bias in AI, Ethics, Trust and Justice.
 
+**UI Builder Notes:**
+* Each individual UI Element is a PUXI.Stage container
+* Using one large PUXI.Stage doesn't allow click events to pass through to the world
+* UI has two communication methods, a stream of data, and individual events
+
+
 License: Open Source BSD-3-Clause
 

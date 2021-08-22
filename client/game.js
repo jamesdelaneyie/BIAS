@@ -15,7 +15,7 @@ const create = () => {
     const client = new nengi.Client(nengiConfig, 100)
     
     const renderer = new PIXIRenderer()
-    const input = new InputSystem(renderer)
+    const input = new InputSystem(renderer, client)
 
     const state = {
         myRawId: null,
@@ -63,6 +63,7 @@ const create = () => {
         
     })
     
+    
 
     //messages to clients / local for view // spacial structure
     //channel is list of entities / 
@@ -77,8 +78,8 @@ const create = () => {
 
     client.on('disconnected', () => { console.log('connection closed') })
 
-    client.connect('ws://localhost:8079')
-    //client.connect('ws://185.92.221.225:8079')
+    //client.connect('ws://localhost:8079')
+    client.connect('ws://185.92.221.225:8079')
 
 
     const update = (delta, tick, now) => {

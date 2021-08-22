@@ -2,16 +2,28 @@ import { Joystick } from './graphics/Joystick';
 import * as PIXI from 'pixi.js'
 import isMobile from 'ismobilejs'
 import UIBuilder from './graphics/UIBuilder.js'
+import JoinCommand from '../common/command/JoinCommand.js'
 
 class InputSystem {
 
-    constructor(renderer) {
+    constructor(renderer, client) {
         this.canvasEle = document.getElementById('main-canvas')
         this.onmousemove = null
 
-        this.UIBuilder = new UIBuilder();
-        renderer.stage.addChild(this.UIBuilder);
+        this.UIBuilder = renderer.UIBuilder
 
+        let isJoined = false;
+
+        const joinButton = renderer.stage.children[1].commandPanel;
+        joinButton.on("click", function () {
+            
+            if(isJoined == false) {
+                let name = renderer.UIBuilder.getText();
+                let playerColor = Math.floor(Math.random()*16777215).toString(16);
+                client.addCommand(new JoinCommand(""+name+"", playerColor))
+                renderer.UIBuilder.clearText();
+            }
+        });
 
         this.currentState = {
             w: false,
@@ -19,13 +31,15 @@ class InputSystem {
             a: false,
             d: false,
             r: false,
+            spacebar: false,
             f: 0,
             rotation: 0,
             mx: 0,
             my: 0,
             mouseDown: false,
             message: "",
-            viewArt: false,
+            viewArt: false
+            
         }
 
         this.frameState = {
@@ -36,10 +50,13 @@ class InputSystem {
             f: 0,
             rotation: 0,
             r: false,
-            mouseDown: false,
             justReleasedR: false,
+            spacebar: false,
+            spacebarRelease: false,
+            mouseDown: false,
             message: "",
-            viewArt: false
+            viewArt: false,
+            spacebar: false
         }
 
         
@@ -53,13 +70,15 @@ class InputSystem {
 
         let iframe = "";
 
-        document.body.addEventListener("mousedown", function(e) {
+        //this.currentState.message = this.UIBuilder.getText();
+
+        /*document.body.addEventListener("mousedown", function(e) {
             console.log(e.target.nodeName, e.target.id)
             if (e.target.nodeName === "DIV"){
               document.getElementById("iframe").remove()
               e.target.remove()
             }
-          }, false)
+          }, false)*/
 
 
         //if(isMobile == false) {
@@ -88,9 +107,15 @@ class InputSystem {
                 }
 
                 // r
-                if (event.keyCode === 219) {
+                if (event.keyCode === 82) {
                     this.currentState.r = true
                     this.frameState.r = true
+                }
+
+                // spacebar
+                if (event.keyCode === 32) {
+                    this.currentState.spacebar = true
+                    this.frameState.spacebar = true
                 }
 
                 if (event.keyCode === 13) {
@@ -103,8 +128,8 @@ class InputSystem {
                 if (event.keyCode === 9) {
                     //console.log(this.UIBuilder)
                     //this.frameState.message = this.UIBuilder.getText();
-                    //this.currentState.message = this.UIBuilder.getText();//this.frameState.message;
-                    //this.UIBuilder.clearText();
+                    this.currentState.message = this.UIBuilder.getText();//this.frameState.message;
+                    this.UIBuilder.clearText();
                 }
 
                 //Right Bracket
@@ -160,13 +185,21 @@ class InputSystem {
                     this.currentState.d = false
                 }
 
-                if (event.keyCode === 219) {
+                if (event.keyCode === 82) {
                     if (this.currentState.r === true) {
                         // used to implement reload on keyup instead of keydown
                         this.frameState.justReleasedR = true
                     }
                     this.currentState.r = false
                 }
+                 // spacebar
+                 if (event.keyCode === 32) {
+                    if (this.currentState.spacebar === true) {
+                        this.frameState.spacebarRelease = true
+                    }
+                    this.currentState.spacebar = false
+                }
+
                 if (event.keyCode === 13) {
                     this.frameState.message = ""
                     this.currentState.message = ""
@@ -381,10 +414,12 @@ class InputSystem {
         this.frameState.s = this.currentState.s
         this.frameState.d = this.currentState.d
         this.frameState.r = this.currentState.r
+        this.frameState.spacebar = this.currentState.spacebar
+        this.frameState.justReleasedR = false
+        this.frameState.spacebarRelease = false;
         this.frameState.rotation = this.currentState.rotation
         this.frameState.mouseDown = this.currentState.mouseDown
         this.frameState.message = this.currentState.message
-        this.frameState.justReleasedR = false
         this.frameState.message = this.currentState.message
         this.frameState.viewArt = this.currentState.viewArt
     }

@@ -316,27 +316,28 @@ var puxi_js = (function (exports, pixi_js, filterDropShadow) {
               this.onMouseUpCommonImpl(event);
           };
           this.onMouseOverImpl = (event) => {
-              if (!this.ishover) {
-                  this.ishover = true;
+                //console.log('NEW HOVER')
+              //if (!this.ishover) {
+                  //this.ishover = true;
                   this.target.insetContainer.on('mousemove', this.onMouseMoveImpl);
                   this.target.insetContainer.on('touchmove', this.onMouseMoveImpl);
                   this.onHover.call(this.target, event, true);
-              }
+              //}
           };
           this.onMouseOutImpl = (event) => {
-              if (this.ishover) {
-                  this.ishover = false;
+              //if (this.ishover) {
+                  //this.ishover = false;
                   this.target.insetContainer.removeListener('mousemove', this.onMouseMoveImpl);
                   this.target.insetContainer.removeListener('touchmove', this.onMouseMoveImpl);
-                  this.onHover.call(this.target, event, false);
-              }
+                  this.onHoverOut.call(this.target, event, false);
+              //}
           };
           this.onMouseMoveImpl = (event) => {
               this.onMove.call(this.target, event);
           };
           this.bound = false;
           this.id = 0;
-          this.ishover = false;
+          //this.ishover = false;
           this.mouse = new pixi_js.Point();
           this.offset = new pixi_js.Point();
           this.movementX = 0;

@@ -606,6 +606,7 @@ const PADDING_AXIS_PROPERTIES = ['paddingHorizontal', 'paddingVertical'];
 const TEXT_STYLE_PROPERTIES = [
     'fontFamily',
     'fontSize',
+    'fill',
     'fontWeight',
     'letterSpacing',
 ];
@@ -2240,7 +2241,7 @@ class Button extends FocusableWidget {
         super(options);
         this.isHover = false;
         if (typeof options.text === 'string') {
-            options.text = new TextWidget(options.text, new TextStyle());
+            options.text = new TextWidget(options.text, new TextStyle({fontSize: 32}));
         }
         this.textWidget = options.text.setLayoutOptions(new FastLayoutOptions({
             width: LayoutOptions.WRAP_CONTENT,
@@ -2250,7 +2251,7 @@ class Button extends FocusableWidget {
             anchor: FastLayoutOptions.CENTER_ANCHOR,
         }));
         if (this.textWidget) {
-            this.addChild(this.textWidget);
+            //this.addChild(this.textWidget);
         }
         this.contentContainer.buttonMode = true;
     }

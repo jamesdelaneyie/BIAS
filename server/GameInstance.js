@@ -18,6 +18,8 @@ import { fire } from '../common/weapon.js'
 import Notification from '../common/message/Notification'
 import lagCompensatedHitscanCheck from './lagCompensatedHitscanCheck'
 import censoring from 'chat-censoring'
+
+
 //import P2Pixi from 'p2Pixi'
 
 
@@ -36,6 +38,15 @@ class GameInstance {
             backgroundColor: "#ff0000",
             borderColor: "#FFFFFF",
             borderWidth: 25,
+            objects: [{
+                name: 'Box',
+                x: 20,
+                y: 20,
+                width: 100,
+                height: 100,
+                mass: 0,
+                color: '00ff00'
+            }]
         }
         this.floors = setupFloors(this.instance, this.room)
         this.obstacles = setupObstacles(this.instance, this.room)
@@ -48,7 +59,7 @@ class GameInstance {
             height: 600,
             backgroundColor: "#00ff00",
             borderColor: "#FFFFFF",
-            borderWidth: 40,
+            borderWidth: 40
         }
         this.floors = setupFloors(this.instance, this.room2)
         this.obstacles2 = setupObstacles(this.instance, this.room2)
@@ -87,19 +98,19 @@ class GameInstance {
 
         this.boxes = boxes
 
-        
+    
 
         this.world.on('postStep', function(event){
             // Add horizontal spring force
             //circleBody.force[0] -= 100 * circleBody.position[0];
         });
+        
 
 
         // (the rest is just attached to client objects when they connect)
         this.instance.on('command::JoinCommand', ({ command, client }) => {
 
-            //console.log('join firing');
-            //if(client.rawEntity)
+            console.log('help')
 
             const rawEntity = client.rawEntity
             const smoothEntity = client.smoothEntity
@@ -118,27 +129,22 @@ class GameInstance {
             smoothEntity.name = command.name
             rawEntity.name = command.name
 
+            smoothEntity.color = command.color
+            rawEntity.color = command.color
+
             this.instance.message(new Identity(rawEntity.nid, smoothEntity.nid), client)
 
-            
 
         })
 
         this.instance.on('connect', ({ client, callback }) => {
             
-
-            /*const rndInt = Math.floor(Math.random() * 6) + 0;
-            const playerColor = Math.floor(Math.random()*16777215).toString(16);//this.room.playerColors[rndInt]
-            console.log(playerColor)
-            */
-
-
             // make the raw entity only visible to this client
             const channel = this.instance.createChannel()
             channel.subscribe(client)
             client.channel = channel
 
-            const playerColor = Math.floor(Math.random()*16777215).toString(16);
+            
             //this.room.playerColors[rndInt]
             const rawEntity = new PlayerCharacter({self: true })
             const smoothEntity = new PlayerCharacter({self: false })
@@ -165,13 +171,18 @@ class GameInstance {
 
             //this.instance.messageAll(new Notification('welcome to:', 200, 200))
             callback({ accepted: true, text: 'Welcome!' })
+
+        
         })
+
+
+
 
         this.instance.on('disconnect', client => {
             // clean up per client state
-            //client.channel.removeEntity(client.rawEntity)
-            //this.instance.removeEntity(client.rawEntity)
-            //this.instance.removeEntity(client.smoothEntity)
+            client.channel.removeEntity(client.rawEntity)
+            this.instance.removeEntity(client.rawEntity)
+            this.instance.removeEntity(client.smoothEntity)
             client.channel.destroy()
         })
 

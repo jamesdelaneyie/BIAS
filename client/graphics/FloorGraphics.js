@@ -17,6 +17,8 @@ class FloorGraphics extends PIXI.Container {
         abyss.endFill()
         this.addChild(abyss)
 
+        
+
 
         //let floorColor = PIXI.utils.string2hex('#4DFA66')
         //let gridColor = PIXI.utils.string2hex('#000000')

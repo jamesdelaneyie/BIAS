@@ -1,5 +1,6 @@
 import PlayerGraphics from '../graphics/PlayerGraphics.js'
 
+
 export default (state, renderer ) => {
     return {
         create({ data, entity }) {
