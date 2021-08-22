@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js'
 import * as PUXI from 'puxi.js'
 import HitpointBar from './HitpointBar.js'
+import { sound } from '@pixi/sound';
 
 class PlayerGraphics extends PIXI.Container {
     constructor(state) {
@@ -20,42 +21,31 @@ class PlayerGraphics extends PIXI.Container {
         this.name = state.name;
         this.self = state.self;
 
+        this.wrapper = new PIXI.Container()
+
         
         //Give me a new space to draw something
         this.auraContainer = new PIXI.Container();   
-        //select my rendering engine for this, i'll use whats already there
         var canvasRenderer = PIXI.autoDetectRenderer(120, 120); 
-        //create a texture object
         var auraTexture = new PIXI.RenderTexture.create(120, 120);
-        //create a sprite object
         var auraSprite = new PIXI.Sprite(auraTexture);
-        //add the sprite to the new space
         this.auraContainer.addChild(auraSprite)
         
-        //console.log();
-
-        //draw graphics   
         const aura = new PIXI.Graphics();
         const auraColor = PIXI.utils.string2hex(""+this.color+"");
-        
-
         aura.beginFill(auraColor);
         aura.drawCircle(0, 0, 60);
         aura.endFill();
-        //add the frame to the container
+        aura.blendMode = PIXI.BLEND_MODES.MULTIPLY;
         this.auraContainer.addChild(aura);
-
-
-        //render the container
         canvasRenderer.render(this.auraContainer, auraTexture)
-        //add the rendered container's output onto the orignal player character
-        this.addChild(this.auraContainer)
+        this.wrapper.addChild(this.auraContainer)
 
         this.body = new PIXI.Graphics()
         this.body.beginFill(auraColor)
         this.body.drawCircle(0, 0, 25)
         this.body.endFill()
-        this.addChild(this.body)
+        this.wrapper.addChild(this.body)
 
         this.nose = new PIXI.Graphics()
         this.nose.moveTo(0, -25)
@@ -64,8 +54,17 @@ class PlayerGraphics extends PIXI.Container {
         this.nose.lineTo(40, 0)
         this.nose.lineTo(0, 25)
         this.nose.endFill()
-        this.addChild(this.nose)
+        this.wrapper.addChild(this.nose)
 
+        this.wrapper.interactive = true;
+        this.wrapper.buttonMode = true;
+
+        
+
+        // Pointers normalize touch and mouse
+        //this.wrapper.on('pointerdown', this.onClick);
+        this.wrapper.on('pointerover', this.onPointerOver);
+        this.wrapper.on('pointerout', this.onPointerOut);
         
 
         this.info = new PUXI.Stage(20,100)
@@ -73,11 +72,14 @@ class PlayerGraphics extends PIXI.Container {
         const nameText = new PUXI.TextWidget(''+this.name+'', textStyle)
         nameText.tint = 0xffffff
         this.info.x = -20
-        this.info.y = -40
-        this.info.alpha = 1
+        this.info.y = -50
+        this.info.alpha = 0
         this.info.addChild(nameText)
-        this.addChild(this.info)
-        
+        this.wrapper.addChild(this.info)
+
+        this.addChild(this.wrapper)
+
+
 
 
         if(this.self == false) {
@@ -89,6 +91,15 @@ class PlayerGraphics extends PIXI.Container {
         
     }
 
+
+    onPointerOver (){
+        this.children[3].alpha = 1
+    }
+
+    onPointerOut(){
+        this.children[3].alpha = 0
+    }
+
     hide() {
         this.body.visible = 0
         this.nose.visible = 0
@@ -97,7 +108,7 @@ class PlayerGraphics extends PIXI.Container {
     }
 
     update(delta) {
-        //console.log(this.isAlive)
+        
         this.count++
         if (!this.isAlive) {
             this.nose.alpha = 0
@@ -114,6 +125,8 @@ class PlayerGraphics extends PIXI.Container {
         }
         this.auraContainer.scale.set(0.6 + Math.sin((this.count/10)) * 0.1, 0.6 + Math.sin((this.count/10)) * 0.1);
         this.auraContainer.alpha = 0.2 + Math.sin((this.count/10)) * 0.1;
+
+
     }
 }
 

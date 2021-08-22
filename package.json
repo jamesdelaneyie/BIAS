@@ -11,6 +11,7 @@
   "dependencies": {
     "@pixi/filter-ascii": "^4.0.0",
     "@pixi/filter-crt": "^4.0.0",
+    "@pixi/sound": "^4.0.4",
     "axios": "^0.21.1",
     "canvas": "^2.7.0",
     "chat-censoring": "^1.0.6",

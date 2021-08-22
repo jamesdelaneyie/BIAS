@@ -27,34 +27,60 @@ class PIXIRenderer {
             resolution: 2
         })
 
+        
+
         this.stage = new PIXI.Container()
         this.camera = new PIXI.Container()
 
         this.background = new PIXI.Container()
         this.middleground = new PIXI.Container()
         this.foreground = new PIXI.Container()
+        this.UIBuilder = new UIBuilder();    
+
+        
 
         this.camera.addChild(this.background)
         this.camera.addChild(this.middleground)
         this.camera.addChild(this.foreground)
+        
+        
+
+        
+        
 
         this.stage.addChild(this.camera)
+        this.stage.addChild(this.UIBuilder)
 
-        /*const blurFilter1 = new CRTFilter({
-            vignetting: 0.5, 
-            vignettingAlpha: 0.,
-            vignettingBlur: 0.2
-        });
-        this.foreground.filters = [blurFilter1];
-        //this.background.filters = [blurFilter1];*/
+        //PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 
+        this.sprite = PIXI.Sprite.from('images/bunny.png');
+        this.sprite.anchor.set(0.5);
+        this.sprite.x = window.innerWidth / 2;
+        this.sprite.y = window.innerHeight / 2;
+        this.sprite.interactive = true;
+        this.sprite.buttonMode = true;
 
+        
+
+        // Pointers normalize touch and mouse
+        this.sprite.on('pointerdown', this.onClick);
+
+        // Alternatively, use the mouse & touch events:
+         //this.sprite.on('click', onClick); // mouse-only
+         //this.sprite.on('tap', onClick); // touch-only
+
+        //this.foreground.addChild(this.sprite);
+        
         window.addEventListener('resize', () => {
             this.resize()
         })
     }
 
+    onClick(){
+        console.log(this.x)
+    }
 
+    
     resize() {
         this.renderer.resize(window.innerWidth, window.innerHeight)
     }
@@ -85,7 +111,6 @@ class PIXIRenderer {
         this.entities.forEach(entity => {
             entity.update(delta)
         })
-        
         this.renderer.render(this.stage)
     }
 }
