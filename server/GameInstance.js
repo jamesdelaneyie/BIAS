@@ -104,6 +104,36 @@ class GameInstance {
             // Add horizontal spring force
             //circleBody.force[0] -= 100 * circleBody.position[0];
         });
+
+        // (the rest is just attached to client objects when they connect)
+        this.instance.on('command::LeaveCommand', ({ command, client }) => {
+
+            console.log('help')
+
+            const rawEntity = client.rawEntity
+            const smoothEntity = client.smoothEntity
+
+            rawEntity.x = this.room.width/2
+            rawEntity.y = this.room.height/2
+            this.world.addBody(rawEntity.body);
+            this.instance.addEntity(rawEntity)
+            client.channel.addEntity(rawEntity)
+
+            smoothEntity.x = this.room.width/2
+            smoothEntity.y = this.room.height/2
+            smoothEntity.collidable = true
+            this.instance.addEntity(smoothEntity)
+
+            smoothEntity.name = command.name
+            rawEntity.name = command.name
+
+            smoothEntity.color = command.color
+            rawEntity.color = command.color
+
+            this.instance.message(new Identity(rawEntity.nid, smoothEntity.nid), client)
+
+
+        })
         
 
 
