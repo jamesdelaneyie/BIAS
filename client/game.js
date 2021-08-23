@@ -79,7 +79,7 @@ const create = () => {
     client.on('disconnected', () => { console.log('connection closed') })
 
     //client.connect('ws://localhost:8079')
-    client.connect('wss://185.92.221.225:8079')
+    client.connect('wss://bias.jamesdelaney.ie/test')
 
 
     const update = (delta, tick, now) => {
