@@ -9,7 +9,208 @@ class UIBuilder extends PIXI.Container {
         super()
 
         
+        //Background Layer for joining
+        const joinWrapper = new PIXI.Graphics()
+        joinWrapper.beginFill();
+        joinWrapper.drawRect(0, 0, window.innerWidth, window.innerHeight);
+        joinWrapper.endFill()
+        joinWrapper.alpha = 0.8
+        this.addChild(joinWrapper);
 
+
+        const joinModal = new PUXI.Widget();
+        
+
+        
+
+        // Chat Text Entry Element 
+        this.textBox = new PUXI.Stage(500, 45)   
+        this.textBox.x = 200
+
+        //Text Styles for Input and Placeholder
+        const textStyles = new PIXI.TextStyle({ 
+            fontFamily: 'Roboto Mono',
+            fill: "#000000", 
+            fontSize: 18, 
+            fontWeight: 300
+        })
+        //The Text Input
+        this.mockInput = new PUXI.TextInput({
+            multiLine: false,
+            background: 0xFFFFFF,
+            value: "",
+            padding: 10,
+            maxLength: 69,
+            selectedColor: "#000000",
+            selectedBackgroundColor: "#0000FF",
+            caretWidth: 4,
+            style: textStyles,
+        }).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 0.999, 
+                height: 40,
+                x: 0,
+                y: 0,
+            }),
+        )
+        this.textBox.addChild(this.mockInput)
+
+        //Placeholder Text
+        this.TextBoxPlaceholder = new PUXI.TextWidget(
+            'Type to Speak!', 
+            textStyles
+        ).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                x: 10,
+                y: 10,
+            })
+        )
+        this.TextBoxPlaceholder.alpha = 0.4;
+        this.textBox.addChild(this.TextBoxPlaceholder);
+
+        //Focus + Blur events, hide placeholder
+        this.textBox.widgetChildren[0].on('focus', () => { 
+            this.TextBoxPlaceholder.alpha = 0;
+        });
+        this.textBox.widgetChildren[0].on('blur', () => { 
+            this.TextBoxPlaceholder.alpha = 0.4;
+        });
+        //Add to the UI Layer
+        this.addChild(this.textBox)
+
+
+
+
+
+
+        // Create basic command UI panel
+        const commandPanelWidth = 100
+        const commandPanelHeight = 30
+        const commandPanelPositioning = 20
+        const commandPanelPadding = 10
+        const commandPanelButtonHeight = 30
+
+        this.commandPanel = new PUXI.Stage(commandPanelWidth, commandPanelHeight+(commandPanelPadding*2))   
+        this.commandPanel.x = window.innerWidth - (commandPanelWidth + commandPanelPositioning)
+        this.commandPanel.y = commandPanelPositioning 
+        this.commandPanel.buttonMode = true;
+        
+        //Join Button 
+        const joinButton = new PUXI.Button({
+            text: ''
+        }).setLayoutOptions(new PUXI.FastLayoutOptions({
+            width: commandPanelWidth - (commandPanelPadding*2),
+            height: commandPanelButtonHeight,
+            x: commandPanelPadding,
+            y: commandPanelPadding
+        }))
+        .setBackground(0xffffff)
+        .setBackgroundAlpha(1)
+       
+        this.commandPanel.addChild(joinButton)
+        this.addChild(this.commandPanel)
+
+        const buttonStyles = new PIXI.TextStyle({ 
+            fontFamily: 'Roboto Mono',
+            fill: "#000000", 
+            fontSize: 16, 
+            fontWeight: 700,
+            letterSpacing: 2
+        })
+        const joinText = new PUXI.TextWidget('JOIN', buttonStyles)
+        joinText.setLayoutOptions(new PUXI.FastLayoutOptions({
+            width: PUXI.LayoutOptions.WRAP_CONTENT,
+            height: commandPanelHeight,
+            x: 0.5,
+            y: commandPanelHeight + 1,
+            anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR
+        }))
+        joinText.tint = 0xFFFFFF
+        this.commandPanel.addChild(joinText)
+
+
+        const buttonStylesTwo = new PIXI.TextStyle({ 
+            fontFamily: 'Roboto Mono',
+            fill: "#FFFFFF", 
+            fontSize: 15, 
+            fontWeight: 700,
+            letterSpacing: 2
+        })
+        const joinTextTwo = new PUXI.TextWidget('JOIN', buttonStylesTwo)
+        joinTextTwo.setLayoutOptions(new PUXI.FastLayoutOptions({
+            width: PUXI.LayoutOptions.WRAP_CONTENT,
+            height: commandPanelHeight,
+            x: 0.5,
+            y: commandPanelHeight + 1,
+            anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR
+        }))
+        joinTextTwo.tint = 0xFFFFFF
+        joinTextTwo.alpha = 0;
+        this.commandPanel.addChild(joinTextTwo)
+
+        joinButton.on("hover", function (over) {
+            if(over == true) {
+                this.setBackground("#FFFF00")
+            } else {
+                this.setBackground("#FFFFFF")
+            }
+        });
+
+
+        const joinButtonClick = new PUXI.ClickManager(joinButton, true, false, false)
+        //this.addChild(joinButtonClick)
+        joinButtonClick.onPress = function(){
+            this.setBackground(0xff0000)
+            joinText.alpha = 0
+            joinTextTwo.alpha = 1
+        }
+        joinButtonClick.onClick = function(){
+            this.setBackground(0xffffff)
+            joinText.alpha = 1
+            joinTextTwo.alpha = 0
+        }
+
+
+
+        window.addEventListener('resize', () => {
+            this.resize()
+        })
+
+    }
+    
+    onPointerOver() {
+        console.log('tester')
+    }
+
+    getText() {
+        return this.mockInput.value;
+    }
+    
+    clearText() {
+        this.mockInput.value = ""
+        this.mockInput.blur()
+    }
+
+    resize() {
+        this.UILayer.resize(window.innerWidth, window.innerHeight);
+    }
+
+    update(){
+        this.UILayer.render()
+    }
+
+
+}
+
+export default UIBuilder
+
+
+
+
+
+
+
+        
 
         ///this.logo = new PUXI.Stage(window.innerWidth, window.innerHeight);
 /*
@@ -143,190 +344,4 @@ class UIBuilder extends PIXI.Container {
 
 */
 
-
-
-        // Chat Text Entry Element 
-        this.textBox = new PUXI.Stage(500, 45)   
-        this.textBox.x = 200
-
-        //Text Styles for Input and Placeholder
-        const textStyles = new PIXI.TextStyle({ 
-            fontFamily: 'Roboto Mono',
-            fill: "#000000", 
-            fontSize: 18, 
-            fontWeight: 300
-        })
-        //The Text Input
-        this.mockInput = new PUXI.TextInput({
-            multiLine: false,
-            background: 0xFFFFFF,
-            value: "",
-            padding: 10,
-            maxLength: 69,
-            selectedColor: "#000000",
-            selectedBackgroundColor: "#0000FF",
-            caretWidth: 4,
-            style: textStyles,
-        }).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 0.999, 
-                height: 40,
-                x: 0,
-                y: 0,
-            }),
-        )
-        this.textBox.addChild(this.mockInput)
-
-        //Placeholder Text
-        this.TextBoxPlaceholder = new PUXI.TextWidget(
-            'Type to Speak!', 
-            textStyles
-        ).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                x: 10,
-                y: 10,
-            })
-        )
-        this.TextBoxPlaceholder.alpha = 0.4;
-        this.textBox.addChild(this.TextBoxPlaceholder);
-
-        //Focus + Blur events, hide placeholder
-        this.textBox.widgetChildren[0].on('focus', () => { 
-            this.TextBoxPlaceholder.alpha = 0;
-        });
-        this.textBox.widgetChildren[0].on('blur', () => { 
-            this.TextBoxPlaceholder.alpha = 0.4;
-        });
-        //Add to the UI Layer
-        this.addChild(this.textBox)
-
-
-
-
-
-
-        // Create basic command UI panel
-        const commandPanelWidth = 100
-        const commandPanelHeight = 30
-        const commandPanelPositioning = 20
-        const commandPanelPadding = 10
-        const commandPanelButtonHeight = 30
-
-        this.commandPanel = new PUXI.Stage(commandPanelWidth, commandPanelHeight+(commandPanelPadding*2))   
-        this.commandPanel.x = window.innerWidth - (commandPanelWidth + commandPanelPositioning)
-        this.commandPanel.y = commandPanelPositioning 
-        this.commandPanel.buttonMode = true;
         
-        //Join Button 
-        const joinButton = new PUXI.Button({
-            text: ''
-        }).setLayoutOptions(new PUXI.FastLayoutOptions({
-            width: commandPanelWidth - (commandPanelPadding*2),
-            height: commandPanelButtonHeight,
-            x: commandPanelPadding,
-            y: commandPanelPadding
-        }))
-        .setBackground(0xffffff)
-        .setBackgroundAlpha(1)
-       
-        this.commandPanel.addChild(joinButton)
-        this.addChild(this.commandPanel)
-
-        const buttonStyles = new PIXI.TextStyle({ 
-            fontFamily: 'Roboto Mono',
-            fill: "#000000", 
-            fontSize: 16, 
-            fontWeight: 700,
-            letterSpacing: 2
-        })
-        const joinText = new PUXI.TextWidget('JOIN', buttonStyles)
-        joinText.setLayoutOptions(new PUXI.FastLayoutOptions({
-            width: PUXI.LayoutOptions.WRAP_CONTENT,
-            height: commandPanelHeight,
-            x: 0.5,
-            y: commandPanelHeight + 1,
-            anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR
-        }))
-        joinText.tint = 0xFFFFFF
-        //joinText.setBackground('red')
-        this.commandPanel.addChild(joinText)
-
-
-        const buttonStylesTwo = new PIXI.TextStyle({ 
-            fontFamily: 'Roboto Mono',
-            fill: "#FFFFFF", 
-            fontSize: 15, 
-            fontWeight: 700,
-            letterSpacing: 2
-        })
-        const joinTextTwo = new PUXI.TextWidget('JOIN', buttonStylesTwo)
-        joinTextTwo.setLayoutOptions(new PUXI.FastLayoutOptions({
-            width: PUXI.LayoutOptions.WRAP_CONTENT,
-            height: commandPanelHeight,
-            x: 0.5,
-            y: commandPanelHeight + 1,
-            anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR
-        }))
-        joinTextTwo.tint = 0xFFFFFF
-        joinTextTwo.alpha = 0;
-        this.commandPanel.addChild(joinTextTwo)
-
-        joinButton.on("hover", function (over) {
-            if(over == true) {
-                this.setBackground("#FFFF00")
-            } else {
-                this.setBackground("#FFFFFF")
-            }
-        });
-
-
-        const joinButtonClick = new PUXI.ClickManager(joinButton, true, false, false)
-        //this.addChild(joinButtonClick)
-        joinButtonClick.onPress = function(){
-            this.setBackground(0xff0000)
-            joinText.alpha = 0
-            joinTextTwo.alpha = 1
-        }
-        joinButtonClick.onClick = function(){
-            this.setBackground(0xffffff)
-            joinText.alpha = 1
-            joinTextTwo.alpha = 0
-            console.log('CLICKED!')
-        }
-
-
-
-        
-
-
-        window.addEventListener('resize', () => {
-            this.resize()
-        })
-
-    }
-    
-    onPointerOver() {
-        console.log('tester')
-    }
-
-    getText() {
-        return this.mockInput.value;
-    }
-    
-    clearText() {
-        this.mockInput.value = ""
-        this.mockInput.blur()
-    }
-
-    resize() {
-        this.UILayer.resize(window.innerWidth, window.innerHeight);
-    }
-
-    update(){
-        this.UILayer.render()
-    }
-
-
-}
-
-export default UIBuilder
