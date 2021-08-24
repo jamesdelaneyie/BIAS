@@ -104,30 +104,38 @@ class GameInstance {
 
 
 
-
-        // Peer JS
         var express = require('express');
         var app = express();
-
+        var PORT = process.env.PORT || 3000
         var ExpressPeerServer = require('peer').ExpressPeerServer;
-        var server = require('https').createServer(app);
+        //var path = require('path')
+        var http = require('http');
+        var https = require('https');
+        var fs = require('fs');
 
-        var theRoom = ExpressPeerServer(server, {
-            debug: true,
-            port: 9010,
-            proxied: true,
-            ssl:{
-                key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem'),
-                cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/cert.pem')
-            },
+        var sslOptions = {
+            key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem'),
+            cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/cert.pem')
+        };
+
+        var server = http.createServer(app).listen(PORT);;
+        https.createServer(sslOptions, app).listen(443)
+
+        // CORS
+        app.use(function(req, res, next) {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            next();
         });
 
-        app.use('/peerjs', theRoom);
+        const { v4: uuidV4 } = require('uuid')
+        app.get('/', (req, res) => {
+            res.redirect(`/${uuidV4()}`)
+          })
+
+        app.use('/peerjs', ExpressPeerServer(server, {debug:true}));
+        //app.use('/', express.static(path.join(__dirname, '/client')))
         
-        server.listen(9010,  () => {
-            console.log('PeerJS On: '+server.address().port);
-        });
-
 
 
 
@@ -136,13 +144,13 @@ class GameInstance {
 
         this.people = []
 
-        theRoom.on('connection', peer => {
-            this.people.push(peer.id);
+        peerServer.on('connection', peer => {
+            //this.people.push(peer.id);
             console.log('peer connected', peer.id);
-            console.log(this.people)
+            //console.log(this.people)
         });
         
-        theRoom.on('disconnect', peer => {
+        peerServer.on('disconnect', peer => {
             console.log('peer disconnected', peer.id);
         });
 

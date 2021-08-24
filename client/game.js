@@ -24,7 +24,7 @@ const create = () => {
     const myPeer = new Peer(chosenValue, {
         host:'/', 
         secure:true, 
-        port: 9010,
+        port: 443,
         path: '/peerjs'
     })
     
