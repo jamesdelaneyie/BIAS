@@ -105,7 +105,7 @@ class GameInstance {
 
         const express = require('express')
         const app = express()
-        const httpPort = process.env.PORT || 9000
+        const httpPort = process.env.PORT || 9010
         const httpsPort = 9010
         const { ExpressPeerServer } = require('peer')
         const path = require('path')
