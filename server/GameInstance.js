@@ -118,7 +118,7 @@ class GameInstance {
             cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/cert.pem')
         };
 
-        var server = http.createServer(app).listen(PORT);;
+        var server = http.createServer(app).listen(PORT)
         https.createServer(sslOptions, app).listen(443)
 
         // CORS
@@ -128,10 +128,6 @@ class GameInstance {
             next();
         });
 
-        const { v4: uuidV4 } = require('uuid')
-        app.get('/', (req, res) => {
-            res.redirect(`/${uuidV4()}`)
-          })
 
         app.use('/peerjs', ExpressPeerServer(server, {debug:true}));
         //app.use('/', express.static(path.join(__dirname, '/client')))
