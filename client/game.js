@@ -18,10 +18,10 @@ const create = () => {
     const renderer = new PIXIRenderer()
     const input = new InputSystem(renderer, client)
 
-    let peerID = '12'
-   /* var chosenValue = Math.random() < 0.5 ? 'james' : 'rory';
+
+    var chosenValue = Math.random() < 0.5 ? 'james' : 'rory';
    
-    const myPeer = new Peer(chosenValue, {host:'/', secure:true, port:443, path: '/peerjs'})
+    const myPeer = new Peer(chosenValue, {host:'/', secure:false, port:443, path: '/peerjs'})
     let peerID;
 
     myPeer.on('open', function(id) {
@@ -87,7 +87,7 @@ const create = () => {
 
     function connectPeers() {
         conn = myPeer.connect(code)
-    }?*/
+    }
         
 
     const state = {
