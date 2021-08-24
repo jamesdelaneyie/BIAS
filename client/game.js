@@ -110,7 +110,7 @@ const create = () => {
 
 
 
-    const audioContainer = document.querySelector('.call-container');
+    //const audioContainer = document.querySelector('.call-container');
 
     /*function showCallContent() {
         window.caststatus.textContent = `Your device ID is: ${myPeer.id}`;
@@ -204,6 +204,8 @@ const create = () => {
     client.on('disconnected', () => { 
         console.log('connection closed') 
     })
+
+
 
     //client.connect('ws://localhost:8079')
     client.connect('wss://bias.jamesdelaney.ie/test')
