@@ -1,7 +1,6 @@
 import nengi from 'nengi'
 import nengiConfig from '../common/nengiConfig.js'
 import p2 from 'p2'
-import axios from 'axios';
 import PlayerCharacter from '../common/entity/PlayerCharacter.js'
 import Identity from '../common/message/Identity.js'
 import WeaponFired from '../common/message/WeaponFired.js'
@@ -20,6 +19,8 @@ import lagCompensatedHitscanCheck from './lagCompensatedHitscanCheck'
 import censoring from 'chat-censoring'
 
 
+
+
 //import P2Pixi from 'p2Pixi'
 
 
@@ -28,6 +29,7 @@ class GameInstance {
     constructor() {
         this.instance = new nengi.Instance(nengiConfig, { port: 8079 })
         instanceHookAPI(this.instance)
+
 
         this.world = new p2.World({gravity: [0, 0]});
         this.room = {
@@ -40,8 +42,8 @@ class GameInstance {
             borderWidth: 25,
             objects: [{
                 name: 'Box',
-                x: 20,
-                y: 20,
+                x: 25,
+                y: 25,
                 width: 100,
                 height: 100,
                 mass: 0,
@@ -98,6 +100,41 @@ class GameInstance {
 
         this.boxes = boxes
 
+
+
+
+
+        // Peer JS
+        var express = require('express');
+        var app = express();
+        var ExpressPeerServer = require('peer').ExpressPeerServer;
+        var server = require('http').createServer(app);
+
+        
+        var theRoom = ExpressPeerServer(server, {debug: true});
+        app.use('/peerjs', theRoom);
+        
+        server.listen(8878,  () => {
+            console.log('PeerJS On: '+server.address().port);
+        });
+
+        this.people = []
+
+        theRoom.on('connection', peer => {
+            this.people.push(peer.id);
+            console.log('peer connected', peer.id);
+            console.log(this.people)
+
+        });
+        
+        theRoom.on('disconnect', peer => {
+            console.log('peer disconnected', peer.id);
+        });
+
+
+
+
+
     
 
         this.world.on('postStep', function(event){
@@ -108,7 +145,7 @@ class GameInstance {
         // (the rest is just attached to client objects when they connect)
         this.instance.on('command::LeaveCommand', ({ command, client }) => {
 
-            console.log('help')
+           /* console.log('help')
 
             const rawEntity = client.rawEntity
             const smoothEntity = client.smoothEntity
@@ -130,7 +167,7 @@ class GameInstance {
             smoothEntity.color = command.color
             rawEntity.color = command.color
 
-            this.instance.message(new Identity(rawEntity.nid, smoothEntity.nid), client)
+            this.instance.message(new Identity(rawEntity.nid, smoothEntity.nid), client)*/
 
 
         })
@@ -140,10 +177,11 @@ class GameInstance {
         // (the rest is just attached to client objects when they connect)
         this.instance.on('command::JoinCommand', ({ command, client }) => {
 
-            console.log('help')
+            //console.log('help')
 
             const rawEntity = client.rawEntity
             const smoothEntity = client.smoothEntity
+            const peerID = client.peerID;
 
             rawEntity.x = this.room.width/2
             rawEntity.y = this.room.height/2
@@ -162,7 +200,9 @@ class GameInstance {
             smoothEntity.color = command.color
             rawEntity.color = command.color
 
-            this.instance.message(new Identity(rawEntity.nid, smoothEntity.nid), client)
+            this.instance.message(new Identity(rawEntity.nid, smoothEntity.nid, ""+peerID+""), client)
+            this.instance.messageAll(new Notification('Welcome '+ command.name +'', 'notification', 20, 20))
+            //getLocalStream();
 
 
         })
@@ -178,8 +218,6 @@ class GameInstance {
             //this.room.playerColors[rndInt]
             const rawEntity = new PlayerCharacter({self: true })
             const smoothEntity = new PlayerCharacter({self: false })
-
-            
 
             rawEntity.client = client
             client.rawEntity = rawEntity
@@ -199,8 +237,8 @@ class GameInstance {
                 halfHeight: 2000
             }
 
-            //this.instance.messageAll(new Notification('welcome to:', 200, 200))
-            callback({ accepted: true, text: 'Welcome!' })
+            
+            callback({ accepted: true, text: 'Welcome!!!!' })
 
         
         })
@@ -210,9 +248,11 @@ class GameInstance {
 
         this.instance.on('disconnect', client => {
             // clean up per client state
-            client.channel.removeEntity(client.rawEntity)
-            this.instance.removeEntity(client.rawEntity)
-            this.instance.removeEntity(client.smoothEntity)
+            if(client.rawEntity.nid) {
+                client.channel.removeEntity(client.rawEntity)
+                this.instance.removeEntity(client.rawEntity)
+                this.instance.removeEntity(client.smoothEntity)
+            }
             client.channel.destroy()
         })
 

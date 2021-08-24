@@ -35,6 +35,7 @@ class PIXIRenderer {
         this.background = new PIXI.Container()
         this.middleground = new PIXI.Container()
         this.foreground = new PIXI.Container()
+        
         this.UIBuilder = new UIBuilder();    
 
         
@@ -112,6 +113,7 @@ class PIXIRenderer {
             entity.update(delta)
         })
         this.renderer.render(this.stage)
+        this.UIBuilder.update()
     }
 }
 
