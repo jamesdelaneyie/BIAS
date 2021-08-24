@@ -19,7 +19,7 @@ const create = () => {
     const input = new InputSystem(renderer, client)
 
 
-    var chosenValue = Math.random() < 0.5 ? 'james' : 'rory';
+    /*var chosenValue = Math.random() < 0.5 ? 'james' : 'rory';
    
     const myPeer = new Peer(chosenValue, {host:'/', secure:true, path: '/'})
     let peerID;
@@ -36,7 +36,7 @@ const create = () => {
 
     function getStreamCode() {
         code = window.prompt('Please enter the sharing code');
-    }
+    }*/
 
     const hangUpBtn = document.querySelector('.hangup-btn');
     hangUpBtn.addEventListener('click', function (){
