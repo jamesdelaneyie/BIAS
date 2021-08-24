@@ -106,7 +106,7 @@ class GameInstance {
 
 
         // Peer JS
-        /*var express = require('express');
+        var express = require('express');
         var app = express();
 
         var ExpressPeerServer = require('peer').ExpressPeerServer;
@@ -117,7 +117,7 @@ class GameInstance {
         var theRoom = ExpressPeerServer(server, {
             debug: true,
             port: 443,
-            //proxied: true,
+            proxied: true,
             ssl:{
                 key: fs.readFileSync('./etc/letsencrypt/live/bias.jamesdelaney.ie/fullchain.pem'),
                 cert: fs.readFileSync('../etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem')
@@ -143,7 +143,7 @@ class GameInstance {
         
         theRoom.on('disconnect', peer => {
             console.log('peer disconnected', peer.id);
-        });*/
+        });
 
 
         
