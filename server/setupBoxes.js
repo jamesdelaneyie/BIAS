@@ -48,9 +48,9 @@ export default (instance, world, room, boxes) => {
         spin: 0, 
         material: wallMaterial 
     })
-    instance.addEntity(rightWall)
-    world.addBody(rightWall.body)
-    boxes.set(rightWall.nid, rightWall)
+    //instance.addEntity(rightWall)
+    //world.addBody(rightWall.body)
+    //boxes.set(rightWall.nid, rightWall)
 
 
     const bottomWall = new Box({ 
