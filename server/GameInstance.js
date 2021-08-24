@@ -105,8 +105,8 @@ class GameInstance {
 
         const express = require('express')
         const app = express()
-        const httpPort = process.env.PORT || 9000
-        const httpsPort = 9010
+        const httpPort = process.env.PORT || 80
+        const httpsPort = 443
         const { ExpressPeerServer } = require('peer')
         const path = require('path')
         const http = require('http')
@@ -114,18 +114,24 @@ class GameInstance {
         const fs = require('fs')
         const credentials = {
             key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem'),
-            cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/fullchain.pem')
+            cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/cert.pem')
         }
 
         const mainServer = http.createServer(app).listen(httpPort, () => { console.log('Main Server listening to port ' + httpPort) })
         const httpsServer = https.createServer(credentials, app).listen(httpsPort, () => { console.log('Peer Server listening to port ' + httpsPort) })
 
-        const peerServer = ExpressPeerServer(httpsServer, {
+        const peerServer = ExpressPeerServer(httpServer, {
                 debug: true,
-                ssl: credentials,
+                ssl: {},
         })
         
         app.use('/peerjs', peerServer)
+
+        const io = require('socket.io')(httpsServer,{
+            cors: {
+                origin: "*",
+            },
+        });
         
 
 
