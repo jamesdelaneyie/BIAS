@@ -21,7 +21,7 @@ const create = () => {
 
     var chosenValue = Math.random() < 0.5 ? 'james' : 'rory';
    
-    const myPeer = new Peer(chosenValue, {host:'/', secure:true, path: '/peerjs'})
+    const myPeer = new Peer(chosenValue, {host:'/', secure:true, path: '/'})
     let peerID;
 
     myPeer.on('open', function(id) {
@@ -205,8 +205,8 @@ const create = () => {
         console.log('connection closed') 
     })
 
-    client.connect('ws://localhost:8079')
-    //client.connect('wss://bias.jamesdelaney.ie/test')
+    //client.connect('ws://localhost:8079')
+    client.connect('wss://bias.jamesdelaney.ie/test')
 
 
     const update = (delta, tick, now) => {
