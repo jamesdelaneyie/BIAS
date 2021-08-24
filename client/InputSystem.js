@@ -379,10 +379,12 @@ class InputSystem {
                 
                 onChange: (data) => {
 
+                    let angle = data.angle * (pi/180);
+
                     this.currentState.mouseDown = false
                     this.frameState.mouseDown = false
-                    this.currentState.rotation = (data.angle)
-                    this.frameState.rotation = (data.angle)
+                    this.currentState.rotation = (angle)
+                    this.frameState.rotation = (angle)
                                 
                 },
                 onEnd: () => {
