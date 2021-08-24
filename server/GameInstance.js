@@ -104,30 +104,30 @@ class GameInstance {
 
 
 
+        const express = require('express')
+        const app = express()
+        const httpPort = process.env.PORT || 80
+        const httpsPort = 9010
+        const { ExpressPeerServer } = require('peer')
+        const path = require('path')
+        const http = require('http')
+        const https = require('https')
+        const fs = require('fs')
+        const credentials = {
+            key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/fullchain.pem'),
+            cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem')
+        }
 
-        // Peer JS
-        var express = require('express');
-        var app = express();
+        const mainServer = http.createServer(app).listen(httpPort, () => { console.log('Main Server listening to port ' + httpPort) })
+        const httpsServer = https.createServer(credentials, app).listen(httpsPort, () => { console.log('Peer Server listening to port ' + httpsPort) })
 
-        var ExpressPeerServer = require('peer').ExpressPeerServer;
-        var server = require('https').createServer(app);
+        const peerServer = ExpressPeerServer(mainServer, {
+                debug: true,
+                ssl: {},
+        })
         
-        var theRoom = ExpressPeerServer(server, {
-            debug: true,
-            port: 9010,
-            proxied: true,
-            ssl:{
-                key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/fullchain.pem'),
-                cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem')
-            },
-        });
-
-        app.use('/peerjs', theRoom);
+        app.use('/peerjs', peerServer)
         
-        server.listen(9010,  () => {
-            console.log('PeerJS On: '+server.address().port);
-        });
-
 
 
         this.people = []
