@@ -135,7 +135,7 @@ class UIBuilder extends PIXI.Container {
         
         //Text Styles for Input and Placeholder
         const textStyles = new PIXI.TextStyle({ 
-            fontFamily: 'Roboto Mono',
+            fontFamily: 'Trade Gothic',
             fill: "#000000", 
             fontSize: 18
         })
@@ -145,6 +145,8 @@ class UIBuilder extends PIXI.Container {
             value: "",
             padding: 10,
             maxLength: 25,
+            align: "center",
+            fontVariant: "small-caps",
             selectedColor: "#000000",
             selectedBackgroundColor: "#FFFFFF",
             caretWidth: 2,
@@ -163,7 +165,7 @@ class UIBuilder extends PIXI.Container {
         
         //Placeholder Text
         const nameFieldPlaceholder = new PUXI.TextWidget(
-            'Who are you?', 
+            'WHO ARE YOU?', 
             textStyles
         ).setLayoutOptions(
             new PUXI.FastLayoutOptions({
@@ -231,14 +233,14 @@ class UIBuilder extends PIXI.Container {
         
 
        const buttonStyles = new PIXI.TextStyle({ 
-            fontFamily: 'Roboto Mono',
+            fontFamily: 'Trade Gothic',
             fill: "#FFFFFF", 
             fontSize: 16, 
             letterSpacing: 2
         })
         const joinText = new PUXI.TextWidget('JOIN', buttonStyles)
         joinText.setLayoutOptions(new PUXI.FastLayoutOptions({
-            width: 50,
+            width: 35,
             height: 18,
             x: 0.5,
             y: 0.5,
@@ -249,14 +251,14 @@ class UIBuilder extends PIXI.Container {
 
 
         const buttonStylesTwo = new PIXI.TextStyle({ 
-            fontFamily: 'Roboto Mono',
+            fontFamily: 'Trade Gothic',
             fill: "#FFFFFF", 
             fontSize: 16, 
             letterSpacing: 2
         })
         const joinTextTwo = new PUXI.TextWidget('JOIN', buttonStylesTwo)
         joinTextTwo.setLayoutOptions(new PUXI.FastLayoutOptions({
-            width: 50,
+            width: 55,
             height: 18,
             x: 0.5,
             y: 0.5,
