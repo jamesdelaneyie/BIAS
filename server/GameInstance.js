@@ -117,10 +117,9 @@ class GameInstance {
             port: 443,
             proxied: true,
             ssl:{
-                key: fs.readFileSync('./etc/letsencrypt/live/bias.jamesdelaney.ie/fullchain.pem'),
-                cert: fs.readFileSync('../etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem')
+                key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/fullchain.pem'),
+                cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem')
             },
-            //allow_discovery: true
         });
 
         app.use('/peerjs', theRoom);
