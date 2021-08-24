@@ -119,7 +119,7 @@ class GameInstance {
         };
 
         var server = http.createServer(app).listen(PORT)
-        https.createServer(sslOptions, app).listen(443)
+        https.createServer(sslOptions, app).listen(9000)
 
         // CORS
         app.use(function(req, res, next) {

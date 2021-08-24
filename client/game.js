@@ -23,7 +23,8 @@ const create = () => {
    
     const myPeer = new Peer(chosenValue, {
         host:'/', 
-        path: '/'
+        path: '/peerjs',
+        port: 9000
     })
     
     let peerID;
