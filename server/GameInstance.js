@@ -104,34 +104,15 @@ class GameInstance {
 
 
 
-        var express = require('express');
-        var app = express();
-        var PORT = process.env.PORT || 3000
-        var ExpressPeerServer = require('peer').ExpressPeerServer;
-        //var path = require('path')
-        var http = require('http');
-        var https = require('https');
-        var fs = require('fs');
 
-        var sslOptions = {
-            key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem'),
-            cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/cert.pem')
-        };
-
-        var server = http.createServer(app).listen(PORT)
-        https.createServer(sslOptions, app).listen(9000)
-
-        // CORS
-        app.use(function(req, res, next) {
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-            next();
+        const peerServer = PeerServer({
+            port: 9000,
+            ssl: {
+                key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem'),
+                cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/cert.pem')
+            }
         });
 
-
-        app.use('/peerjs', ExpressPeerServer(server, {debug:true}));
-        //app.use('/', express.static(path.join(__dirname, '/client')))
-        
 
 
 
@@ -140,13 +121,13 @@ class GameInstance {
 
         this.people = []
 
-        server.on('connection', peer => {
+        peerServer.on('connection', peer => {
             //this.people.push(peer.id);
             console.log('peer connected', peer.id);
             //console.log(this.people)
         });
         
-        server.on('disconnect', peer => {
+        peerServer.on('disconnect', peer => {
             console.log('peer disconnected', peer.id);
         });
 
