@@ -312,12 +312,6 @@ class UIBuilder extends PIXI.Container {
         
         
 
-        
-
-
-        
-
-
 
 
         // Chat Text Entry Element 
