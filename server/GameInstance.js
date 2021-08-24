@@ -31,7 +31,6 @@ class GameInstance {
         this.instance = new nengi.Instance(nengiConfig, { port: 8079 })
         instanceHookAPI(this.instance)
 
-        const boxes = new Map()
 
         this.world = new p2.World({gravity: [0, 9]});
         this.room = {
@@ -54,9 +53,8 @@ class GameInstance {
         }
         this.floors = setupFloors(this.instance, this.room)
         this.obstacles = setupObstacles(this.instance, this.room)
-        this.boxes = setupBoxes(this.instance, this.world, this.room, boxes)
         
-        /*
+        
         this.room2 = {
             x: 900,
             y: 150,
@@ -68,7 +66,6 @@ class GameInstance {
         }
         this.floors = setupFloors(this.instance, this.room2)
         this.obstacles2 = setupObstacles(this.instance, this.room2)
-        this.boxesTwo = setupBoxes(this.instance, this.world, this.room2, boxes)
         
         this.room3 = {
             x: 0,
@@ -81,7 +78,6 @@ class GameInstance {
         }
         this.floors = setupFloors(this.instance, this.room3)
         this.obstacles3 = setupObstacles(this.instance, this.room3)
-        this.boxesThree = setupBoxes(this.instance, this.world, this.room3, boxes)
 
         this.room4 = {
             x: 850,
@@ -94,56 +90,55 @@ class GameInstance {
         }
         this.floors = setupFloors(this.instance, this.room4)
         this.obstacles4 = setupObstacles(this.instance, this.room4)
-        this.boxesFour = setupBoxes(this.instance, this.world, this.room4, boxes)
-        */
 
+        
+
+        const boxes = new Map()
+        this.boxes = setupBoxes(this.instance, this.world, this.room, boxes)
+        this.boxesTwo = setupBoxes(this.instance, this.world, this.room2, boxes)
+        this.boxesThree = setupBoxes(this.instance, this.world, this.room3, boxes)
+        this.boxesFour = setupBoxes(this.instance, this.world, this.room4, boxes)
 
         this.boxes = boxes
 
 
 
 
-        const express = require('express')
-        const app = express()
-        const httpPort = process.env.PORT || 80
-        const httpsPort = 443
-        const { ExpressPeerServer } = require('peer')
-        const path = require('path')
-        const http = require('http')
-        const https = require('https')
-        const fs = require('fs')
-        const credentials = {
-            key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem'),
-            cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/cert.pem')
-        }
 
-        const mainServer = http.createServer(app).listen(httpPort, () => { console.log('Main Server listening to port ' + httpPort) })
-        const httpsServer = https.createServer(credentials, app).listen(httpsPort, () => { console.log('Peer Server listening to port ' + httpsPort) })
+        // Peer JS
+        var express = require('express');
+        var app = express();
 
-        const peerServer = ExpressPeerServer(httpServer, {
-                debug: true,
-                ssl: {},
-        })
+        var ExpressPeerServer = require('peer').ExpressPeerServer;
+        var server = require('https').createServer(app);
         
-        app.use('/peerjs', peerServer)
-
-        const io = require('socket.io')(httpsServer,{
-            cors: {
-                origin: "*",
+        var theRoom = ExpressPeerServer(server, {
+            debug: true,
+            port: 9010,
+            //proxied: true,
+            ssl:{
+                key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem'),
+                cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/cert.pem')
             },
         });
+
+        app.use('/peerjs', theRoom);
         
+        server.listen(9010,  () => {
+            console.log('PeerJS On: '+server.address().port);
+        });
+
 
 
         this.people = []
 
-        mainServer.on('connection', peer => {
+        theRoom.on('connection', peer => {
             this.people.push(peer.id);
             console.log('peer connected', peer.id);
             console.log(this.people)
         });
         
-        mainServer.on('disconnect', peer => {
+        theRoom.on('disconnect', peer => {
             console.log('peer disconnected', peer.id);
         });
 
