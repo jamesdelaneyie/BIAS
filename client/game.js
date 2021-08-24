@@ -31,6 +31,7 @@ const create = () => {
         port: 9000
     })
     
+    let peerID;
 
     myPeer.on('open', function(id) {
         peerID = id;
