@@ -106,7 +106,7 @@ class GameInstance {
 
 
         // Peer JS
-        /*var express = require('express');
+        var express = require('express');
         var app = express();
 
         var ExpressPeerServer = require('peer').ExpressPeerServer;
@@ -123,7 +123,7 @@ class GameInstance {
             //allow_discovery: true
         });
 
-        //app.use('/peerjs', theRoom);
+        app.use('/peerjs', theRoom);
         
         server.listen(443,  () => {
             console.log('PeerJS On: '+server.address().port);
@@ -141,7 +141,7 @@ class GameInstance {
         
         theRoom.on('disconnect', peer => {
             console.log('peer disconnected', peer.id);
-        });*/
+        });
 
 
         
