@@ -1,4 +1,3 @@
-
 import nengi from 'nengi'
 import nengiConfig from '../common/nengiConfig.js'
 import InputSystem from './InputSystem.js'
@@ -19,15 +18,19 @@ const create = () => {
     const input = new InputSystem(renderer, client)
 
 
-    var chosenValue = Math.random() < 0.5 ? 'james' : 'rory';
-   
+    const months = ["Peter", "James", "Rory"];
+    const random = Math.floor(Math.random() * months.length);
+
+    const chosenValue = months[random];
+
+
+
     const myPeer = new Peer(chosenValue, {
         host:'/', 
         path: '/',
         port: 9000
     })
     
-    let peerID;
 
     myPeer.on('open', function(id) {
         peerID = id;
