@@ -62,7 +62,7 @@ class PlayerGraphics extends PIXI.Container {
         
 
         // Pointers normalize touch and mouse
-        //this.wrapper.on('pointerdown', this.onClick);
+        this.wrapper.on('pointerdown', this.onPointerOver);
         this.wrapper.on('pointerover', this.onPointerOver);
         this.wrapper.on('pointerout', this.onPointerOut);
         
