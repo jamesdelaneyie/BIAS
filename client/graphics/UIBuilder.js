@@ -378,6 +378,11 @@ class UIBuilder extends PIXI.Container {
         this.removeChild(this.joinModal)
     }
 
+    leaveSession(){
+        this.addChild(this.joinModal)
+        this.joinModalWidgetGroup.contentContainer.alpha = 1
+    }
+
     getText() {
         return this.nameFieldInput.value;
     }
