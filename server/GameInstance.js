@@ -22,10 +22,6 @@ import fs from 'fs'
 
 
 
-//import P2Pixi from 'p2Pixi'
-
-
-
 class GameInstance {
     constructor() {
         this.instance = new nengi.Instance(nengiConfig, { port: 8079 })
@@ -104,7 +100,7 @@ class GameInstance {
 
 
 
-
+        const { PeerServer } = require('peer');
         const peerServer = PeerServer({
             port: 9000,
             ssl: {
