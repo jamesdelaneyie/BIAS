@@ -93,7 +93,7 @@ const create = () => {
     const state = {
         myRawId: null,
         mySmoothId: null,
-        myPeerId: peerID,
+        myPeerId: '123',
         obstacles: new Map(),
         boxes: new Map(),
         floors: new Map()
