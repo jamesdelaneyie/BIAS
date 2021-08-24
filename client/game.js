@@ -32,7 +32,6 @@ const create = () => {
     myPeer.on('open', function(id) {
         peerID = id;
         window.caststatus.textContent = `Your device ID is: ${myPeer.id}`;
-        
     });
     window.myPeer = myPeer
 
