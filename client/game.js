@@ -55,7 +55,7 @@ const create = () => {
             window.peerStream = stream; //E
             showConnectedContent(); //F    });
         })
-    })*/
+    })
 
     myPeer.on('call', function(call) {
         const answerCall = confirm("Do you want to answer?")
@@ -87,7 +87,7 @@ const create = () => {
 
     function connectPeers() {
         conn = myPeer.connect(code)
-    }
+    }*/
         
 
     const state = {
