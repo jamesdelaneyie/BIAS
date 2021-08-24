@@ -17,6 +17,7 @@ import { fire } from '../common/weapon.js'
 import Notification from '../common/message/Notification'
 import lagCompensatedHitscanCheck from './lagCompensatedHitscanCheck'
 import censoring from 'chat-censoring'
+import fs from 'fs'
 
 
 
@@ -31,7 +32,7 @@ class GameInstance {
         instanceHookAPI(this.instance)
 
 
-        this.world = new p2.World({gravity: [0, 0]});
+        this.world = new p2.World({gravity: [0, 9]});
         this.room = {
             x: 0,
             y: 0,
@@ -108,15 +109,29 @@ class GameInstance {
         var express = require('express');
         var app = express();
         var ExpressPeerServer = require('peer').ExpressPeerServer;
-        var server = require('http').createServer(app);
+        
+        var server = require('https').createServer(app);
 
         
-        var theRoom = ExpressPeerServer(server, {debug: true});
+        
+        var theRoom = ExpressPeerServer(server, {
+            debug: true,
+            port: 443,
+            proxied: true,
+            ssl:{
+                key: fs.readFileSync('./etc/letsencrypt/live/bias.jamesdelaney.ie/fullchain.pem'),
+                cert: fs.readFileSync('../etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem')
+            },
+            allow_discovery: true
+        });
+
         app.use('/peerjs', theRoom);
         
-        server.listen(8878,  () => {
+        server.listen(443,  () => {
             console.log('PeerJS On: '+server.address().port);
         });
+
+
 
         this.people = []
 
@@ -124,7 +139,6 @@ class GameInstance {
             this.people.push(peer.id);
             console.log('peer connected', peer.id);
             console.log(this.people)
-
         });
         
         theRoom.on('disconnect', peer => {

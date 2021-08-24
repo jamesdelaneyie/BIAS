@@ -33,7 +33,7 @@ Being built right now in the open by James Delaney for Science Gallery Dublin's 
 * Each individual UI Element is a PUXI.Stage container
 * Using one large PUXI.Stage doesn't allow click events to pass through to the world
 * UI has two communication methods, a stream of data, and individual events
-
+* STAGE -> WIDGETGROUP -> WIDGET -> GRAPHICS 
 
 License: Open Source BSD-3-Clause
 

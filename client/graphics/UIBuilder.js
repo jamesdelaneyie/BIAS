@@ -270,7 +270,7 @@ class UIBuilder extends PIXI.Container {
         joinButtonWrapper.contentContainer.cursor = "pointer";
 
         const joinButtonClick = new PUXI.ClickManager(this.joinButton, true, false, false)
-        //this.addChild(joinButtonClick)
+        
         joinButtonClick.onPress = function(){
             this.setBackground(0xff0000)
             joinText.alpha = 0

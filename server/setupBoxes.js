@@ -125,9 +125,9 @@ export default (instance, world, room, boxes) => {
 
 
     var touch = new p2.ContactMaterial(circleMaterial, wallMaterial, {
-        friction: 0,
-        restitution: 0.1,
-        surfaceVelocity: 10
+        friction: 1,
+        restitution: 0.5,
+        surfaceVelocity: 20
     });
 
     world.addContactMaterial(touch);
