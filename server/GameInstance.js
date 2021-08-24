@@ -106,7 +106,7 @@ class GameInstance {
 
 
         // Peer JS
-        var express = require('express');
+        /*var express = require('express');
         var app = express();
 
         var ExpressPeerServer = require('peer').ExpressPeerServer;
@@ -143,7 +143,7 @@ class GameInstance {
         
         theRoom.on('disconnect', peer => {
             console.log('peer disconnected', peer.id);
-        });
+        });*/
 
 
         
