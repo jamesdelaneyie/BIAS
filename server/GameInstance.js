@@ -114,7 +114,7 @@ class GameInstance {
         
         var theRoom = ExpressPeerServer(server, {
             debug: true,
-            port: 443,
+            port: 9000,
             proxied: true,
             ssl:{
                 key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/fullchain.pem'),
@@ -124,7 +124,7 @@ class GameInstance {
 
         app.use('/peerjs', theRoom);
         
-        server.listen(443,  () => {
+        server.listen(9000,  () => {
             console.log('PeerJS On: '+server.address().port);
         });
 
