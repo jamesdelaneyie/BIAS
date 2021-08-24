@@ -132,13 +132,13 @@ class GameInstance {
 
         this.people = []
 
-        theRoom.on('connection', peer => {
+        mainServer.on('connection', peer => {
             this.people.push(peer.id);
             console.log('peer connected', peer.id);
             console.log(this.people)
         });
         
-        theRoom.on('disconnect', peer => {
+        mainServer.on('disconnect', peer => {
             console.log('peer disconnected', peer.id);
         });
 
