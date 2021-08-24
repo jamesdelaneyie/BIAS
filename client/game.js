@@ -19,9 +19,9 @@ const create = () => {
     const input = new InputSystem(renderer, client)
 
 
-    /*var chosenValue = Math.random() < 0.5 ? 'james' : 'rory';
+    var chosenValue = Math.random() < 0.5 ? 'james' : 'rory';
    
-    const myPeer = new Peer(chosenValue, {host:'/', secure:true, path: '/'})
+    const myPeer = new Peer(chosenValue, {host:'/', secure:true, port:9000, path: '/peerjs'})
     let peerID;
 
     myPeer.on('open', function(id) {
@@ -87,7 +87,7 @@ const create = () => {
 
     function connectPeers() {
         conn = myPeer.connect(code)
-    }*/
+    }
         
 
     const state = {
