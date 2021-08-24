@@ -127,7 +127,7 @@ class GameInstance {
         
         server.listen(443,  () => {
             console.log('PeerJS On: '+server.address().port);
-        });*/
+        });
 
 
 
@@ -141,7 +141,7 @@ class GameInstance {
         
         theRoom.on('disconnect', peer => {
             console.log('peer disconnected', peer.id);
-        });
+        });*/
 
 
         
