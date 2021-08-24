@@ -104,7 +104,7 @@ class GameInstance {
 
 
 
-
+/*
         // Peer JS
         var express = require('express');
         var app = express();
@@ -122,7 +122,7 @@ class GameInstance {
                 key: fs.readFileSync('./etc/letsencrypt/live/bias.jamesdelaney.ie/fullchain.pem'),
                 cert: fs.readFileSync('../etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem')
             },
-            allow_discovery: true
+            //allow_discovery: true
         });
 
         app.use('/peerjs', theRoom);
@@ -146,7 +146,7 @@ class GameInstance {
         });
 
 
-
+        */
 
 
     
