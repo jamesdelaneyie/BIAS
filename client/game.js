@@ -114,9 +114,9 @@ const create = () => {
 
 
 
-    //const audioContainer = document.querySelector('.call-container');
+    const audioContainer = document.querySelector('.call-container');
 
-    /*function showCallContent() {
+    function showCallContent() {
         window.caststatus.textContent = `Your device ID is: ${myPeer.id}`;
         callBtn.hidden = false;
         audioContainer.hidden = true;
@@ -136,7 +136,7 @@ const create = () => {
         }).catch( err => {
             console.log("u got an error:" + err)
         });
-    }*/
+    }
 
     client.on('message::Identity', message => {
         state.myRawId = message.rawId
@@ -144,13 +144,13 @@ const create = () => {
         state.myPeerId = message.peerId
 
         
-        //getLocalStream();
+        getLocalStream();
 
-        //getStreamCode();
+        getStreamCode();
 
-        //connectPeers();
+        connectPeers();
 
-       /* const call = myPeer.call(code, window.localStream); // A
+        const call = myPeer.call(code, window.localStream); // A
         console.log(code, window.localStream)
         console.log(call)
 
@@ -161,7 +161,7 @@ const create = () => {
             showCallContent()
             showConnectedContent(); //F]
             console.log('connected')
-        });*/
+        });
 
        
     })
