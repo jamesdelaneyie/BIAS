@@ -36,7 +36,7 @@ const create = () => {
 
     function getStreamCode() {
         code = window.prompt('Please enter the sharing code');
-    }*/
+    }
 
     const hangUpBtn = document.querySelector('.hangup-btn');
     hangUpBtn.addEventListener('click', function (){
@@ -55,7 +55,7 @@ const create = () => {
             window.peerStream = stream; //E
             showConnectedContent(); //F    });
         })
-    })
+    })*/
 
     myPeer.on('call', function(call) {
         const answerCall = confirm("Do you want to answer?")
