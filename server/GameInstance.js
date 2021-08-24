@@ -106,13 +106,11 @@ class GameInstance {
 
 
         // Peer JS
-        var express = require('express');
+        /*var express = require('express');
         var app = express();
 
         var ExpressPeerServer = require('peer').ExpressPeerServer;
-        
         var server = require('https').createServer(app);
-        
         
         var theRoom = ExpressPeerServer(server, {
             debug: true,
@@ -129,7 +127,7 @@ class GameInstance {
         
         server.listen(443,  () => {
             console.log('PeerJS On: '+server.address().port);
-        });
+        });*/
 
 
 
