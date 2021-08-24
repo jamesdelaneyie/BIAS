@@ -125,7 +125,7 @@ class GameInstance {
             //allow_discovery: true
         });
 
-        app.use('/peerjs', theRoom);
+        //app.use('/peerjs', theRoom);
         
         server.listen(443,  () => {
             console.log('PeerJS On: '+server.address().port);
