@@ -108,16 +108,16 @@ class GameInstance {
         // Peer JS
         var express = require('express');
         var app = express();
+
         var ExpressPeerServer = require('peer').ExpressPeerServer;
         
         var server = require('https').createServer(app);
-
         
         
         var theRoom = ExpressPeerServer(server, {
             debug: true,
             port: 443,
-            proxied: true,
+            //proxied: true,
             ssl:{
                 key: fs.readFileSync('./etc/letsencrypt/live/bias.jamesdelaney.ie/fullchain.pem'),
                 cert: fs.readFileSync('../etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem')
