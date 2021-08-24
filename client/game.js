@@ -21,7 +21,12 @@ const create = () => {
 
     var chosenValue = Math.random() < 0.5 ? 'james' : 'rory';
    
-    const myPeer = new Peer(chosenValue, {host:'/', secure:true, path: '/'})
+    const myPeer = new Peer(chosenValue, {
+        host:'/', 
+        secure:true, 
+        port: 9010,
+        path: '/peerjs'
+    })
     
     let peerID;
 
