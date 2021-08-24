@@ -31,6 +31,7 @@ class GameInstance {
         this.instance = new nengi.Instance(nengiConfig, { port: 8079 })
         instanceHookAPI(this.instance)
 
+        const boxes = new Map()
 
         this.world = new p2.World({gravity: [0, 9]});
         this.room = {
@@ -53,8 +54,9 @@ class GameInstance {
         }
         this.floors = setupFloors(this.instance, this.room)
         this.obstacles = setupObstacles(this.instance, this.room)
+        this.boxes = setupBoxes(this.instance, this.world, this.room, boxes)
         
-        
+        /*
         this.room2 = {
             x: 900,
             y: 150,
@@ -66,6 +68,7 @@ class GameInstance {
         }
         this.floors = setupFloors(this.instance, this.room2)
         this.obstacles2 = setupObstacles(this.instance, this.room2)
+        this.boxesTwo = setupBoxes(this.instance, this.world, this.room2, boxes)
         
         this.room3 = {
             x: 0,
@@ -78,6 +81,7 @@ class GameInstance {
         }
         this.floors = setupFloors(this.instance, this.room3)
         this.obstacles3 = setupObstacles(this.instance, this.room3)
+        this.boxesThree = setupBoxes(this.instance, this.world, this.room3, boxes)
 
         this.room4 = {
             x: 850,
@@ -90,14 +94,9 @@ class GameInstance {
         }
         this.floors = setupFloors(this.instance, this.room4)
         this.obstacles4 = setupObstacles(this.instance, this.room4)
-
-        
-
-        const boxes = new Map()
-        this.boxes = setupBoxes(this.instance, this.world, this.room, boxes)
-        this.boxesTwo = setupBoxes(this.instance, this.world, this.room2, boxes)
-        this.boxesThree = setupBoxes(this.instance, this.world, this.room3, boxes)
         this.boxesFour = setupBoxes(this.instance, this.world, this.room4, boxes)
+        */
+
 
         this.boxes = boxes
 
@@ -121,9 +120,9 @@ class GameInstance {
         const mainServer = http.createServer(app).listen(httpPort, () => { console.log('Main Server listening to port ' + httpPort) })
         const httpsServer = https.createServer(credentials, app).listen(httpsPort, () => { console.log('Peer Server listening to port ' + httpsPort) })
 
-        const peerServer = ExpressPeerServer(mainServer, {
+        const peerServer = ExpressPeerServer(httpsServer, {
                 debug: true,
-                ssl: {},
+                ssl: credentials,
         })
         
         app.use('/peerjs', peerServer)

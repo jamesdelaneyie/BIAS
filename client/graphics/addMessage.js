@@ -13,7 +13,7 @@ const addMessage = (layer, message) => {
     if(!visible) {
 
         const style = new PIXI.TextStyle({
-            fontFamily: 'Roboto Mono',
+            fontFamily: 'Trade Gothic',
             fill: "black",
             fontSize: 18,
             fontWeight: 300,

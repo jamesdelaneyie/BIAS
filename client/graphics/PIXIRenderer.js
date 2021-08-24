@@ -1,14 +1,13 @@
 
 import * as PIXI from 'pixi.js'
-import * as PUXI from 'puxi.js'
 import UIBuilder from './UIBuilder.js'
-
 
 import { CRTFilter } from '@pixi/filter-crt'
 import { EmoteSelector } from 'pixi-emote-selector'
 import MultiStyleText from 'pixi-multistyle-text'
 import cryptoRandomString from 'crypto-random-string'
 
+var FontFaceObserver = require('fontfaceobserver');
 
 class PIXIRenderer {
 
@@ -36,8 +35,12 @@ class PIXIRenderer {
         this.middleground = new PIXI.Container()
         this.foreground = new PIXI.Container()
         
+        var font = new FontFaceObserver('Trade Gothic');
         this.UIBuilder = new UIBuilder();    
-
+        font.load().then(function () {
+            //this.UIBuilder = new UIBuilder();    
+        });
+        
         
 
         this.camera.addChild(this.background)
