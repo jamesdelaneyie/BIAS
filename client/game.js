@@ -19,13 +19,75 @@ const create = () => {
     const input = new InputSystem(renderer, client)
 
 
-    const myPeer = new Peer({host:'/', secure:false, port:8878, path: '/peerjs'})
+    var chosenValue = Math.random() < 0.5 ? 'james' : 'rory';
+   
+    const myPeer = new Peer(chosenValue, {host:'/', secure:false, port:443, path: '/peerjs'})
     let peerID;
+
     myPeer.on('open', function(id) {
         peerID = id;
+        window.caststatus.textContent = `Your device ID is: ${myPeer.id}`;
+        
     });
+    window.myPeer = myPeer
+
+    const callBtn = document.querySelector('.call-btn');
+    let code;
+
+    function getStreamCode() {
+        code = window.prompt('Please enter the sharing code');
+    }
+
+    const hangUpBtn = document.querySelector('.hangup-btn');
+    hangUpBtn.addEventListener('click', function (){
+        conn.close();
+        showCallContent();
+    })
+
+    callBtn.addEventListener('click', function(){
+        getStreamCode();
+        connectPeers();
+        const call = myPeer.call(code, window.localStream); // A
+    
+        call.on('stream', function(stream) { // B
+            window.remoteAudio.srcObject = stream; // C
+            window.remoteAudio.autoplay = true; // D
+            window.peerStream = stream; //E
+            showConnectedContent(); //F    });
+        })
+    })
+
+    myPeer.on('call', function(call) {
+        const answerCall = confirm("Do you want to answer?")
+     
+        if(answerCall){
+           call.answer(window.localStream) // A
+           showConnectedContent(); // B
+           call.on('stream', function(stream) { // C
+              window.remoteAudio.srcObject = stream;
+              window.remoteAudio.autoplay = true;
+              window.peerStream = stream;
+           });
+        } else {
+           console.log("call denied"); // D
+        }
+     });
         
 
+    let conn;
+    myPeer.on('connection', function(conn){
+        conn.on('data', (data) => {
+            console.log(data);
+        });
+        //conn = connection;
+        conn.on('open', () => {
+            conn.send('hello!');
+        });
+    });
+
+    function connectPeers() {
+        conn = myPeer.connect(code)
+    }
         
 
     const state = {
@@ -46,11 +108,60 @@ const create = () => {
         return shouldIgnore(state.myRawId, update)
     }
 
+
+
+    const audioContainer = document.querySelector('.call-container');
+
+    function showCallContent() {
+        window.caststatus.textContent = `Your device ID is: ${myPeer.id}`;
+        callBtn.hidden = false;
+        audioContainer.hidden = true;
+    }
+
+    function showConnectedContent() {
+        window.caststatus.textContent = `You're connected`;
+        callBtn.hidden = true;
+        audioContainer.hidden = false;
+    }
+
+    function getLocalStream() {
+        navigator.mediaDevices.getUserMedia({video: false, audio: true}).then( stream => {
+            window.localStream = stream;
+            window.localAudio.srcObject = stream;
+            window.localAudio.autoplay = true;
+        }).catch( err => {
+            console.log("u got an error:" + err)
+        });
+    }
+
     client.on('message::Identity', message => {
         state.myRawId = message.rawId
         state.mySmoothId = message.smoothId
         state.myPeerId = message.peerId
+
+        
+        getLocalStream();
+
+        //getStreamCode();
+
+        connectPeers();
+
+       /* const call = myPeer.call(code, window.localStream); // A
+        console.log(code, window.localStream)
+        console.log(call)
+
+        call.on('stream', function(stream) { // B
+            window.remoteAudio.srcObject = stream; // C
+            window.remoteAudio.autoplay = true; // D
+            window.peerStream = stream; //E
+            showCallContent()
+            showConnectedContent(); //F]
+            console.log('connected')
+        });*/
+
+       
     })
+
 
     client.on('message::WeaponFired', message => {
         if (message.sourceId === state.mySmoothEntity.nid) {
