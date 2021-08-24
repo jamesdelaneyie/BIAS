@@ -91,7 +91,7 @@ export default (instance, world, room, boxes) => {
     const objects = room.objects
     if(objects) {
         objects.forEach(object => {
-            console.log(object.name)
+            //.log(object.name)
             let objectProps = new Box({
                 name: object.name,
                 x: object.x + roomX,

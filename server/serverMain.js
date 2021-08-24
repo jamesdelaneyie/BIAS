@@ -20,7 +20,9 @@ const loop = function() {
         tick++
 
         //const start = hrtimeMs() // uncomment to benchmark
+        
         gameInstance.update(delta, tick, Date.now())
+
        // gamePhysicsState.step(delta, tick, Date.now())
         //const stop = hrtimeMs()
         //console.log('game update took', stop-start, 'ms')

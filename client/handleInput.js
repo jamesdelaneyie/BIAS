@@ -83,11 +83,6 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
         }
     } else {
 
-        //console.log('test')
-        //console.log(input.spacebarRelease);
-        //console.log(input.spacebar)
-        //console.log(input.justReleasedR)
-
         if(input.spacebar == true) {
             //client.addCommand(new JoinCommand(input.message, 'Red'))
         }

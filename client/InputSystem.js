@@ -13,8 +13,7 @@ class InputSystem {
         this.UIBuilder = renderer.UIBuilder
 
         let isJoined = false;
-
-        const joinButton = renderer.stage.children[1].commandPanel;
+        const joinButton = renderer.stage.children[1].joinButton
         joinButton.on("click", function () {
             
             if(isJoined == false) {
@@ -22,6 +21,8 @@ class InputSystem {
                 let playerColor = Math.floor(Math.random()*16777215).toString(16);
                 client.addCommand(new JoinCommand(""+name+"", playerColor))
                 renderer.UIBuilder.clearText();
+                renderer.UIBuilder.joinSession();
+                isJoined = true
             }
         });
 

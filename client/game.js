@@ -1,3 +1,4 @@
+
 import nengi from 'nengi'
 import nengiConfig from '../common/nengiConfig.js'
 import InputSystem from './InputSystem.js'
@@ -11,15 +12,26 @@ import shouldIgnore from './shouldIgnore.js'
 import addMessage from './graphics/addMessage.js'
 
 
+
 const create = () => {
     const client = new nengi.Client(nengiConfig, 100)
-    
     const renderer = new PIXIRenderer()
     const input = new InputSystem(renderer, client)
+
+
+    const myPeer = new Peer({host:'/', secure:false, port:8878, path: '/peerjs'})
+    let peerID;
+    myPeer.on('open', function(id) {
+        peerID = id;
+    });
+        
+
+        
 
     const state = {
         myRawId: null,
         mySmoothId: null,
+        myPeerId: peerID,
         obstacles: new Map(),
         boxes: new Map(),
         floors: new Map()
@@ -37,6 +49,7 @@ const create = () => {
     client.on('message::Identity', message => {
         state.myRawId = message.rawId
         state.mySmoothId = message.smoothId
+        state.myPeerId = message.peerId
     })
 
     client.on('message::WeaponFired', message => {
@@ -52,7 +65,7 @@ const create = () => {
         if(message.type == "notification") {
             message.x = 0
             message.y = 0
-            addMessage(renderer.foreground, message);
+            addMessage(renderer.stage, message);
         }
         if(message.type == "text") {
             addMessage(renderer.middleground, message);
@@ -74,9 +87,12 @@ const create = () => {
 
     client.on('connected', res => { 
         console.log('connection?:', res) 
+        //startCall(target);
     })
 
-    client.on('disconnected', () => { console.log('connection closed') })
+    client.on('disconnected', () => { 
+        console.log('connection closed') 
+    })
 
     //client.connect('ws://localhost:8079')
     client.connect('wss://bias.jamesdelaney.ie/test')
@@ -93,3 +109,5 @@ const create = () => {
 }
 
 export default create
+
+

@@ -36,16 +36,30 @@ const addMessage = (layer, message) => {
             text.isMessage = false;
             layer.addChild(text)
         } else {
+
             text = new PIXI.Text(message.text, style);
-            text.x = message.x - 50 
-            text.y = message.y - (50 + text.height)
+            if(message.type == 'notification') {
+                text.x = 30
+                text.y = 28
+            } else {
+                text.x = message.x - 50 
+                text.y = message.y - (50 + text.height)
+            }
+            
+
             text.alpha = 0;
             text.isMessage = true;
 
 
             textBox = new PIXI.Graphics()
             textBox.beginFill(0xFFFFFF)
-            textBox.drawRoundedRect(message.x - 70, message.y - (68 + text.height), text.width+40, text.height+25, 20)
+            if(message.type == 'notification') {
+                textBox.drawRoundedRect(10, 10, text.width+40, text.height+25, 20)
+            } else {
+                textBox.drawRoundedRect(message.x - 70, message.y - (68 + text.height), text.width+40, text.height+25, 20)
+
+            }
+            
             textBox.endFill()
             textBox.alpha = 0
             
