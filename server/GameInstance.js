@@ -114,8 +114,8 @@ class GameInstance {
         const https = require('https')
         const fs = require('fs')
         const credentials = {
-            //key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/fullchain.pem'),
-            //cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem')
+            key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem'),
+            cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/fullchain.pem')
         }
 
         const mainServer = http.createServer(app).listen(httpPort, () => { console.log('Main Server listening to port ' + httpPort) })
