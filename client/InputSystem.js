@@ -141,7 +141,7 @@ class InputSystem {
                     //iframe.src = "https://www.youtube.com/embed/daixJKnzc4o?autoplay=1&modestbranding=1&showinfo=0&rel=0&fs=0&color=white&controls=0"
                     iframe.src = "https://normalizi.ng/"
                     iframe.style = "position:absolute;top:50%;left:50%;transform:translateX(-50%)translateY(-50%);border:0;width:1120px;height:630px"
-                    iframe.allow = "geolocation, camera"
+                    iframe.allow = "geolocation camera"
                     iframe.id = "iframe"
                     iframe.allowfullscreen = "allowfullscreen"
                     document.body.appendChild(iframe);
