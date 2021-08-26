@@ -22,6 +22,21 @@ class BoxGraphics extends PIXI.Container {
         
     }
 
+    updateColor(color) {
+        console.log(color)
+        if(typeof color == "undefined" ) {
+            let updateColor = PIXI.utils.string2hex("#FFFFFF");
+            this.body.beginFill(updateColor)
+            this.body.drawRect(-this.width/2, -this.height/2, this.width, this.height)
+            this.body.endFill()
+        } else {
+            let updateColor = PIXI.utils.string2hex(color);
+            this.body.beginFill(updateColor)
+            this.body.drawRect(-this.width/2, -this.height/2, this.width, this.height)
+            this.body.endFill()
+        }
+    }
+
     update(delta) {
 
     }
