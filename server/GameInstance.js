@@ -41,7 +41,13 @@ class GameInstance {
             backgroundColor: "#00ff00",
             borderColor: "#FFFFFF",
             borderWidth: 25,
-            objects: [],
+            objects: [{
+                x: 100,
+                y: 100,
+                width: 25, 
+                width: 25, 
+                color: "#0000ff"
+            }],
             portals: [{
                 x: 380,
                 y: 250,

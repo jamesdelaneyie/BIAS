@@ -1,13 +1,13 @@
 {
-  "name": "nengi-2d-demo",
-  "version": "1.0.0",
-  "description": "nengi 2d example game with client-side prediction and lag compensation",
+  "name": "bias",
+  "version": "0.1.0",
+  "description": "biaspace",
   "scripts": {
     "start": "npx concurrently \"npx webpack-dev-server --config webpack.dev.js\" \"npx nodemon --inspect ./server/index.js --ignore public --ignore bot/\"",
     "build": "npx webpack --config webpack.prod.js"
   },
-  "author": "timetocode // Alex",
-  "license": "Apache 2.0",
+  "author": "jamesdelaneyie",
+  "license": "BSD-3-Clause",
   "dependencies": {
     "@pixi/filter-ascii": "^4.0.0",
     "@pixi/filter-crt": "^4.0.0",
