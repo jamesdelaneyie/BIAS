@@ -5,6 +5,7 @@ import MultiStyleText from 'pixi-multistyle-text'
 import cryptoRandomString from 'crypto-random-string'
 import { GlowFilter } from '@pixi/filter-glow'
 import { Ease, ease } from 'pixi-ease'
+import { sound } from '@pixi/sound';
 
 class UIBuilder extends PIXI.Container {
     constructor() {
@@ -282,6 +283,9 @@ class UIBuilder extends PIXI.Container {
             this.setBackground(0xffffff)
             joinText.alpha = 1
             joinTextTwo.alpha = 0
+
+            sound.add('login', 'audio/login.mp3');
+            sound.play('login')
         }
 
         

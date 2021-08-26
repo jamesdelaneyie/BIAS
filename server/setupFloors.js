@@ -9,7 +9,6 @@ export default (instance, room) => {
     let roomWidth = room.width
     let roomHeight = room.height
     let roomColor = room.backgroundColor
-    let roomBorderWdith = room.borderWidth
 
     if(!roomX == 0) {
         roomX = roomX/2
@@ -17,7 +16,6 @@ export default (instance, room) => {
     if(!roomY == 0) {
         roomY = roomY/2
     }
-    console.log("Room X:"+ roomX)
 
     const floor = new Floor({ 
         x: roomX, 

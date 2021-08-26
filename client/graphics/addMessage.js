@@ -93,7 +93,7 @@ const addMessage = (layer, message) => {
                     text.alpha = text.alpha - 0.1;
                     textBox.alpha = textBox.alpha - 0.1
                 }
-                console.log(text.alpha)
+                //console.log(text.alpha)
             }
             setTimeout(() => {
                 layer.removeChild(text)

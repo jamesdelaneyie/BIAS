@@ -66,7 +66,7 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
         const graphics = client.graphicalEntities.get(prediction.nid)
         graphics.x = prediction.x
         graphics.y = prediction.y
-        graphics.rotation = rotationAmount
+        graphics.playerBody.rotation = rotationAmount
        
         // make the camera look at our entity
         renderer.centerCamera(graphics)

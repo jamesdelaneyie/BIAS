@@ -81,6 +81,7 @@ export default (client, hooks) => {
     })
 
     client.on('update', update => {
+        //console.log(update)
         if (client.entityUpdateFilter(update)) {
             //console.log('ignore', update)
             return

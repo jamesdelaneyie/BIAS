@@ -1,0 +1,5 @@
+# .env ======
+NENGIPORT=5000
+PEERPORT=9000
+
+//HO_AM_I="Who Knows"

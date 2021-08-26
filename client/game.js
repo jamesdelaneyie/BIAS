@@ -9,6 +9,7 @@ import drawHitscan from './graphics/drawHitscan.js'
 import reconcilePlayer from './reconcilePlayer.js'
 import shouldIgnore from './shouldIgnore.js'
 import addMessage from './graphics/addMessage.js'
+import { sound } from '@pixi/sound';
 
 
 
@@ -17,7 +18,7 @@ const create = () => {
     const renderer = new PIXIRenderer()
     const input = new InputSystem(renderer, client)
 
-
+/*
     const months = ["Peter", "James", "Rory"];
     const random = Math.floor(Math.random() * months.length);
 
@@ -95,7 +96,7 @@ const create = () => {
 
     function connectPeers() {
         conn = myPeer.connect(code)
-    }
+    }*/
         
 
     const state = {
@@ -107,7 +108,12 @@ const create = () => {
         floors: new Map()
     }
 
-    clientHookAPI( // API EXTENSION
+    sound.add('my-sound', 'audio/background.mp3');
+    sound.volume('my-sound', 0.05)
+    sound.speed('my-sound', 0.9)
+    sound.play('my-sound', {loop: true})
+
+    clientHookAPI(
         client,
         createHooks(state, renderer)
     )
@@ -147,12 +153,15 @@ const create = () => {
         state.mySmoothId = message.smoothId
         state.myPeerId = message.peerId
 
+
+
+
         
-        getLocalStream();
+       // getLocalStream();
 
-        getStreamCode();
+        /*//reamCode();
 
-        connectPeers();
+        //connectPeers();
 
         const call = myPeer.call(code, window.localStream); // A
         console.log(code, window.localStream)
@@ -165,7 +174,7 @@ const create = () => {
             showCallContent()
             showConnectedContent(); //F]
             console.log('connected')
-        });
+        });*/
 
        
     })
@@ -205,8 +214,7 @@ const create = () => {
     })
 
     client.on('connected', res => { 
-        console.log('connection?:', res) 
-        //startCall(target);
+        console.log('connection?:', res)
     })
 
     client.on('disconnected', () => { 
@@ -215,8 +223,8 @@ const create = () => {
 
 
 
-    //client.connect('ws://localhost:8079')
-    client.connect('wss://bias.jamesdelaney.ie/test')
+    client.connect('ws://localhost:8079')
+    //client.connect('wss://bias.jamesdelaney.ie/test')
 
 
     const update = (delta, tick, now) => {

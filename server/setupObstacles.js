@@ -1,9 +1,7 @@
 import Obstacle from '../common/entity/Obstacle.js'
 
 // setup a few obstacles
-export default (instance, room) => {
-
-    const obstacles = new Map()
+export default (instance, room, obstacles) => {
 
     let roomX = room.x
     let roomY = room.y 
@@ -30,7 +28,7 @@ export default (instance, room) => {
         height: roomHeight + borderWidth,
         border: borderWidth,
         color: backgroundColor 
-        })
+    })
     instance.addEntity(rightWall)
     obstacles.set(rightWall.nid, rightWall)
 

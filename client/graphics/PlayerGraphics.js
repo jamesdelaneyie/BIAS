@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js'
 import * as PUXI from 'puxi.js'
 import HitpointBar from './HitpointBar.js'
-import { sound } from '@pixi/sound';
+
 
 class PlayerGraphics extends PIXI.Container {
     constructor(state) {
@@ -21,6 +21,8 @@ class PlayerGraphics extends PIXI.Container {
         this.name = state.name;
         this.self = state.self;
 
+        this.playerBody = new PIXI.Graphics();
+
         this.wrapper = new PIXI.Container()
 
         
@@ -39,13 +41,13 @@ class PlayerGraphics extends PIXI.Container {
         aura.blendMode = PIXI.BLEND_MODES.MULTIPLY;
         this.auraContainer.addChild(aura);
         canvasRenderer.render(this.auraContainer, auraTexture)
-        this.wrapper.addChild(this.auraContainer)
+        this.playerBody.addChild(this.auraContainer)
 
         this.body = new PIXI.Graphics()
         this.body.beginFill(auraColor)
         this.body.drawCircle(0, 0, 25)
         this.body.endFill()
-        this.wrapper.addChild(this.body)
+        this.playerBody.addChild(this.body)
 
         this.nose = new PIXI.Graphics()
         this.nose.moveTo(0, -25)
@@ -54,17 +56,16 @@ class PlayerGraphics extends PIXI.Container {
         this.nose.lineTo(40, 0)
         this.nose.lineTo(0, 25)
         this.nose.endFill()
-        this.wrapper.addChild(this.nose)
+        this.playerBody.addChild(this.nose)
 
         this.wrapper.interactive = true;
         this.wrapper.buttonMode = true;
 
+
+
         
 
-        // Pointers normalize touch and mouse
-        this.wrapper.on('pointerdown', this.onPointerOver);
-        this.wrapper.on('pointerover', this.onPointerOver);
-        this.wrapper.on('pointerout', this.onPointerOut);
+
         
 
         this.info = new PUXI.Stage(20,100)
@@ -73,12 +74,19 @@ class PlayerGraphics extends PIXI.Container {
         nameText.tint = 0xffffff
         this.info.x = -20
         this.info.y = -50
-        this.info.alpha = 0
+        this.info.alpha = 0 
         this.info.addChild(nameText)
+
+        // Pointers normalize touch and mouse
+        this.wrapper.on('pointerdown', this.onPointerOver);
+        this.wrapper.on('pointerover', this.onPointerOver);
+        this.wrapper.on('pointerout', this.onPointerOut);
+
+
+
         this.wrapper.addChild(this.info)
-
+        this.wrapper.addChild(this.playerBody)
         this.addChild(this.wrapper)
-
 
 
 
@@ -92,12 +100,12 @@ class PlayerGraphics extends PIXI.Container {
     }
 
 
-    onPointerOver (){
-        this.children[3].alpha = 1
+    onPointerOver(){
+        this.children[0].alpha = 1
     }
 
     onPointerOut(){
-        this.children[3].alpha = 0
+        this.children[0].alpha = 0
     }
 
     hide() {
@@ -106,6 +114,14 @@ class PlayerGraphics extends PIXI.Container {
         this.auraContainer.visible  = 0
         this.info.visible = 0
     }
+
+    show() {
+        this.body.visible = 1
+        this.nose.visible = 1
+        this.auraContainer.visible  = 1
+        this.info.visible = 1
+    }
+
 
     update(delta) {
         
