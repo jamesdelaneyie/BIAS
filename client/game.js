@@ -9,7 +9,8 @@ import drawHitscan from './graphics/drawHitscan.js'
 import reconcilePlayer from './reconcilePlayer.js'
 import shouldIgnore from './shouldIgnore.js'
 import addMessage from './graphics/addMessage.js'
-import { sound } from '@pixi/sound';
+import * as PIXI from 'pixi.js'
+import { Sound, filters } from '@pixi/sound';
 
 
 
@@ -108,10 +109,15 @@ const create = () => {
         floors: new Map()
     }
 
-    sound.add('my-sound', 'audio/background.mp3');
-    sound.volume('my-sound', 0.05)
-    sound.speed('my-sound', 0.9)
-    sound.play('my-sound', {loop: true})
+    const backgroundMusic = Sound.from('audio/background.mp3');
+    backgroundMusic.speed = 0.9
+    backgroundMusic.volume = 0.05
+    backgroundMusic.loop = true;
+
+    const telephone = new filters.TelephoneFilter(1)
+    const distorsion = new filters.DistortionFilter(0.1)
+    backgroundMusic.filters = [telephone, distorsion]
+    backgroundMusic.play()
 
     clientHookAPI(
         client,
@@ -188,8 +194,16 @@ const create = () => {
         drawHitscan(renderer.middleground, x, y, tx, ty, 0xff0000)
     })
 
+
+
+
+
+    const sound = Sound.from('audio/car.mp3');
+
     client.on('message::Notification', message => {
-        //console.log('Notification', message)
+
+        console.log('Notification', message)
+
         if(message.type == "notification") {
             message.x = 0
             message.y = 0
@@ -200,6 +214,17 @@ const create = () => {
         }
         if(message.type == "talk") {
             addMessage(renderer.middleground, message);
+        }
+        if(message.type == "sound") {
+
+            
+            if(sound.isPlaying == false) {
+                sound.play(); 
+            }
+                      
+           
+    
+
         }
         
     })
@@ -223,8 +248,8 @@ const create = () => {
 
 
 
-    //client.connect('ws://localhost:8079')
-    client.connect('wss://bias.jamesdelaney.ie/test')
+    client.connect('ws://localhost:8079')
+    //client.connect('wss://bias.jamesdelaney.ie/test')
 
 
     const update = (delta, tick, now) => {
