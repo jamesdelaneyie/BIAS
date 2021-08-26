@@ -15,11 +15,6 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
 
     const { myRawEntity, obstacles, boxes, floors} = state
 
-    //console.log(renderer.stage.children[1]);
-
-   
-
-
 
     if (myRawEntity) {
         // which way are we pointing?
@@ -46,8 +41,8 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
         }
 
         if(input.r == true) {
-            const respawnCommand = new RespawnCommand(true)
-            client.addCommand(respawnCommand)
+            //const respawnCommand = new RespawnCommand(true)
+            //client.addCommand(respawnCommand)
         }
        
         // apply moveCommand  to our local entity
@@ -83,7 +78,7 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
         }
     } else {
 
-        if(input.spacebar == true) {
+        if(input.message != '') {
             //client.addCommand(new JoinCommand(input.message, 'Red'))
         }
 

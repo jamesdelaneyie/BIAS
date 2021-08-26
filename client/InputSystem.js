@@ -120,17 +120,15 @@ class InputSystem {
                 }
 
                 if (event.keyCode === 13) {
-                    //console.log(this.UIBuilder)
-                    //this.frameState.message = this.UIBuilder.getText();
-                    this.currentState.message = this.UIBuilder.getText();//this.frameState.message;
-                    this.UIBuilder.clearText();
+                    this.currentState.message = this.UIBuilder.getMessageText();
+                    this.UIBuilder.clearMessageText();
                 } 
 
                 if (event.keyCode === 9) {
                     //console.log(this.UIBuilder)
                     //this.frameState.message = this.UIBuilder.getText();
-                    this.currentState.message = this.UIBuilder.getText();//this.frameState.message;
-                    this.UIBuilder.clearText();
+                    //this.currentState.message = this.UIBuilder.getText();//this.frameState.message;
+                    //this.UIBuilder.clearText();
                 }
 
                 //Right Bracket
@@ -202,6 +200,7 @@ class InputSystem {
                     this.currentState.spacebar = false
                 }
 
+                //enter
                 if (event.keyCode === 13) {
                     this.frameState.message = ""
                     this.currentState.message = ""
@@ -423,7 +422,6 @@ class InputSystem {
         this.frameState.spacebarRelease = false;
         this.frameState.rotation = this.currentState.rotation
         this.frameState.mouseDown = this.currentState.mouseDown
-        this.frameState.message = this.currentState.message
         this.frameState.message = this.currentState.message
         this.frameState.viewArt = this.currentState.viewArt
     }

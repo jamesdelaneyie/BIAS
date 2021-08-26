@@ -27,11 +27,13 @@ const addMessage = (layer, message) => {
         let text = ""
         let textBox = ""
 
+        message.text = message.text.toUpperCase()
+
         
         if(message.type == 'talk') {
             text = new PIXI.Text("❤️", style);
-            text.x = message.x - Math.floor(Math.random() * 80) + 20
-            text.y = message.y - Math.floor(Math.random() * 80) + 20
+            text.x = message.x - Math.floor(Math.random() * 120) + 40
+            text.y = message.y - Math.floor(Math.random() * 120) + 20
             text.alpha = 1;
             text.isMessage = false;
             layer.addChild(text)

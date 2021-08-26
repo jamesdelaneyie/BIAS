@@ -42,48 +42,23 @@ class PIXIRenderer {
             //this.UIBuilder = new UIBuilder();    
         });
         
-        
 
         this.camera.addChild(this.background)
         this.camera.addChild(this.middleground)
         this.camera.addChild(this.foreground)
         
-        
-
-        
-        
+        this.camera.x = 500
+        this.camera.y = 250
 
         this.stage.addChild(this.camera)
         this.stage.addChild(this.UIBuilder)
 
-        //PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
-
-        this.sprite = PIXI.Sprite.from('images/bunny.png');
-        this.sprite.anchor.set(0.5);
-        this.sprite.x = window.innerWidth / 2;
-        this.sprite.y = window.innerHeight / 2;
-        this.sprite.interactive = true;
-        this.sprite.buttonMode = true;
-
-        
-
-        // Pointers normalize touch and mouse
-        this.sprite.on('pointerdown', this.onClick);
-
-        // Alternatively, use the mouse & touch events:
-         //this.sprite.on('click', onClick); // mouse-only
-         //this.sprite.on('tap', onClick); // touch-only
-
-        //this.foreground.addChild(this.sprite);
         
         window.addEventListener('resize', () => {
             this.resize()
         })
     }
 
-    onClick(){
-        console.log(this.x)
-    }
 
     
     resize() {

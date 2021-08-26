@@ -88,8 +88,8 @@ class UIBuilder extends PIXI.Container {
         this.modalBackgroundGlow.alpha = 1
         this.modalBackgroundGlow.drawRoundedRect(0, 0, modalWidth, 400, modalRadius)
         this.modalBackgroundGlow.endFill()
-        this.glowFilter = new GlowFilter({ distance: 25, outerStrength: 2.5, innerStrength: 0, color: 0x00ff00, quality: 0.2 })
-        this.modalBackgroundGlow.filters = [ this.glowFilter ]
+        //this.glowFilter = new GlowFilter({ distance: 25, outerStrength: 2.5, innerStrength: 0, color: 0x00ff00, quality: 0.2 })
+        //this.modalBackgroundGlow.filters = [ this.glowFilter ]
         this.joinModalWidgetGroup.contentContainer.addChild(this.modalBackgroundGlow)
 
         //Modal Background
@@ -299,29 +299,33 @@ class UIBuilder extends PIXI.Container {
         
         this.joinModal.addChild(this.joinModalWidgetGroup)
         
-
         this.addChild(this.joinModal)
 
-        
 
 
 
-       
-        
-   /*     
 
-        
 
 
         
-        
-
-
 
         // Chat Text Entry Element 
-        this.textBox = new PUXI.Stage(500, 45)   
-        this.textBox.x = 200
+        this.textBox = new PUXI.Stage(window.innerWidth, 40)   
+        
         this.textBox.alpha = 0
+        this.textBox.y = window.innerHeight - 80
+
+        this.textBoxWrapper = new PUXI.WidgetGroup({
+        }).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 500,
+                height: 40,
+                x: 0.5,
+                y: 0.5,
+                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+            }),
+        )
+
         //The Text Input
         this.mockInput = new PUXI.TextInput({
             multiLine: false,
@@ -341,10 +345,10 @@ class UIBuilder extends PIXI.Container {
                 y: 0,
             }),
         )
-        this.textBox.addChild(this.mockInput)
-        //Placeholder Text
+        this.textBoxWrapper.addChild(this.mockInput);
+        
         this.TextBoxPlaceholder = new PUXI.TextWidget(
-            'Type to Speak!', 
+            'TYPE TO SPEAK!', 
             textStyles
         ).setLayoutOptions(
             new PUXI.FastLayoutOptions({
@@ -353,18 +357,19 @@ class UIBuilder extends PIXI.Container {
             })
         )
         this.TextBoxPlaceholder.alpha = 0.4;
-        this.textBox.addChild(this.TextBoxPlaceholder);
+        this.textBoxWrapper.addChild(this.TextBoxPlaceholder);
 
-        //Focus + Blur events, hide placeholder
-        this.textBox.widgetChildren[0].on('focus', () => { 
+        this.textBoxWrapper.widgetChildren[0].on('focus', () => { 
             this.TextBoxPlaceholder.alpha = 0;
         });
-        this.textBox.widgetChildren[0].on('blur', () => { 
+        this.textBoxWrapper.widgetChildren[0].on('blur', () => { 
             this.TextBoxPlaceholder.alpha = 0.4;
         });
-        //Add to the UI Layer
+
+        this.textBox.addChild(this.textBoxWrapper);
         this.addChild(this.textBox)
-*/
+   
+
 
         window.addEventListener('resize', () => {
             this.joinModal.resize(window.innerWidth, window.innerHeight)
@@ -376,6 +381,7 @@ class UIBuilder extends PIXI.Container {
         this.joinModalWidgetGroup.contentContainer.alpha = 0
         this.joinModal.alpha = 0
         this.removeChild(this.joinModal)
+        this.textBox.alpha = 1
     }
 
     leaveSession(){
@@ -386,10 +392,21 @@ class UIBuilder extends PIXI.Container {
     getText() {
         return this.nameFieldInput.value;
     }
-    
+
     clearText() {
         this.nameFieldInput.value = ""
         this.nameFieldInput.blur()
+    }
+
+    getMessageText() {
+        return this.mockInput.value;
+    }
+    
+    clearMessageText() {
+        if(this.mockInput.value != "<3") {
+            this.mockInput.value = ""
+            this.mockInput.blur()
+        }
     }
 
     resize() {
