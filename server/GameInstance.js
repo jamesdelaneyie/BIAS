@@ -52,10 +52,10 @@ class GameInstance {
             }],
             portals: [{
                 x: 380,
-                y: 250,
+                y: 175,
                 width: 20,
                 height: 100,
-                exit: [2340, 50]
+                exit: [2210, 50]
             }]
         }
         this.floors = setupFloors(this.instance, this.room)
@@ -71,11 +71,11 @@ class GameInstance {
             borderWidth: 25,
             objects: [],
             portals: [{
-                x: 125,
+                x: 150,
                 y: 20,
                 width: 100,
                 height: 20, 
-                exit: [320, 290]
+                exit: [320, 200]
             }]
         }
         this.floors2 = setupFloors(this.instance, this.room2)
@@ -364,7 +364,7 @@ class GameInstance {
         }
 
         
-
+            //Portals
             this.instance.clients.forEach(client => {
 
                 for (let portal of this.portals.values()) {
@@ -377,16 +377,25 @@ class GameInstance {
                         
                         if(collided) {
 
-                            client.rawEntity.x = portal.exit[0]
-                            client.rawEntity.y = portal.exit[1]
-                            client.view.x = client.rawEntity.x
-                            client.view.y = client.rawEntity.y
 
-                            client.positions = []
-
-                            //console.log(client)
+                            let thisInstance = this.instance;
+                            let thisClient = client.rawEntity
+                            thisClient.isAlive = false;
                             
-                        
+                            setTimeout(function(){
+                                thisClient.x = portal.exit[0]
+                                thisClient.y = portal.exit[1]
+                                client.view.x = thisClient.x
+                                client.view.y = thisClient.y
+                                client.positions = []
+                            }, 100)
+                            
+
+                            setTimeout(function(){
+                                thisClient.isAlive = true
+                                thisInstance.messageAll(new Notification('portal-noise', 'sound', 0, 0), client)
+                            }, 300)
+
                             break
                         }
                         
@@ -398,37 +407,46 @@ class GameInstance {
 
             })
 
-            this.instance.clients.forEach(client => {
+            //Play Boxes
+            for (let box of this.boxes.values()) {
 
-                for (let box of this.boxes.values()) {
+                for (const [key, value] of Object.entries(this.instance.clients.array)) {
 
-                    if(client.smoothEntity.isAlive) {
+                    
+                    //console.log(value)
+
+                    if(value.rawEntity.isAlive && box.name == "item") {
 
                         let collided = false
 
-                        collided = SAT.testCirclePolygon(client.rawEntity.collider.circle, box.collider.polygon) 
-                        
-                        if(collided) {
-                    
-                            console.log(collided)
-                            this.instance.messageAll(new Notification('pickup', 'notification', 20, 20))
+                        collided = SAT.testCirclePolygon(value.rawEntity.collider.circle, box.collider.polygon) 
+                        //console.log(collided)
 
+                        if(this.instance.clients.array.length > 1) {
                             if(collided == true) {
+                                this.instance.messageAll(new Notification(''+ value.rawEntity.name +' is touching " '+ box.name +' "', 'notification', 20, 20))
                                 box.color = "#0000ff"
                                 break
                             } else {
                                 box.color = "#FFFFFF"
                             }
-             
+                        } else {
+                            if(collided == true) {
+                                this.instance.messageAll(new Notification(''+ value.rawEntity.name +' is touching " '+ box.name +' "', 'notification', 20, 20))
+                                box.color = "#0000ff"
+                                break
+                            } else {
+                                box.color = "#FFFFFF"
+                            }
                         }
-                        
+
                     }
 
 
                 }
 
 
-            })
+            }
             
        
         

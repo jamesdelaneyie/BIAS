@@ -7,6 +7,7 @@ class Box {
         this.nid = state.nid
         //this.x = state.x
         //this.y = state.y
+        this.name = state.name
         this.width = state.width
         this.height = state.height
         this.rotation = state.rotation
@@ -19,21 +20,46 @@ class Box {
        
 
 
-        this.boxShape = new p2.Box({
-            width: state.width, 
-            height: state.height
-        });
-        this.boxShape.material = state.material;
-        this.body = new p2.Body({
-            mass: state.mass,
-            position: [state.x, state.y],
-            //angularVelocity: 0.1
-        });
+      
+
+        if(state.name == "item") {
+
+
+            this.boxShape = new p2.Box({
+                width: state.width, 
+                height: state.height
+            });
+            this.boxShape.material = state.material;
+            this.body = new p2.Body({
+                mass: 1,
+                position: [state.x, state.y],
+            });
+    
+            
+            this.body.addShape(this.boxShape)
+
+            console.log('alternative size')
+            console.log(state.width, state.height)
+            this.collider = CollisionSystem.createRectangleColliderBox(0, 0, 25, 25)   
+
+        } else {
+
+            this.boxShape = new p2.Box({
+                width: state.width, 
+                height: state.height
+            });
+            this.boxShape.material = state.material;
+            this.body = new p2.Body({
+                mass: state.mass,
+                position: [state.x, state.y],
+            });
+    
+            
+            this.body.addShape(this.boxShape)
+            this.collider = CollisionSystem.createRectangleCollider(0,0,0,0)    
+        }
 
         
-        this.body.addShape(this.boxShape)
-
-        this.collider = CollisionSystem.createRectangleCollider(-state.width/2, -state.height/2, state.width, state.height)    
     }
 
     get x() {
@@ -52,6 +78,7 @@ class Box {
 }
 
 Box.protocol = {
+    name: nengi.String,
     x: { type: nengi.Number, interp: true },
     y: { type: nengi.Number, interp: true },
     rotation: { type: nengi.RotationFloat32, interp: true },
