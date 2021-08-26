@@ -42,11 +42,13 @@ class GameInstance {
             borderColor: "#FFFFFF",
             borderWidth: 25,
             objects: [{
+                name: "item",
                 x: 100,
                 y: 100,
                 width: 25, 
-                width: 25, 
-                color: "#0000ff"
+                height: 25, 
+                color: "#0000ff",
+                mass: 1
             }],
             portals: [{
                 x: 380,
@@ -58,7 +60,6 @@ class GameInstance {
         }
         this.floors = setupFloors(this.instance, this.room)
         
-        //this.boxes = setupBoxes(this.instance, this.world, this.room, boxes)
 
         this.room2 = {
             x: 2000,
@@ -79,67 +80,8 @@ class GameInstance {
         }
         this.floors2 = setupFloors(this.instance, this.room2)
         
-        //this.boxes2 = setupBoxes(this.instance, this.world, this.room2, boxes)
-
         
         
-
-        /*this.roomBlue = {
-            x: 0,
-            y: 0,
-            width: 800,
-            height: 800,
-            backgroundColor: "#ff0000",
-            borderColor: "#FFFFFF",
-            borderWidth: 25,
-            objects: []
-        }
-        this.floors = setupFloors(this.instance, this.roomBlue)
-        this.boxes = setupBoxes(this.instance, this.world, this.roomBlue, boxes)
-        this.obstacles = setupObstacles(this.instance, this.roomBlue)*/
-     
-        /*
-        this.room2 = {
-            x: 900,
-            y: 150,
-            width: 600,
-            height: 600,
-            backgroundColor: "#00ff00",
-            borderColor: "#FFFFFF",
-            borderWidth: 40
-        }
-        this.floors = setupFloors(this.instance, this.room2)
-        this.obstacles2 = setupObstacles(this.instance, this.room2)
-        this.boxesTwo = setupBoxes(this.instance, this.world, this.room2, boxes)
-        
-        this.room3 = {
-            x: 0,
-            y: 900,
-            width: 800,
-            height: 800,
-            backgroundColor: "#0000ff",
-            borderColor: "#FFFFFF",
-            borderWidth: 25,
-        }
-        this.floors = setupFloors(this.instance, this.room3)
-        this.obstacles3 = setupObstacles(this.instance, this.room3)
-        this.boxesThree = setupBoxes(this.instance, this.world, this.room3, boxes)
-
-        this.room4 = {
-            x: 850,
-            y: 850,
-            width: 600,
-            height: 200,
-            backgroundColor: "#ff00ff",
-            borderColor: "#FFFFFF",
-            borderWidth: 10
-        }
-        this.floors = setupFloors(this.instance, this.room4)
-        this.obstacles4 = setupObstacles(this.instance, this.room4)
-        this.boxesFour = setupBoxes(this.instance, this.world, this.room4, boxes)
-        
-        */
-       
         
         const boxes = new Map()
         this.boxes = setupBoxes(this.instance, this.world, this.room, boxes)
@@ -442,10 +384,42 @@ class GameInstance {
 
                             client.positions = []
 
-                            console.log(client)
+                            //console.log(client)
                             
-                            
+                        
                             break
+                        }
+                        
+                    }
+
+
+                }
+
+
+            })
+
+            this.instance.clients.forEach(client => {
+
+                for (let box of this.boxes.values()) {
+
+                    if(client.smoothEntity.isAlive) {
+
+                        let collided = false
+
+                        collided = SAT.testCirclePolygon(client.rawEntity.collider.circle, box.collider.polygon) 
+                        
+                        if(collided) {
+                    
+                            console.log(collided)
+                            this.instance.messageAll(new Notification('pickup', 'notification', 20, 20))
+
+                            if(collided == true) {
+                                box.color = "#0000ff"
+                                break
+                            } else {
+                                box.color = "#FFFFFF"
+                            }
+             
                         }
                         
                     }
@@ -457,10 +431,6 @@ class GameInstance {
             })
             
        
-
-
-
-        
         
 
         this.boxes.forEach(box => {
@@ -470,6 +440,9 @@ class GameInstance {
             box.rotation = box.body.angle 
             
         })
+
+
+
 
         // when instance.updates, nengi sends out snapshots to every client
         this.instance.update()

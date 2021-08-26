@@ -33,7 +33,7 @@ class Box {
         
         this.body.addShape(this.boxShape)
 
-        this.collider = CollisionSystem.createRectangleCollider(0,0,0,0)    
+        this.collider = CollisionSystem.createRectangleCollider(-state.width/2, -state.height/2, state.width, state.height)    
     }
 
     get x() {

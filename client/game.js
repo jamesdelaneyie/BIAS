@@ -223,8 +223,8 @@ const create = () => {
 
 
 
-    client.connect('ws://localhost:8079')
-    //client.connect('wss://bias.jamesdelaney.ie/test')
+    //client.connect('ws://localhost:8079')
+    client.connect('wss://bias.jamesdelaney.ie/test')
 
 
     const update = (delta, tick, now) => {
