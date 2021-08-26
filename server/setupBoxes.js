@@ -15,13 +15,10 @@ export default (instance, world, room, boxes) => {
     const roomWidth = room.width
     const roomHeight = room.height
     const borderWidth = room.borderWidth
-
     const borderColor = room.borderColor
-    const backgroundColor = room.backgroundColor
 
-    //console.log(roomX)
 
-    const topWall = new Box({ 
+   const topWall = new Box({ 
         name: 'topWall', 
         x: roomX + roomWidth/2, 
         y: roomY - borderWidth/2, 
@@ -48,9 +45,9 @@ export default (instance, world, room, boxes) => {
         spin: 0, 
         material: wallMaterial 
     })
-    //instance.addEntity(rightWall)
-    //world.addBody(rightWall.body)
-    //boxes.set(rightWall.nid, rightWall)
+    instance.addEntity(rightWall)
+    world.addBody(rightWall.body)
+    boxes.set(rightWall.nid, rightWall)
 
 
     const bottomWall = new Box({ 
@@ -109,7 +106,7 @@ export default (instance, world, room, boxes) => {
         });
     }
 
-    setInterval(function(){
+    /*setInterval(function(){
         let newBox = new Box({ name: 'gallery', x: roomX+ 100, y: roomY + 200, width: 50, height: 50, color: "#ffffff", mass: 5, spin: 0.2, material: circleMaterial })
         instance.addEntity(newBox)
         world.addBody(newBox.body)
@@ -120,7 +117,7 @@ export default (instance, world, room, boxes) => {
             world.removeBody(newBox.body)
             boxes.delete(newBox.nid)
         }, 20000)
-    }, 2000)
+    }, 2000)*/
     
 
 

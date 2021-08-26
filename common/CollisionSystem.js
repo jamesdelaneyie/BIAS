@@ -77,11 +77,13 @@ CollisionSystem.createRectangleCollider = (x, y, width, height) => {
     }
 }
 
+
+
+
 CollisionSystem.moveWithCollisions = (entity, obstacles, boxes) => {
 
     obstacles.forEach(obstacle => {
         if (SAT.testCirclePolygon(entity.collider.circle, obstacle.collider.polygon, response)) {
-            //console.log('res', response)
             entity.x -= response.overlapV.x
             entity.y -= response.overlapV.y
         }
@@ -90,12 +92,13 @@ CollisionSystem.moveWithCollisions = (entity, obstacles, boxes) => {
     
     boxes.forEach(box => {
         if (SAT.testCirclePolygon(entity.collider.circle, box.collider.polygon, response)) {
-            //console.log('res', response)
             entity.x -= response.overlapV.x
             entity.y -= response.overlapV.y
         }
         response.clear()
     })
+
+    
 }
 
 

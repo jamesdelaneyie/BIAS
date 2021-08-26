@@ -1,4 +1,6 @@
 import * as PIXI from 'pixi.js'
+import {GlowFilter} from '@pixi/filter-glow';
+
 
 class FloorGraphics extends PIXI.Container {
     constructor(state) {
@@ -10,49 +12,43 @@ class FloorGraphics extends PIXI.Container {
         this.height = state.height
         this.color = state.color
 
+        this.container = new PIXI.Container();
         let abyss = new PIXI.Graphics()
+        
         let abyssColor = PIXI.utils.string2hex(this.color);
         abyss.beginFill(abyssColor)
         abyss.drawRect(state.x, state.y, state.width, state.height)
         abyss.endFill()
-        this.addChild(abyss)
+
+        this.container.addChild(abyss)
+        this.addChild(this.container)
+/*
+        let gridGap = 45
+        let gap = 2
+
+        const floorGrid = new PIXI.Container();
 
         
-
-
-        //let floorColor = PIXI.utils.string2hex('#4DFA66')
-        //let gridColor = PIXI.utils.string2hex('#000000')
-        //console.log(height)
-        //let gridGap = 50
-        //let halfGrid = gridGap/2
-        //let gap = 1
-
-        /*let floor = new PIXI.Graphics()
-        floor.beginFill(floorColor)
-        floor.drawRect(0, 0, 1000, 1000)
-        floor.endFill()
-        this.addChild(floor)*/
-
-
-        //Horizontal Lines
-        /*for (var i = 0; i < 21; i++) {           
+        for (var i = 0; i < 9; i++) {           
             let line = new PIXI.Graphics()
-            line.lineStyle(gap, 0x222222)
+            line.lineStyle(gap, 0xFFFFFF)
             line.moveTo(i * gridGap, 0)
             line.lineTo(i * gridGap, this.width)
-            line.alpha = 0.1
-            this.addChild(line)
+            line.alpha = 1
+            floorGrid.addChild(line)
         }
 
         //Vertical Lines
-        for (var i = 0; i < 21; i++) {           
+        for (var i = 0; i < 9; i++) {           
             let line = new PIXI.Graphics()
-            line.lineStyle(gap, 0x222222)
+            line.lineStyle(gap, 0xFFFFFF)
             line.moveTo(0, i * gridGap)
             line.lineTo(this.height, i * gridGap)
-            line.alpha = 0.1
-            this.addChild(line)
-        }*/
+            line.alpha = 1
+            floorGrid.addChild(line)
+        }
+
+        this.addChild(floorGrid)
 
         //Grid Dots
         /*for (var i = 1; i < 21; i++) { 

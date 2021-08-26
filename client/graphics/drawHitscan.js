@@ -5,9 +5,7 @@ const drawHitscan = (layer, x, y, targetX, targetY, color) => {
     graphics.lineStyle(1, color)
     graphics.moveTo(x, y)
     graphics.lineTo(targetX, targetY)
-    graphics.drawCircle(targetX, targetY, 20)
     layer.addChild(graphics)
-    
 
     setTimeout(() => {
         layer.removeChild(graphics)

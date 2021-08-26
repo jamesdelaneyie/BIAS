@@ -13,11 +13,14 @@ import applyCommand from '../common/applyCommand.js'
 import setupFloors from './setupFloors.js'
 import setupObstacles from './setupObstacles.js'
 import setupBoxes from './setupBoxes.js'
+import setupPortals from './setupPortals.js'
 import { fire } from '../common/weapon.js'
 import Notification from '../common/message/Notification'
 import lagCompensatedHitscanCheck from './lagCompensatedHitscanCheck'
 import censoring from 'chat-censoring'
 import fs from 'fs'
+import SAT from 'sat'
+
 
 
 
@@ -28,8 +31,54 @@ class GameInstance {
         instanceHookAPI(this.instance)
 
 
-        this.world = new p2.World({gravity: [0, 9]});
+       
+        this.world = new p2.World({gravity: [0, 0]});
         this.room = {
+            x: 0,
+            y: 0,
+            width: 400,
+            height: 400,
+            backgroundColor: "#00ff00",
+            borderColor: "#FFFFFF",
+            borderWidth: 25,
+            objects: [],
+            portals: [{
+                x: 380,
+                y: 250,
+                width: 20,
+                height: 100,
+                exit: [2340, 50]
+            }]
+        }
+        this.floors = setupFloors(this.instance, this.room)
+        
+        //this.boxes = setupBoxes(this.instance, this.world, this.room, boxes)
+
+        this.room2 = {
+            x: 2000,
+            y: 0,
+            width: 400,
+            height: 400,
+            backgroundColor: "#0000ff",
+            borderColor: "#FFFFFF",
+            borderWidth: 25,
+            objects: [],
+            portals: [{
+                x: 125,
+                y: 20,
+                width: 100,
+                height: 20, 
+                exit: [320, 290]
+            }]
+        }
+        this.floors2 = setupFloors(this.instance, this.room2)
+        
+        //this.boxes2 = setupBoxes(this.instance, this.world, this.room2, boxes)
+
+        
+        
+
+        /*this.roomBlue = {
             x: 0,
             y: 0,
             width: 800,
@@ -37,20 +86,13 @@ class GameInstance {
             backgroundColor: "#ff0000",
             borderColor: "#FFFFFF",
             borderWidth: 25,
-            objects: [{
-                name: 'Box',
-                x: 25,
-                y: 25,
-                width: 100,
-                height: 100,
-                mass: 0,
-                color: '00ff00'
-            }]
+            objects: []
         }
-        this.floors = setupFloors(this.instance, this.room)
-        this.obstacles = setupObstacles(this.instance, this.room)
-        
-        
+        this.floors = setupFloors(this.instance, this.roomBlue)
+        this.boxes = setupBoxes(this.instance, this.world, this.roomBlue, boxes)
+        this.obstacles = setupObstacles(this.instance, this.roomBlue)*/
+     
+        /*
         this.room2 = {
             x: 900,
             y: 150,
@@ -62,6 +104,7 @@ class GameInstance {
         }
         this.floors = setupFloors(this.instance, this.room2)
         this.obstacles2 = setupObstacles(this.instance, this.room2)
+        this.boxesTwo = setupBoxes(this.instance, this.world, this.room2, boxes)
         
         this.room3 = {
             x: 0,
@@ -74,6 +117,7 @@ class GameInstance {
         }
         this.floors = setupFloors(this.instance, this.room3)
         this.obstacles3 = setupObstacles(this.instance, this.room3)
+        this.boxesThree = setupBoxes(this.instance, this.world, this.room3, boxes)
 
         this.room4 = {
             x: 850,
@@ -86,16 +130,25 @@ class GameInstance {
         }
         this.floors = setupFloors(this.instance, this.room4)
         this.obstacles4 = setupObstacles(this.instance, this.room4)
-
+        this.boxesFour = setupBoxes(this.instance, this.world, this.room4, boxes)
         
-
+        */
+       
+        
         const boxes = new Map()
         this.boxes = setupBoxes(this.instance, this.world, this.room, boxes)
         this.boxesTwo = setupBoxes(this.instance, this.world, this.room2, boxes)
-        this.boxesThree = setupBoxes(this.instance, this.world, this.room3, boxes)
-        this.boxesFour = setupBoxes(this.instance, this.world, this.room4, boxes)
-
         this.boxes = boxes
+
+        const obstacles = new Map()
+        this.obstacles = setupObstacles(this.instance, this.room, obstacles)
+        this.obstacles2 = setupObstacles(this.instance, this.room2, obstacles)
+        this.obstacles = obstacles
+
+        const portals = new Map()
+        this.portals = setupPortals(this.instance, this.room, portals)
+        this.portalsTwo= setupPortals(this.instance, this.room2, portals)
+        this.portals = portals
 
 
 
@@ -104,8 +157,8 @@ class GameInstance {
         const peerServer = PeerServer({
             port: 9000,
             ssl: {
-                key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem'),
-                cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/cert.pem')
+               //key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem'),
+               // cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/cert.pem')
             }
         });
 
@@ -118,9 +171,7 @@ class GameInstance {
         this.people = []
 
         peerServer.on('connection', peer => {
-            //this.people.push(peer.id);
             console.log('peer connected', peer.id);
-            //console.log(this.people)
         });
         
         peerServer.on('disconnect', peer => {
@@ -128,15 +179,6 @@ class GameInstance {
         });
 
 
-        
-
-
-    
-
-        this.world.on('postStep', function(event){
-            // Add horizontal spring force
-            //circleBody.force[0] -= 100 * circleBody.position[0];
-        });
 
         // (the rest is just attached to client objects when they connect)
         this.instance.on('command::LeaveCommand', ({ command, client }) => {
@@ -173,20 +215,24 @@ class GameInstance {
         // (the rest is just attached to client objects when they connect)
         this.instance.on('command::JoinCommand', ({ command, client }) => {
 
-            //console.log('help')
-
             const rawEntity = client.rawEntity
             const smoothEntity = client.smoothEntity
             const peerID = client.peerID;
 
-            rawEntity.x = this.room.width/2
-            rawEntity.y = this.room.height/2
+
+            let room2SpawnX = this.room2.x + (this.room2.width/2)
+            let room2SpawnY = this.room2.y + (this.room2.height/2)
+
+            rawEntity.x = room2SpawnX
+            rawEntity.y = room2SpawnY
+
+
             this.world.addBody(rawEntity.body);
             this.instance.addEntity(rawEntity)
             client.channel.addEntity(rawEntity)
 
-            smoothEntity.x = this.room.width/2
-            smoothEntity.y = this.room.height/2
+            smoothEntity.x = this.room2.width/2
+            smoothEntity.y = this.room2.height/2
             smoothEntity.collidable = true
             this.instance.addEntity(smoothEntity)
 
@@ -196,24 +242,24 @@ class GameInstance {
             smoothEntity.color = command.color
             rawEntity.color = command.color
 
+            smoothEntity.isAlive = true;
+            rawEntity.isAlive = true;
+            
             this.instance.message(new Identity(rawEntity.nid, smoothEntity.nid, ""+peerID+""), client)
             this.instance.messageAll(new Notification('Welcome '+ command.name +'', 'notification', 20, 20))
+            
             //getLocalStream();
-
 
         })
 
         this.instance.on('connect', ({ client, callback }) => {
             
-            // make the raw entity only visible to this client
             const channel = this.instance.createChannel()
             channel.subscribe(client)
             client.channel = channel
 
-            
-            //this.room.playerColors[rndInt]
-            const rawEntity = new PlayerCharacter({self: true })
-            const smoothEntity = new PlayerCharacter({self: false })
+            const rawEntity = new PlayerCharacter({ self: true })
+            const smoothEntity = new PlayerCharacter({ self: false })
 
             rawEntity.client = client
             client.rawEntity = rawEntity
@@ -229,14 +275,12 @@ class GameInstance {
             client.view = {
                 x: 0,
                 y: 0,
-                halfWidth: 2000,
-                halfHeight: 2000
+                halfWidth: 99999,
+                halfHeight: 99999
             }
 
-            
-            callback({ accepted: true, text: 'Welcome!!!!' })
+            callback({ accepted: true, text: 'Welcome!' })
 
-        
         })
 
 
@@ -272,13 +316,8 @@ class GameInstance {
             respawnPlayer(rawEntity, smoothEntity);
         })
 
-
-        
-
         this.instance.on('command::MoveCommand', ({ command, client, tick }) => {
-            // move this client's entity
             const rawEntity = client.rawEntity
-            const smoothEntity = client.smoothEntity
             applyCommand(rawEntity, command, this.obstacles, this.boxes)
             
             client.positions.push({
@@ -343,9 +382,80 @@ class GameInstance {
                 const maximumMovementPerFrameInPixels = 410 * delta
                 followPath(smoothEntity, client.positions, maximumMovementPerFrameInPixels)
             }
+
         })
 
         this.world.step(1/5);
+
+        //update touching
+        for (let obstacle of this.obstacles.values()) {
+            for (const [key, value] of Object.entries(this.instance.clients.array)) {
+
+                if(typeof value.smoothEntity != "undefined") {
+
+                    let collided = SAT.testCirclePolygon(value.rawEntity.collider.circle, obstacle.collider.polygon) 
+                    
+                    if(this.instance.clients.array.length > 1) {
+                        if(collided == true) {
+                            obstacle.color = "#ffff00"
+                            break
+                        } else {
+                            obstacle.color = "#FFffFF"
+                        }
+                    } else {
+                        if(collided == true) {
+                            obstacle.color = "#ffff00"
+                        } else {
+                            obstacle.color = "#FFffFF"
+                        }
+                    }
+                    
+                }
+                
+            }
+        }
+
+        
+
+            this.instance.clients.forEach(client => {
+
+                for (let portal of this.portals.values()) {
+
+                    if(client.smoothEntity.isAlive) {
+
+                        let collided = false
+
+                        collided = SAT.testCirclePolygon(client.rawEntity.collider.circle, portal.collider.polygon) 
+                        
+                        if(collided) {
+
+                            client.rawEntity.x = portal.exit[0]
+                            client.rawEntity.y = portal.exit[1]
+                            client.view.x = client.rawEntity.x
+                            client.view.y = client.rawEntity.y
+
+                            client.positions = []
+
+                            console.log(client)
+                            
+                            
+                            break
+                        }
+                        
+                    }
+
+
+                }
+
+
+            })
+            
+       
+
+
+
+        
+        
 
         this.boxes.forEach(box => {
             

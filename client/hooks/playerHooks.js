@@ -1,5 +1,5 @@
 import PlayerGraphics from '../graphics/PlayerGraphics.js'
-
+import { sound } from '@pixi/sound';
 
 export default (state, renderer ) => {
     return {
@@ -9,10 +9,16 @@ export default (state, renderer ) => {
             
             renderer.middleground.addChild(graphics)
             renderer.entities.set(graphics.nid, graphics)
+
+            
             
             /* self, raw */
             if (data.nid === state.myRawId) {
                 state.myRawEntity = entity
+                if(data.self == false) {
+                    sound.add('login', 'audio/car.mp3');
+                    sound.play('login') 
+                }
             }
 
             /* self, smooth */

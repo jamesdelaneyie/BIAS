@@ -18,6 +18,7 @@ const damagePlayer = (victim, amount) => {
             victim.y = Math.random() * 500
 
             // teleport the raw entity too
+            victim.client.rawEntity.alpha = 1
             victim.client.rawEntity.x = victim.x
             victim.client.rawEntity.y = victim.y
             victim.client.rawEntity.hitpoints = 100

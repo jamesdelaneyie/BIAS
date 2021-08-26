@@ -11,6 +11,7 @@ import JoinCommand from './command/JoinCommand.js'
 import Obstacle from './entity/Obstacle.js'
 import Box from './entity/Box.js'
 import Floor from './entity/Floor.js'
+import Portal from './entity/Portal.js'
 
 const config = {
     UPDATE_RATE: 20, 
@@ -29,7 +30,8 @@ const config = {
             ['Floor', Floor],
             ['PlayerCharacter', PlayerCharacter],
             ['Obstacle', Obstacle],
-            ['Box', Box]
+            ['Box', Box],
+            ['Portal', Portal]
         ],
         localMessages: [],
         messages: [

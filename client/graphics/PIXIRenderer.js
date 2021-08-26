@@ -37,6 +37,7 @@ class PIXIRenderer {
         
         var font = new FontFaceObserver('Trade Gothic');
         this.UIBuilder = new UIBuilder();    
+        
         font.load().then(function () {
             //this.UIBuilder = new UIBuilder();    
         });

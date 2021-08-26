@@ -144,11 +144,11 @@ class InputSystem {
                     iframe.allow = "camera"
                     iframe.id = "iframe"
                     iframe.allowfullscreen = "allowfullscreen"
-                    document.body.appendChild(iframe);
+                    //document.body.appendChild(iframe);
 
                     var close = document.createElement('div');
                     close.style = "position:absolute;50px;top:50px;right:50px;background-color:red;width:20px;height:20px"
-                    document.body.appendChild(close);
+                    //document.body.appendChild(close);
                 }
 
                     //shift

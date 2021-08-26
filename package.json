@@ -42,6 +42,7 @@
   },
   "devDependencies": {
     "concurrently": "^4.1.2",
+    "dotenv": "^10.0.0",
     "ismobilejs": "^1.1.1",
     "nodemon": "^1.19.3",
     "p2Pixi": "^1.0.6",

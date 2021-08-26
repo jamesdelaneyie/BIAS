@@ -1,12 +1,12 @@
-import ObstacleGraphics from '../graphics/ObstacleGraphics.js'
+import PortalGraphics from '../graphics/PortalGraphics.js'
 
-export default ({ obstacles }, renderer) => {
+export default ({ portals }, renderer) => {
     return {
         create({ data, entity }) {
 
-            obstacles.set(data.nid, entity)
+            //portals.set(data.nid, entity)
 
-            const graphics = new ObstacleGraphics(data)
+            const graphics = new PortalGraphics(data)
 
             renderer.entities.set(data.nid, graphics)
             renderer.middleground.addChild(graphics)
@@ -16,11 +16,6 @@ export default ({ obstacles }, renderer) => {
         delete({ nid, graphics }) {
             renderer.entities.delete(nid)
             renderer.middleground.removeChild(graphics)
-        },
-        watch: {
-            color({ graphics, value }) {
-                graphics.updateColor(value)
-            }
         }
     }
 }

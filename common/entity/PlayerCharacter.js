@@ -10,7 +10,7 @@ class PlayerCharacter {
         this.power = 0
         this.rotation = 0
         this.hitpoints = 100
-        this.isAlive = true
+        this.isAlive = false
         this.speed = 400
         this.size = 30
         this.mass = 5
