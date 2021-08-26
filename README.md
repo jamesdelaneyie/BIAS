@@ -21,10 +21,10 @@ npm start
 TO DO: A lot. I'll also try update this with some of the concepts and design choices as I build it.
 
 BIAS is composed of warped and curropted versions of these masterful creations by folks who should be deeply thanked by all of us: 
-* nice-proto & nengi.js - @timetocode
+* [nengi.js](https://github.com/timetocode/nengi)
 * p2.js – @schteppe
+* peerjs - 
 * PIXI.js joypad  – @endel
-* PIXI.js emote – @endel
 * PUXI.js UI Framework – @bQvle @SukantPal
 
 Being built right now in the open by James Delaney for Science Gallery Dublin's commision of "Can you build us an online gallery?" for their year-long season of exhibitions, events and education, questioning the social, psychological and technological aspects of bias in AI, Ethics, Trust and Justice.
