@@ -109,15 +109,7 @@ const create = () => {
         floors: new Map()
     }
 
-    const backgroundMusic = Sound.from('audio/background.mp3');
-    backgroundMusic.speed = 0.9
-    backgroundMusic.volume = 0.05
-    backgroundMusic.loop = true;
-
-    const telephone = new filters.TelephoneFilter(1)
-    const distorsion = new filters.DistortionFilter(0.1)
-    backgroundMusic.filters = [telephone, distorsion]
-    backgroundMusic.play()
+    
 
     clientHookAPI(
         client,
@@ -240,6 +232,17 @@ const create = () => {
 
     client.on('connected', res => { 
         console.log('connection?:', res)
+
+        const backgroundMusic = Sound.from('audio/background.mp3');
+        backgroundMusic.speed = 0.9
+        backgroundMusic.volume = 0.05
+        backgroundMusic.loop = true;
+
+        const telephone = new filters.TelephoneFilter(1)
+        const distorsion = new filters.DistortionFilter(0.1)
+        backgroundMusic.filters = [telephone, distorsion]
+        backgroundMusic.play()
+        
     })
 
     client.on('disconnected', () => { 

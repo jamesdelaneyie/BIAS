@@ -12,10 +12,10 @@ class PortalGraphics extends PIXI.Container {
         this.radius = state.radius
         this.extra = state.extra
 
-        this.color = PIXI.utils.string2hex("#FFFFFF");
+        this.color = PIXI.utils.string2hex("#800080");
         
         this.body = new PIXI.Graphics()
-        this.body.beginFill(0xFFFFFF)
+        this.body.beginFill(this.color)
         this.body.drawRect(-25, -25, state.width, state.height)
         this.body.endFill()
         

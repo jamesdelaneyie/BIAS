@@ -76,9 +76,42 @@ class GameInstance {
                 width: 100,
                 height: 20, 
                 exit: [320, 200]
+            }, {
+                x: 150,
+                y: 410,
+                width: 100,
+                height: 20, 
+                exit: [210, 1050]
             }]
         }
         this.floors2 = setupFloors(this.instance, this.room2)
+
+        this.room3 = {
+            x: 0,
+            y: 1000,
+            width: 400,
+            height: 400,
+            backgroundColor: "#FF0000",
+            borderColor: "#FFFFFF",
+            borderWidth: 25,
+            objects: [{
+                name: "item",
+                x: 200,
+                y: 200,
+                width: 25, 
+                height: 25, 
+                color: "#0000ff",
+                mass: 5
+            }],
+            portals: [{
+                x: 150,
+                y: 20,
+                width: 100,
+                height: 20, 
+                exit: [2210, 350],
+            }]
+        }
+        this.floors3 = setupFloors(this.instance, this.room3)
         
         
         
@@ -86,6 +119,7 @@ class GameInstance {
         const boxes = new Map()
         this.boxes = setupBoxes(this.instance, this.world, this.room, boxes)
         this.boxesTwo = setupBoxes(this.instance, this.world, this.room2, boxes)
+        this.boxesThree = setupBoxes(this.instance, this.world, this.room3, boxes)
         this.boxes = boxes
 
         const obstacles = new Map()
@@ -96,6 +130,7 @@ class GameInstance {
         const portals = new Map()
         this.portals = setupPortals(this.instance, this.room, portals)
         this.portalsTwo= setupPortals(this.instance, this.room2, portals)
+        this.portalsThree= setupPortals(this.instance, this.room3, portals)
         this.portals = portals
 
 
@@ -217,6 +252,7 @@ class GameInstance {
             
             client.positions = []
 
+
             //this.instance.message(new Notification('yolo'), client)
             //channel.addMessage(new Notification('private channel created'))
            
@@ -249,9 +285,10 @@ class GameInstance {
             if(command.text == "<3") {
                 this.instance.messageAll(new Notification('❤️', 'talk', command.x, command.y))
             } else {
+
                 let polite = censoring.checkMessage(command.text, '*');
                 let friendlyMessage = censoring.censorMessage(command.text, '*');
-
+                
                 this.instance.messageAll(new Notification(friendlyMessage, 'text', command.x, command.y))
                 console.log(polite);
 

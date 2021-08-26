@@ -67,7 +67,8 @@ class PlayerGraphics extends PIXI.Container {
 
 
         
-
+        this.name = this.name.toUpperCase();
+        
         this.info = new PUXI.Stage(20,100)
         const textStyle = new PIXI.TextStyle({fill: 0xffffff, fontSize: '12px', fontWeight: 400});
         const nameText = new PUXI.TextWidget(''+this.name+'', textStyle)
