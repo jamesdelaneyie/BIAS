@@ -11,7 +11,7 @@ import shouldIgnore from './shouldIgnore.js'
 import addMessage from './graphics/addMessage.js'
 import * as PIXI from 'pixi.js'
 import { Sound, filters } from '@pixi/sound';
-
+import MultiStyleText from 'pixi-multistyle-text'
 
 
 const create = () => {
@@ -19,91 +19,12 @@ const create = () => {
     const renderer = new PIXIRenderer()
     const input = new InputSystem(renderer, client)
 
-/*
-    const months = ["Peter", "James", "Rory"];
-    const random = Math.floor(Math.random() * months.length);
-
-    const chosenValue = months[random];
-
-
-
-    const myPeer = new Peer(chosenValue, {
-        host:'/', 
-        path: '/',
-        port: 9000
-    })
-    
-    let peerID;
-
-    myPeer.on('open', function(id) {
-        peerID = id;
-        window.caststatus.textContent = `Your device ID is: ${myPeer.id}`;
-    });
-    window.myPeer = myPeer
-
-    const callBtn = document.querySelector('.call-btn');
-    let code;
-
-    function getStreamCode() {
-        code = window.prompt('Please enter the sharing code');
-    }
-
-    const hangUpBtn = document.querySelector('.hangup-btn');
-    hangUpBtn.addEventListener('click', function (){
-        conn.close();
-        showCallContent();
-    })
-
-    callBtn.addEventListener('click', function(){
-        getStreamCode();
-        connectPeers();
-        const call = myPeer.call(code, window.localStream); // A
-    
-        call.on('stream', function(stream) { // B
-            window.remoteAudio.srcObject = stream; // C
-            window.remoteAudio.autoplay = true; // D
-            window.peerStream = stream; //E
-            showConnectedContent(); //F    });
-        })
-    })
-
-    myPeer.on('call', function(call) {
-        const answerCall = confirm("Do you want to answer?")
-     
-        if(answerCall){
-           call.answer(window.localStream) // A
-           showConnectedContent(); // B
-           call.on('stream', function(stream) { // C
-              window.remoteAudio.srcObject = stream;
-              window.remoteAudio.autoplay = true;
-              window.peerStream = stream;
-           });
-        } else {
-           console.log("call denied"); // D
-        }
-     });
-        
-
-    let conn;
-    myPeer.on('connection', function(conn){
-        conn.on('data', (data) => {
-            console.log(data);
-        });
-        //conn = connection;
-        conn.on('open', () => {
-            conn.send('hello!');
-        });
-    });
-
-    function connectPeers() {
-        conn = myPeer.connect(code)
-    }*/
-        
+    window.renderer = renderer
 
     const state = {
         myRawId: null,
         mySmoothId: null,
-        myPeerId: '123',
+        myPeerId: null,
         obstacles: new Map(),
         boxes: new Map(),
         floors: new Map()
@@ -122,20 +43,6 @@ const create = () => {
 
 
 
-    const audioContainer = document.querySelector('.call-container');
-
-    function showCallContent() {
-        window.caststatus.textContent = `Your device ID is: ${myPeer.id}`;
-        callBtn.hidden = false;
-        audioContainer.hidden = true;
-    }
-
-    function showConnectedContent() {
-        window.caststatus.textContent = `You're connected`;
-        callBtn.hidden = true;
-        audioContainer.hidden = false;
-    }
-
     function getLocalStream() {
         navigator.mediaDevices.getUserMedia({video: false, audio: true}).then( stream => {
             window.localStream = stream;
@@ -146,34 +53,153 @@ const create = () => {
         });
     }
 
+
+
+
+
+
     client.on('message::Identity', message => {
         state.myRawId = message.rawId
         state.mySmoothId = message.smoothId
         state.myPeerId = message.peerId
+        state.name = message.name;
 
+        const userSettings = window.localStorage;
+        userSettings.setItem('name', state.name);
 
+        const text = new MultiStyleText("<dot>●</dot> Connected to Nengi Instance as <hi>"+ state.name +"</hi>", {
+            "default": {
+                fontFamily: "Monaco",
+                fontSize: "10px",
+                fill: "#ececec",
+                align: "left"
+            },
+            "dot": {
+                fontSize: "15px",
+                fill: "#00ff00"
+            },
+            "hi": {
+                fontSize: "10px",
+                fill: "#ffffff"
+            }
+        });
+        renderer.stage.addChild(text);
+        text.x = 10;
+        text.y = window.innerHeight - 40;
 
+        window.myName = state.name
 
+        const myPeer = new Peer(""+state.name+"",{
+            host:'/', 
+            path: '/',
+            port: 9000
+        })
         
-       // getLocalStream();
+        let peerID;
+    
+        myPeer.on('open', function(id) {
+            peerID = id;
+    
+            const text = new MultiStyleText("<dot>●</dot> Device ID: "+peerID+"", {
+                "default": {
+                    fontFamily: "Monaco",
+                    fontSize: "10px",
+                    fill: "#ececec",
+                    align: "left"
+                },
+                "dot": {
+                    fontSize: "15px",
+                    fill: "#0000ff"
+                }
+            });
+            renderer.stage.addChild(text);
+            text.x = 10;
+            text.y = 10;
+    
+        });
+        myPeer.on('error', function (err) {
+            console.log(err.type)
+            if(err.type == 'server-error') {
+                const text = new MultiStyleText("<dot>●</dot> Unable to connect to peer server. Please reload page.", {
+                    "default": {
+                        fontFamily: "Monaco",
+                        fontSize: "10px",
+                        fill: "#ececec",
+                        align: "left"
+                    },
+                    "dot": {
+                        fontSize: "15px",
+                        fill: "#ff0000"
+                    }
+                });
+                renderer.stage.addChild(text);
+                text.x = 10;
+                text.y = 5;
+    
+            }
+        });
+        window.myPeer = myPeer
 
-        /*//reamCode();
+   
+    const hangUpBtn = document.querySelector('.hangup-btn');
+    hangUpBtn.addEventListener('click', function (){
+        conn.close();
+        showCallContent();
+    })
 
-        //connectPeers();
+    const callSound = Sound.from('audio/calling.mp3');
+    callSound.volume = 0.05
+    callSound.loop = true
 
-        const call = myPeer.call(code, window.localStream); // A
-        console.log(code, window.localStream)
-        console.log(call)
+    myPeer.on('call', function(call) {
 
-        call.on('stream', function(stream) { // B
-            window.remoteAudio.srcObject = stream; // C
-            window.remoteAudio.autoplay = true; // D
-            window.peerStream = stream; //E
-            showCallContent()
-            showConnectedContent(); //F]
-            console.log('connected')
-        });*/
+        console.log(call);
 
+        const connectionId = call.connectionId
+        const callerID = call.peer
+
+    
+        call.answer(window.localStream) 
+        const text = new MultiStyleText("<dot>●</dot> Connected With: "+callerID +" (ID:"+connectionId+")", {
+            "default": {
+                fontFamily: "Monaco",
+                fontSize: "10px",
+                fill: "#ececec",
+                align: "left"
+            },
+            "dot": {
+                fontSize: "15px",
+                fill: "#00ff00"
+            }
+        });
+        renderer.stage.addChild(text);
+        text.x = 10;
+        text.y = 30;// A
+        
+        call.on('stream', function(stream) { // C
+           window.remoteAudio.srcObject = stream;
+           window.remoteAudio.autoplay = true;
+           window.peerStream = stream;
+        });
+     
+        
+     });
+        
+
+    
+    myPeer.on('connection', function(conn){
+        conn.on('data', (data) => {
+            console.log(data);
+        });
+        conn.on('open', () => {
+            conn.send('hello!');
+        });
+    });
+
+    
+    
+
+        getLocalStream();
        
     })
 
@@ -183,14 +209,14 @@ const create = () => {
             return
         }
         const { x, y, tx, ty } = message
-        drawHitscan(renderer.middleground, x, y, tx, ty, 0xff0000)
+        drawHitscan(renderer.background, x, y, tx, ty, 0x000000)
     })
 
 
 
 
 
-    const sound = Sound.from('audio/car.mp3');
+    const portalSound = Sound.from('audio/car.mp3');
 
     client.on('message::Notification', message => {
 
@@ -208,14 +234,10 @@ const create = () => {
             addMessage(renderer.middleground, message);
         }
         if(message.type == "sound") {
-
             
-            if(sound.isPlaying == false) {
-                sound.play(); 
+            if(portalSound.isPlaying == false) {
+                portalSound.play(); 
             }
-                      
-           
-    
 
         }
         
@@ -223,15 +245,31 @@ const create = () => {
     
     
 
-    //messages to clients / local for view // spacial structure
-    //channel is list of entities / 
 
     client.on('predictionErrorFrame', predictionErrorFrame => {
         reconcilePlayer(predictionErrorFrame, client, state.myRawEntity, state.obstacles, state.boxes)
     })
 
     client.on('connected', res => { 
+
         console.log('connection?:', res)
+        const connectedText = new MultiStyleText("<dot>●</dot> Connected to Server ["+res.text+"]", {
+            "default": {
+                fontFamily: "Monaco",
+                fontSize: "10px",
+                fill: "#ececec",
+                align: "left"
+            },
+            "dot": {
+                fontSize: "15px",
+                fill: "#00ff00"
+            }
+        });
+        renderer.stage.addChild(connectedText);
+        connectedText.x = 10;
+        connectedText.y = window.innerHeight - 25;
+
+
 
         const backgroundMusic = Sound.from('audio/background.mp3');
         backgroundMusic.speed = 0.9
@@ -241,12 +279,33 @@ const create = () => {
         const telephone = new filters.TelephoneFilter(1)
         const distorsion = new filters.DistortionFilter(0.1)
         backgroundMusic.filters = [telephone, distorsion]
-        backgroundMusic.play()
+        //backgroundMusic.play()
+
+        const name = localStorage.getItem('name');
+        if(name) {
+            console.log('lemme join!')
+        }
         
     })
 
     client.on('disconnected', () => { 
         console.log('connection closed') 
+
+        const disconnectedText = new MultiStyleText("<dot>●</dot> Connected to Server", {
+            "default": {
+                fontFamily: "Monaco",
+                fontSize: "10px",
+                fill: "#ececec",
+                align: "left"
+            },
+            "dot": {
+                fontSize: "15px",
+                fill: "#00ff00"
+            }
+        });
+        renderer.stage.addChild(disconnectedText);
+        disconnectedText.x = 10;
+        disconnectedText.y = window.innerHeight - 25;
     })
 
 
@@ -260,6 +319,8 @@ const create = () => {
         handleInput(input, state, client, renderer, delta)
         renderer.update(delta)
         client.update()
+
+        //console.log(window.peerStream)
     }
 
     return update

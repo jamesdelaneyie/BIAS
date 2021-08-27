@@ -4,8 +4,7 @@ import UIBuilder from './UIBuilder.js'
 
 import { CRTFilter } from '@pixi/filter-crt'
 import { EmoteSelector } from 'pixi-emote-selector'
-import MultiStyleText from 'pixi-multistyle-text'
-import cryptoRandomString from 'crypto-random-string'
+
 
 var FontFaceObserver = require('fontfaceobserver');
 

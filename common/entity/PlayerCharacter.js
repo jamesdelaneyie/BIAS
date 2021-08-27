@@ -13,7 +13,7 @@ class PlayerCharacter {
         this.isAlive = false
         this.speed = 400
         this.size = 30
-        this.mass = 5
+        this.mass = 20
         this.material = new p2.Material();
         this.footDown = false
         this.color = state.color
@@ -26,7 +26,7 @@ class PlayerCharacter {
 
         this.circleShape.material = this.material;
         this.body = new p2.Body({
-            mass: 90,
+            mass: 10,
             position: [0, 0]
         });
         this.body.addShape(this.circleShape)

@@ -1,7 +1,8 @@
 import * as PIXI from 'pixi.js'
 import * as PUXI from 'puxi.js'
 import HitpointBar from './HitpointBar.js'
-
+import { Sound } from '@pixi/sound';
+import MultiStyleText from 'pixi-multistyle-text'
 
 class PlayerGraphics extends PIXI.Container {
     constructor(state) {
@@ -21,10 +22,8 @@ class PlayerGraphics extends PIXI.Container {
         this.name = state.name;
         this.self = state.self;
 
-        this.playerBody = new PIXI.Graphics();
-
         this.wrapper = new PIXI.Container()
-
+        this.playerBody = new PIXI.Graphics();
         
         //Give me a new space to draw something
         this.auraContainer = new PIXI.Container();   
@@ -61,6 +60,9 @@ class PlayerGraphics extends PIXI.Container {
         this.wrapper.interactive = true;
         this.wrapper.buttonMode = true;
 
+        this.interactive = true;
+        this.buttonMode = true;
+
 
 
         
@@ -79,7 +81,7 @@ class PlayerGraphics extends PIXI.Container {
         this.info.addChild(nameText)
 
         // Pointers normalize touch and mouse
-        this.wrapper.on('pointerdown', this.onPointerOver);
+        this.on('pointerdown', this.onPointerDown);
         this.wrapper.on('pointerover', this.onPointerOver);
         this.wrapper.on('pointerout', this.onPointerOut);
 
@@ -103,6 +105,52 @@ class PlayerGraphics extends PIXI.Container {
 
     onPointerOver(){
         this.children[0].alpha = 1
+    }
+
+    setName(name){
+        this.name = name
+    }
+
+    onPointerDown(){
+
+        console.log(this.name)
+        if(this.name != window.myName) {
+            myPeer.connect(this.name)
+        
+            const call = window.myPeer.call(this.name, window.localStream)
+            const dialingSound = Sound.from('audio/dialing.mp3');
+
+            if(!dialingSound.isPlaying) {
+                dialingSound.loop = true
+                dialingSound.play()
+            }
+        
+            call.on('stream', function(stream) { 
+                window.remoteAudio.srcObject = stream; 
+                window.remoteAudio.autoplay = true;
+                window.remoteAudio.muted = false; 
+                window.peerStream = stream; 
+                dialingSound.stop();
+                console.log(stream);
+                const text = new MultiStyleText("<dot>●</dot> Connected With: "+this.name +" (ID:"+stream.id+")", {
+                    "default": {
+                        fontFamily: "Monaco",
+                        fontSize: "10px",
+                        fill: "#ececec",
+                        align: "left"
+                    },
+                    "dot": {
+                        fontSize: "15px",
+                        fill: "#00ff00"
+                    }
+                });
+                window.renderer.stage.addChild(text);
+                text.x = 10;
+                text.y = 30;// A
+            })
+
+        }
+        
     }
 
     onPointerOut(){

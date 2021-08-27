@@ -17,7 +17,7 @@ const handleShot = (x, y, tx, ty, obstacles, renderer) => {
         }
     })
     
-    drawHitscan(renderer.middleground, x, y, endX, endY, 0xffffff)
+    drawHitscan(renderer.background, x, y, endX, endY, 0xffffff)
 }
 
 export default handleShot

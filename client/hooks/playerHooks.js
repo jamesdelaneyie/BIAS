@@ -36,6 +36,9 @@ export default (state, renderer ) => {
         watch: {
             hitpoints({ graphics, value }) {
                 graphics.hitpointBar.setHitpointPercentage(value / 100)
+            },
+            name({ graphics, value }) {
+                graphics.setName(value)
             }
         }
     }

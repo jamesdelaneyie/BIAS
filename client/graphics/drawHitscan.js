@@ -5,6 +5,10 @@ const drawHitscan = (layer, x, y, targetX, targetY, color) => {
     graphics.lineStyle(1, color)
     graphics.moveTo(x, y)
     graphics.lineTo(targetX, targetY)
+    graphics.lineStyle(2, color)
+    graphics.drawCircle(targetX,targetY,25);
+    graphics.endFill()
+    graphics.alpha = 0.2
     layer.addChild(graphics)
 
     setTimeout(() => {
@@ -14,7 +18,7 @@ const drawHitscan = (layer, x, y, targetX, targetY, color) => {
             texture: true,
             baseTexture: true
         })
-    }, 64)
+    }, 120)
 }
 
 export default drawHitscan
