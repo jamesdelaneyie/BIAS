@@ -1,9 +1,6 @@
 import * as PIXI from 'pixi.js'
 import * as PUXI from 'puxi.js'
-import isMobile from 'ismobilejs'
 import MultiStyleText from 'pixi-multistyle-text'
-import cryptoRandomString from 'crypto-random-string'
-import { GlowFilter } from '@pixi/filter-glow'
 import { Ease, ease } from 'pixi-ease'
 import { sound } from '@pixi/sound';
 
@@ -55,19 +52,18 @@ class UIBuilder extends PIXI.Container {
                 anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
             }),
         )
-        
 
         
         this.joinModalWidgetGroup.contentContainer.alpha = 0
         ease.add(this.joinModalWidgetGroup.contentContainer, 
             { 
-                y: -15, 
+                y: -30, 
                 alpha: 1, 
             }, 
             { 
-                duration: 1000, 
+                duration: 800, 
                 ease: 'easeOutExpo',
-                wait: 1000
+                wait: 500
             })
         
         
@@ -113,9 +109,9 @@ class UIBuilder extends PIXI.Container {
                 anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
             }),
         )
-        const logo = PIXI.Sprite.from('images/logo.svg');
-        logo.width = 103
-        logo.height = 89
+        const logo = PIXI.Sprite.from('images/logo-alt.svg');
+        logo.width = 74
+        logo.height = 74
         logo.anchor.set(0.5);
         logo.x = 25
         logo.y = 25
@@ -309,11 +305,18 @@ class UIBuilder extends PIXI.Container {
 
         
 
+
+
+
+
+
+
+
         // Chat Text Entry Element 
         this.textBox = new PUXI.Stage(window.innerWidth, 40)   
         
         this.textBox.alpha = 0
-        this.textBox.y = window.innerHeight - 80
+        this.textBox.y = window.innerHeight - 55
 
         this.textBoxWrapper = new PUXI.WidgetGroup({
         }).setLayoutOptions(

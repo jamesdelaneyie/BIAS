@@ -6,13 +6,14 @@ export default ({ floors }, renderer) => {
 
             const graphics = new FloorGraphics(data)
             renderer.entities.set(data.nid, graphics)
-            renderer.middleground.addChild(graphics)
+            graphics.alpha = 0.5
+            renderer.background.addChild(graphics)
 
             return graphics
         },
         delete({ nid, graphics }) {
             renderer.entities.delete(nid)
-            renderer.middleground.removeChild(graphics)
+            renderer.background.removeChild(graphics)
         }
     }
 }

@@ -7,6 +7,7 @@ export default (entity, command, obstacles, boxes) => {
     }
     
         // rotation (not important to movement, purely aesthetic)
+        //console.log(entity)
         entity.rotation = command.rotation
 
         // movement logic

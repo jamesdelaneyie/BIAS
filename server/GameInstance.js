@@ -22,6 +22,7 @@ import fs from 'fs'
 import SAT from 'sat'
 
 
+import cryptoRandomString from 'crypto-random-string'
 
 
 
@@ -48,7 +49,7 @@ class GameInstance {
                 width: 25, 
                 height: 25, 
                 color: "#0000ff",
-                mass: 1
+                mass: 0.1
             }],
             portals: [{
                 x: 380,
@@ -101,7 +102,7 @@ class GameInstance {
                 width: 25, 
                 height: 25, 
                 color: "#0000ff",
-                mass: 5
+                mass: 0.1
             }],
             portals: [{
                 x: 150,
@@ -144,7 +145,6 @@ class GameInstance {
                // cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/cert.pem')
             }
         });
-
         // PAUL GAALXY S8 NO KEYS
 
 
@@ -228,10 +228,9 @@ class GameInstance {
             smoothEntity.isAlive = true;
             rawEntity.isAlive = true;
             
-            this.instance.message(new Identity(rawEntity.nid, smoothEntity.nid, ""+peerID+""), client)
+            this.instance.message(new Identity(rawEntity.nid, smoothEntity.nid, ""+peerID+"", ""+ command.name +""), client)
             this.instance.messageAll(new Notification('Welcome '+ command.name +'', 'notification', 20, 20))
             
-            //getLocalStream();
 
         })
 
@@ -251,10 +250,6 @@ class GameInstance {
             client.smoothEntity = smoothEntity
             
             client.positions = []
-
-
-            //this.instance.message(new Notification('yolo'), client)
-            //channel.addMessage(new Notification('private channel created'))
            
             client.view = {
                 x: 0,
@@ -263,7 +258,11 @@ class GameInstance {
                 halfHeight: 99999
             }
 
-            callback({ accepted: true, text: 'Welcome!' })
+            //const instance = this.instance
+            //console.log(this.instance)
+            let server = this.instance.wsServer.httpServer._connectionKey;
+
+            callback({ accepted: true, text: server})
 
         })
 
@@ -288,7 +287,7 @@ class GameInstance {
 
                 let polite = censoring.checkMessage(command.text, '*');
                 let friendlyMessage = censoring.censorMessage(command.text, '*');
-                
+
                 this.instance.messageAll(new Notification(friendlyMessage, 'text', command.x, command.y))
                 console.log(polite);
 
@@ -304,7 +303,7 @@ class GameInstance {
         this.instance.on('command::MoveCommand', ({ command, client, tick }) => {
             const rawEntity = client.rawEntity
             applyCommand(rawEntity, command, this.obstacles, this.boxes)
-            
+            //console.log(rawEntity);
             client.positions.push({
                 x: rawEntity.x,
                 y: rawEntity.y,
@@ -425,13 +424,13 @@ class GameInstance {
                                 client.view.x = thisClient.x
                                 client.view.y = thisClient.y
                                 client.positions = []
-                            }, 100)
+                            }, 50)
                             
 
                             setTimeout(function(){
                                 thisClient.isAlive = true
                                 thisInstance.messageAll(new Notification('portal-noise', 'sound', 0, 0), client)
-                            }, 300)
+                            }, 100)
 
                             break
                         }
@@ -477,6 +476,34 @@ class GameInstance {
                             }
                         }
 
+                    }
+
+
+                }
+
+
+            }
+
+
+
+
+            //Play Boxes
+            for (let box of this.boxes.values()) {
+
+                for (let portal of this.portals.values()) {
+
+                    let collided = false
+
+                    collided = SAT.testPolygonPolygon(box.collider.polygon, portal.collider.polygon) 
+                    
+                    //console.log(collided)
+
+                    if(collided) {
+                        
+                        box.body.position[0] = portal.exit[0]
+                        box.body.position[1] = portal.exit[1]
+                        
+                        break
                     }
 
 
