@@ -2,13 +2,22 @@
 
 # B.I.A.S. 
 
-Bi-directional Intimate Ambient Space is a little real-time physical 2d social world. 
+Bi-directional Intimate Ambient Space is a real-time 2d world. 
 
-It's a place you make. You can go there and interaction with other people and things. 
+It's a place you can make. And then you can go there and interact with things and people. 
 
-The founding pillars of the project are that lowering the visual fidelity of real time digital communication and building an interaction pallete suited to screen devices, while at all times seeking to _faithly transpose_ IRL interactions into a screen-first world. 
+The founding pillars of the project are that lowering the visual fidelity of real time digital communication and building an interaction pallete suited to screen devices, and seeking to _faithly transpose_ IRL interactions into a screen-first world;
 
-For more information about where I'm coming at this from, check out this presentation: https://bit.ly/3j3J77b
+**V0.1.0 ALPHA IS LIVE:**
+bias.jamesdelaney.ie
+
+**Features**
+* Identity creation
+* 2D movement in a dual-collision world
+* Text, emoji-blast, and voice chat
+* Portals and triggers
+
+
 
 *Show me what you got:*
 
@@ -17,14 +26,6 @@ nvm use 12
 npm install
 npm start
 ```
-
-**Features**
-* Identity Creation (Name and Body Modifier)
-* 2D Movement with a dual-collision[*] system with real physical bodies
-* Communication: Text, Emoji-Blast, Voice chat
-* Interaction: Trigger events based on world interactions
-
-[*] Explain why 
 
 **TO DO FEATURES**:
 * Collect / Hold Objects
@@ -55,4 +56,5 @@ Being built right now in the open by James Delaney for Science Gallery Dublin's 
 * STAGE -> WIDGETGROUP -> WIDGET -> GRAPHICS 
 
 License: Open Source BSD-3-Clause
+Presentation: https://bit.ly/3j3J77b
 
