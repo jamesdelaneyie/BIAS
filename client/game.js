@@ -12,6 +12,7 @@ import addMessage from './graphics/addMessage.js'
 import * as PIXI from 'pixi.js'
 import { Sound, filters } from '@pixi/sound';
 import MultiStyleText from 'pixi-multistyle-text'
+import AudioStreamMeter from 'audio-stream-meter'
 
 
 const create = () => {
@@ -153,13 +154,11 @@ const create = () => {
 
     myPeer.on('call', function(call) {
 
-        console.log(call);
-
+        call.answer(window.localStream) 
         const connectionId = call.connectionId
+        console.log(call)
         const callerID = call.peer
 
-    
-        call.answer(window.localStream) 
         const text = new MultiStyleText("<dot>●</dot> Connected With: "+callerID +" (ID:"+connectionId+")", {
             "default": {
                 fontFamily: "Monaco",
@@ -174,12 +173,22 @@ const create = () => {
         });
         renderer.stage.addChild(text);
         text.x = 10;
-        text.y = 30;// A
+        text.y = 30;
         
         call.on('stream', function(stream) { // C
            window.remoteAudio.srcObject = stream;
            window.remoteAudio.autoplay = true;
            window.peerStream = stream;
+
+           var audioContext = new AudioContext();
+				
+            var mediaStream = audioContext.createMediaStreamSource(stream);
+
+            var meter = AudioStreamMeter.audioStreamProcessor(audioContext, function() {
+                console.log("Their Volume:" + meter.volume * 100 + '%');
+            });
+            
+            mediaStream.connect(meter);
         });
      
         
@@ -238,7 +247,22 @@ const create = () => {
             if(portalSound.isPlaying == false) {
                 portalSound.play(); 
             }
+            renderer.videoTexture.baseTexture.resource.source.pause()
 
+        }
+
+        if(message.type == "command") {
+
+
+            if(renderer.videoTexture.baseTexture.resource.source.paused) {
+                renderer.videoTexture.baseTexture.resource.source.play()
+                console.log('playing');
+            } else {
+                //renderer.videoTexture.baseTexture.resource.source.pause()
+                //console.log('paused');
+            }
+
+            
         }
         
     })
@@ -273,7 +297,7 @@ const create = () => {
 
         const backgroundMusic = Sound.from('audio/background.mp3');
         backgroundMusic.speed = 0.9
-        backgroundMusic.volume = 0.05
+        backgroundMusic.volume = 0.02
         backgroundMusic.loop = true;
 
         const telephone = new filters.TelephoneFilter(1)

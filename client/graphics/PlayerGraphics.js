@@ -3,6 +3,7 @@ import * as PUXI from 'puxi.js'
 import HitpointBar from './HitpointBar.js'
 import { Sound } from '@pixi/sound';
 import MultiStyleText from 'pixi-multistyle-text'
+import AudioStreamMeter from 'audio-stream-meter'
 
 class PlayerGraphics extends PIXI.Container {
     constructor(state) {
@@ -132,6 +133,17 @@ class PlayerGraphics extends PIXI.Container {
                 window.peerStream = stream; 
                 dialingSound.stop();
                 console.log(stream);
+
+                var audioContext = new AudioContext();
+				
+                var mediaStream = audioContext.createMediaStreamSource(stream);
+
+                var meter = AudioStreamMeter.audioStreamProcessor(audioContext, function() {
+                    console.log("Your Volume:" + meter.volume * 100 + '%');
+                });
+                
+                mediaStream.connect(meter);
+
                 const text = new MultiStyleText("<dot>●</dot> Connected With: "+this.name +" (ID:"+stream.id+")", {
                     "default": {
                         fontFamily: "Monaco",

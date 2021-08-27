@@ -18,7 +18,6 @@ bias.jamesdelaney.ie
 * Portals and triggers
 
 
-
 *Show me what you got:*
 
 ```

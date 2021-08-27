@@ -51,6 +51,49 @@ class PIXIRenderer {
 
         this.stage.addChild(this.camera)
         this.stage.addChild(this.UIBuilder)
+    
+        //ADD VIDEO
+        this.videoTexture = PIXI.Texture.from('/video/video.mp4');
+        this.videoTexture.baseTexture.resource.muted = true
+        this.videoTexture.baseTexture.resource.autoPlay = false
+        
+        const videoSprite = new PIXI.Sprite(this.videoTexture);
+        
+        videoSprite.width = 620;
+        videoSprite.height = 348;
+        videoSprite.x = -500;
+        videoSprite.y = -400;
+        videoSprite.rotation = -0.1
+
+        this.foreground.addChild(videoSprite);
+
+
+
+
+
+
+
+        const style = new PIXI.TextStyle({
+            fill: "white",
+            fontFamily: "Monaco, monospace",
+            fontSize: 19,
+            fontWeight: 400,
+            lineHeight: 25,
+            whiteSpace: "breakword",
+            wordWrap: true,
+            wordWrapWidth: 350,
+            leading: 1
+        });
+        const explainerText = new PIXI.Text('Libbys Room ☝ \n\n Welcome to BIAS Online!\n * Arrows Keys/WASD to Move\n * Tap person to talk\n\n  Play nicely :)', style);
+        explainerText.x = 1600
+        explainerText.y = 50
+        this.foreground.addChild(explainerText)
+
+
+        const libbyRoomText = new PIXI.Text('Libby\'$ Room \n\n Touch Box to Start Video', style);
+        libbyRoomText.x = -400
+        libbyRoomText.y = 50
+        this.foreground.addChild(libbyRoomText)
 
         
         window.addEventListener('resize', () => {

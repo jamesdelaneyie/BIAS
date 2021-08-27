@@ -147,6 +147,8 @@ class GameInstance {
 
         
 
+        
+
 
         this.people = []
 
@@ -457,15 +459,19 @@ class GameInstance {
 
                         if(this.instance.clients.array.length > 1) {
                             if(collided == true) {
+                                this.instance.messageAll(new Notification('Video Started', 'command', 0, 0))
                                 this.instance.messageAll(new Notification(''+ value.rawEntity.name +' is touching " '+ box.name +' "', 'notification', 20, 20))
                                 box.color = "#0000ff"
                                 break
                             } else {
                                 box.color = "#FFFFFF"
+                                //this.instance
                             }
                         } else {
                             if(collided == true) {
+                                this.instance.messageAll(new Notification('Video Started', 'command', 0, 0))
                                 this.instance.messageAll(new Notification(''+ value.rawEntity.name +' is touching " '+ box.name +' "', 'notification', 20, 20))
+                                
                                 box.color = "#0000ff"
                                 break
                             } else {

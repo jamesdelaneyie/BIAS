@@ -12,6 +12,7 @@
     "@pixi/filter-ascii": "^4.0.0",
     "@pixi/filter-crt": "^4.0.0",
     "@pixi/sound": "^4.0.4",
+    "audio-stream-meter": "^1.0.5",
     "axios": "^0.21.1",
     "canvas": "^2.7.0",
     "chat-censoring": "^1.0.6",
