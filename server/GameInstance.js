@@ -22,9 +22,6 @@ import fs from 'fs'
 import SAT from 'sat'
 
 
-import cryptoRandomString from 'crypto-random-string'
-
-
 
 class GameInstance {
     constructor() {
@@ -102,7 +99,7 @@ class GameInstance {
                 width: 25, 
                 height: 25, 
                 color: "#0000ff",
-                mass: 0.1
+                mass: 0.1 
             }],
             portals: [{
                 x: 150,
@@ -141,8 +138,8 @@ class GameInstance {
         const peerServer = PeerServer({
             port: 9000,
             ssl: {
-               //key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem'),
-               // cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/cert.pem')
+               key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem'),
+               cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/cert.pem')
             }
         });
         // PAUL GAALXY S8 NO KEYS
