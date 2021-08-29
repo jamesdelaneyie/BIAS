@@ -22,9 +22,10 @@ class PlayerGraphics extends PIXI.Container {
         this.color = state.color;
         this.name = state.name;
         this.self = state.self;
-
+        this.volume = 0
         this.wrapper = new PIXI.Container()
         this.playerBody = new PIXI.Graphics();
+        this.size = 25
         
         //Give me a new space to draw something
         this.auraContainer = new PIXI.Container();   
@@ -45,16 +46,16 @@ class PlayerGraphics extends PIXI.Container {
 
         this.body = new PIXI.Graphics()
         this.body.beginFill(auraColor)
-        this.body.drawCircle(0, 0, 25)
+        this.body.drawCircle(0, 0, this.size)
         this.body.endFill()
         this.playerBody.addChild(this.body)
 
         this.nose = new PIXI.Graphics()
-        this.nose.moveTo(0, -25)
+        this.nose.moveTo(0, -this.size)
         this.nose.beginFill(auraColor)
-        this.nose.moveTo(0, -25)
+        this.nose.moveTo(0, -this.size)
         this.nose.lineTo(40, 0)
-        this.nose.lineTo(0, 25)
+        this.nose.lineTo(0, this.size)
         this.nose.endFill()
         this.playerBody.addChild(this.nose)
 
@@ -115,6 +116,9 @@ class PlayerGraphics extends PIXI.Container {
     onPointerDown(){
 
         console.log(this.name)
+
+        var personToCall = this.name;
+        var yourself = this
         if(this.name != window.myName) {
             myPeer.connect(this.name)
         
@@ -135,16 +139,16 @@ class PlayerGraphics extends PIXI.Container {
                 console.log(stream);
 
                 var audioContext = new AudioContext();
-				
                 var mediaStream = audioContext.createMediaStreamSource(stream);
-
                 var meter = AudioStreamMeter.audioStreamProcessor(audioContext, function() {
-                    console.log("Your Volume:" + meter.volume * 100 + '%');
+                    yourself.updateCircleSize(meter.volume);
                 });
+
+                this.volume = meter.volume
                 
                 mediaStream.connect(meter);
 
-                const text = new MultiStyleText("<dot>●</dot> Connected With: "+this.name +" (ID:"+stream.id+")", {
+                const text = new MultiStyleText("<dot>●</dot> Connected With: "+ personToCall +" (ID:"+stream.id+")", {
                     "default": {
                         fontFamily: "Monaco",
                         fontSize: "10px",
@@ -163,6 +167,11 @@ class PlayerGraphics extends PIXI.Container {
 
         }
         
+    }
+
+    updateCircleSize(size){
+        var size = Number(size*500).toFixed(0)
+        this.auraContainer.scale.set(size)
     }
 
     onPointerOut(){
@@ -184,8 +193,11 @@ class PlayerGraphics extends PIXI.Container {
     }
 
 
+
     update(delta) {
         
+        //console.log(this.size)
+
         this.count++
         if (!this.isAlive) {
             this.nose.alpha = 0

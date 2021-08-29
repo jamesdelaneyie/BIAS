@@ -34,6 +34,31 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
         const moveCommand = new MoveCommand(input.w, input.a, input.s, input.d, rotationAmount, delta)
         client.addCommand(moveCommand)
 
+        //console.log(input.mouseDown)
+        if (input.mouseDown) {
+            const coolEmoji = renderer.stage.children[1].coolEmoji.contentContainer;
+            coolEmoji.on("pointerdown", function () {
+                client.addCommand(new SpeakCommand("😎", "emojiBlast", myRawEntity.x, myRawEntity.y))
+            });
+            const heartEmoji = renderer.stage.children[1].heartEmoji.contentContainer;
+            heartEmoji.on("pointerdown", function () {
+                client.addCommand(new SpeakCommand("❤️", "emojiBlast", myRawEntity.x, myRawEntity.y))
+            });
+            const lighteningEmoji = renderer.stage.children[1].lighteningEmoji.contentContainer;
+            lighteningEmoji.on("pointerdown", function () {
+                client.addCommand(new SpeakCommand("⚡", "emojiBlast", myRawEntity.x, myRawEntity.y))
+            });
+            const sadEmoji = renderer.stage.children[1].sadEmoji.contentContainer;
+            sadEmoji.on("pointerdown", function () {
+                client.addCommand(new SpeakCommand("🙁", "emojiBlast", myRawEntity.x, myRawEntity.y))
+            });
+            const whateverEmoji = renderer.stage.children[1].whateverEmoji.contentContainer;
+            whateverEmoji.on("pointerdown", function () {
+                client.addCommand(new SpeakCommand("🙄", "emojiBlast", myRawEntity.x, myRawEntity.y))
+            });
+        }
+
+
 
         if(input.message != "") {
             const speakCommand = new SpeakCommand(input.message, myRawEntity.x, myRawEntity.y)
@@ -76,12 +101,6 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
                 handleShot(myRawEntity.x, myRawEntity.y, worldCoord.x, worldCoord.y, state.obstacles, renderer)
             }
         }
-    } else {
-
-        if(input.message != '') {
-            //client.addCommand(new JoinCommand(input.message, 'Red'))
-        }
-
     }
 }
 

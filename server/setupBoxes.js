@@ -106,18 +106,29 @@ export default (instance, world, room, boxes) => {
         });
     }
 
-    /*setInterval(function(){
-        let newBox = new Box({ name: 'gallery', x: roomX+ 100, y: roomY + 200, width: 50, height: 50, color: "#ffffff", mass: 5, spin: 0.2, material: circleMaterial })
-        instance.addEntity(newBox)
-        world.addBody(newBox.body)
-        boxes.set(newBox.nid, newBox)
+    setInterval(function(){
+        if(boxes.size < 14) {
+            objects.forEach(object => {
+                //.log(object.name)
+                let objectProps = new Box({
+                    name: object.name,
+                    x: object.x + roomX,
+                    y: object.y + roomY,
+                    width: object.width,
+                    height: object.height,
+                    mass: object.mass,
+                    color: object.color,
+                    spin: 0, 
+                    material: wallMaterial 
+                })
+                instance.addEntity(objectProps)
+                world.addBody(objectProps.body)
+                boxes.set(objectProps.nid, objectProps)
+            });
+        }
+    }, 2000)
 
-        setTimeout(function(){
-            instance.removeEntity(newBox)
-            world.removeBody(newBox.body)
-            boxes.delete(newBox.nid)
-        }, 20000)
-    }, 2000)*/
+    console.log(boxes.size)
     
 
 

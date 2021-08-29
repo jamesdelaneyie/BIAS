@@ -1,4 +1,5 @@
 import BoxGraphics from '../graphics/BoxGraphics.js'
+import CollisionSystem from '../../common/CollisionSystem.js'
 
 export default ({ boxes }, renderer) => {
     return {
@@ -13,7 +14,8 @@ export default ({ boxes }, renderer) => {
 
             return graphics
         },
-        delete({ nid, graphics }) {
+        delete({ nid, graphics, entity }) {
+            entity.collider = CollisionSystem.createRectangleColliderBox(0, 0, 0, 0)   
             renderer.entities.delete(nid)
             renderer.middleground.removeChild(graphics)
         },

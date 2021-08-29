@@ -27,8 +27,6 @@ const addMessage = (layer, message) => {
         let text = ""
         let textBox = ""
 
-        message.text = message.text.toUpperCase()
-
         
         if(message.type == 'talk') {
             text = new PIXI.Text("❤️", style);

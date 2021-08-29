@@ -1,8 +1,7 @@
 import { Joystick } from './graphics/Joystick';
-import * as PIXI from 'pixi.js'
 import isMobile from 'ismobilejs'
-import UIBuilder from './graphics/UIBuilder.js'
 import JoinCommand from '../common/command/JoinCommand.js'
+import SpeakCommand from '../common/command/SpeakCommand';
 
 class InputSystem {
 
@@ -11,7 +10,7 @@ class InputSystem {
         this.onmousemove = null
 
         this.UIBuilder = renderer.UIBuilder
-
+        
         let isJoined = false;
         const joinButton = renderer.stage.children[1].joinButton
         joinButton.on("click", function () {
@@ -25,6 +24,8 @@ class InputSystem {
                 isJoined = true
             }
         });
+        
+        
 
         this.currentState = {
             w: false,
@@ -38,6 +39,7 @@ class InputSystem {
             mx: 0,
             my: 0,
             mouseDown: false,
+            mouseMoving: false,
             message: "",
             viewArt: false
             
@@ -55,6 +57,7 @@ class InputSystem {
             spacebar: false,
             spacebarRelease: false,
             mouseDown: false,
+            mouseMoving: false,
             message: "",
             viewArt: false,
             spacebar: false
@@ -122,6 +125,15 @@ class InputSystem {
                 if (event.keyCode === 13) {
                     this.currentState.message = this.UIBuilder.getMessageText();
                     this.UIBuilder.clearMessageText();
+
+                    if(isJoined == false) {
+                        let name = renderer.UIBuilder.getText();
+                        let playerColor = Math.floor(Math.random()*16777215).toString(16);
+                        client.addCommand(new JoinCommand(""+name+"", playerColor))
+                        renderer.UIBuilder.clearText();
+                        renderer.UIBuilder.joinSession();
+                        isJoined = true
+                    }
                 } 
 
                 if (event.keyCode === 9) {
@@ -220,6 +232,8 @@ class InputSystem {
                 if (this.onmousemove) {
                     this.onmousemove(event)
                 }
+                this.currentState.mouseMoving = true
+                this.frameState.mouseMoving = true
             })
 
             document.addEventListener('mousedown', event => {
@@ -230,6 +244,8 @@ class InputSystem {
 
             document.addEventListener('mouseup', event => {
                 this.currentState.mouseDown = false
+                this.currentState.mouseMoving = false
+                this.frameState.mouseMoving = false
             })
 
             if(this.isMobile) {
@@ -422,6 +438,7 @@ class InputSystem {
         this.frameState.spacebarRelease = false;
         this.frameState.rotation = this.currentState.rotation
         this.frameState.mouseDown = this.currentState.mouseDown
+        this.frameState.mouseMoving = this.currentState.mouseMoving
         this.frameState.message = this.currentState.message
         this.frameState.viewArt = this.currentState.viewArt
     }

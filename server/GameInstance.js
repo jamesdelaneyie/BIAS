@@ -41,12 +41,12 @@ class GameInstance {
             borderWidth: 25,
             objects: [{
                 name: "item",
-                x: 100,
-                y: 100,
+                x: 200,
+                y: 200,
                 width: 25, 
                 height: 25, 
                 color: "#0000ff",
-                mass: 0.1
+                mass: 0
             }],
             portals: [{
                 x: 380,
@@ -99,7 +99,7 @@ class GameInstance {
                 width: 25, 
                 height: 25, 
                 color: "#0000ff",
-                mass: 0.1 
+                mass: 0 
             }],
             portals: [{
                 x: 150,
@@ -138,14 +138,14 @@ class GameInstance {
         const peerServer = PeerServer({
             port: 9000,
             ssl: {
-               key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem'),
-               cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/cert.pem')
+               //key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem'),
+               //cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/cert.pem')
             }
         });
         // PAUL GAALXY S8 NO KEYS
 
 
-        
+
 
         
 
@@ -220,15 +220,17 @@ class GameInstance {
 
             smoothEntity.name = command.name
             rawEntity.name = command.name
+            client.name = command.name
 
             smoothEntity.color = command.color
             rawEntity.color = command.color
+            
 
             smoothEntity.isAlive = true;
             rawEntity.isAlive = true;
             
             this.instance.message(new Identity(rawEntity.nid, smoothEntity.nid, ""+peerID+"", ""+ command.name +""), client)
-            this.instance.messageAll(new Notification('Welcome '+ command.name +'', 'notification', 20, 20))
+            this.instance.messageAll(new Notification(''+ command.name +'', 'personJoined', 20, 20))
             
 
         })
@@ -257,11 +259,10 @@ class GameInstance {
                 halfHeight: 99999
             }
 
-            //const instance = this.instance
-            //console.log(this.instance)
+
             let server = this.instance.wsServer.httpServer._connectionKey;
 
-            callback({ accepted: true, text: server})
+            callback({ accepted: true, text: ""+server+""})
 
         })
 
@@ -270,6 +271,7 @@ class GameInstance {
 
         this.instance.on('disconnect', client => {
             // clean up per client state
+            this.instance.messageAll(new Notification(''+ client.rawEntity.name +'', 'personLeft', 20, 20))
             if(client.rawEntity.nid) {
                 client.channel.removeEntity(client.rawEntity)
                 this.instance.removeEntity(client.rawEntity)
@@ -278,9 +280,18 @@ class GameInstance {
             client.channel.destroy()
         })
 
+
+
+
+
+
         this.instance.on('command::SpeakCommand', ({ command, client, tick }) => {
+
+            if(command.type == "emojiBlast") {
+
+                this.instance.messageAll(new Notification(command.text, 'emojiBlast', command.x, command.y))
             
-            if(command.text == "<3") {
+            } else if(command.text == "<3") {
                 this.instance.messageAll(new Notification('❤️', 'talk', command.x, command.y))
             } else {
 
@@ -447,8 +458,6 @@ class GameInstance {
 
                 for (const [key, value] of Object.entries(this.instance.clients.array)) {
 
-                    
-                    //console.log(value)
 
                     if(value.rawEntity.isAlive && box.name == "item") {
 
@@ -459,9 +468,20 @@ class GameInstance {
 
                         if(this.instance.clients.array.length > 1) {
                             if(collided == true) {
-                                this.instance.messageAll(new Notification('Video Started', 'command', 0, 0))
-                                this.instance.messageAll(new Notification(''+ value.rawEntity.name +' is touching " '+ box.name +' "', 'notification', 20, 20))
-                                box.color = "#0000ff"
+                                this.instance.message(new Notification('score increase', 'scoreIncrease'), value)
+                                //
+                                //box.collider = null
+                                this.world.removeBody(box.body)
+                                this.boxes.delete(box.nid)
+                                value.channel.removeEntity(box)
+                                this.instance.removeEntity(box)
+
+                                console.log(value.channel)
+                                
+                                
+                                
+                                
+                                //onsole.log(box)
                                 break
                             } else {
                                 box.color = "#FFFFFF"
@@ -469,13 +489,27 @@ class GameInstance {
                             }
                         } else {
                             if(collided == true) {
-                                this.instance.messageAll(new Notification('Video Started', 'command', 0, 0))
-                                this.instance.messageAll(new Notification(''+ value.rawEntity.name +' is touching " '+ box.name +' "', 'notification', 20, 20))
+                                //this.instance.messageAll(new Notification('Video Started', 'command', 0, 0))
+                                //this.instance.messageAll(new Notification(''+ value.rawEntity.name +' is touching " '+ box.name +' "', 'notification', 20, 20))
                                 
-                                box.color = "#0000ff"
+                                this.instance.message(new Notification('score increase', 'scoreIncrease'), value)
+                                //
+                                //box.collider = null
+                                this.world.removeBody(box.body)
+                                this.boxes.delete(box.nid)
+                                value.channel.removeEntity(box)
+                                this.instance.removeEntity(box)
+
+                                console.log(value.channel)
+                                
+                                
+                                
+                                
+                                console.log(box)
+                                //box.color = "#0000ff"
                                 break
                             } else {
-                                box.color = "#FFFFFF"
+                                //box.color = "#FFFFFF"
                             }
                         }
 
@@ -486,7 +520,6 @@ class GameInstance {
 
 
             }
-
 
 
 

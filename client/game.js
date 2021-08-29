@@ -9,16 +9,17 @@ import drawHitscan from './graphics/drawHitscan.js'
 import reconcilePlayer from './reconcilePlayer.js'
 import shouldIgnore from './shouldIgnore.js'
 import addMessage from './graphics/addMessage.js'
-import * as PIXI from 'pixi.js'
+import emojiBlast from './graphics/emojiBlast.js'
 import { Sound, filters } from '@pixi/sound';
 import MultiStyleText from 'pixi-multistyle-text'
 import AudioStreamMeter from 'audio-stream-meter'
 
 
 const create = () => {
+    
     const client = new nengi.Client(nengiConfig, 100)
     const renderer = new PIXIRenderer()
-    const input = new InputSystem(renderer, client)
+    let input = new InputSystem(renderer, client)
 
     window.renderer = renderer
 
@@ -67,28 +68,10 @@ const create = () => {
 
         const userSettings = window.localStorage;
         userSettings.setItem('name', state.name);
-
-        const text = new MultiStyleText("<dot>●</dot> Connected to Nengi Instance as <hi>"+ state.name +"</hi>", {
-            "default": {
-                fontFamily: "Monaco",
-                fontSize: "10px",
-                fill: "#ececec",
-                align: "left"
-            },
-            "dot": {
-                fontSize: "15px",
-                fill: "#00ff00"
-            },
-            "hi": {
-                fontSize: "10px",
-                fill: "#ffffff"
-            }
-        });
-        renderer.stage.addChild(text);
-        text.x = 10;
-        text.y = window.innerHeight - 40;
-
         window.myName = state.name
+
+        renderer.UIBuilder.joinInstance(state.name, state.myRawId)
+        
 
         const myPeer = new Peer(""+state.name+"",{
             host:'/', 
@@ -156,10 +139,8 @@ const create = () => {
 
         call.answer(window.localStream) 
         const connectionId = call.connectionId
-        console.log(call)
-        const callerID = call.peer
 
-        const text = new MultiStyleText("<dot>●</dot> Connected With: "+callerID +" (ID:"+connectionId+")", {
+        const text = new MultiStyleText("<dot>●</dot> Connected With: "+call.peer +" (ID:"+connectionId+")", {
             "default": {
                 fontFamily: "Monaco",
                 fontSize: "10px",
@@ -185,7 +166,7 @@ const create = () => {
             var mediaStream = audioContext.createMediaStreamSource(stream);
 
             var meter = AudioStreamMeter.audioStreamProcessor(audioContext, function() {
-                console.log("Their Volume:" + meter.volume * 100 + '%');
+                //console.log("Their Volume:" + meter.volume * 100 + '%');
             });
             
             mediaStream.connect(meter);
@@ -229,13 +210,22 @@ const create = () => {
 
     client.on('message::Notification', message => {
 
-        console.log('Notification', message)
-
-        if(message.type == "notification") {
-            message.x = 0
-            message.y = 0
-            addMessage(renderer.stage, message);
+        if(message.type == "scoreIncrease") {
+            renderer.UIBuilder.increaseScore()
+            //console.log('scored')
         }
+
+        if(message.type == "personJoined") {
+            renderer.UIBuilder.personJoined(message.text)
+        }
+        if(message.type == "personLeft") {
+            renderer.UIBuilder.personLeft(message.text)
+        }
+
+        if(message.type == "emojiBlast") {
+            emojiBlast(renderer.middleground, message);
+        }
+
         if(message.type == "text") {
             addMessage(renderer.middleground, message);
         }
@@ -277,23 +267,9 @@ const create = () => {
     client.on('connected', res => { 
 
         console.log('connection?:', res)
-        const connectedText = new MultiStyleText("<dot>●</dot> Connected to Server ["+res.text+"]", {
-            "default": {
-                fontFamily: "Monaco",
-                fontSize: "10px",
-                fill: "#ececec",
-                align: "left"
-            },
-            "dot": {
-                fontSize: "15px",
-                fill: "#00ff00"
-            }
-        });
-        renderer.stage.addChild(connectedText);
-        connectedText.x = 10;
-        connectedText.y = window.innerHeight - 25;
-
-
+        
+        renderer.UIBuilder.updateConnection(res, true);
+        
 
         const backgroundMusic = Sound.from('audio/background.mp3');
         backgroundMusic.speed = 0.9
@@ -315,27 +291,14 @@ const create = () => {
     client.on('disconnected', () => { 
         console.log('connection closed') 
 
-        const disconnectedText = new MultiStyleText("<dot>●</dot> Connected to Server", {
-            "default": {
-                fontFamily: "Monaco",
-                fontSize: "10px",
-                fill: "#ececec",
-                align: "left"
-            },
-            "dot": {
-                fontSize: "15px",
-                fill: "#00ff00"
-            }
-        });
-        renderer.stage.addChild(disconnectedText);
-        disconnectedText.x = 10;
-        disconnectedText.y = window.innerHeight - 25;
+        renderer.UIBuilder.updateConnection(null, false);
+
     })
 
 
 
-    //client.connect('ws://localhost:8079')
-    client.connect('wss://bias.jamesdelaney.ie/test')
+    client.connect('ws://localhost:8079')
+    //client.connect('wss://bias.jamesdelaney.ie/test')
 
 
     const update = (delta, tick, now) => {

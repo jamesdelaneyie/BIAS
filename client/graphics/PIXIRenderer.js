@@ -3,7 +3,6 @@ import * as PIXI from 'pixi.js'
 import UIBuilder from './UIBuilder.js'
 
 import { CRTFilter } from '@pixi/filter-crt'
-import { EmoteSelector } from 'pixi-emote-selector'
 
 
 var FontFaceObserver = require('fontfaceobserver');
@@ -34,7 +33,7 @@ class PIXIRenderer {
         this.middleground = new PIXI.Container()
         this.foreground = new PIXI.Container()
         
-        var font = new FontFaceObserver('Trade Gothic');
+        var font = new FontFaceObserver('Trade Gothic Next');
         this.UIBuilder = new UIBuilder();    
         
         font.load().then(function () {
@@ -51,6 +50,12 @@ class PIXIRenderer {
 
         this.stage.addChild(this.camera)
         this.stage.addChild(this.UIBuilder)
+
+
+
+
+
+
     
         //ADD VIDEO
         this.videoTexture = PIXI.Texture.from('/video/video.mp4');

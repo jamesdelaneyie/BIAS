@@ -1,122 +1,130 @@
 import * as PIXI from 'pixi.js'
 import * as PUXI from 'puxi.js'
 import MultiStyleText from 'pixi-multistyle-text'
+import TaggedText from 'pixi-tagged-text'
 import { Ease, ease } from 'pixi-ease'
-import { sound } from '@pixi/sound';
+import { sound } from '@pixi/sound'
+import { CRTFilter } from '@pixi/filter-crt'
+import {GlowFilter} from '@pixi/filter-glow';
 
 class UIBuilder extends PIXI.Container {
     constructor() {
         super()
 
-        this.count = 0
+        this.width  = window.innerWidth 
+        this.height = window.innerHeight
+        
+        
+        
+        const colorBlack = PIXI.utils.string2hex("#292929"); //Black
+        const colorGreen = PIXI.utils.string2hex("#4DFA66") //Green
+        
+        /* Intro Modal */
+        
+        
+        const modalButtonColor = "#FF284D" //Red
 
-        const width  = window.innerWidth || document.documentElement.clientWidth
-        || document.body.clientWidth;
-        const height = window.innerHeight || document.documentElement.clientHeight
-        || document.body.clientHeight;
+        
+        let modalFieldFontSize = 52
+        let modalButtonFontSize = 64
+        
+
+        this.mobileBreakPoint = 500
+        this.tabletBreakPoint = 960
+        this.laptopBreakPoint = 1240
+
+        this.modalTitleFontSize = 10
+
+        
+
+        let modalWidth = 0.9999
+        let modalHeight = 0.9999;
+        
+        let modalRadius = 20
+        
 
 
-        this.joinModal = new PUXI.Stage(width, height)   
 
-        let modalWidth
-        if(width <= 500) {
-            modalWidth = 360;
-        } else {
-            modalWidth = 600;
-        }
-        let modalRadius = 10
+        const puxiCenter = PUXI.FastLayoutOptions.CENTER_ANCHOR;
+        
 
+
+        //Modal Stage
+        this.joinModal = new PUXI.Stage(window.innerWidth, window.innerHeight)   
+        
         //Modal Background
         const joinModalWrapper= new PUXI.Widget({
         }).setLayoutOptions(
             new PUXI.FastLayoutOptions({
-                width: 0.999999,
+                width: 0.999999, 
                 height: 0.99999,
-                x: 0.5,
-                y: 0.5,
-                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
             }),
         )
-        .setBackground(0x000000)
-        .setBackgroundAlpha(0.9)
-        .setPadding(0)
+        .setBackground(colorGreen)
+    
         
-        
-
+        //Modal Centre Box Wrapper 
         this.joinModalWidgetGroup = new PUXI.WidgetGroup().setLayoutOptions(
             new PUXI.FastLayoutOptions({
+                x: 0.5, y: 0.5,
+                anchor: puxiCenter,
                 width: modalWidth,
-                height: 400,
-                x: 0.5,
-                y: 0.5,
-                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+                height: modalHeight
             }),
         )
 
         
         this.joinModalWidgetGroup.contentContainer.alpha = 0
-        ease.add(this.joinModalWidgetGroup.contentContainer, 
-            { 
-                y: -30, 
-                alpha: 1, 
-            }, 
-            { 
-                duration: 800, 
-                ease: 'easeOutExpo',
-                wait: 500
-            })
-        
-        
+        this.joinModalWidgetGroup.contentContainer.y = 50
 
-        //Modal Content
-        const backgroundBox = new PUXI.Widget({}).setLayoutOptions(
+        const fadeInStyles = { y: 0, alpha: 1, }
+        const fadeInSettings = { duration: 800, ease: 'easeOutExpo', wait: 500 }
+
+        ease.add(this.joinModalWidgetGroup.contentContainer, fadeInStyles, fadeInSettings)
+        
+        //Whats your name
+        const modalTitle = new PUXI.Widget({
+        }).setLayoutOptions(
             new PUXI.FastLayoutOptions({
+                width: 0,
+                height: 0,
                 x: 0.5,
                 y: 0.5,
                 anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
             }),
+        ).setBackground(0xFFFFFF)
+
+        this.textStyles = new PIXI.TextStyle({ 
+            fontFamily: 'Trade Gothic Next',
+            fill: colorBlack, 
+            fontSize: 108,
+            fontWeight: 900, 
+        })
+
+        this.nameFieldPlaceholder = new PUXI.TextWidget(
+            'What’s your name?', 
+            this.textStyles
         )
-        
+        this.nameFieldPlaceholder.contentContainer.children[0].anchor.set(0.5, 0.5);
+        this.nameFieldPlaceholder.contentContainer.children[0].x = 0
+        this.nameFieldPlaceholder.contentContainer.children[0].y = 0
+        modalTitle.addChild(this.nameFieldPlaceholder)
 
-        //Modal Glow Background
-        this.modalBackgroundGlow = new PIXI.Graphics()
-        this.modalBackgroundGlow.beginFill(0xFFFFFF);
-        this.modalBackgroundGlow.alpha = 1
-        this.modalBackgroundGlow.drawRoundedRect(0, 0, modalWidth, 400, modalRadius)
-        this.modalBackgroundGlow.endFill()
-        //this.glowFilter = new GlowFilter({ distance: 25, outerStrength: 2.5, innerStrength: 0, color: 0x00ff00, quality: 0.2 })
-        //this.modalBackgroundGlow.filters = [ this.glowFilter ]
-        this.joinModalWidgetGroup.contentContainer.addChild(this.modalBackgroundGlow)
 
-        //Modal Background
-        this.modalBackground = new PIXI.Graphics()
-        this.modalBackground.beginFill(0xFFFFFF);
-        this.modalBackground.alpha = 1
-        this.modalBackground.drawRoundedRect(0, 0, modalWidth, 400, modalRadius)
-        this.modalBackground.endFill()
-        this.joinModalWidgetGroup.contentContainer.addChild(this.modalBackground)
-        
-        this.joinModalWidgetGroup.addChild(backgroundBox)
 
-        //Logo Wrapper + Logo
-        const logoBox = new PUXI.Widget({
-        }).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 50,
-                height: 50,
-                x: 0.5,
-                y: 0.3,
-                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-            }),
-        )
-        const logo = PIXI.Sprite.from('images/logo-alt.svg');
-        logo.width = 74
-        logo.height = 74
-        logo.anchor.set(0.5);
-        logo.x = 25
-        logo.y = 25
-        logoBox.contentContainer.addChild(logo)
+
+        const fontLoader = new PIXI.Loader()
+            fontLoader.add('HeadingFont', '/fonts/TradeGothicNextBold.fnt').load(() => {
+            this.createText()
+            this.resizeText()
+                
+        })
+
+
+
+
         
+        //this.joinModalWidgetGroup.addChild(modalTitle)
 
 
         //Name Input Field
@@ -289,7 +297,7 @@ class UIBuilder extends PIXI.Container {
 
         this.joinModal.addChild(joinModalWrapper)
 
-        this.joinModalWidgetGroup.addChild(logoBox)
+        this.joinModalWidgetGroup.addChild(modalTitle)
         this.joinModalWidgetGroup.addChild(inputBox)
         this.joinModalWidgetGroup.addChild(joinButtonWrapper)
         
@@ -313,7 +321,7 @@ class UIBuilder extends PIXI.Container {
 
 
         // Chat Text Entry Element 
-        this.textBox = new PUXI.Stage(window.innerWidth, 40)   
+       /* this.textBox = new PUXI.Stage(window.innerWidth, 40)   
         
         this.textBox.alpha = 0
         this.textBox.y = window.innerHeight - 55
@@ -339,7 +347,7 @@ class UIBuilder extends PIXI.Container {
             selectedColor: "#000000",
             selectedBackgroundColor: "#0000FF",
             caretWidth: 4,
-            style: textStyles,
+            //style: textStyles,
         }).setLayoutOptions(
             new PUXI.FastLayoutOptions({
                 width: 0.999, 
@@ -352,7 +360,7 @@ class UIBuilder extends PIXI.Container {
         
         this.TextBoxPlaceholder = new PUXI.TextWidget(
             'TYPE TO SPEAK!', 
-            textStyles
+            //textStyles
         ).setLayoutOptions(
             new PUXI.FastLayoutOptions({
                 x: 10,
@@ -373,18 +381,270 @@ class UIBuilder extends PIXI.Container {
         this.addChild(this.textBox)
    
 
+        */
 
-        window.addEventListener('resize', () => {
-            this.joinModal.resize(window.innerWidth, window.innerHeight)
+       
+
+
+
+
+        this.statusStage = new PUXI.Stage({
+            width: 300,
+            height: 100
+        });
+
+        this.statusWrapper = new PUXI.WidgetGroup({
+        }).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 350,
+                height: 200,
+                x: 10,
+                y: 0.995,
+                anchor: new PIXI.Point(0, 1)
+            }),
+        ).setBackground(0xFFFFFF).setBackgroundAlpha(0.1)
+
+
+
+        this.statusLayout = new PUXI.Widget({}).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                height: 0,
+                width: 300,
+                x: 0,
+                y: 0.9,
+                anchor: new PIXI.Point(0, 1)
+            }),
+        )
+        this.statusWrapper.addChild(this.statusLayout)
+        this.statusStage.addChild(this.statusWrapper)
+
+
+        const mask = new PIXI.Graphics();
+        mask.beginFill(0xFFFFFF)
+        mask.drawRect(0, 0, 300, 200);
+        mask.y = -185
+        mask.alpha = 0
+        this.statusLayout.contentContainer.addChild(mask)
+        this.statusLayout.mask = mask
+
+       
+        this.addChild(this.statusStage)
+
+        this.statusStage.resize(window.innerWidth, window.innerHeight)
+        this.statusStage.stage.hitArea = new PIXI.Rectangle(0, 0, 0, 0);
+
+
+
+
+
+
+
+
+        this.emojiStage = new PUXI.Stage({
+            width: 260,
+            height: 50,
+            x: 0,
+            y: 0
         })
 
+        this.emojiWrapper = new PUXI.WidgetGroup({}).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 260, 
+                height: 50,
+                x: 0.5,
+                y: 0.965,
+                anchor: new PIXI.Point(0.5, 0.5)
+            })
+        )
+
+        this.emojiWrapperBackground = new PIXI.Graphics()
+        this.emojiWrapperBackground.lineStyle(1.5, 0x000000, 1, 1, false)
+        this.emojiWrapperBackground.beginFill(0xFFFFFF)
+        this.emojiWrapperBackground.drawRoundedRect(0, 0, 260, 50, 25)
+        this.emojiWrapperBackground.endFill()
+        this.emojiWrapperBackground.moveTo(260, 23)
+        this.emojiWrapperBackground.lineTo(260, 30)
+        this.emojiWrapper.contentContainer.addChild(this.emojiWrapperBackground)
+
+        this.coolEmoji = new PUXI.Widget({}).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 60,
+                height: 50,
+                x: 0,
+                y: 0
+            })
+        ).setPadding(15, 10)
+        const coolEmoji = new PIXI.Text("😎", {fontSize: 28});
+        this.coolEmoji.contentContainer.addChild(coolEmoji)
+        this.emojiWrapper.addChild(this.coolEmoji)
+        this.coolEmoji.contentContainer.buttonMode = true
+        this.coolEmoji.contentContainer.interactive = true
+
+        this.heartEmoji = new PUXI.Widget({}).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 60,
+                height: 50,
+                x: 50,
+                y: 0
+            })
+        ).setPadding(15, 10)
+        const heartEmoji = new PIXI.Text("❤️", {fontSize: 28});
+        this.heartEmoji.contentContainer.addChild(heartEmoji)
+        this.emojiWrapper.addChild(this.heartEmoji)
+        this.heartEmoji.contentContainer.buttonMode = true
+        this.heartEmoji.contentContainer.interactive = true
+
+        this.lighteningEmoji = new PUXI.Widget({}).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 60,
+                height: 50,
+                x: 100,
+                y: 0
+            })
+        ).setPadding(15, 10)
+        this.lighteningEmoji.buttonMode = true
+        const lighteningEmoji = new PIXI.Text("⚡", {fontSize: 28});
+        this.lighteningEmoji.contentContainer.addChild(lighteningEmoji)
+        this.emojiWrapper.addChild(this.lighteningEmoji)
+        this.lighteningEmoji.contentContainer.buttonMode = true
+        this.lighteningEmoji.contentContainer.interactive = true
+
+        this.sadEmoji = new PUXI.Widget({}).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 60,
+                height: 50,
+                x: 150,
+                y: 0
+            })
+        ).setPadding(15, 10)
+        const sadEmoji = new PIXI.Text("🙁", {fontSize: 28});
+        this.sadEmoji.contentContainer.addChild(sadEmoji)
+        this.emojiWrapper.addChild(this.sadEmoji)
+        this.sadEmoji.contentContainer.buttonMode = true
+        this.sadEmoji.contentContainer.interactive = true
+
+        this.whateverEmoji = new PUXI.Widget({}).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 60,
+                height: 50,
+                x: 200,
+                y: 0
+            })
+        ).setPadding(15, 10)
+        const whateverEmoji = new PIXI.Text("🙄", {fontSize: 28});
+        this.whateverEmoji.contentContainer.addChild(whateverEmoji)
+        this.whateverEmoji.contentContainer.buttonMode = true
+        this.whateverEmoji.contentContainer.interactive = true
+        this.emojiWrapper.addChild(this.whateverEmoji)
+
+        
+        this.emojiStage.addChild(this.emojiWrapper);
+        this.addChild(this.emojiStage);
+
+        this.emojiStage.resize(window.innerWidth, window.innerHeight)
+        const bounds = this.emojiWrapperBackground.getBounds()
+        this.emojiStage.stage.hitArea = new PIXI.Rectangle(
+            bounds.x,
+            bounds.y,
+            bounds.width,
+            bounds.height
+        );
+
+
+
+
+        this.scoreStage = new PUXI.Stage({
+            width: 200,
+            height: 280,
+            x: 0,
+            y: 0
+        })
+        
+        this.scoreWrapper = new PUXI.WidgetGroup({}).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 200, 
+                height: 280,
+                x: 0.99,
+                y: 20,
+                anchor: new PIXI.Point(1, 0)
+            })
+        )
+        
+        this.scoreWrapperBackground = new PIXI.Graphics()
+        this.scoreWrapperBackground.beginFill(0xFFFFFF)
+        this.scoreWrapperBackground.drawRoundedRect(0, 0, 200, 280, 25)
+        this.scoreWrapperBackground.endFill()
+        this.scoreWrapper.contentContainer.addChild(this.scoreWrapperBackground)
+        
+        this.johanScore = new PUXI.Widget({}).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 60,
+                height: 50,
+                x: 0,
+                y: 0
+            })
+        ).setPadding(15, 10)
+        this.johanScoreText = new PIXI.Text("0/10", {fontSize: 25});
+        this.johanScore.contentContainer.addChild(this.johanScoreText)
+        this.scoreWrapper.addChild(this.johanScore)
+        this.johanScore.contentContainer.buttonMode = true
+        this.johanScore.contentContainer.interactive = true
+        
+        
+        this.scoreStage.addChild(this.scoreWrapper);
+        this.addChild(this.scoreStage);
+        
+        this.scoreStage.resize(window.innerWidth, window.innerHeight)
+        const scoreBounds = this.scoreWrapperBackground.getBounds()
+        this.scoreStage.stage.hitArea = new PIXI.Rectangle(
+            scoreBounds.x,
+            scoreBounds.y,
+            scoreBounds.width,
+            scoreBounds.height
+        );
+        
+
+
+
+
+        window.addEventListener('resize', () => {
+            this.resizeText()
+
+            this.joinModal.resize(window.innerWidth, window.innerHeight)
+            
+            this.statusStage.resize(window.innerWidth, window.innerHeight)
+            this.statusStage.stage.hitArea = new PIXI.Rectangle(0,0,0,0);
+
+            this.emojiStage.resize(window.innerWidth, window.innerHeight)
+            const bounds = this.emojiWrapperBackground.getBounds()
+            this.emojiStage.stage.hitArea = new PIXI.Rectangle(
+                bounds.x,
+                bounds.y,
+                bounds.width,
+                bounds.height
+            );
+            
+            this.scoreStage.resize(window.innerWidth, window.innerHeight)
+            const scoreBounds = this.scoreWrapperBackground.getBounds()
+            this.scoreStage.stage.hitArea = new PIXI.Rectangle(
+                scoreBounds.x,
+                scoreBounds.y,
+                scoreBounds.width,
+                scoreBounds.height
+            );
+
+
+        })
+
+
+        this.count = 0
     }
 
     joinSession(){
         this.joinModalWidgetGroup.contentContainer.alpha = 0
         this.joinModal.alpha = 0
         this.removeChild(this.joinModal)
-        this.textBox.alpha = 1
+        //this.textBox.alpha = 1
     }
 
     leaveSession(){
@@ -402,24 +662,168 @@ class UIBuilder extends PIXI.Container {
     }
 
     getMessageText() {
-        return this.mockInput.value;
-    }
-    
-    clearMessageText() {
-        if(this.mockInput.value != "<3") {
-            this.mockInput.value = ""
-            this.mockInput.blur()
+        if(this.joinModal.visible == true) {
+            this.joinSession()
+            return this.nameFieldInput.value;
+            
+        } else {
+            return this.mockInput.value;
         }
     }
 
-    resize() {
-        //this.UILayer.render()
-        //this.resize(window.innerWidth, window.innerHeight);
+    clearMessageText() {
+        if(!this.joinModal.visible == true) {
+            if(this.mockInput.value != "<3") {
+                this.mockInput.value = ""
+                this.mockInput.blur()
+            }
+        }
     }
 
+
+    personLeft(name) {
+        var joinText = "<reddot>●</reddot> <hi>"+ name +"</hi> Left"
+        var textBox = this.statusLayout.contentContainer.children[1];
+        var currentText = textBox.text
+        textBox.text = joinText + "\n" + currentText
+        console.log(textBox.y)
+        if(textBox.y > -180) {
+            textBox.y = textBox.y - 18
+        }
+    }
+
+    increaseScore() {
+        var currentScore = Number(this.johanScoreText.text.slice(0,1))
+        currentScore = currentScore + 1
+        var newScore = currentScore + "/10";
+        console.log(newScore)
+        this.johanScoreText.text = newScore
+    }
+
+    personJoined(name) {
+        var joinText = "<whitedot>●</whitedot> <hi>"+ name +"</hi> Joined the Gallery ❤️"
+        var textBox = this.statusLayout.contentContainer.children[1];
+        var currentText = textBox.text
+        textBox.text = joinText + "\n" + currentText
+        console.log(textBox.y)
+        if(textBox.y > -180) {
+            textBox.y = textBox.y - 18
+        }
+    }
+
+    joinInstance(name, id) {
+        var joinText = "<greendot>●</greendot> <b>Connected to Nengi Instance</b> <p>(ID: "+ id +")</p> as: <hi>"+ name +"</hi>"
+        var textBox = this.statusLayout.contentContainer.children[1];
+        var currentText = textBox.text
+        textBox.text = joinText + "\n" + currentText
+        console.log(textBox.y)
+        if(textBox.y > -180) {
+            textBox.y = textBox.y - 18
+        }
+    }
+
+    updateConnection(value, boolean){
+
+        if(boolean == true) {
+            var connectedText = new TaggedText("<bluedot>●</bluedot> <b>Connected to Server</b> <y>["+value.text+"]</y>", {
+                "default": {
+                    fontFamily: "Iosevka",
+                    fontSize: "11px",
+                    fill: "#efefef",
+                    align: "left"
+                },
+                "bluedot": {
+                    fontFamily: "Monaco",
+                    fontSize: "15px",
+                    fill: "#0000ff"
+                },
+                "greendot": {
+                    fontFamily: "Monaco",
+                    fontSize: "15px",
+                    fill: "#00ff00"
+                },
+                "whitedot": {
+                    fontFamily: "Monaco",
+                    fontSize: "15px",
+                    fill: "#FFFFFF"
+                },
+                "reddot": {
+                    fontFamily: "Monaco",
+                    fontSize: "15px",
+                    fill: "#FF00000"
+                },
+                "b": {
+                    fontWeight: 700
+                },
+                "y": {
+                    fill: "#FFFF00"
+                },
+                "p": {
+                    fill: "#FF1493"
+                },
+                "hi": {
+                    fill: "#ffffff",
+                    fontWeight: 700,
+                    textDecoration: "underline"
+                }
+            });
+            this.statusLayout.contentContainer.addChild(connectedText);
+
+        } else {
+            this.statusLayout.contentContainer.removeChildAt(1);
+            var connectedText = new TaggedText("<dot>●</dot> Disconnected from Server.", {
+                "default": {
+                    fontFamily: "Monaco",
+                    fontSize: "10px",
+                    fill: "#000000",
+                    align: "left"
+                },
+                "dot": {
+                    fontSize: "15px",
+                    fill: "#ff0000"
+                }
+            });
+            this.statusLayout.contentContainer.addChild(connectedText);
+
+        }
+        
+    }
+    
+
+    resizeText() {
+        
+        const width = window.innerWidth
+        console.log(width)
+
+        if(width <= 500) {
+            this.nameFieldPlaceholder.contentContainer.children[0].style.fontSize = 30
+        } else if (width <= 960) {
+            this.nameFieldPlaceholder.contentContainer.children[0].style.fontSize = 50
+        } else if (width <= 1240) {
+            this.nameFieldPlaceholder.contentContainer.children[0].style.fontSize = 80
+        } else {
+            this.nameFieldPlaceholder.contentContainer.children[0].style.fontSize = 108
+        }
+    }
+
+    createText() {
+       /* this.text = new PIXI.BitmapText('Hello Bitmap Font', {
+            font: '72px TradeGothicNextBold',
+            align: 'center',
+        })
+        this.joinModalWidgetGroup.contentContainer.addChild(this.text)
+        this.text.text = "yes"*/
+    }
+    
+ 
     update(){
         this.count++
-        this.modalBackgroundGlow.alpha = 0.5 + Math.sin((this.count/20)) * 0.3;
+        
+        //console.log(this.statusStage.stage.hitArea)
+        
+    
+
+
     }
 
 
