@@ -8,6 +8,7 @@ import FireCommand from './command/FireCommand.js'
 import SpeakCommand from './command/SpeakCommand.js'
 import RespawnCommand from './command/RespawnCommand.js'
 import JoinCommand from './command/JoinCommand.js'
+import LeaveCommand from './command/LeaveCommand.js'
 import Obstacle from './entity/Obstacle.js'
 import Box from './entity/Box.js'
 import Floor from './entity/Floor.js'
@@ -44,7 +45,8 @@ const config = {
             ['FireCommand', FireCommand],
             ['SpeakCommand', SpeakCommand],
             ['RespawnCommand', RespawnCommand],
-            ['JoinCommand', JoinCommand]
+            ['JoinCommand', JoinCommand],
+            ['LeaveCommand', LeaveCommand]
         ],
         basics: []
     }

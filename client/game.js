@@ -212,7 +212,18 @@ const create = () => {
 
         if(message.type == "scoreIncrease") {
             renderer.UIBuilder.increaseScore()
-            //console.log('scored')
+        }
+
+        if(message.type == "worldInfoTime") {
+            renderer.UIBuilder.updateWorldTime(message.text)
+        }
+
+        if(message.type == "worldInfoTotalUsers") {
+            renderer.UIBuilder.updateTotalUsers(message.text)
+        }
+
+        if(message.type == "worldInfoActiveUsers") {
+            renderer.UIBuilder.updateActiveUsers(message.text)
         }
 
         if(message.type == "personJoined") {
@@ -289,7 +300,7 @@ const create = () => {
     })
 
     client.on('disconnected', () => { 
-        console.log('connection closed') 
+        //console.log('connection closed') 
 
         renderer.UIBuilder.updateConnection(null, false);
 
@@ -297,8 +308,8 @@ const create = () => {
 
 
 
-    client.connect('ws://localhost:8079')
-    //client.connect('wss://bias.jamesdelaney.ie/test')
+    //client.connect('ws://localhost:8079')
+    client.connect('wss://bias.jamesdelaney.ie/test')
 
 
     const update = (delta, tick, now) => {
@@ -306,8 +317,6 @@ const create = () => {
         handleInput(input, state, client, renderer, delta)
         renderer.update(delta)
         client.update()
-
-        //console.log(window.peerStream)
     }
 
     return update

@@ -1,8 +1,6 @@
 import MoveCommand from '../common/command/MoveCommand.js'
 import FireCommand from '../common/command/FireCommand.js'
 import SpeakCommand from '../common/command/SpeakCommand.js'
-import RespawnCommand from '../common/command/RespawnCommand.js'
-import JoinCommand from '../common/command/JoinCommand.js'
 import applyCommand from '../common/applyCommand.js'
 import { fire } from '../common/weapon.js'
 import handleShot from './handleShot.js'
@@ -17,6 +15,7 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
 
 
     if (myRawEntity) {
+        
         // which way are we pointing?
         const worldCoord = renderer.toWorldCoordinates(
             inputSystem.currentState.mx, 
@@ -84,12 +83,13 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
 
         // also apply the result of the prediction to the graphical entity
         const graphics = client.graphicalEntities.get(prediction.nid)
-        graphics.x = prediction.x
-        graphics.y = prediction.y
-        graphics.playerBody.rotation = rotationAmount
+        if(graphics) {
+            graphics.x = prediction.x
+            graphics.y = prediction.y
+            graphics.playerBody.rotation = rotationAmount
        
-        // make the camera look at our entity
-        renderer.centerCamera(graphics)
+            renderer.centerCamera(graphics)
+        }
         /* end movement */
 
         /* shooting */

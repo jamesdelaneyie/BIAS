@@ -1,7 +1,7 @@
 import { Joystick } from './graphics/Joystick';
 import isMobile from 'ismobilejs'
 import JoinCommand from '../common/command/JoinCommand.js'
-import SpeakCommand from '../common/command/SpeakCommand';
+import LeaveCommand from '../common/command/LeaveCommand.js'
 
 class InputSystem {
 
@@ -22,6 +22,19 @@ class InputSystem {
                 renderer.UIBuilder.clearText();
                 renderer.UIBuilder.joinSession();
                 isJoined = true
+            }
+        });
+
+        //let isJoined = false;
+        const leaveButton = renderer.stage.children[1].leaveButton
+        leaveButton.on("click", function () {
+            
+            if(isJoined == true) {
+                let name = renderer.UIBuilder.getText();
+                client.addCommand(new LeaveCommand(""+name+""))
+                renderer.UIBuilder.clearText();
+                renderer.UIBuilder.leaveSession();
+                isJoined = false
             }
         });
         

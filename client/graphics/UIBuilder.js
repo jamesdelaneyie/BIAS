@@ -607,6 +607,217 @@ class UIBuilder extends PIXI.Container {
 
 
 
+
+
+
+
+        this.leaveGameStage = new PUXI.Stage({
+            width: 100,
+            height: 50,
+            x: 0,
+            y: 0
+        })
+
+
+        //Leave Button 
+        this.leaveButtonWrapper = new PUXI.WidgetGroup({
+        }).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 100,
+                height: 40,
+                x: 0.985,
+                y: 0.5,
+                anchor: new PIXI.Point(1,0)
+            }),
+        ).setBackground(0x000000).setBackgroundAlpha(1);
+
+        this.leaveButton = new PUXI.Button({
+            text: ''
+        }).setLayoutOptions(new PUXI.FastLayoutOptions({
+            width: 0.97,
+            height: 0.95,
+            x: 0.5,
+            y: 0.5,
+            anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+        }))
+        .setBackground(0xFFFFFFF)
+        .setBackgroundAlpha(1)
+        this.leaveButtonWrapper.addChild(this.leaveButton)
+        this.leaveButton.on("hover", function (over) {
+            if(over == true) {
+                this.setBackground("#FFFF00")
+            } else {
+                this.setBackground("#FFFFFF")
+            }
+        });
+
+        
+
+        const leaveText = new PUXI.TextWidget('LEAVE', buttonStyles)
+        leaveText.setLayoutOptions(new PUXI.FastLayoutOptions({
+            width: 50,
+            height: 18,
+            x: 0.5,
+            y: 0.5,
+            anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+        }))
+        leaveText.tint = 0x000000
+        this.leaveButtonWrapper.addChild(leaveText)
+
+
+
+        const leaveTextTwo = new PUXI.TextWidget('LEAVE', buttonStylesTwo)
+        leaveTextTwo.setLayoutOptions(new PUXI.FastLayoutOptions({
+            width: 50,
+            height: 18,
+            x: 0.5,
+            y: 0.5,
+            anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+        }))
+        leaveTextTwo.tint = 0xFFFFFF
+        leaveTextTwo.alpha = 0;
+        this.leaveButtonWrapper.addChild(leaveTextTwo)
+        this.leaveButtonWrapper.contentContainer.interactive = true;
+        this.leaveButtonWrapper.contentContainer.buttonMode = true;
+        this.leaveButtonWrapper.contentContainer.cursor = "pointer";
+
+        const leaveButtonClick = new PUXI.ClickManager(this.leaveButton, true, false, false)
+        
+        leaveButtonClick.onPress = function(){
+            this.setBackground(0xff0000)
+            joinText.alpha = 0
+            joinTextTwo.alpha = 1
+        }
+        leaveButtonClick.onClick = function(){
+            this.setBackground(0xffffff)
+            joinText.alpha = 1
+            joinTextTwo.alpha = 0
+
+            sound.add('login', 'audio/login.mp3');
+            sound.play('login')
+        }
+
+        this.leaveGameStage.addChild(this.leaveButtonWrapper)
+        this.addChild(this.leaveGameStage)
+        this.leaveButtonWrapper.contentContainer.alpha = 0
+        this.leaveGameStage.resize(window.innerWidth, window.innerHeight)
+        const leaveGameBounds = this.leaveButtonWrapper.contentContainer.getBounds()
+        this.leaveGameStage.stage.hitArea = new PIXI.Rectangle(
+            leaveGameBounds.x,
+            leaveGameBounds.y,
+            leaveGameBounds.width,
+            leaveGameBounds.height
+        );
+        ease.add(this.leaveButtonWrapper.contentContainer, fadeInStyles, fadeInSettings)
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        this.worldInfo = new PUXI.Stage({
+            width: 200,
+            height: 100,
+            x: 0,
+            y: 0
+        })
+        
+        this.worldInfoWrapper = new PUXI.WidgetGroup({}).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 200, 
+                height: 100,
+                x: 0.985,
+                y: 0.98,
+                anchor: new PIXI.Point(1, 1)
+            })
+        ).setPadding(10)
+        
+        this.worldInfoBackground = new PIXI.Graphics()
+        this.worldInfoBackground.beginFill(0xFFFFFF)
+        this.worldInfoBackground.drawRoundedRect(0, 0, 200, 100, 15)
+        this.worldInfoBackground.endFill()
+        this.worldInfoWrapper.contentContainer.addChild(this.worldInfoBackground)
+
+        this.worldInfo.addChild(this.worldInfoWrapper);
+        this.addChild(this.worldInfo)
+
+
+        this.currentTimeHeader = new PIXI.Text("World Running For:", {fill: 0x000000, fontSize: 10, fontFamily: 'Iosveka'});
+        this.currentTimeHeader.x = 10
+        this.currentTimeHeader.y = 10
+        this.worldInfoWrapper.contentContainer.addChild(this.currentTimeHeader);
+        
+        this.currentTime = new PIXI.Text("00:00", {fill: 0x000000, fontSize: 10, fontFamily: 'Iosveka'});
+        this.currentTime.x = 130
+        this.currentTime.y = 11
+        this.worldInfoWrapper.contentContainer.addChild(this.currentTime);
+
+
+
+        this.numberOfPeople = new PIXI.Text("Active Users:", {fill: 0x000000, fontSize: 10, fontFamily: 'Iosveka'});
+        this.numberOfPeople.x = 10
+        this.numberOfPeople.y = 25
+        this.worldInfoWrapper.contentContainer.addChild(this.numberOfPeople);
+        
+        this.numberOfPeopleCounter = new PIXI.Text("0", {fill: 0x000000, fontSize: 10, fontFamily: 'Iosveka'});
+        this.numberOfPeopleCounter.x = 130
+        this.numberOfPeopleCounter.y = 26
+        this.worldInfoWrapper.contentContainer.addChild(this.numberOfPeopleCounter);
+
+
+
+        this.totalNumberOfPeople = new PIXI.Text("Total Users:", {fill: 0x000000, fontSize: 10, fontFamily: 'Iosveka'});
+        this.totalNumberOfPeople.x = 10
+        this.totalNumberOfPeople.y = 42
+        this.worldInfoWrapper.contentContainer.addChild(this.totalNumberOfPeople);
+        
+        this.totalNumberOfPeopleCounter = new PIXI.Text("0", {fill: 0x000000, fontSize: 10, fontFamily: 'Iosveka'});
+        this.totalNumberOfPeopleCounter.x = 130
+        this.totalNumberOfPeopleCounter.y = 43
+        this.worldInfoWrapper.contentContainer.addChild(this.totalNumberOfPeopleCounter);
+
+
+
+        this.worldInfo.resize(window.innerWidth, window.innerHeight)
+        const worldBounds = this.worldInfoBackground.getBounds()
+        this.worldInfo.stage.hitArea = new PIXI.Rectangle(
+            worldBounds.x,
+            worldBounds.y,
+            worldBounds.width,
+            worldBounds.height
+        );
+
+
+
+
+       
+
+
+
+
+
+
+
         window.addEventListener('resize', () => {
             this.resizeText()
 
@@ -633,6 +844,24 @@ class UIBuilder extends PIXI.Container {
                 scoreBounds.height
             );
 
+            this.worldInfo.resize(window.innerWidth, window.innerHeight)
+            const worldBounds = this.worldInfoBackground.getBounds()
+            this.worldInfo.stage.hitArea = new PIXI.Rectangle(
+                worldBounds.x,
+                worldBounds.y,
+                worldBounds.width,
+                worldBounds.height
+            );
+
+            this.leaveGameStage.resize(window.innerWidth, window.innerHeight)
+            const leaveGameBounds = this.leaveButtonWrapper.contentContainer.getBounds()
+            this.leaveGameStage.stage.hitArea = new PIXI.Rectangle(
+                leaveGameBounds.x,
+                leaveGameBounds.y,
+                leaveGameBounds.width,
+                leaveGameBounds.height
+            );
+
 
         })
 
@@ -644,12 +873,12 @@ class UIBuilder extends PIXI.Container {
         this.joinModalWidgetGroup.contentContainer.alpha = 0
         this.joinModal.alpha = 0
         this.removeChild(this.joinModal)
-        //this.textBox.alpha = 1
     }
 
     leaveSession(){
-        this.addChild(this.joinModal)
         this.joinModalWidgetGroup.contentContainer.alpha = 1
+        this.joinModal.alpha = 1
+        this.addChild(this.joinModal)
     }
 
     getText() {
@@ -678,6 +907,20 @@ class UIBuilder extends PIXI.Container {
                 this.mockInput.blur()
             }
         }
+    }
+
+    updateWorldTime(time) {
+        var currentWorldTime = new Date(time * 1000).toISOString().substr(14, 5)
+        this.currentTime.text = currentWorldTime
+    }
+
+    updateTotalUsers(number) {
+        this.totalNumberOfPeopleCounter.text = number
+    }
+
+
+    updateActiveUsers(number) {
+        this.numberOfPeopleCounter.text = number
     }
 
 

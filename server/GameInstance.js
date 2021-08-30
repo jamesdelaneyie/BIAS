@@ -29,7 +29,9 @@ class GameInstance {
         instanceHookAPI(this.instance)
 
 
-       
+        this.totalUsers = 0
+        this.activeUsers = []
+
         this.world = new p2.World({gravity: [0, 0]});
         this.room = {
             x: 0,
@@ -138,8 +140,8 @@ class GameInstance {
         const peerServer = PeerServer({
             port: 9000,
             ssl: {
-               //key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem'),
-               //cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/cert.pem')
+               key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem'),
+               cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/cert.pem')
             }
         });
         // PAUL GAALXY S8 NO KEYS
@@ -165,29 +167,25 @@ class GameInstance {
         // (the rest is just attached to client objects when they connect)
         this.instance.on('command::LeaveCommand', ({ command, client }) => {
 
-           /* console.log('help')
+           /// clean up per client state
+           this.instance.messageAll(new Notification(''+ client.rawEntity.name +'', 'personLeft', 20, 20))
 
-            const rawEntity = client.rawEntity
-            const smoothEntity = client.smoothEntity
 
-            rawEntity.x = this.room.width/2
-            rawEntity.y = this.room.height/2
-            this.world.addBody(rawEntity.body);
-            this.instance.addEntity(rawEntity)
-            client.channel.addEntity(rawEntity)
+           for (var i = this.activeUsers.length - 1; i >= 0; --i) {
+               if (this.activeUsers[i].name == ''+ client.rawEntity.name +'') {
+                   this.activeUsers.splice(i,1);
+               }
+           }
 
-            smoothEntity.x = this.room.width/2
-            smoothEntity.y = this.room.height/2
-            smoothEntity.collidable = true
-            this.instance.addEntity(smoothEntity)
 
-            smoothEntity.name = command.name
-            rawEntity.name = command.name
+           if(client.rawEntity.nid) {
+               client.channel.removeEntity(client.rawEntity)
+               this.instance.removeEntity(client.rawEntity)
+               this.instance.removeEntity(client.smoothEntity)
+           }
+           client.channel.destroy()
 
-            smoothEntity.color = command.color
-            rawEntity.color = command.color
 
-            this.instance.message(new Identity(rawEntity.nid, smoothEntity.nid), client)*/
 
 
         })
@@ -231,6 +229,9 @@ class GameInstance {
             
             this.instance.message(new Identity(rawEntity.nid, smoothEntity.nid, ""+peerID+"", ""+ command.name +""), client)
             this.instance.messageAll(new Notification(''+ command.name +'', 'personJoined', 20, 20))
+
+            this.totalUsers++
+            this.activeUsers.push({name: command.name})
             
 
         })
@@ -272,6 +273,16 @@ class GameInstance {
         this.instance.on('disconnect', client => {
             // clean up per client state
             this.instance.messageAll(new Notification(''+ client.rawEntity.name +'', 'personLeft', 20, 20))
+
+            //console.log(''+ client.rawEntity.name +'')
+
+            for (var i = this.activeUsers.length - 1; i >= 0; --i) {
+                if (this.activeUsers[i].name == ''+ client.rawEntity.name +'') {
+                    this.activeUsers.splice(i,1);
+                }
+            }
+
+
             if(client.rawEntity.nid) {
                 client.channel.removeEntity(client.rawEntity)
                 this.instance.removeEntity(client.rawEntity)
@@ -364,9 +375,10 @@ class GameInstance {
                 client.view.x = client.rawEntity.x
                 client.view.y = client.rawEntity.y
                 
-                //console.log(client.rawEntity.body.position)
+                //console.log(client.rawEntity.body)
                 client.rawEntity.body.position[0] = client.rawEntity.x
                 client.rawEntity.body.position[1] = client.rawEntity.y
+                client.rawEntity.body.angle = client.rawEntity.rotation
             }
             
             //console.log(client);
@@ -379,7 +391,13 @@ class GameInstance {
 
         })
 
-        this.world.step(1/5);
+        this.world.step(1/20);
+
+
+        this.instance.messageAll(new Notification(""+(this.world.time.toFixed())+"", 'worldInfoTime'))
+        this.instance.messageAll(new Notification(""+this.totalUsers+"", 'worldInfoTotalUsers'))
+        this.instance.messageAll(new Notification(""+this.activeUsers.length+"", 'worldInfoActiveUsers'))
+
 
         //update touching
         for (let obstacle of this.obstacles.values()) {
@@ -495,10 +513,10 @@ class GameInstance {
                                 this.instance.message(new Notification('score increase', 'scoreIncrease'), value)
                                 //
                                 //box.collider = null
-                                this.world.removeBody(box.body)
+                                /*this.world.removeBody(box.body)
                                 this.boxes.delete(box.nid)
                                 value.channel.removeEntity(box)
-                                this.instance.removeEntity(box)
+                                this.instance.removeEntity(box)*/
 
                                 console.log(value.channel)
                                 
