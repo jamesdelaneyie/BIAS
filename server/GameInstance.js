@@ -140,8 +140,8 @@ class GameInstance {
         const peerServer = PeerServer({
             port: 9000,
             ssl: {
-               key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem'),
-               cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/cert.pem')
+               //key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem'),
+               //cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/cert.pem')
             }
         });
         // PAUL GAALXY S8 NO KEYS
