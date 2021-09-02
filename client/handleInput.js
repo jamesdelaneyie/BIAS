@@ -11,6 +11,8 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
     const input = inputSystem.frameState
     inputSystem.releaseKeys()
 
+
+
     const { myRawEntity, obstacles, boxes, floors} = state
 
 
@@ -49,7 +51,7 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
             });
             const sadEmoji = renderer.stage.children[1].sadEmoji.contentContainer;
             sadEmoji.on("pointerdown", function () {
-                client.addCommand(new SpeakCommand("🙁", "emojiBlast", myRawEntity.x, myRawEntity.y))
+                client.addCommand(new SpeakCommand("🎉", "emojiBlast", myRawEntity.x, myRawEntity.y))
             });
             const whateverEmoji = renderer.stage.children[1].whateverEmoji.contentContainer;
             whateverEmoji.on("pointerdown", function () {
@@ -60,7 +62,7 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
 
 
         if(input.message != "") {
-            const speakCommand = new SpeakCommand(input.message, myRawEntity.x, myRawEntity.y)
+            const speakCommand = new SpeakCommand(input.message, "talk", myRawEntity.x, myRawEntity.y)
             client.addCommand(speakCommand)
         }
 

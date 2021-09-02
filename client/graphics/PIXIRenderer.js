@@ -34,16 +34,16 @@ class PIXIRenderer {
         this.foreground = new PIXI.Container()
         
         var font = new FontFaceObserver('Trade Gothic Next');
-        this.UIBuilder = new UIBuilder();    
+        this.UIBuilder = new UIBuilder(this.renderer);    
         
-        font.load().then(function () {
-            //this.UIBuilder = new UIBuilder();    
-        });
-        
+        font.load()
 
         this.camera.addChild(this.background)
         this.camera.addChild(this.middleground)
         this.camera.addChild(this.foreground)
+
+        const noise = new PIXI.filters.NoiseFilter(0.1, 0.2893);
+        this.stage.filters = [noise]
         
         this.camera.x = 500
         this.camera.y = 250
@@ -58,7 +58,7 @@ class PIXIRenderer {
 
     
         //ADD VIDEO
-        this.videoTexture = PIXI.Texture.from('/video/video.mp4');
+        /*this.videoTexture = PIXI.Texture.from('/video/video.mp4');
         this.videoTexture.baseTexture.resource.muted = true
         this.videoTexture.baseTexture.resource.autoPlay = false
         
@@ -70,35 +70,8 @@ class PIXIRenderer {
         videoSprite.y = -400;
         videoSprite.rotation = -0.1
 
-        this.foreground.addChild(videoSprite);
+        this.foreground.addChild(videoSprite);*/
 
-
-
-
-
-
-
-        const style = new PIXI.TextStyle({
-            fill: "white",
-            fontFamily: "Monaco, monospace",
-            fontSize: 19,
-            fontWeight: 400,
-            lineHeight: 25,
-            whiteSpace: "breakword",
-            wordWrap: true,
-            wordWrapWidth: 350,
-            leading: 1
-        });
-        const explainerText = new PIXI.Text('Libbys Room ☝ \n\n Welcome to BIAS Online!\n * Arrows Keys/WASD to Move\n * Tap person to talk\n\n  Play nicely :)', style);
-        explainerText.x = 1600
-        explainerText.y = 50
-        this.foreground.addChild(explainerText)
-
-
-        const libbyRoomText = new PIXI.Text('Libby\'$ Room \n\n Touch Box to Start Video', style);
-        libbyRoomText.x = -400
-        libbyRoomText.y = 50
-        this.foreground.addChild(libbyRoomText)
 
         
         window.addEventListener('resize', () => {
@@ -139,7 +112,7 @@ class PIXIRenderer {
             entity.update(delta)
         })
         this.renderer.render(this.stage)
-        this.UIBuilder.update()
+        this.UIBuilder.update(delta)
     }
 }
 

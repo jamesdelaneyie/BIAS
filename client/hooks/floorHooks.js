@@ -6,7 +6,6 @@ export default ({ floors }, renderer) => {
 
             const graphics = new FloorGraphics(data)
             renderer.entities.set(data.nid, graphics)
-            graphics.alpha = 0.5
             renderer.background.addChild(graphics)
 
             return graphics

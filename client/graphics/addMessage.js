@@ -2,18 +2,18 @@ import * as PIXI from 'pixi.js'
 
 const addMessage = (layer, message) => {
 
-    var visible = false;
+    /*var visible = false;
     layer.children.some(function(child) {
         if(child.isMessage == true) {
             visible = true;
             return
         }
-    });
+    });*/
 
-    if(!visible) {
+    //if(!visible) {
 
         const style = new PIXI.TextStyle({
-            fontFamily: 'Trade Gothic',
+            fontFamily: 'Trade Gothic Next',
             fill: "black",
             fontSize: 18,
             fontWeight: 300,
@@ -114,7 +114,7 @@ const addMessage = (layer, message) => {
 
         
 
-    }
+    //}
 }
 
 export default addMessage

@@ -13,6 +13,7 @@ import emojiBlast from './graphics/emojiBlast.js'
 import { Sound, filters } from '@pixi/sound';
 import MultiStyleText from 'pixi-multistyle-text'
 import AudioStreamMeter from 'audio-stream-meter'
+import { GlitchFilter } from '@pixi/filter-glitch'
 
 
 const create = () => {
@@ -64,6 +65,7 @@ const create = () => {
         state.myRawId = message.rawId
         state.mySmoothId = message.smoothId
         state.myPeerId = message.peerId
+        state.myAvatar = message.avatar
         state.name = message.name;
 
         const userSettings = window.localStorage;
@@ -72,7 +74,7 @@ const create = () => {
 
         renderer.UIBuilder.joinInstance(state.name, state.myRawId)
         
-
+        /*
         const myPeer = new Peer(""+state.name+"",{
             host:'/', 
             path: '/',
@@ -189,7 +191,7 @@ const create = () => {
     
     
 
-        getLocalStream();
+        getLocalStream();*/
        
     })
 
@@ -207,6 +209,9 @@ const create = () => {
 
 
     const portalSound = Sound.from('audio/car.mp3');
+    const partySound = Sound.from('audio/grunt-birthday-party.mp3');
+    const messageSound = Sound.from('audio/message.mp3');
+    const leftSound = Sound.from('audio/left.mp3');
 
     client.on('message::Notification', message => {
 
@@ -235,10 +240,31 @@ const create = () => {
 
         if(message.type == "emojiBlast") {
             emojiBlast(renderer.middleground, message);
+            
+            if(!partySound.isPlaying && message.text == "🎉") {
+                partySound.play()
+            }
+
+            if(message.text == "⚡") {
+               const fuckMeUp = new GlitchFilter({animating: true})
+               renderer.camera.filters = [fuckMeUp]
+               renderer.UIBuilder.filters = [fuckMeUp]
+            }
+
+            if(message.text == "❤️") {
+                const fuckMeUp = new GlitchFilter({animating: true})
+                renderer.camera.filters = []
+                renderer.UIBuilder.filters = []
+             }
+
+            
         }
 
         if(message.type == "text") {
             addMessage(renderer.middleground, message);
+            if(!messageSound.isPlaying) {
+                messageSound.play()
+            }
         }
         if(message.type == "talk") {
             addMessage(renderer.middleground, message);
@@ -284,13 +310,13 @@ const create = () => {
 
         const backgroundMusic = Sound.from('audio/background.mp3');
         backgroundMusic.speed = 0.9
-        backgroundMusic.volume = 0.02
+        backgroundMusic.volume = 0.005
         backgroundMusic.loop = true;
 
         const telephone = new filters.TelephoneFilter(1)
         const distorsion = new filters.DistortionFilter(0.1)
         backgroundMusic.filters = [telephone, distorsion]
-        //backgroundMusic.play()
+        backgroundMusic.play()
 
         const name = localStorage.getItem('name');
         if(name) {

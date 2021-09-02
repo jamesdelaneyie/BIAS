@@ -5,19 +5,26 @@ import TaggedText from 'pixi-tagged-text'
 import { Ease, ease } from 'pixi-ease'
 import { sound } from '@pixi/sound'
 import { CRTFilter } from '@pixi/filter-crt'
-import {GlowFilter} from '@pixi/filter-glow';
+
+import { GlowFilter } from '@pixi/filter-glow';
+
+import {DropShadowFilter} from '@pixi/filter-drop-shadow';
+
 
 class UIBuilder extends PIXI.Container {
-    constructor() {
+    constructor(renderer) {
         super()
 
         this.width  = window.innerWidth 
         this.height = window.innerHeight
-        
+        this.nameGiven = false
         
         
         const colorBlack = PIXI.utils.string2hex("#292929"); //Black
         const colorGreen = PIXI.utils.string2hex("#4DFA66") //Green
+
+        const fadeInStyles = { y: 0, alpha: 1, }
+        const fadeInSettings = { duration: 800, ease: 'easeOutExpo', wait: 500 }
         
         /* Intro Modal */
         
@@ -33,7 +40,7 @@ class UIBuilder extends PIXI.Container {
         this.tabletBreakPoint = 960
         this.laptopBreakPoint = 1240
 
-        this.modalTitleFontSize = 10
+
 
         
 
@@ -46,265 +53,8 @@ class UIBuilder extends PIXI.Container {
 
 
         const puxiCenter = PUXI.FastLayoutOptions.CENTER_ANCHOR;
-        
-
-
-        //Modal Stage
-        this.joinModal = new PUXI.Stage(window.innerWidth, window.innerHeight)   
-        
-        //Modal Background
-        const joinModalWrapper= new PUXI.Widget({
-        }).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 0.999999, 
-                height: 0.99999,
-            }),
-        )
-        .setBackground(colorGreen)
-    
-        
-        //Modal Centre Box Wrapper 
-        this.joinModalWidgetGroup = new PUXI.WidgetGroup().setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                x: 0.5, y: 0.5,
-                anchor: puxiCenter,
-                width: modalWidth,
-                height: modalHeight
-            }),
-        )
 
         
-        this.joinModalWidgetGroup.contentContainer.alpha = 0
-        this.joinModalWidgetGroup.contentContainer.y = 50
-
-        const fadeInStyles = { y: 0, alpha: 1, }
-        const fadeInSettings = { duration: 800, ease: 'easeOutExpo', wait: 500 }
-
-        ease.add(this.joinModalWidgetGroup.contentContainer, fadeInStyles, fadeInSettings)
-        
-        //Whats your name
-        const modalTitle = new PUXI.Widget({
-        }).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 0,
-                height: 0,
-                x: 0.5,
-                y: 0.5,
-                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-            }),
-        ).setBackground(0xFFFFFF)
-
-        this.textStyles = new PIXI.TextStyle({ 
-            fontFamily: 'Trade Gothic Next',
-            fill: colorBlack, 
-            fontSize: 108,
-            fontWeight: 900, 
-        })
-
-        this.nameFieldPlaceholder = new PUXI.TextWidget(
-            'What’s your name?', 
-            this.textStyles
-        )
-        this.nameFieldPlaceholder.contentContainer.children[0].anchor.set(0.5, 0.5);
-        this.nameFieldPlaceholder.contentContainer.children[0].x = 0
-        this.nameFieldPlaceholder.contentContainer.children[0].y = 0
-        modalTitle.addChild(this.nameFieldPlaceholder)
-
-
-
-
-        const fontLoader = new PIXI.Loader()
-            fontLoader.add('HeadingFont', '/fonts/TradeGothicNextBold.fnt').load(() => {
-            this.createText()
-            this.resizeText()
-                
-        })
-
-
-
-
-        
-        //this.joinModalWidgetGroup.addChild(modalTitle)
-
-
-        //Name Input Field
-        const inputBox = new PUXI.WidgetGroup().setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 300,
-                height: 40,
-                x: 0.5,
-                y: 0.6,
-                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-            }),
-        ).setBackground(0xE2E2E2).setBackgroundAlpha(1);
-        
-        //Text Styles for Input and Placeholder
-        const textStyles = new PIXI.TextStyle({ 
-            fontFamily: 'Trade Gothic',
-            fill: "#000000", 
-            fontSize: 18
-        })
-        //The Text Input
-        this.nameFieldInput = new PUXI.TextInput({
-            multiLine: false,
-            value: "",
-            padding: 10,
-            maxLength: 25,
-            align: "center",
-            fontVariant: "small-caps",
-            selectedColor: "#000000",
-            selectedBackgroundColor: "#FFFFFF",
-            caretWidth: 2,
-            style: textStyles,
-        }).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 0.99,
-                height: 0.95,
-                x: 0.5,
-                y: 0.5,
-                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-            }),
-        )
-        
-        inputBox.addChild(this.nameFieldInput)
-        
-        //Placeholder Text
-        const nameFieldPlaceholder = new PUXI.TextWidget(
-            'WHO ARE YOU?', 
-            textStyles
-        ).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                x: 10,
-                y: 11,
-            })
-        )
-        nameFieldPlaceholder.alpha = 0.4;
-        inputBox.widgetChildren[0].on('focus', () => { 
-            nameFieldPlaceholder.alpha = 0;
-        });
-        inputBox.widgetChildren[0].on('blur', () => { 
-            if(this.nameFieldInput.value != '') {
-                nameFieldPlaceholder.alpha = 0;
-            } else {
-                nameFieldPlaceholder.alpha = 0.4;
-            }
-        });
-        
-        inputBox.addChild(nameFieldPlaceholder);
-        inputBox.contentContainer.interactive = true;
-        inputBox.contentContainer.buttonMode = true;
-        inputBox.contentContainer.cursor = "text";
-        inputBox.contentContainer.on("mouseover", function() {
-            inputBox.setBackground("#FFFF00")
-        });
-        inputBox.contentContainer.on("mouseout", function() {
-            inputBox.setBackground("#E2E2E2")
-        });
-        
-
-
-        //Join Button 
-        const joinButtonWrapper = new PUXI.WidgetGroup({
-        }).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 100,
-                height: 40,
-                x: 0.5,
-                y: 0.8,
-                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-            }),
-        ).setBackground(0x000000).setBackgroundAlpha(1);
-
-        this.joinButton = new PUXI.Button({
-            text: ''
-        }).setLayoutOptions(new PUXI.FastLayoutOptions({
-            width: 0.97,
-            height: 0.95,
-            x: 0.5,
-            y: 0.5,
-            anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-        }))
-        .setBackground(0xFFFFFFF)
-        .setBackgroundAlpha(1)
-        joinButtonWrapper.addChild(this.joinButton)
-        this.joinButton.on("hover", function (over) {
-            if(over == true) {
-                this.setBackground("#FFFF00")
-            } else {
-                this.setBackground("#FFFFFF")
-            }
-        });
-
-        
-
-       const buttonStyles = new PIXI.TextStyle({ 
-            fontFamily: 'Trade Gothic',
-            fill: "#FFFFFF", 
-            fontSize: 16, 
-            letterSpacing: 2
-        })
-        const joinText = new PUXI.TextWidget('JOIN', buttonStyles)
-        joinText.setLayoutOptions(new PUXI.FastLayoutOptions({
-            width: 35,
-            height: 18,
-            x: 0.5,
-            y: 0.5,
-            anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-        }))
-        joinText.tint = 0x000000
-        joinButtonWrapper.addChild(joinText)
-
-
-        const buttonStylesTwo = new PIXI.TextStyle({ 
-            fontFamily: 'Trade Gothic',
-            fill: "#FFFFFF", 
-            fontSize: 16, 
-            letterSpacing: 2
-        })
-        const joinTextTwo = new PUXI.TextWidget('JOIN', buttonStylesTwo)
-        joinTextTwo.setLayoutOptions(new PUXI.FastLayoutOptions({
-            width: 55,
-            height: 18,
-            x: 0.5,
-            y: 0.5,
-            anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-        }))
-        joinTextTwo.tint = 0xFFFFFF
-        joinTextTwo.alpha = 0;
-        joinButtonWrapper.addChild(joinTextTwo)
-        joinButtonWrapper.contentContainer.interactive = true;
-        joinButtonWrapper.contentContainer.buttonMode = true;
-        joinButtonWrapper.contentContainer.cursor = "pointer";
-
-        const joinButtonClick = new PUXI.ClickManager(this.joinButton, true, false, false)
-        
-        joinButtonClick.onPress = function(){
-            this.setBackground(0xff0000)
-            joinText.alpha = 0
-            joinTextTwo.alpha = 1
-        }
-        joinButtonClick.onClick = function(){
-            this.setBackground(0xffffff)
-            joinText.alpha = 1
-            joinTextTwo.alpha = 0
-
-            sound.add('login', 'audio/login.mp3');
-            sound.play('login')
-        }
-
-        
-
-
-        this.joinModal.addChild(joinModalWrapper)
-
-        this.joinModalWidgetGroup.addChild(modalTitle)
-        this.joinModalWidgetGroup.addChild(inputBox)
-        this.joinModalWidgetGroup.addChild(joinButtonWrapper)
-        
-        this.joinModal.addChild(this.joinModalWidgetGroup)
-        
-        this.addChild(this.joinModal)
-
 
 
 
@@ -315,77 +65,13 @@ class UIBuilder extends PIXI.Container {
 
 
 
-
-
-
-
-
-        // Chat Text Entry Element 
-       /* this.textBox = new PUXI.Stage(window.innerWidth, 40)   
-        
-        this.textBox.alpha = 0
-        this.textBox.y = window.innerHeight - 55
-
-        this.textBoxWrapper = new PUXI.WidgetGroup({
-        }).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 500,
-                height: 40,
-                x: 0.5,
-                y: 0.5,
-                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-            }),
-        )
-
-        //The Text Input
-        this.mockInput = new PUXI.TextInput({
-            multiLine: false,
-            background: 0xFFFFFF,
-            value: "",
-            padding: 10,
-            maxLength: 69,
-            selectedColor: "#000000",
-            selectedBackgroundColor: "#0000FF",
-            caretWidth: 4,
-            //style: textStyles,
-        }).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 0.999, 
-                height: 40,
-                x: 0,
-                y: 0,
-            }),
-        )
-        this.textBoxWrapper.addChild(this.mockInput);
-        
-        this.TextBoxPlaceholder = new PUXI.TextWidget(
-            'TYPE TO SPEAK!', 
-            //textStyles
-        ).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                x: 10,
-                y: 10,
-            })
-        )
-        this.TextBoxPlaceholder.alpha = 0.4;
-        this.textBoxWrapper.addChild(this.TextBoxPlaceholder);
-
-        this.textBoxWrapper.widgetChildren[0].on('focus', () => { 
-            this.TextBoxPlaceholder.alpha = 0;
-        });
-        this.textBoxWrapper.widgetChildren[0].on('blur', () => { 
-            this.TextBoxPlaceholder.alpha = 0.4;
-        });
-
-        this.textBox.addChild(this.textBoxWrapper);
-        this.addChild(this.textBox)
-   
-
-        */
 
        
 
 
+
+
+        
 
 
         this.statusStage = new PUXI.Stage({
@@ -402,15 +88,14 @@ class UIBuilder extends PIXI.Container {
                 y: 0.995,
                 anchor: new PIXI.Point(0, 1)
             }),
-        ).setBackground(0xFFFFFF).setBackgroundAlpha(0.1)
-
+        ).setBackground(0x000000).setBackgroundAlpha(0.3)
 
 
         this.statusLayout = new PUXI.Widget({}).setLayoutOptions(
             new PUXI.FastLayoutOptions({
                 height: 0,
                 width: 300,
-                x: 0,
+                x: 5,
                 y: 0.9,
                 anchor: new PIXI.Point(0, 1)
             }),
@@ -437,7 +122,7 @@ class UIBuilder extends PIXI.Container {
 
 
 
-
+        
 
 
         this.emojiStage = new PUXI.Stage({
@@ -451,9 +136,9 @@ class UIBuilder extends PIXI.Container {
             new PUXI.FastLayoutOptions({
                 width: 260, 
                 height: 50,
-                x: 0.5,
-                y: 0.965,
-                anchor: new PIXI.Point(0.5, 0.5)
+                x: 0.65,
+                y: 0.98,
+                anchor: new PIXI.Point(0.5, 1)
             })
         )
 
@@ -517,7 +202,7 @@ class UIBuilder extends PIXI.Container {
                 y: 0
             })
         ).setPadding(15, 10)
-        const sadEmoji = new PIXI.Text("🙁", {fontSize: 28});
+        const sadEmoji = new PIXI.Text("🎉", {fontSize: 28});
         this.sadEmoji.contentContainer.addChild(sadEmoji)
         this.emojiWrapper.addChild(this.sadEmoji)
         this.sadEmoji.contentContainer.buttonMode = true
@@ -610,7 +295,7 @@ class UIBuilder extends PIXI.Container {
 
 
 
-
+/*
         this.leaveGameStage = new PUXI.Stage({
             width: 100,
             height: 50,
@@ -666,7 +351,7 @@ class UIBuilder extends PIXI.Container {
 
 
 
-        const leaveTextTwo = new PUXI.TextWidget('LEAVE', buttonStylesTwo)
+        const leaveTextTwo = new PUXI.TextWidget('LEAVE', buttonStyles)
         leaveTextTwo.setLayoutOptions(new PUXI.FastLayoutOptions({
             width: 50,
             height: 18,
@@ -709,13 +394,103 @@ class UIBuilder extends PIXI.Container {
             leaveGameBounds.height
         );
         ease.add(this.leaveButtonWrapper.contentContainer, fadeInStyles, fadeInSettings)
-
+*/
         
 
 
 
 
 
+        // Chat Text Entry Element 
+        this.textBox = new PUXI.Stage({
+            width: 350,
+            height: 50,
+            x: 0,
+            y: 0
+        })
+        
+        this.textBox.alpha = 1
+
+        this.textBoxWrapper = new PUXI.WidgetGroup({
+        }).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 350,
+                height: 50,
+                x: 0.40,
+                y: 0.98,
+                anchor: new PIXI.Point(0.5, 1)
+            }),
+        )
+
+        this.textBoxWrapperBackground = new PIXI.Graphics()
+        this.textBoxWrapperBackground.lineStyle(1.5, 0x000000, 1, 1, false)
+        this.textBoxWrapperBackground.beginFill(0xFFFFFF)
+        this.textBoxWrapperBackground.drawRoundedRect(0, 0, 350, 50, 25)
+        this.textBoxWrapperBackground.endFill()
+        this.textBoxWrapperBackground.moveTo(350, 23)
+        this.textBoxWrapperBackground.lineTo(350, 30)
+        this.textBoxWrapper.contentContainer.addChild(this.textBoxWrapperBackground)
+
+        const textInputStyles = new PIXI.TextStyle({ 
+            fontFamily: 'Trade Gothic Next',
+            fill: "#000000", 
+            fontSize: 26
+        })
+        
+        //The Text Input
+        this.mockInput = new PUXI.TextInput({
+            multiLine: false,
+            value: "",
+            padding: 10,
+            maxLength: 30,
+            selectedColor: "#000000",
+            selectedBackgroundColor: "#FFFF00",
+            caretWidth: 2,
+            style: textInputStyles,
+        }).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 0.999, 
+                height: 50,
+                x: 5,
+                y: 0,
+            }),
+        )
+        this.textBoxWrapper.addChild(this.mockInput);
+        
+        this.TextBoxPlaceholder = new PUXI.TextWidget(
+            'Type Here', 
+            textInputStyles
+        ).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                x: 15,
+                y: 10,
+            })
+        )
+        this.TextBoxPlaceholder.alpha = 0;
+        ease.add(this.TextBoxPlaceholder, fadeInStyles, fadeInSettings)
+        this.textBoxWrapper.addChild(this.TextBoxPlaceholder);
+
+        this.textBoxWrapper.widgetChildren[0].on('focus', () => { 
+            this.TextBoxPlaceholder.alpha = 0;
+        });
+        this.textBoxWrapper.widgetChildren[0].on('blur', () => { 
+            if(this.mockInput.value == "") {
+                this.TextBoxPlaceholder.alpha = 0.4;
+            }
+        });
+
+        this.textBox.addChild(this.textBoxWrapper);
+        this.addChild(this.textBox)
+
+        this.textBox.resize(window.innerWidth, window.innerHeight)
+        const textBoxBounds = this.textBoxWrapperBackground.getBounds()
+        this.textBox.stage.hitArea = new PIXI.Rectangle(
+            textBoxBounds.x,
+            textBoxBounds.y,
+            textBoxBounds.width,
+            textBoxBounds.height
+        );
+   
 
 
 
@@ -737,7 +512,7 @@ class UIBuilder extends PIXI.Container {
 
         this.worldInfo = new PUXI.Stage({
             width: 200,
-            height: 100,
+            height: 63,
             x: 0,
             y: 0
         })
@@ -745,16 +520,16 @@ class UIBuilder extends PIXI.Container {
         this.worldInfoWrapper = new PUXI.WidgetGroup({}).setLayoutOptions(
             new PUXI.FastLayoutOptions({
                 width: 200, 
-                height: 100,
+                height: 63,
                 x: 0.985,
-                y: 0.98,
+                y: 0.975,
                 anchor: new PIXI.Point(1, 1)
             })
         ).setPadding(10)
         
         this.worldInfoBackground = new PIXI.Graphics()
         this.worldInfoBackground.beginFill(0xFFFFFF)
-        this.worldInfoBackground.drawRoundedRect(0, 0, 200, 100, 15)
+        this.worldInfoBackground.drawRoundedRect(0, 0, 200, 63, 15)
         this.worldInfoBackground.endFill()
         this.worldInfoWrapper.contentContainer.addChild(this.worldInfoBackground)
 
@@ -776,7 +551,7 @@ class UIBuilder extends PIXI.Container {
 
         this.numberOfPeople = new PIXI.Text("Active Users:", {fill: 0x000000, fontSize: 10, fontFamily: 'Iosveka'});
         this.numberOfPeople.x = 10
-        this.numberOfPeople.y = 25
+        this.numberOfPeople.y = 26
         this.worldInfoWrapper.contentContainer.addChild(this.numberOfPeople);
         
         this.numberOfPeopleCounter = new PIXI.Text("0", {fill: 0x000000, fontSize: 10, fontFamily: 'Iosveka'});
@@ -810,6 +585,440 @@ class UIBuilder extends PIXI.Container {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+        let quoteWidth = 0.8
+        let quoteWidthBackground = (window.innerWidth/100)*80
+
+        this.quoteStage = new PUXI.Stage(window.innerWidth, window.innerHeight);
+        this.quoteWrapper = new PUXI.WidgetGroup({
+        }).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: quoteWidth,
+                height: 0.8,
+                x: 0.5,
+                y: 0.5,
+                anchor: new PIXI.Point(0.5, 0.5)
+            }),
+        ).setBackground(0xFFFFFF).setBackgroundAlpha(0.1)
+        this.quoteWrapperBackground = new PIXI.Graphics()
+        this.quoteWrapperBackground.beginFill(0xFFFFFF)   
+        this.quoteWrapperBackground.drawRoundedRect(
+            0, 0, quoteWidthBackground, (window.innerHeight/100)*80, 40
+        )
+        this.quoteWrapper.contentContainer.addChild(this.quoteWrapperBackground)
+
+        this.quoteWrapperClose = new PUXI.WidgetGroup({
+        }).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: quoteWidth,
+                height: 0.8,
+                x: 0.5,
+                y: 0.5,
+                anchor: new PIXI.Point(0.5, 0.5)
+            }),
+        ).useLayout(new PUXI.AnchorLayout());
+
+       
+
+
+        this.scrollWrapper = new PUXI.WidgetGroup({
+        }).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 0.999,
+                height: 0.999,
+                x: 0.5,
+                y: 0.5,
+                anchor: new PIXI.Point(0.5, 0.5)
+            }),
+        ).setPadding(50)
+
+
+
+        this.scrollContent = new PUXI.ScrollWidget({
+            scrollY: true,
+            scrollX: false,
+            scrollBars: true,
+            dragScrolling: true,
+            softness: 1,
+            expandMask: 0,
+            overflowY: 0,
+        }).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 0.9999,
+                height: 0.999,
+                x: 0.5,
+                y: 0.5,
+                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+            })
+        ).setPadding(0, 50, 0, 0)
+        this.scrollWrapper.addChild(this.scrollContent);
+        this.quoteWrapper.addChild(this.scrollWrapper);
+
+        const style = new PIXI.TextStyle({
+            fontFamily: "Trade Gothic Next",
+            fontSize: 32,
+            breakWords: true,
+            fontWeight: 300,
+            lineHeight: 45,
+            whiteSpace: "pre",
+            wordWrap: true,
+            wordWrapWidth: 1000,
+            leading: 1
+        });
+
+        const styleHeading = new PIXI.TextStyle({
+            fontFamily: "Trade Gothic Next",
+            fontSize: 32,
+            breakWords: true,
+            fontWeight: 700,
+            lineHeight: 32,
+            whiteSpace: "pre",
+            letterSpacing: 1,
+            wordWrap: true,
+            wordWrapWidth: 600,
+            leading: 1
+        });
+
+        
+        const text = "Squeaky Wheel is excited to present a public beta of Johann Diedrick’s Dark Matters, an interactive web experience, exhibition in Squeaky Wheel’s window gallery, and series of events\n\nDark Matters exposes the absence of Black speech in the datasets used to train voice interface systems in consumer artificial intelligence products such as Alexa and Siri. Utilizing 3D modeling, sound, and storytelling, the project challenges our communities to grapple with racism and inequity through speech and the spoken word, and how AI systems underserve Black communities.\n\nA video installation version of Dark Matters will be on view 24/7 for free at Squeaky Wheel’s window gallery in downtown Buffalo. An iterative online version will be available on our website June 18–September 10, 2021, which the artist intends to present as a way to receive feedback from the public on the work’s development. An outdoor soft opening will take place at Squeaky Wheel’s storefront space on Friday, June 18, between 4–6 pm, with in-person remarks by Curator Ekrem Serdar at 5 pm, and a virtual artist talk and public Q&A with the artist at 7 pm ET.";
+
+        this.textContent = new PUXI.TextWidget(text, style)
+        this.textContent.alpha = 0
+
+        
+
+        const title = "SQUEEKY WHEEL";
+        this.title = new PUXI.TextWidget(title, styleHeading)
+        this.title.alpha = 0
+        this.title.contentContainer.children[0].x = 50
+        this.title.contentContainer.children[0].y = 45
+
+
+
+        this.closeIcon = new PUXI.Button({
+            text: '✕'
+        }).setLayoutOptions(new PUXI.AnchorLayoutOptions({
+            anchorLeft: 0.9999,
+            anchorTop: 30,
+            anchorRight: 115,
+            anchorBottom: 0.9
+          }))
+        
+        this.closeIcon.contentContainer.x = 15
+        this.closeIcon.contentContainer.interactive = true;
+        this.closeIcon.contentContainer.buttonMode = true;
+        this.closeIcon.contentContainer.cursor = "pointer";
+
+        this.closeModal = new PUXI.ClickManager(this.closeIcon, true, false, false)
+        
+        this.closeModal.onClick(function(){
+            console.log('tester')
+            this.parent.parent.visible = false
+        })
+
+
+        let textContainer = this.textContent
+        let textTitle = this.title
+
+        setTimeout(function(){
+            textContainer.alpha = 1
+            textTitle.alpha = 1
+        }, 1000)
+
+
+        this.scrollContent.addChild(this.textContent)
+        this.quoteWrapperClose.addChild(this.closeIcon)
+
+        this.quoteWrapper.addChild(this.title)
+        
+        this.quoteStage.addChild(this.quoteWrapper)
+        this.quoteStage.addChild(this.quoteWrapperClose)
+
+        this.addChild(this.quoteStage)
+        this.quoteStage.visible = false
+
+        this.quoteStage.resize(window.innerWidth, window.innerHeight)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //Modal Stage
+        this.joinModal = new PUXI.Stage(window.innerWidth, window.innerHeight)   
+        
+        //Modal Background
+        this.joinModalWrapper = new PUXI.Widget({
+        }).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 0.999999, 
+                height: 0.99999,
+            }),
+        )
+        .setBackground(colorGreen)
+        
+        this.drawGridBackground(window.innerWidth, window.innerHeight)
+
+
+        
+        //Logo Wrapper + Logo
+        const logoBox = new PUXI.Widget({
+        }).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 520,
+                height: 86,
+                x: 20,
+                y: 10,
+                anchor: new PIXI.Point(0,0)
+            }),
+        )
+        const scienceGalleryLogo = PIXI.Sprite.from('images/sg.svg');
+        scienceGalleryLogo.width = 88
+        scienceGalleryLogo.height = 42.5
+        logoBox.contentContainer.addChild(scienceGalleryLogo)
+        const trinityLogo = PIXI.Sprite.from('images/trinity.svg');
+        trinityLogo.width = 160
+        trinityLogo.height = 42.5
+        trinityLogo.x = 100
+        trinityLogo.y = 3
+        logoBox.contentContainer.addChild(trinityLogo)
+        this.joinModal.addChild(logoBox)
+        
+
+
+        
+
+
+        //Modal Centre Box Wrapper 
+        this.joinModalWidgetGroup = new PUXI.WidgetGroup().setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                x: 0.5, y: 0.5,
+                anchor: puxiCenter,
+                width: modalWidth,
+                height: modalHeight
+            }),
+        )
+
+        
+        this.joinModalWidgetGroup.contentContainer.alpha = 0
+        this.joinModalWidgetGroup.contentContainer.y = 50
+
+
+
+        ease.add(this.joinModalWidgetGroup.contentContainer, fadeInStyles, fadeInSettings)
+        
+
+
+
+
+        //Whats your name
+        this.joinTitleWrapper = new PUXI.Widget({
+        }).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 0,
+                height: 0,
+                x: 0.5,
+                y: 0.3725,
+                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+            }),
+        ).setBackground(0xFFFFFF)
+
+        this.joinTitleStyles = new PIXI.TextStyle({ 
+            fontFamily: 'Trade Gothic Next',
+            fill: colorBlack, 
+            fontSize: 108,
+            fontWeight: 900, 
+        })
+
+        this.joinTitle = new PUXI.TextWidget(
+            'What’s your name?', 
+            this.joinTitleStyles
+        )
+        
+        this.joinTitle.contentContainer.children[0].anchor.set(0.5, 0.5);
+        this.joinTitle.contentContainer.children[0].x = 0
+        this.joinTitle.contentContainer.children[0].y = 0
+        this.joinTitleWrapper.addChild(this.joinTitle)
+        
+
+
+
+
+
+        
+
+
+        //Name Input Field
+        this.inputBox = new PUXI.WidgetGroup().setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 1100,
+                height: 100,
+                x: 0.5,
+                y: 0.545,
+                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+            }),
+        ).setBackground(0xFFFFFF).setBackgroundAlpha(1);
+        
+        //Text Styles for Input and Placeholder
+        const textStyles = new PIXI.TextStyle({ 
+            fontFamily: 'Trade Gothic Next',
+            fill: "#000000", 
+            fontSize: 52
+        })
+        //The Text Input
+        this.nameFieldInput = new PUXI.TextInput({
+            multiLine: false,
+            value: "",
+            padding: 20,
+            maxLength: 25,
+            align: "center",
+            fontVariant: "small-caps",
+            selectedColor: "#000000",
+            selectedBackgroundColor: "#FFFFFF",
+            caretWidth: 2,
+            style: textStyles,
+        }).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 0.99,
+                height: 0.95,
+                x: 0.5,
+                y: 0.5,
+                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+            }),
+        )
+        
+        this.inputBox.addChild(this.nameFieldInput)
+        
+        //Placeholder Text
+        this.nameFieldPlaceholder = new PUXI.TextWidget(
+            'Username', 
+            textStyles
+        ).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                x: 20,
+                y: 21,
+            })
+        )
+        this.nameFieldPlaceholder.alpha = 0.4;
+        const nameFieldPlaceholder = this.nameFieldPlaceholder
+        this.inputBox.widgetChildren[0].on('focus', () => { 
+            nameFieldPlaceholder.alpha = 0;
+        });
+        this.inputBox.widgetChildren[0].on('blur', () => { 
+            if(this.nameFieldInput.value != '') {
+                nameFieldPlaceholder.alpha = 0;
+            } else {
+                nameFieldPlaceholder.alpha = 0.4;
+            }
+        });
+        
+        this.inputBox.addChild(this.nameFieldPlaceholder);
+        this.inputBox.contentContainer.interactive = true;
+        this.inputBox.contentContainer.buttonMode = true;
+        this.inputBox.contentContainer.cursor = "text";
+
+        const inputBox = this.inputBox
+        this.inputBox.contentContainer.on("mouseover", function() {
+            inputBox.setBackground("#FFFF00")
+        });
+        this.inputBox.contentContainer.on("mouseout", function() {
+            inputBox.setBackground("#FFFFFF")
+        });
+
+
+
+
+
+
+
+
+
+        //select avatar 
+        //Logo Wrapper + Logo
+        const avatarWrapper = new PUXI.WidgetGroup({
+        }).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 100,
+                height: 100,
+                x: 0.5,
+                y: 0.55,
+                anchor: new PIXI.Point(0.5,0.5)
+            }),
+        )
+
+
+        this.avatarBox = new PUXI.Widget({
+        }).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 100,
+                height: 100,
+                x: 0.5,
+                y: 0.55,
+                anchor: new PIXI.Point(0,0)
+            }),
+        )
+        //this.avatarBox.contentContainer.children[0].anchor.set(0.5, 0.5)
+
+        //this.avatar = null
+        var avatarCounter = 1
+        let avatarBox = this.avatarBox
+        setInterval(function(){
+            if(avatarBox.contentContainer.children == 0) {
+                let avatarCurrent = PIXI.Sprite.from('images/avatar'+avatarCounter+'.svg');
+                avatarCurrent.width = 100
+                avatarCurrent.height = 100
+                avatarCurrent.x = -50
+                avatarCurrent.y = -50
+                avatarBox.contentContainer.addChild(avatarCurrent)
+            } else {
+                avatarBox.contentContainer.removeChildAt(0)
+                let avatarCurrent = PIXI.Sprite.from('images/avatar'+avatarCounter+'.svg');
+                this.avatar = avatarCurrent
+                avatarCurrent.width = 100
+                avatarCurrent.height = 100
+                avatarCurrent.x = -50
+                avatarCurrent.y = -50
+                avatarBox.contentContainer.addChild(avatarCurrent)
+
+            }
+            avatarCounter++
+            if(avatarCounter >= 5) {
+                avatarCounter = 1
+            }
+        }, 500)
+        this.avatarBox.alpha = 0
+        avatarWrapper.addChild(this.avatarBox)
+        this.joinModalWidgetGroup.addChild(avatarWrapper)
+
+
+
+
        
 
 
@@ -818,21 +1027,226 @@ class UIBuilder extends PIXI.Container {
 
 
 
+
+
+        
+
+
+        //Join Button 
+        this.joinButtonWrapper = new PUXI.WidgetGroup({
+        }).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 500,
+                height: 100,
+                x: 0.5,
+                y: 0.727,
+                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+            }),
+        ).setBackground(0x000000).setBackgroundAlpha(1);
+
+        this.joinButton = new PUXI.Button({
+            text: ''
+        }).setLayoutOptions(new PUXI.FastLayoutOptions({
+            width: 0.9999,
+            height: 0.9999,
+            x: 0.5,
+            y: 0.5,
+            anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+        }))
+        .setBackground(0xFF284D)
+        .setBackgroundAlpha(1)
+        this.joinButtonWrapper.addChild(this.joinButton)
+        this.joinButton.on("hover", function (over) {
+            if(over == true) {
+                this.setBackground("#FFFF00")
+            } else {
+                this.setBackground("#FF284D")
+            }
+        });
+
+        
+
+       const buttonStyles = new PIXI.TextStyle({ 
+            fontFamily: 'Trade Gothic Next',
+            fill: "#FFFFFF", 
+            fontWeight: 700,
+            fontSize: 64, 
+            letterSpacing: 2
+        })
+        this.joinText = new PUXI.TextWidget('CONTINUE', buttonStyles)
+        this.joinText.setLayoutOptions(new PUXI.FastLayoutOptions({
+            x: 0.5,
+            y: 0.5,
+            anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+        }))
+        this.joinText.tint = 0x000000
+        this.joinButtonWrapper.addChild(this.joinText)
+
+        this.joinButtonWrapper.contentContainer.interactive = true;
+        this.joinButtonWrapper.contentContainer.buttonMode = true;
+        this.joinButtonWrapper.contentContainer.cursor = "pointer";
+
+        const joinButtonClick = new PUXI.ClickManager(this.joinButton, true, false, false)
+        
+        joinButtonClick.onPress = function(){
+            this.setBackground(0xffff00)
+            
+        }
+
+        const joinTitleWrapper = this.joinTitleWrapper
+        const joinModalWidgetGroup = this.joinModalWidgetGroup
+        
+        joinButtonClick.onClick = function(){
+
+            sound.add('login', 'audio/login.mp3');
+            sound.play('login')
+            
+            joinTitleWrapper.contentContainer.children[0].children[0].children[0].text = 'Select your avatar'
+            joinModalWidgetGroup.removeChild(inputBox)
+            avatarBox.alpha = 1
+
+            theUI.setName()
+            
+            
+            const nameStyles = new PIXI.TextStyle({ 
+                fontFamily: 'Trade Gothic Next',
+                fill: colorBlack, 
+                fontSize: 25,
+                fontWeight: 900, 
+                letterSpacing: 2
+            })
+            
+            setTimeout(function(){
+                const personName = theUI.getText()
+                const nameText = new PIXI.Text(""+personName.toUpperCase()+"", nameStyles);
+                nameText.updateText();
+                
+
+                const radius = 68;
+                const maxRopePoints = 100;
+                const step = Math.PI / maxRopePoints;
+
+                let ropePoints = maxRopePoints - Math.round( (nameText.texture.width / (radius * Math.PI)) * maxRopePoints );
+                ropePoints /= 2;
+
+                const points = [];
+                for ( let i = maxRopePoints - ropePoints; i > ropePoints; i-- ) {
+                const x = radius * Math.cos( step * i );
+                const y = radius * Math.sin( step * i );
+                points.push( new PIXI.Point( x, -y ) );
+                }
+
+                const container = new PIXI.Container();
+                const rope = new PIXI.SimpleRope( nameText.texture, points );
+                container.addChild( rope );
+                const bounds = container.getLocalBounds();
+                const matrix = new PIXI.Matrix();
+                matrix.tx = -bounds.x;
+                matrix.ty = -bounds.y;
+
+                const renderTexture = PIXI.RenderTexture.create( bounds.width, bounds.height, PIXI.settings.SCALE_MODE.NEAREST, 2 );
+                renderer.render(container, renderTexture, true, matrix, false);
+                
+                PIXI.BaseTexture.addToCache( renderTexture.baseTexture, 'curvedText' );
+                PIXI.Texture.addToCache( renderTexture, 'curvedText' );
+                
+                const sprite = PIXI.Sprite.from('curvedText');
+
+                var moveBack = sprite.width / 5
+                sprite.y = -26
+                sprite.x = -moveBack
+                avatarWrapper.contentContainer.addChildAt(sprite)
+                
+                
+            }, 200)
+
+        
+            
+        }
+
+
+        
+
+        
+
+
+        
+
+        this.joinModalWidgetGroup.addChild(this.joinTitleWrapper)
+        this.joinModalWidgetGroup.addChild(this.inputBox)
+        this.joinModalWidgetGroup.addChild(this.joinButtonWrapper)
+        
+        this.joinModal.addChild(this.joinModalWidgetGroup)
+        
+        this.addChild(this.joinModal)
+
+
+
+
+
+
+
+
+
+
+
+        //this.joinModal.resize(window.innerWidth, window.innerHeight)
+
+        const theUI = this
+        const joinModal = this.joinModal
+
+        setTimeout(function(){
+
+            theUI.resizeText()
+            joinModal.resize(window.innerWidth, window.innerHeight)
+
+        }, 500)
+
         window.addEventListener('resize', () => {
+            
             this.resizeText()
+            
+            this.drawGridBackground(window.innerWidth, window.innerHeight)
 
             this.joinModal.resize(window.innerWidth, window.innerHeight)
             
             this.statusStage.resize(window.innerWidth, window.innerHeight)
             this.statusStage.stage.hitArea = new PIXI.Rectangle(0,0,0,0);
 
+            
+            this.quoteStage.resize(window.innerWidth, window.innerHeight)
+            const quoteBounds = this.quoteWrapperBackground.getBounds()
+            this.quoteStage.stage.hitArea = new PIXI.Rectangle(
+                quoteBounds.x,
+                quoteBounds.y,
+                quoteBounds.width,
+                quoteBounds.height
+            );
+            let quoteWidthBackground = (window.innerWidth/100)*80
+
+            this.quoteWrapperBackground.clear()
+            this.quoteWrapperBackground = new PIXI.Graphics()
+            this.quoteWrapperBackground.beginFill(0xFFFFFF)        
+            this.quoteWrapperBackground.drawRoundedRect(0, 0, quoteWidthBackground, (window.innerHeight/100)*80, 50)
+            this.quoteWrapper.contentContainer.addChildAt(this.quoteWrapperBackground,0)
+
+
+            this.textBox.resize(window.innerWidth, window.innerHeight)
+            const textBoxbounds = this.textBoxWrapperBackground.getBounds()
+            this.textBox.stage.hitArea = new PIXI.Rectangle(
+                textBoxbounds.x,
+                textBoxbounds.y,
+                textBoxbounds.width,
+                textBoxbounds.height
+            );
+
             this.emojiStage.resize(window.innerWidth, window.innerHeight)
-            const bounds = this.emojiWrapperBackground.getBounds()
+            const emojiBounds = this.emojiWrapperBackground.getBounds()
             this.emojiStage.stage.hitArea = new PIXI.Rectangle(
-                bounds.x,
-                bounds.y,
-                bounds.width,
-                bounds.height
+                emojiBounds.x,
+                emojiBounds.y,
+                emojiBounds.width,
+                emojiBounds.height
             );
             
             this.scoreStage.resize(window.innerWidth, window.innerHeight)
@@ -853,14 +1267,14 @@ class UIBuilder extends PIXI.Container {
                 worldBounds.height
             );
 
-            this.leaveGameStage.resize(window.innerWidth, window.innerHeight)
+            /*this.leaveGameStage.resize(window.innerWidth, window.innerHeight)
             const leaveGameBounds = this.leaveButtonWrapper.contentContainer.getBounds()
             this.leaveGameStage.stage.hitArea = new PIXI.Rectangle(
                 leaveGameBounds.x,
                 leaveGameBounds.y,
                 leaveGameBounds.width,
                 leaveGameBounds.height
-            );
+            );*/
 
 
         })
@@ -869,11 +1283,74 @@ class UIBuilder extends PIXI.Container {
         this.count = 0
     }
 
+
+    getAvatar() {
+        return this.avatarBox.contentContainer.children[0]._texture.textureCacheIds
+    }
+
+
+    drawGridBackground(width, height) {
+
+        if(width <= 500) {
+            this.gridGap = 25
+            this.gridLine = 0.2
+        } else if (width <= 960) {
+            this.gridGap = 50
+            this.gridLine = 0.5
+        } else if (width <= 1240) {
+            this.gridGap = 75
+            this.gridLine = 1
+        } else {
+            this.gridGap = 100
+            this.gridLine = 1
+        }
+
+        this.gridOffset = this.gridGap/2
+        width = width + this.gridGap*2
+        height = height + this.gridGap*2
+        
+        
+        this.gridBackground = new PIXI.Container();
+        this.gridNumberOfLinesHorizontal = width / this.gridGap
+        this.gridBackground.x = -this.gridOffset
+        this.gridBackground.y = -this.gridOffset
+
+        for (var i = 0; i < this.gridNumberOfLinesHorizontal; i++) {           
+            let line = new PIXI.Graphics()
+            line.lineStyle(this.gridLine, 0x000000, 0.5)
+            line.moveTo(i * this.gridGap, 0)
+            line.lineTo(i * this.gridGap, height)
+            this.gridBackground.addChild(line)
+        }
+
+        this.numberOfLinesVertical = height / this.gridGap
+            
+        for (var i = 0; i < this.numberOfLinesVertical; i++) { 
+            let line = new PIXI.Graphics()
+            line.lineStyle(this.gridLine, 0x000000, 0.5)
+            line.moveTo(0, i * this.gridGap)
+            line.lineTo(width, i * this.gridGap)
+            this.gridBackground.addChild(line)
+        }
+        if(this.joinModalWrapper.contentContainer.children == 0) {
+            this.joinModalWrapper.contentContainer.addChildAt(this.gridBackground, 0)
+            this.joinModal.addChild(this.joinModalWrapper)
+        } else {
+            this.joinModalWrapper.contentContainer.removeChildAt(0)
+            this.joinModalWrapper.contentContainer.addChildAt(this.gridBackground, 0)
+        }
+        
+        
+    }
+
     joinSession(){
         this.joinModalWidgetGroup.contentContainer.alpha = 0
         this.joinModal.alpha = 0
         this.removeChild(this.joinModal)
     }
+
+
+    
 
     leaveSession(){
         this.joinModalWidgetGroup.contentContainer.alpha = 1
@@ -890,32 +1367,29 @@ class UIBuilder extends PIXI.Container {
         this.nameFieldInput.blur()
     }
 
+    setName() {
+        this.nameGiven = true
+    }
+
     getMessageText() {
-        if(this.joinModal.visible == true) {
-            this.joinSession()
-            return this.nameFieldInput.value;
-            
-        } else {
-            return this.mockInput.value;
-        }
+        this.quoteStage.visible = false
+        return this.mockInput.value;
     }
 
     clearMessageText() {
-        if(!this.joinModal.visible == true) {
-            if(this.mockInput.value != "<3") {
-                this.mockInput.value = ""
-                this.mockInput.blur()
-            }
-        }
+        this.mockInput.value = ""
+        this.mockInput.blur()
+        this.mockInput.focus()
     }
 
     updateWorldTime(time) {
-        var currentWorldTime = new Date(time * 1000).toISOString().substr(14, 5)
-        this.currentTime.text = currentWorldTime
+       var currentWorldTime = new Date(time * 1000).toISOString().substr(11, 8)
+       //console.log(currentWorldTime)
+       this.currentTime.text = currentWorldTime
     }
 
     updateTotalUsers(number) {
-        this.totalNumberOfPeopleCounter.text = number
+       this.totalNumberOfPeopleCounter.text = number
     }
 
 
@@ -938,6 +1412,9 @@ class UIBuilder extends PIXI.Container {
     increaseScore() {
         var currentScore = Number(this.johanScoreText.text.slice(0,1))
         currentScore = currentScore + 1
+        if(currentScore == 9) {
+            this.quoteStage.visible = true
+        }
         var newScore = currentScore + "/10";
         console.log(newScore)
         this.johanScoreText.text = newScore
@@ -1036,37 +1513,137 @@ class UIBuilder extends PIXI.Container {
     resizeText() {
         
         const width = window.innerWidth
-        console.log(width)
 
-        if(width <= 500) {
-            this.nameFieldPlaceholder.contentContainer.children[0].style.fontSize = 30
-        } else if (width <= 960) {
-            this.nameFieldPlaceholder.contentContainer.children[0].style.fontSize = 50
-        } else if (width <= 1240) {
-            this.nameFieldPlaceholder.contentContainer.children[0].style.fontSize = 80
+        if(width <= 680) {
+            this.statusStage.visible = false
+            this.worldInfo.visible = false
+            this.scoreStage.visible = false
         } else {
-            this.nameFieldPlaceholder.contentContainer.children[0].style.fontSize = 108
+            this.statusStage.visible = true
+            this.worldInfo.visible = true
+            this.scoreStage.visible = true
         }
+
+
+
+        // Join Modal Title
+        if(width <= 500) {
+            this.joinTitle.contentContainer.children[0].style.fontSize = 40
+        } else if (width <= 960) {
+            this.joinTitle.contentContainer.children[0].style.fontSize = 50
+        } else if (width <= 1240) {
+            this.joinTitle.contentContainer.children[0].style.fontSize = 80
+        } else {
+            this.joinTitle.contentContainer.children[0].style.fontSize = 108
+        }
+
+        //join Modal input box
+        if(width <= 500) {
+            //wrapper
+            this.inputBox.setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 300,
+                    height: 50,
+                    x: 0.5,
+                    y: 0.545,
+                    anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+                })
+            )
+            //The Input
+            this.nameFieldInput.textContainer.setPadding(10)
+            this.nameFieldInput.caret = new PIXI.Graphics();
+            this.nameFieldInput.caret.visible = false;
+            this.nameFieldInput.caret._index = 0;
+            this.nameFieldInput.caret.lineStyle(1, 0x000000);
+            this.nameFieldInput.caret.moveTo(0, 0);
+            this.nameFieldInput.caret.lineTo(0, 25);
+            this.nameFieldInput.lineHeight = 20
+            this.nameFieldInput.textHeight = 20
+            //The Placeholder
+            this.nameFieldPlaceholder.contentContainer.children[0].style.fontSize = 20
+            this.nameFieldPlaceholder.setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    x: 10,
+                    y: 12,
+                })
+            )
+
+            this.joinButtonWrapper.setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 200,
+                    height: 50,
+                    x: 0.5,
+                    y: 0.727,
+                    anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+                })
+            )
+            this.joinText.contentContainer.children[0].style.fontSize = 20
+
+        } else if (width <= 960) {
+            this.inputBox.setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 600,
+                    height: 80,
+                    x: 0.5,
+                    y: 0.545,
+                    anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+                })
+            )
+        } else if (width <= 1240) {
+            this.inputBox.setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 820,
+                    height: 80,
+                    x: 0.5,
+                    y: 0.545,
+                    anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+                })
+            )
+        } else {
+            this.inputBox.setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 1100,
+                    height: 100,
+                    x: 0.5,
+                    y: 0.545,
+                    anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+                })
+            )
+            //The Input
+            this.nameFieldInput.textContainer.setPadding(20)
+            this.nameFieldInput.caret = new PIXI.Graphics();
+            this.nameFieldInput.caret.visible = false;
+            this.nameFieldInput.caret._index = 0;
+            this.nameFieldInput.caret.lineStyle(1, 0x000000);
+            this.nameFieldInput.caret.moveTo(0, 0);
+            this.nameFieldInput.caret.lineTo(0, 60);
+            this.nameFieldInput.lineHeight = 60
+            this.nameFieldInput.textHeight = 60
+            //The Placeholder
+            this.nameFieldPlaceholder.contentContainer.children[0].style.fontSize = 52
+            this.nameFieldPlaceholder.setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    x: 20,
+                    y: 21,
+                })
+            )
+        }
+
+
     }
 
-    createText() {
-       /* this.text = new PIXI.BitmapText('Hello Bitmap Font', {
-            font: '72px TradeGothicNextBold',
-            align: 'center',
-        })
-        this.joinModalWidgetGroup.contentContainer.addChild(this.text)
-        this.text.text = "yes"*/
-    }
-    
+
  
-    update(){
+    update(delta){
         this.count++
-        
-        //console.log(this.statusStage.stage.hitArea)
-        
-    
 
-
+        //console.log(this.avatarBox.contentContainer)
+        this.avatarBox.contentContainer.rotation += 1 * delta;
+        //console.log(this.avatarBox)
+        
+        if(this.filters) {
+            //this.filters[0].seed = Math.random()
+        }
     }
 
 

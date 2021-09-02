@@ -8,7 +8,7 @@ export default (instance, room) => {
     let roomY = room.y 
     let roomWidth = room.width
     let roomHeight = room.height
-    let roomColor = room.backgroundColor
+    let roomColor = room.color
 
     if(!roomX == 0) {
         roomX = roomX/2

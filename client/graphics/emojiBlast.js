@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { Ease, ease } from 'pixi-ease'
+import { Sound } from '@pixi/sound';
 
 const emojiBlast = (layer, message) => {
 
@@ -18,6 +19,8 @@ const emojiBlast = (layer, message) => {
         }
         
         const emoji = new PIXI.Text(message.text);
+
+
 
         emoji.x = message.x - 15
         emoji.y = message.y - 40

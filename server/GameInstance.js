@@ -36,15 +36,16 @@ class GameInstance {
         this.room = {
             x: 0,
             y: 0,
-            width: 400,
-            height: 400,
+            width: 4000,
+            height: 4000,
             backgroundColor: "#00ff00",
+            color: "#4DFA66",
             borderColor: "#FFFFFF",
             borderWidth: 25,
             objects: [{
                 name: "item",
-                x: 200,
-                y: 200,
+                x: 1900,
+                y: 1900,
                 width: 25, 
                 height: 25, 
                 color: "#0000ff",
@@ -61,7 +62,7 @@ class GameInstance {
         this.floors = setupFloors(this.instance, this.room)
         
 
-        this.room2 = {
+        /*this.room2 = {
             x: 2000,
             y: 0,
             width: 400,
@@ -112,39 +113,28 @@ class GameInstance {
             }]
         }
         this.floors3 = setupFloors(this.instance, this.room3)
-        
+        */
         
         
         
         const boxes = new Map()
         this.boxes = setupBoxes(this.instance, this.world, this.room, boxes)
-        this.boxesTwo = setupBoxes(this.instance, this.world, this.room2, boxes)
-        this.boxesThree = setupBoxes(this.instance, this.world, this.room3, boxes)
+        //this.boxesTwo = setupBoxes(this.instance, this.world, this.room2, boxes)
+        //this.boxesThree = setupBoxes(this.instance, this.world, this.room3, boxes)
         this.boxes = boxes
 
         const obstacles = new Map()
         this.obstacles = setupObstacles(this.instance, this.room, obstacles)
-        this.obstacles2 = setupObstacles(this.instance, this.room2, obstacles)
+        //this.obstacles2 = setupObstacles(this.instance, this.room2, obstacles)
         this.obstacles = obstacles
 
         const portals = new Map()
         this.portals = setupPortals(this.instance, this.room, portals)
-        this.portalsTwo= setupPortals(this.instance, this.room2, portals)
-        this.portalsThree= setupPortals(this.instance, this.room3, portals)
+        //this.portalsTwo= setupPortals(this.instance, this.room2, portals)
+        //this.portalsThree= setupPortals(this.instance, this.room3, portals)
         this.portals = portals
 
 
-
-
-        const { PeerServer } = require('peer');
-        const peerServer = PeerServer({
-            port: 9000,
-            ssl: {
-               //key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem'),
-               //cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/cert.pem')
-            }
-        });
-        // PAUL GAALXY S8 NO KEYS
 
 
 
@@ -154,13 +144,7 @@ class GameInstance {
 
         this.people = []
 
-        peerServer.on('connection', peer => {
-            console.log('peer connected', peer.id);
-        });
         
-        peerServer.on('disconnect', peer => {
-            console.log('peer disconnected', peer.id);
-        });
 
 
 
@@ -195,13 +179,23 @@ class GameInstance {
         // (the rest is just attached to client objects when they connect)
         this.instance.on('command::JoinCommand', ({ command, client }) => {
 
-            const rawEntity = client.rawEntity
+            
+            const rawEntity = new PlayerCharacter({ self: true, avatar: ""+command.avatar+"" })
+            const smoothEntity = new PlayerCharacter({ self: false, avatar: ""+command.avatar+""  })
+
+            rawEntity.client = client
+            client.rawEntity = rawEntity
+            
+            smoothEntity.client = client
+            client.smoothEntity = smoothEntity
+
+            /*const rawEntity = client.rawEntity
             const smoothEntity = client.smoothEntity
-            const peerID = client.peerID;
+            const peerID = client.peerID;*/
 
 
-            let room2SpawnX = this.room2.x + (this.room2.width/2)
-            let room2SpawnY = this.room2.y + (this.room2.height/2)
+            let room2SpawnX = this.room.x + (this.room.width/2)
+            let room2SpawnY = this.room.y + (this.room.height/2)
 
             rawEntity.x = room2SpawnX
             rawEntity.y = room2SpawnY
@@ -211,14 +205,18 @@ class GameInstance {
             this.instance.addEntity(rawEntity)
             client.channel.addEntity(rawEntity)
 
-            smoothEntity.x = this.room2.width/2
-            smoothEntity.y = this.room2.height/2
+            smoothEntity.x = this.room.width/2
+            smoothEntity.y = this.room.height/2
             smoothEntity.collidable = true
             this.instance.addEntity(smoothEntity)
 
             smoothEntity.name = command.name
             rawEntity.name = command.name
             client.name = command.name
+
+            smoothEntity.avatar = command.avatar
+            rawEntity.avatar = command.avatar
+            client.avatar = command.avatar
 
             smoothEntity.color = command.color
             rawEntity.color = command.color
@@ -227,7 +225,7 @@ class GameInstance {
             smoothEntity.isAlive = true;
             rawEntity.isAlive = true;
             
-            this.instance.message(new Identity(rawEntity.nid, smoothEntity.nid, ""+peerID+"", ""+ command.name +""), client)
+            this.instance.message(new Identity(rawEntity.nid, smoothEntity.nid, "peer", ""+ command.avatar +"",""+ command.name +""), client)
             this.instance.messageAll(new Notification(''+ command.name +'', 'personJoined', 20, 20))
 
             this.totalUsers++
@@ -242,14 +240,7 @@ class GameInstance {
             channel.subscribe(client)
             client.channel = channel
 
-            const rawEntity = new PlayerCharacter({ self: true })
-            const smoothEntity = new PlayerCharacter({ self: false })
-
-            rawEntity.client = client
-            client.rawEntity = rawEntity
             
-            smoothEntity.client = client
-            client.smoothEntity = smoothEntity
             
             client.positions = []
            
@@ -298,13 +289,12 @@ class GameInstance {
 
         this.instance.on('command::SpeakCommand', ({ command, client, tick }) => {
 
+            //console.log(command)
             if(command.type == "emojiBlast") {
 
                 this.instance.messageAll(new Notification(command.text, 'emojiBlast', command.x, command.y))
             
-            } else if(command.text == "<3") {
-                this.instance.messageAll(new Notification('❤️', 'talk', command.x, command.y))
-            } else {
+            } else if(command.type == "talk") {
 
                 let polite = censoring.checkMessage(command.text, '*');
                 let friendlyMessage = censoring.censorMessage(command.text, '*');
@@ -433,7 +423,7 @@ class GameInstance {
 
                 for (let portal of this.portals.values()) {
 
-                    if(client.smoothEntity.isAlive) {
+                    if(client.smoothEntity) {
 
                         let collided = false
 
@@ -477,7 +467,7 @@ class GameInstance {
                 for (const [key, value] of Object.entries(this.instance.clients.array)) {
 
 
-                    if(value.rawEntity.isAlive && box.name == "item") {
+                    if(value.rawEntity && box.name == "item") {
 
                         let collided = false
 
@@ -494,7 +484,7 @@ class GameInstance {
                                 value.channel.removeEntity(box)
                                 this.instance.removeEntity(box)
 
-                                console.log(value.channel)
+                                //console.log(value.channel)
                                 
                                 
                                 
@@ -518,12 +508,12 @@ class GameInstance {
                                 value.channel.removeEntity(box)
                                 this.instance.removeEntity(box)*/
 
-                                console.log(value.channel)
+                                //console.log(value.channel)
                                 
                                 
                                 
                                 
-                                console.log(box)
+                                //console.log(box)
                                 //box.color = "#0000ff"
                                 break
                             } else {

@@ -12,21 +12,38 @@ class InputSystem {
         this.UIBuilder = renderer.UIBuilder
         
         let isJoined = false;
+
+        
+
         const joinButton = renderer.stage.children[1].joinButton
+        const UIBuilder = this.UIBuilder
+
+        
+        
         joinButton.on("click", function () {
             
             if(isJoined == false) {
+
                 let name = renderer.UIBuilder.getText();
-                let playerColor = Math.floor(Math.random()*16777215).toString(16);
-                client.addCommand(new JoinCommand(""+name+"", playerColor))
-                renderer.UIBuilder.clearText();
-                renderer.UIBuilder.joinSession();
-                isJoined = true
+                let avatar = renderer.UIBuilder.getAvatar();
+
+                if(UIBuilder.nameGiven == true) {
+
+                    client.addCommand(new JoinCommand(""+name+"", ""+avatar+""))
+                    renderer.UIBuilder.clearText();
+                    renderer.UIBuilder.joinSession();
+                    //console.log(name, avatar)
+
+                    isJoined = true
+                    
+
+                }
+                
             }
         });
 
         //let isJoined = false;
-        const leaveButton = renderer.stage.children[1].leaveButton
+        /*const leaveButton = renderer.stage.children[1].leaveButton
         leaveButton.on("click", function () {
             
             if(isJoined == true) {
@@ -36,8 +53,16 @@ class InputSystem {
                 renderer.UIBuilder.leaveSession();
                 isJoined = false
             }
-        });
+        });*/
+
+        window.addEventListener('resize', () => {
+            
+            this.placeJoySticks()
         
+        })
+
+        
+            
         
 
         this.currentState = {
@@ -81,13 +106,11 @@ class InputSystem {
         this.isMobile = isMobile();
 
         // disable right click
-        /*document.addEventListener('contextmenu', event =>
+       /* document.addEventListener('contextmenu', event =>
             event.preventDefault()
         )*/
 
         let iframe = "";
-
-        //this.currentState.message = this.UIBuilder.getText();
 
         /*document.body.addEventListener("mousedown", function(e) {
             console.log(e.target.nodeName, e.target.id)
@@ -100,9 +123,18 @@ class InputSystem {
 
         //if(isMobile == false) {
 
+            
+
             document.addEventListener('keydown', event => {
                 //console.log('keydown', event)
                 // w or up arrow
+
+
+                if(!renderer.stage.children[1].mockInput._isFocused) {
+                    
+                
+
+
                 if (event.keyCode === 87 || event.keyCode === 38) {
                     this.currentState.w = true
                     this.frameState.w = true
@@ -123,6 +155,8 @@ class InputSystem {
                     this.frameState.d = true
                 }
 
+            }
+
                 // r
                 if (event.keyCode === 82) {
                     this.currentState.r = true
@@ -135,20 +169,15 @@ class InputSystem {
                     this.frameState.spacebar = true
                 }
 
+                    //enter
                 if (event.keyCode === 13) {
                     this.currentState.message = this.UIBuilder.getMessageText();
-                    this.UIBuilder.clearMessageText();
+                    this.frameState.message = this.UIBuilder.getMessageText();
+                }
 
-                    if(isJoined == false) {
-                        let name = renderer.UIBuilder.getText();
-                        let playerColor = Math.floor(Math.random()*16777215).toString(16);
-                        client.addCommand(new JoinCommand(""+name+"", playerColor))
-                        renderer.UIBuilder.clearText();
-                        renderer.UIBuilder.joinSession();
-                        isJoined = true
-                    }
-                } 
+                
 
+                
                 if (event.keyCode === 9) {
                     //console.log(this.UIBuilder)
                     //this.frameState.message = this.UIBuilder.getText();
@@ -227,8 +256,9 @@ class InputSystem {
 
                 //enter
                 if (event.keyCode === 13) {
-                    this.frameState.message = ""
+                   // this.frameState.message = ""
                     this.currentState.message = ""
+                    this.UIBuilder.clearMessageText();
                 }
 
                 //Right Bracket
@@ -261,13 +291,11 @@ class InputSystem {
                 this.frameState.mouseMoving = false
             })
 
-            if(this.isMobile) {
-                var joypadSize = 1
-            } else {
+            if(this.isMobile.any) {
                 var joypadSize = 0.5
+            } else {
+                var joypadSize = 0.2
             }
-
-            //console.log(this.isMobile.any)
 
 
             this.leftController = new Joystick({
@@ -391,10 +419,7 @@ class InputSystem {
                 }
             });
            
-            if(this.isMobile.any || window.innerWidth < 600) {
-                this.leftController.position.set(this.leftController.width, window.innerHeight - this.leftController.height);
-                renderer.stage.addChild(this.leftController);
-            }
+            
 
             this.rightController = new Joystick({
             
@@ -408,7 +433,10 @@ class InputSystem {
                 
                 onChange: (data) => {
 
-                    let angle = data.angle * (pi/180);
+                    let angle = data.angle
+
+                    var pi = Math.PI;
+                    angle =  (angle * (pi/180)*-1);
 
                     this.currentState.mouseDown = false
                     this.frameState.mouseDown = false
@@ -419,16 +447,51 @@ class InputSystem {
                 onEnd: () => {
                     this.currentState.mouseDown = false
                 }
+
+
+                
             });
+
+             
             if(this.isMobile.any || window.innerWidth < 600) {
-                this.rightController.position.set(window.innerWidth - this.rightController.width, window.innerHeight - this.rightController.height);
-                renderer.stage.addChild(this.rightController);
+                this.leftController.position.set(this.leftController.width, window.innerHeight - this.leftController.height*2);
+                renderer.stage.addChild(this.leftController);
+            } else {
+                renderer.stage.removeChild(this.leftController);
             }
+    
+
+            
+
+            if(this.isMobile.any || window.innerWidth < 600) {
+                this.rightController.position.set(window.innerWidth - this.rightController.width, window.innerHeight - this.rightController.height*1.5);
+                renderer.stage.addChild(this.rightController);
+            }else {
+                renderer.stage.removeChild(this.rightController);
+            }
+    
+   
+
+            
            
             
 
 
         //}
+    }
+
+    placeJoySticks(){
+
+        if(this.isMobile.any || window.innerWidth < 600) {
+            this.rightController.position.set(window.innerWidth - this.rightController.width, window.innerHeight - this.rightController.height*1.5);
+            renderer.stage.addChild(this.rightController);
+        }
+
+        if(this.isMobile.any || window.innerWidth < 600) {
+            this.leftController.position.set(this.leftController.width, window.innerHeight - this.leftController.height*2);
+            renderer.stage.addChild(this.leftController);
+        }
+
     }
 
     isMobile(){

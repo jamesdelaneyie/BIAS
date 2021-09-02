@@ -19,6 +19,7 @@ class PlayerCharacter {
         this.color = state.color
         this.name = state.name
         this.self = state.self;
+        this.avatar = state.avatar
 
         this.circleShape = new p2.Circle({
             radius: this.size
@@ -80,6 +81,7 @@ PlayerCharacter.protocol = {
     delta: nengi.Number,
     isAlive: nengi.Boolean,
     color: nengi.String,
+    avatar: nengi.String,
     name: nengi.String,
     self: nengi.Boolean,
     hitpoints: nengi.UInt8

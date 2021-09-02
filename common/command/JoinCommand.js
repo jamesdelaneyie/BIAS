@@ -1,15 +1,15 @@
 import nengi from 'nengi'
 
 class JoinCommand {
-    constructor(name, color) {
+    constructor(name, avatar) {
         this.name = name
-        this.color = color
+        this.avatar = avatar
     }
 }
 
 JoinCommand.protocol = {
     name: nengi.String,
-    color: nengi.String
+    avatar: nengi.String
 }
 
 export default JoinCommand

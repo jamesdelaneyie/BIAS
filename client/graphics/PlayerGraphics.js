@@ -26,6 +26,10 @@ class PlayerGraphics extends PIXI.Container {
         this.wrapper = new PIXI.Container()
         this.playerBody = new PIXI.Graphics();
         this.size = 25
+        this.avatar = state.avatar
+
+        console.log(state.avatar)
+
         
         //Give me a new space to draw something
         this.auraContainer = new PIXI.Container();   
@@ -48,7 +52,8 @@ class PlayerGraphics extends PIXI.Container {
         this.body.beginFill(auraColor)
         this.body.drawCircle(0, 0, this.size)
         this.body.endFill()
-        this.playerBody.addChild(this.body)
+        //this.playerBody.addChild(this.body)
+        
 
         this.nose = new PIXI.Graphics()
         this.nose.moveTo(0, -this.size)
@@ -58,6 +63,15 @@ class PlayerGraphics extends PIXI.Container {
         this.nose.lineTo(0, this.size)
         this.nose.endFill()
         this.playerBody.addChild(this.nose)
+
+        this.avatarContainer = new PIXI.Container();   
+        this.avatar = new PIXI.Sprite.from(''+this.avatar+'');
+        this.avatar.width = 50
+        this.avatar.height = 50
+        this.avatar.x = -25
+        this.avatar.y = -25
+        this.avatarContainer.addChild(this.avatar)
+        this.playerBody.addChild(this.avatarContainer)
 
         this.wrapper.interactive = true;
         this.wrapper.buttonMode = true;
@@ -99,6 +113,7 @@ class PlayerGraphics extends PIXI.Container {
             this.body.visible = 0
             this.info.visible = 0
             this.nose.visible = 0
+            this.avatar.visible = 0
             this.auraContainer.visible = 0
         }
         
@@ -111,6 +126,10 @@ class PlayerGraphics extends PIXI.Container {
 
     setName(name){
         this.name = name
+    }
+
+    setAvatar(avatar){
+        this.avatar = avatar
     }
 
     onPointerDown(){
@@ -183,6 +202,7 @@ class PlayerGraphics extends PIXI.Container {
         this.nose.visible = 0
         this.auraContainer.visible  = 0
         this.info.visible = 0
+        this.avatarContainer.visible = 0
     }
 
     show() {
@@ -190,6 +210,7 @@ class PlayerGraphics extends PIXI.Container {
         this.nose.visible = 1
         this.auraContainer.visible  = 1
         this.info.visible = 1
+        this.avatarContainer.visible = 1
     }
 
 
@@ -204,12 +225,14 @@ class PlayerGraphics extends PIXI.Container {
             this.body.visible = 0;
             this.auraContainer.visible = 0
             this.info.visible = 0
+            this.avatarContainer.visible = 0
         } else {
             if(!this.self == false) {
                 this.nose.alpha = 1
                 this.body.visible = 1;
                 this.auraContainer.visible = 1
                 this.info.visible = 1
+                this.avatarContainer.visible = 1
             }
         }
         this.auraContainer.scale.set(0.6 + Math.sin((this.count/10)) * 0.1, 0.6 + Math.sin((this.count/10)) * 0.1);

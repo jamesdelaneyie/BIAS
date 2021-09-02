@@ -39,6 +39,9 @@ export default (state, renderer ) => {
             },
             name({ graphics, value }) {
                 graphics.setName(value)
+            },
+            avatar({ graphics, value }) {
+                graphics.setAvatar(value)
             }
         }
     }
