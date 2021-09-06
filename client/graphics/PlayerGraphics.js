@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
-import * as PUXI from 'puxi.js'
+import * as PUXI from '../../node_modules/puxi/lib/puxi.mjs'
+
 import HitpointBar from './HitpointBar.js'
 import { Sound } from '@pixi/sound';
 import MultiStyleText from 'pixi-multistyle-text'

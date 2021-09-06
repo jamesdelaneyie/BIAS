@@ -42,7 +42,7 @@
     "pixi-webfont-loader": "^1.0.2",
     "pixi.js": "^5.1.5",
     "pixi.js-legacy": "^6.1.2",
-    "puxi.js": "0.0.5",
+    "puxi": "github:jamesdelaneyie/puxi-mods",
     "sat": "^0.7.1"
   },
   "devDependencies": {

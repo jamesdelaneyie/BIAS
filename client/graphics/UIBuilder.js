@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js'
-import * as PUXI from 'puxi.js'
+import * as PUXI from '../../node_modules/puxi/lib/puxi.mjs'
 import MultiStyleText from 'pixi-multistyle-text'
 import TaggedText from 'pixi-tagged-text'
 import { Ease, ease } from 'pixi-ease'
@@ -8,6 +8,7 @@ import { CRTFilter } from '@pixi/filter-crt'
 import { GlowFilter } from '@pixi/filter-glow';
 import {DropShadowFilter} from '@pixi/filter-drop-shadow';
 
+//var PUXI = require('puxi');
 
 class UIBuilder extends PIXI.Container {
     constructor(renderer) {

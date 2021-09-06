@@ -238,6 +238,7 @@ const create = () => {
         if(message.type == "personJoined") {
             renderer.UIBuilder.personJoined(message.text)
         }
+
         if(message.type == "personLeft") {
             renderer.UIBuilder.personLeft(message.text)
         }
@@ -270,9 +271,11 @@ const create = () => {
                 messageSound.play()
             }
         }
+
         if(message.type == "talk") {
             addMessage(renderer.middleground, message);
         }
+        
         if(message.type == "sound") {
             
             if(portalSound.isPlaying == false) {
