@@ -663,10 +663,10 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
                                 
                                 //
                                 //box.collider = null
-                                this.world.removeBody(box.body)
+                                /*this.world.removeBody(box.body)
                                 this.boxes.delete(box.nid)
                                 value.channel.removeEntity(box)
-                                this.instance.removeEntity(box)
+                                this.instance.removeEntity(box)*/
 
                                 //console.log(value.channel)
                                 
