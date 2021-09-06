@@ -10,8 +10,6 @@ export default (state, renderer ) => {
             renderer.middleground.addChild(graphics)
             renderer.entities.set(graphics.nid, graphics)
 
-            
-            
             /* self, raw */
             if (data.nid === state.myRawId) {
                 state.myRawEntity = entity

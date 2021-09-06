@@ -328,6 +328,8 @@ class InputSystem {
                         this.frameState.s = false
                         this.currentState.d = false
                         this.frameState.d = false
+                        this.currentState.rotation = -1.5708
+                        this.frameState.rotation = -1.5708
                     }
             
                     if(dd == 'top_right') {
@@ -339,6 +341,8 @@ class InputSystem {
                         this.frameState.s = false
                         this.currentState.d = true
                         this.frameState.d = true
+                        this.currentState.rotation = -0.785398
+                        this.frameState.rotation = -0.785398
                     }
             
                     if(dd == 'right') {
@@ -350,6 +354,8 @@ class InputSystem {
                         this.frameState.s = false
                         this.currentState.d = true
                         this.frameState.d = true
+                        this.currentState.rotation = 0
+                        this.frameState.rotation = 0
             
                     }
             
@@ -362,6 +368,10 @@ class InputSystem {
                         this.frameState.s = true
                         this.currentState.d = true
                         this.frameState.d = true
+                        this.currentState.rotation = 0.785398
+                        this.frameState.rotation = 0.785398
+                       
+                        
                     }
                     
                     if (dd == 'bottom') {
@@ -373,6 +383,8 @@ class InputSystem {
                         this.frameState.s = true
                         this.currentState.d = false
                         this.frameState.d = false
+                        this.currentState.rotation = 1.5708
+                        this.frameState.rotation = 1.5708
                     }
             
                     if (dd == 'bottom_left') {
@@ -384,6 +396,8 @@ class InputSystem {
                         this.frameState.s = true
                         this.currentState.d = false
                         this.frameState.d = false
+                        this.currentState.rotation = -1.5708
+                        this.frameState.rotation = -1.5708
             
                     }
             
@@ -396,6 +410,8 @@ class InputSystem {
                         this.frameState.s = false
                         this.currentState.d = false
                         this.frameState.d = false
+                        this.currentState.rotation = 2.35619
+                        this.frameState.rotation = 2.35619
                     }
             
                     if (dd == 'left_top') {
@@ -407,6 +423,8 @@ class InputSystem {
                         this.frameState.s = false
                         this.currentState.d = false
                         this.frameState.d = false
+                        this.currentState.rotation = 2.35619
+                        this.frameState.rotation = 2.35619
                     }
             
             

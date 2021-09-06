@@ -91,13 +91,13 @@ export default (instance, world, room, boxes) => {
             //.log(object.name)
             let objectProps = new Box({
                 name: object.name,
+                type: object.type,
                 x: object.x + roomX,
                 y: object.y + roomY,
                 width: object.width,
                 height: object.height,
                 mass: object.mass,
                 color: object.color,
-                spin: 0, 
                 material: wallMaterial 
             })
             instance.addEntity(objectProps)
@@ -106,7 +106,7 @@ export default (instance, world, room, boxes) => {
         });
     }
 
-    setInterval(function(){
+    /*setInterval(function(){
         if(boxes.size < 14) {
             objects.forEach(object => {
                 //.log(object.name)
@@ -128,7 +128,7 @@ export default (instance, world, room, boxes) => {
         }
     }, 2000)
 
-    console.log(boxes.size)
+    console.log(boxes.size)*/
     
 
 

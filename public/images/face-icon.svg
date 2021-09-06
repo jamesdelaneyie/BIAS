@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="43.5" height="43.5" style="overflow:visible;enable-background:new 0 0 43.5 43.5" viewBox="0 0 43.5 43.5">
+  <style>
+    .st1{fill:#FFFFFF}
+  </style>
+  <g id="Group_18241_1_" transform="translate(-2758.561 -1757.396)">
+    <g id="Group_18239_1_">
+      <g id="Group_18238_1_">
+        <path id="Path_25946_1_" d="M2796 1778.5c0 8.6-7 15.6-15.6 15.6s-15.6-7-15.6-15.6 7-15.6 15.6-15.6c8.7 0 15.6 7 15.6 15.6" style="fill:#FFE401"/>
+        <path id="Path_25947_1_" d="M2786.5 1785.5h-12.1c-.5 0-.9-.4-.9-.9s.4-.9.9-.9h12.1c.5 0 .9.4.9.9s-.4.9-.9.9"/>
+      </g>
+      <circle id="Ellipse_6123_1_" cx="2774.4" cy="1773" r="2.3"/>
+      <circle id="Ellipse_6124_1_" cx="2785.8" cy="1773" r="2.3"/>
+    </g>
+    <g id="Group_18240_1_">
+      <path id="Path_25948_1_" d="M2800.4 1759.1v12.2h1.7v-13.9h-13.9v1.7h12.2z" class="st1"/>
+      <path id="Path_25949_1_" d="M2760.3 1759.1h12.2v-1.7h-13.9v13.9h1.7v-12.2z" class="st1"/>
+      <path id="Path_25950_1_" d="M2760.3 1799.2V1787h-1.7v13.9h13.9v-1.7h-12.2z" class="st1"/>
+      <path id="Path_25951_1_" d="M2800.4 1799.2h-12.2v1.7h13.9V1787h-1.7v12.2z" class="st1"/>
+    </g>
+  </g>
+</svg>

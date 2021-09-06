@@ -8,6 +8,8 @@ class Box {
         //this.x = state.x
         //this.y = state.y
         this.name = state.name
+        this.type = state.type
+
         this.width = state.width
         this.height = state.height
         this.rotation = state.rotation
@@ -16,31 +18,30 @@ class Box {
         this.radius = state.radius
         this.spin = state.spin
         this.material = state.material
-        
        
-
-
-      
-
-        if(state.name == "item") {
+        
+        if(state.name == "token") {
 
 
             this.boxShape = new p2.Box({
                 width: state.width, 
                 height: state.height
             });
+
+            //var vertices = [[-1,-1], [1,-1], [1,1], [-1,1]];
+            //var convexShape = new Convex({ vertices: vertices });
+            //body.addShape(convexShape);
+
             this.boxShape.material = state.material;
             this.body = new p2.Body({
-                mass: 1,
+                mass: state.mass,
                 position: [state.x, state.y],
             });
     
             
             this.body.addShape(this.boxShape)
 
-            console.log('alternative size')
-            console.log(state.width, state.height)
-            this.collider = CollisionSystem.createRectangleColliderBox(0, 0, 25, 25)   
+            this.collider = CollisionSystem.createRectangleColliderBox(0, 0, 35, 35)   
 
         } else {
 
@@ -79,6 +80,7 @@ class Box {
 
 Box.protocol = {
     name: nengi.String,
+    type: nengi.String,
     x: { type: nengi.Number, interp: true },
     y: { type: nengi.Number, interp: true },
     rotation: { type: nengi.RotationFloat32, interp: true },

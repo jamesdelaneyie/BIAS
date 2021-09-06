@@ -53,6 +53,7 @@ export default (instance, room, obstacles) => {
     })
     instance.addEntity(leftWall)
     obstacles.set(leftWall.nid, leftWall)
+    
 
  
 

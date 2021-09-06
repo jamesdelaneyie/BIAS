@@ -1,6 +1,9 @@
 
 import * as PIXI from 'pixi.js'
 import UIBuilder from './UIBuilder.js'
+import PixiFps from "pixi-fps";
+ 
+
 
 import { CRTFilter } from '@pixi/filter-crt'
 
@@ -43,13 +46,16 @@ class PIXIRenderer {
         this.camera.addChild(this.foreground)
 
         const noise = new PIXI.filters.NoiseFilter(0.1, 0.2893);
-        this.stage.filters = [noise]
+        //this.stage.filters = [noise]
         
         this.camera.x = 500
         this.camera.y = 250
 
         this.stage.addChild(this.camera)
         this.stage.addChild(this.UIBuilder)
+
+        const fpsCounter = new PixiFps();
+        this.stage.addChild(fpsCounter)
 
 
 

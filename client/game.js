@@ -216,7 +216,11 @@ const create = () => {
     client.on('message::Notification', message => {
 
         if(message.type == "scoreIncrease") {
-            renderer.UIBuilder.increaseScore()
+            renderer.UIBuilder.increaseScore(message.text)
+        }
+
+        if(message.type == "showQuote") {
+            renderer.UIBuilder.showQuote(message.text)
         }
 
         if(message.type == "worldInfoTime") {
@@ -310,7 +314,7 @@ const create = () => {
 
         const backgroundMusic = Sound.from('audio/background.mp3');
         backgroundMusic.speed = 0.9
-        backgroundMusic.volume = 0.005
+        backgroundMusic.volume = 0.0001
         backgroundMusic.loop = true;
 
         const telephone = new filters.TelephoneFilter(1)
