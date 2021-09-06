@@ -147,15 +147,43 @@ class GameInstance {
                 mass: 1
             }],
             portals: [{
-                x: 380,
-                y: 175,
-                width: 20,
-                height: 100,
+                x: 3500,
+                y: 50,
+                width: 100,
+                height: 10,
                 exit: [2210, 50]
             }]
         }
         this.floors = setupFloors(this.instance, this.room)
         
+        this.room2 = {
+            x: 100,
+            y: -400,
+            width: 1000,
+            height: 600,
+            backgroundColor: "#00ff00",
+            color: "#4DFA66",
+            borderColor: "#FFFFFF",
+            borderWidth: 25,
+            objects: [{
+                name: "token",
+                type: "robot",
+                x: 1900,
+                y: 1900,
+                width: 35, 
+                height: 35, 
+                color: "#0000ff",
+                mass: 1
+            }],
+            portals: [{
+                x: 3000,
+                y: 50,
+                width: 20,
+                height: 100,
+                exit: [2210, 50]
+            }]
+        }
+        this.floors = setupFloors(this.instance, this.room2)
 
         
         

@@ -1586,7 +1586,7 @@ class UIBuilder extends PIXI.Container {
     }
 
     showQuote(quote) {
-        //console.log(quote)
+        console.log(quote)
         if(this.quoteWrapper.contentContainer.alpha <= 0) {
             const quoteNumber = quote.slice(-1)
             //console.log(this.textContent.text)
@@ -1596,7 +1596,7 @@ class UIBuilder extends PIXI.Container {
 
             
 
-            this.textContent.text = this.quotesToShow[quoteNumber].paragraph
+            //this.textContent.text = this.quotesToShow[quoteNumber].paragraph
             this.connectedText.text = this.quotesToShow[quoteNumber].paragraph
 
             this.title.text = this.quotesToShow[quoteNumber].title
