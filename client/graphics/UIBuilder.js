@@ -1676,7 +1676,8 @@ class UIBuilder extends PIXI.Container {
 
     showQuote(quote) {
     
-        const quoteNumber = quote.slice(-1)
+        let quoteNumber = quote.slice(-1)
+        console.log(quoteNumber)
         //console.log(quote)
         let showingQuote = false;
         if(this.quoteWrapper.contentContainer.alpha <= 0 && showingQuote == false) {

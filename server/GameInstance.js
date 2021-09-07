@@ -733,12 +733,7 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
 
             //console.log(''+ client.rawEntity.name +'')
 
-            for (var i = this.activeUsers.length - 1; i >= 0; --i) {
-                if (this.activeUsers[i].name == ''+ client.rawEntity.name +'') {
-                    this.activeUsers.splice(i,1);
-                }
-            }
-
+        
 
             if(client.rawEntity) {
                 client.channel.removeEntity(client.rawEntity)
@@ -973,7 +968,7 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
                                 //onsole.log(box)
                                 break
                             } else {
-                                box.color = "#FFFFFF"
+                                //box.color = "#FFFFFF"
 
                                 if (box.type == "art") {
                                     this.instance.message(new Notification(''+box.color+'', 'hideArt'), value)
