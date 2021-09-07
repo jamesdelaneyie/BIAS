@@ -233,7 +233,7 @@ class GameInstance {
                 y: 500,
                 width: 40, 
                 height: 40, 
-                color: "quote4",
+                color: "quote3",
                 mass: 0
             },{
                 name: "token",

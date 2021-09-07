@@ -809,7 +809,7 @@ class UIBuilder extends PIXI.Container {
                 title:"STEALING UR FEELINGS",
                 subtitle:"Can the internet read you?",
                 credit:"Noah Levenson | USA | 2019",
-                paragraph: "Meet the new A.I. that knows you better than you know yourself. 😋 STEALING UR FEELINGS is an interactive film that learns your deepest, darkest secrets - <i>just by looking at your face</i>. That's the good news. The bad news? Your favourite apps are doing exactly the same thing.\n\n<small><bold>BIO</bold>\nNoah Levenson leads research engineering as 'Hacker in Residence' at Consumer Reports Digital Lab. He is a 2019 Rockefeller Foundation Bellagio fellow. His computer science work has been profiled by Scientific American, MIT, Engadget, CBC News, and Fast Company, among others. He lives in New York City, where he was born.\n\n<noahlink>noahlevenson.com</noahlink> // @noahlevenson</small>",
+                paragraph: "Meet the new A.I. that knows you better than you know yourself. STEALING UR FEELINGS is an interactive film that learns your deepest, darkest secrets - <i>just by looking at your face</i>. That's the good news. The bad news? Your favourite apps are doing exactly the same thing.\n\n<small><bold>BIO</bold>\nNoah Levenson leads research engineering as 'Hacker in Residence' at Consumer Reports Digital Lab. He is a 2019 Rockefeller Foundation Bellagio fellow. His computer science work has been profiled by Scientific American, MIT, Engadget, CBC News, and Fast Company, among others. He lives in New York City, where he was born.\n\n<noahlink>noahlevenson.com</noahlink> // @noahlevenson</small>",
                 style:"",
                 type: "face"
             },{
@@ -1676,13 +1676,13 @@ class UIBuilder extends PIXI.Container {
 
     showQuote(quote) {
     
-       
+        const quoteNumber = quote.slice(-1)
         //console.log(quote)
         let showingQuote = false;
         if(this.quoteWrapper.contentContainer.alpha <= 0 && showingQuote == false) {
             this.addChild(this.quoteStage)
             this.quoteStage.resize(window.innerWidth, window.innerHeight)
-            const quoteNumber = quote.slice(-1)
+           
             //console.log(this.textContent.text)
             //console.log(this.connectedText.text)
             //console.log(this.quotesToShow[quoteNumber].paragraph)
