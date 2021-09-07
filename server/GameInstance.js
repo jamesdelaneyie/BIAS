@@ -430,7 +430,7 @@ class GameInstance {
             theInstance.addEntity(likePump)
             theWorld.addBody(likePump.body)
             boxes.set(likePump.nid, likePump)
-        }, 2000)
+        }, 10000)
 
         /*setInterval(function(){
             let size = Math.random() * 70
