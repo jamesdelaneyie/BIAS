@@ -42,6 +42,9 @@ class BoxGraphics extends PIXI.Container {
                 if (state.color == "#505050") {
                     this.videoTexture = PIXI.Texture.from('/video/normalising_artist.mp4');
                 }
+                if (state.color == "#80EDFF") {
+                    this.videoTexture = PIXI.Texture.from('/video/normalising_artist.mp4');
+                }
 
                 
                 
