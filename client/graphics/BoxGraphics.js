@@ -33,6 +33,7 @@ class BoxGraphics extends PIXI.Container {
                 this.addChild(this.body)
 
                 console.log(state.color)
+                this.videoTexture = PIXI.Texture.from('/video/normalising_artist.mp4');
                 if(state.color == "#00ffff") {
                     this.videoTexture = PIXI.Texture.from('/video/matters_artist.mp4');
                 }

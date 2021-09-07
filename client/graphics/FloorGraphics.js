@@ -91,7 +91,7 @@ class FloorGraphics extends PIXI.Container {
             lastNameText.y = 763
             this.addChild(lastNameText)
 
-        } else if (state.color == "") {
+        } else if (state.color == "#80EDFF") {
 
 
             const firstName = "LIBBY HEANEY"
