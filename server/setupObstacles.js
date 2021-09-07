@@ -11,8 +11,8 @@ export default (instance, room, obstacles) => {
     let backgroundColor = room.backgroundColor
 
     const topWall = new Obstacle({ 
-        x: roomX, 
-        y: roomY, 
+        x: roomX - borderWidth, 
+        y: roomY - borderWidth, 
         width: roomWidth + borderWidth, 
         height: borderWidth, 
         border: borderWidth,
@@ -22,8 +22,8 @@ export default (instance, room, obstacles) => {
     obstacles.set(topWall.nid, topWall)
 
     const rightWall = new Obstacle({ 
-        x: roomX + roomWidth + borderWidth, 
-        y: roomY, 
+        x: roomX + roomWidth, 
+        y: roomY - borderWidth, 
         width: borderWidth, 
         height: roomHeight + borderWidth,
         border: borderWidth,
@@ -33,8 +33,8 @@ export default (instance, room, obstacles) => {
     obstacles.set(rightWall.nid, rightWall)
 
     const bottomWall = new Obstacle({ 
-        x: roomX, 
-        y: roomHeight + (borderWidth) + roomY, 
+        x: roomX - borderWidth, 
+        y: roomHeight + roomY, 
         width: roomWidth + (borderWidth*2), 
         height: borderWidth, 
         border: borderWidth,
@@ -44,7 +44,7 @@ export default (instance, room, obstacles) => {
     obstacles.set(bottomWall.nid, bottomWall)
 
     const leftWall = new Obstacle({ 
-        x: roomX,
+        x: roomX  - borderWidth,
         y: roomY,
         width: borderWidth,
         height: roomHeight + (borderWidth),

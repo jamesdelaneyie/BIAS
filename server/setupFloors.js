@@ -10,12 +10,6 @@ export default (instance, room) => {
     let roomHeight = room.height
     let roomColor = room.color
 
-    if(!roomX == 0) {
-        roomX = roomX/2
-    }
-    if(!roomY == 0) {
-        roomY = roomY/2
-    }
 
     const floor = new Floor({ 
         x: roomX, 

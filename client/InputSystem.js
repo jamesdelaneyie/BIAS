@@ -110,16 +110,8 @@ class InputSystem {
             event.preventDefault()
         )*/
 
-        let iframe = "";
 
-        /*document.body.addEventListener("mousedown", function(e) {
-            console.log(e.target.nodeName, e.target.id)
-            if (e.target.nodeName === "DIV"){
-              document.getElementById("iframe").remove()
-              e.target.remove()
-            }
-          }, false)*/
-
+       
 
         //if(isMobile == false) {
 
@@ -177,50 +169,7 @@ class InputSystem {
 
                 
 
-                
-                if (event.keyCode === 9) {
-                    //console.log(this.UIBuilder)
-                    //this.frameState.message = this.UIBuilder.getText();
-                    //this.currentState.message = this.UIBuilder.getText();//this.frameState.message;
-                    //this.UIBuilder.clearText();
-                }
-
-                //Right Bracket
-                if(event.keyCode === 221) {
-                    this.currentState.viewArt = true
-                    this.frameState.viewArt = true
-                    iframe = document.createElement('iframe');
-                    //iframe.src = "https://www.youtube.com/embed/daixJKnzc4o?autoplay=1&modestbranding=1&showinfo=0&rel=0&fs=0&color=white&controls=0"
-                    iframe.src = "https://stealingurfeelin.gs/"
-                    iframe.style = "position:absolute;top:50%;left:50%;transform:translateX(-50%)translateY(-50%);border:0;width:1120px;height:630px"
-                    iframe.allow = "camera"
-                    iframe.id = "iframe"
-                    iframe.allowfullscreen = "allowfullscreen"
-                    //document.body.appendChild(iframe);
-
-                    var close = document.createElement('div');
-                    close.style = "position:absolute;50px;top:50px;right:50px;background-color:red;width:20px;height:20px"
-                    //document.body.appendChild(close);
-                }
-
-                    //shift
-                if (event.keyCode === 16) {
-                    //iframe = document.createElement('iframe');
-                    //"https://stealingurfeelin.gs/"
-                    //iframe.allow = "camera"
-                    //                    
-
-                    //iframe.src = "http://vylevylevyle.com/drk_webvr_test/"
-                    
-                    //document.body.appendChild(iframe);
-
-                   // var close = document.createElement('div');
-                    //close.style = "position:absolute;50px;top:50px;right:50px;background-color:red;width:20px;height:20px"
-                    //document.body.appendChild(close);
-                    
-                    
-                    
-                } 
+            
 
             })
 

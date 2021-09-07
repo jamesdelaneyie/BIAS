@@ -69,17 +69,17 @@ class UIBuilder extends PIXI.Container {
 
 
         this.statusStage = new PUXI.Stage({
-            width: 300,
+            width: 250,
             height: 100
         });
 
         this.statusWrapper = new PUXI.WidgetGroup({
         }).setLayoutOptions(
             new PUXI.FastLayoutOptions({
-                width: 350,
-                height: 200,
+                width: 250,
+                height: 100,
                 x: 10,
-                y: 0.995,
+                y: 0.985,
                 anchor: new PIXI.Point(0, 1)
             }),
         ).setBackground(0x000000).setBackgroundAlpha(0.3)
@@ -88,9 +88,9 @@ class UIBuilder extends PIXI.Container {
         this.statusLayout = new PUXI.Widget({}).setLayoutOptions(
             new PUXI.FastLayoutOptions({
                 height: 0,
-                width: 300,
+                width: 250,
                 x: 5,
-                y: 0.9,
+                y: 0.8,
                 anchor: new PIXI.Point(0, 1)
             }),
         )
@@ -100,7 +100,7 @@ class UIBuilder extends PIXI.Container {
 
         const mask = new PIXI.Graphics();
         mask.beginFill(0xFFFFFF)
-        mask.drawRect(0, 0, 300, 200);
+        mask.drawRect(0, 0, 250, 100);
         mask.y = -185
         mask.alpha = 0
         this.statusLayout.contentContainer.addChild(mask)
@@ -693,7 +693,7 @@ class UIBuilder extends PIXI.Container {
 
 
 
-        let quoteWidth = 0.8
+        let quoteWidth = 0.5
 
         this.quoteStage = new PUXI.Stage(window.innerWidth, window.innerHeight);
         this.quoteWrapper = new PUXI.WidgetGroup({
@@ -701,7 +701,7 @@ class UIBuilder extends PIXI.Container {
             new PUXI.FastLayoutOptions({
                 width: quoteWidth,
                 height: 0.8,
-                x: 0.5,
+                x: 0.3,
                 y: 0.5,
                 anchor: new PIXI.Point(0.5, 0.5)
             }),
@@ -712,7 +712,7 @@ class UIBuilder extends PIXI.Container {
         if(window.innerWidth <=500) {
             this.quoteWrapperBackground.drawRoundedRect(0, 0, (window.innerWidth/100)*90, (window.innerHeight/100)*85, 50)
         } else {
-            this.quoteWrapperBackground.drawRoundedRect(0, 0, (window.innerWidth/100)*80, (window.innerHeight/100)*80, 50)
+            this.quoteWrapperBackground.drawRoundedRect(0, 0, (window.innerWidth/100)*quoteWidth, (window.innerHeight/100)*80, 50)
         }
         this.quoteWrapper.contentContainer.addChild(this.quoteWrapperBackground)
 
@@ -729,12 +729,6 @@ class UIBuilder extends PIXI.Container {
                 anchor: new PIXI.Point(0.5, 0.5)
             }),
         )
-        
-        if(window.innerWidth <=500) {
-            this.scrollWrapper.setPadding(25)
-        } else {
-            this.scrollWrapper.setPadding(50)
-        }
         
 
 
@@ -768,7 +762,7 @@ class UIBuilder extends PIXI.Container {
             whiteSpace: "pre",
             wordWrap: true,
             padding: 10,
-            wordWrapWidth: 1000,
+            wordWrapWidth: 700,
             leading: 1,
             textBaseline: "middle"
         });
@@ -792,7 +786,7 @@ class UIBuilder extends PIXI.Container {
             {
                 title:"DARK MATTERS",
                 subtitle:"Johann Diedrick",
-                paragraph: "The integration of algorithmic systems into the social sphere often emerges from the need to make life easier for those already in positions of power - not from the desire to protect and benefit the end user — Abeba Birhane",
+                paragraph: "Emotion recognition-enabled cameras have been installed in Xinjiang, the north-western Chinese region where an estimated 1m mostly Uyghur Muslims are being held in detention camps. Li Xiaoyu, a policing expert and party cadre from the public security bureau in Altay city in Xinjiang, told the Financial Times in 2019 that the technology was deployed mostly at customs to ‘rapidly identify criminal suspects by analysing their mental state’.”\n\n- Madhumita Murgia",
                 style:"",
                 type: "talking"
             },
@@ -803,11 +797,26 @@ class UIBuilder extends PIXI.Container {
                 style:"",
                 type: "face"
             },{
-                title:"BIAS ONLINE",
-                subtitle:"Noah Levenson",
-                paragraph: "Wecome!",
+                title:"WELCOME TO BIAS ONLINE",
+                subtitle:"Specially for the Ars festival",
+                credit:"——",
+                paragraph: "We’re launching our very first online-only exhibition: BIAS ONLINE bring online visitors on a journey of compelling exploration through datasets, emotion and facial recognition and artificial intelligence with new artworks from Libby Heaney, Johann Diedrick, Mushon Zer-Aviv, and Noah Levenson. BIAS ONLINE was developed and supported by Science Gallery at Trinity College Dublin as part of the European ARTificial Intelligence Lab project. Co-funded by Creative Europe.",
                 style:"",
                 type: "face"
+            },{
+                title:"STEALING UR FEELINGS",
+                subtitle:"Can the internet read you?",
+                credit:"Noah Levenson | USA | 2019",
+                paragraph: "Meet the new A.I. that knows you better than you know yourself. 😋 STEALING UR FEELINGS is an interactive film that learns your deepest, darkest secrets - <i>just by looking at your face</i>. That's the good news. The bad news? Your favourite apps are doing exactly the same thing.\n\n<small><bold>BIO</bold>\nNoah Levenson leads research engineering as 'Hacker in Residence' at Consumer Reports Digital Lab. He is a 2019 Rockefeller Foundation Bellagio fellow. His computer science work has been profiled by Scientific American, MIT, Engadget, CBC News, and Fast Company, among others. He lives in New York City, where he was born.\n\n<noahlink>noahlevenson.com</noahlink> // @noahlevenson</small>",
+                style:"",
+                type: "face"
+            },{
+                title:"DARK MATTERS",
+                subtitle:"What does bias sound like?",
+                credit: "Johann Diedrick | USA | 2021",
+                paragraph: "Dark Matters exposes the absence of Black speech in the datasets used to train voice interface systems in consumer AI products like Alexa and Siri. Using 3D modeling, sound and storytelling, the project challenges us to grapple with racism and inequity through speech and the spoken word, and how AI systems underserve Black communities.\n\nBIO\nJohann Diedrick is an artist, engineer, and musician that makes installations, performances, and sculptures for encountering the world through our ears. He surfaces vibratory histories of past interactions inscribed in material and embedded in space, peeling back sonic layers to reveal hidden memories and untold stories. He shares his tools and techniques through listening tours, workshops, and open-source hardware/software. He is the founder of A Quiet Life, a sonic engineering and research studio that designs and builds audio-related software and hardware products for revealing possibilities off the grid through sonic encounter. He is a 2021 Mozilla Creative Media Award recipient, a member of NEW INC, and an adjunct professor at NYU's ITP program. His work has been featured in Wire Magazine, Musicworks Magazine, and presented internationally at MoMA PS1, Ars Electronica, and the Somerset House, among others. This project is supported by the Mozilla Foundation.<small></small>",
+                style:"",
+                type: "talking"
             }
         ]
         
@@ -821,42 +830,48 @@ class UIBuilder extends PIXI.Container {
         this.title.contentContainer.children[0].x = 50
         this.title.contentContainer.children[0].y = 45
 
-        this.quoteText = "“The integration of algorithmic systems into the social sphere often emerges from the need to make life easier for those already in positions of <bold>power</bold> - not from the desire to protect and benefit the end user \n\n— <bold>Abeba Birhane</bold>";
-        this.textContent = new PUXI.TextWidget(this.quoteText, style)
-        //this.textContent.alpha = 0
+
+        this.textContent = new PUXI.TextWidget("", style)
        
-        this.connectedText = new MultiStyleText(this.quoteText, {
+        this.connectedText = new TaggedText("", {
             "default": {
                 fontFamily: "Trade Gothic Next",
                 fontSize: "32px",
                 wordWrap: true,
-                lineHeight: 40,
-                wordWrapWidth: 1000,
+                lineHeight: 45,
+                padding: 10,
+                wordWrapWidth: 700,
                 leading: 1,
                 textBaseline: "middle"
             },
+            "subtitle": {
+                lineHeight: 55,
+            },
             "bold": {
                 fontWeight: 700,
+                fontSize: "20px",
+                lineHeight: 24
+            },
+            "small": {
+                fontSize: "20px",
+                lineHeight: 26,
             },
             "i": {
                 fontStyle: "italic"
+            },
+            "noahlink": {
+                fill: "blue"
             }
-        }, {splitStyle: "words", drawWhitespace: true, debug: true});
+        });
 
         this.textContent.contentContainer.addChild(this.connectedText)
 
         this.connectedText.interactive = true;
 
-        this.connectedText.on("pointerdown", (e) => {
-            if (e.targetTag.name === "bold") {
-                alert(`You clicked on the link for "${e.targetTag.properties.name}"!`);
-            }
-        });
-        
         //console.log(this.textContent.contentContainer.children[0])
         //console.log(connectedText)
         this.connectedText.visible = false
-        this.connectedText.updateText()
+        //this.connectedText.updateText()
         this.connectedText.visible = true
       
        
@@ -921,9 +936,11 @@ class UIBuilder extends PIXI.Container {
         this.quoteWrapper.addChild(this.leaveButtonWrapper)
         this.quoteStage.addChild(this.quoteWrapper)
         this.quoteWrapper.contentContainer.alpha = 0
+
+
         //this.addChild(this.quoteStage)
 
-        this.quoteStage.resize(window.innerWidth, window.innerHeight)
+        //this.quoteStage.resize(window.innerWidth, window.innerHeight)
 
 
 
@@ -1384,11 +1401,26 @@ class UIBuilder extends PIXI.Container {
 
         }, 500)
 
+        document.addEventListener("pointerdown", function(e) {
+            if (e.target.nodeName === "DIV"){
+                if(document.getElementById("iframe")) {
+                    document.getElementById("iframe").remove()
+                    e.target.remove()
+                }
+            }
+        })
+
         window.addEventListener('resize', () => {
             
             this.resizeText()
             
             this.drawGridBackground(window.innerWidth, window.innerHeight)
+
+            if(this.iframe) {
+                this.iframe.width = window.innerWidth
+                this.iframe.height = window.innerHeight
+            }
+            
 
             this.joinModal.resize(window.innerWidth, window.innerHeight)
             
@@ -1408,6 +1440,7 @@ class UIBuilder extends PIXI.Container {
 
             this.quoteWrapperBackground.clear()
             this.quoteWrapperBackground = new PIXI.Graphics()
+            this.quoteWrapperBackground.lineStyle(1, 0x000000)
             this.quoteWrapperBackground.beginFill(0xFFFFFF)  
 
             if(window.innerWidth <=500) {
@@ -1467,9 +1500,13 @@ class UIBuilder extends PIXI.Container {
 
 
         })
-
-
+        //this.resetArt = true
+        this.showingArt = false
         this.count = 0
+
+        
+
+
     }
 
 
@@ -1536,7 +1573,7 @@ class UIBuilder extends PIXI.Container {
         this.joinModalWidgetGroup.contentContainer.alpha = 0
         this.joinModal.alpha = 0
         this.removeChild(this.joinModal)
-        this.addChild(this.quoteStage)
+        
     }
 
 
@@ -1585,35 +1622,101 @@ class UIBuilder extends PIXI.Container {
         this.numberOfPeopleCounter.text = number
     }
 
+    hideArt(art){
+        this.showingArt = false
+    }
+    
+
+    showArt(art) {
+        const artNumber = art.slice(-1)
+        let link
+        if(artNumber == 1) {
+            link = "https://stealingurfeelin.gs/"
+        } else if (artNumber == 2) {
+            link = "https://darkmatters.ml/"
+        } else if (artNumber == 3) {
+            link = "https://normalizi.ng/"
+        } else if (artNumber == 4) {
+            link = "https://www.youtube.com/embed/Kz97PpPFF78"
+        }
+        if(!document.getElementById("iframe")) {
+            this.iframe = document.createElement('iframe');
+            this.iframe.src = link
+            this.iframe.style = "position:absolute;top:50%;left:50%;transform:translateX(-50%)translateY(-50%);border:0;z-index:3"
+            if (artNumber == 3) {
+                this.iframe.style = "position:absolute;top:50%;left:50%;transform:translateX(-50%)translateY(-50%);border:0;width:414px;height:789px;z-index:3"
+            }
+            if (artNumber == 4) {
+                this.iframe.frameborder="0" 
+            }
+            this.iframe.allow = "camera"
+            this.iframe.id = "iframe"
+            this.iframe.allowfullscreen = "allowfullscreen"
+            this.iframe.width = window.innerWidth
+            this.iframe.height = window.innerHeight
+            document.body.appendChild(this.iframe);
+            this.showingArt = true;
+            console.log(this.showingArt)
+            var close = document.createElement('div');
+            close.id = "back-to-bias"
+            var backTo = document.createTextNode('← Back to ')
+            var biasOnline = document.createTextNode('BIAS ONLINE')
+            var bold = document.createElement('span');
+            bold.appendChild(biasOnline)
+            bold.style = "font-weight:900;cursor:pointer;";
+            close.style = "position:absolute;top:0;width:100%;padding:10px 20px;background-color:#000000;font-size:18px;color:#4DFA66;width:100%;z-index:4"
+            close.appendChild(backTo)
+            close.appendChild(bold)
+            document.body.appendChild(close);
+        }
+        
+    }
+
     showQuote(quote) {
-        console.log(quote)
-        if(this.quoteWrapper.contentContainer.alpha <= 0) {
+    
+       
+        //console.log(quote)
+        let showingQuote = false;
+        if(this.quoteWrapper.contentContainer.alpha <= 0 && showingQuote == false) {
+            this.addChild(this.quoteStage)
+            this.quoteStage.resize(window.innerWidth, window.innerHeight)
             const quoteNumber = quote.slice(-1)
             //console.log(this.textContent.text)
             //console.log(this.connectedText.text)
             //console.log(this.quotesToShow[quoteNumber].paragraph)
             this.scrollContent.forcePctPosition('y', 0)
 
-            
+            //console.log(this.scrollContent)
+            this.scrollContent.hideScrollBars()
 
             //this.textContent.text = this.quotesToShow[quoteNumber].paragraph
-            this.connectedText.text = this.quotesToShow[quoteNumber].paragraph
-
             this.title.text = this.quotesToShow[quoteNumber].title
+            const continutedText = '<subtitle>' + this.quotesToShow[quoteNumber].subtitle + '</subtitle>\n' + this.quotesToShow[quoteNumber].paragraph + '\n<small>' + this.quotesToShow[quoteNumber].credit + '</small>'
+            this.connectedText.text = continutedText
+
+            const scrollContentScrollBars = this.scrollContent
+            
             //this.connectedText.text = this.quotesToShow[quoteNumber].paragraph
 
              //this.textContent.contentContainer.children[1].updateText()
-             let height = this.textContent.contentContainer.children[1].height
-             console.log(height)
-             if(height <= 100) {
+             let height = 400
+
+             console.log('Text height UI Builder:' + height)
+
+             if(height <= 80) {
                 height = 0.3
-             } else if (height <= 300) {
+             } else if (height <= 250) {
                  height = 0.4
-             } else if (height <= 500) {
+                 scrollContentScrollBars.showScrollBars()
+             } else if (height <= 400) {
                 height = 0.5
+                scrollContentScrollBars.showScrollBars()
              } else {
                  height = 0.85
+                 scrollContentScrollBars.showScrollBars()
              }
+
+             
              this.quoteWrapper.setLayoutOptions(
                  new PUXI.FastLayoutOptions({
                      width: 0.9,
@@ -1631,13 +1734,26 @@ class UIBuilder extends PIXI.Container {
              this.quoteWrapper.contentContainer.addChildAt(this.quoteWrapperBackground,0)
 
             this.quoteStage.resize(window.innerWidth, window.innerHeight)
+            const quoteBounds = this.quoteWrapperBackground.getBounds()
+            this.quoteStage.stage.hitArea = new PIXI.Rectangle(
+                quoteBounds.x,
+                quoteBounds.y,
+                quoteBounds.width,
+                quoteBounds.height
+            );
 
+            window.dispatchEvent(new Event('resize'));
 
             //console.log(this.connectedText)
             //this.quotesToShow[quoteNumber].paragraph
             ease.add(this.quoteWrapper.contentContainer, this.fadeInStyles, this.fadeInSettings)
+            showingQuote = true 
             //this.quoteStage.visible = true
         }
+
+        
+       
+
 
         
         
@@ -1646,6 +1762,11 @@ class UIBuilder extends PIXI.Container {
 
     closeModal() {
         ease.add(this.quoteWrapper.contentContainer, this.fadeOutStyles, this.fadeOutSettings)
+        const quoteStage = this.quoteStage
+        const theUI = this
+        setTimeout(function(){
+            theUI.removeChild(quoteStage)
+        }, 500)
         //this.quoteStage.visible = false
     }
 
@@ -1655,7 +1776,7 @@ class UIBuilder extends PIXI.Container {
         var textBox = this.statusLayout.contentContainer.children[1];
         var currentText = textBox.text
         textBox.text = joinText + "\n" + currentText
-        console.log(textBox.y)
+        //console.log(textBox.y)
         if(textBox.y > -180) {
             textBox.y = textBox.y - 18
         }
@@ -1861,26 +1982,29 @@ class UIBuilder extends PIXI.Container {
         
         const width = window.innerWidth
 
+        
+            
+
         if(width <= 414) {
             this.scoreStage.scale.set(0.6, 0.6);
             this.scoreStage.x = 150
             this.scoreStage.y = -5
             this.statusStage.visible = false
             this.worldInfo.visible = false
-        } else if (width <= 680) {
+            this.scrollWrapper.setPadding(25)
+        } else if (width <= 736) {
             this.statusStage.visible = false
             this.worldInfo.visible = false
-            //this.scoreStage.visible = false
             this.scoreStage.scale.set(0.75, 0.75);
             this.scoreStage.x = 130
-           
-            
+            this.scrollWrapper.setPadding(30)
         } else {
             this.statusStage.visible = true
-            this.worldInfo.visible = true
+            this.worldInfo.visible = false
             this.scoreStage.visible = true
             this.scoreStage.scale.set(1, 1)
             this.scoreStage.x = 0
+            this.scrollWrapper.setPadding(50)
            
         }
 
@@ -1897,14 +2021,41 @@ class UIBuilder extends PIXI.Container {
                     anchor: new PIXI.Point(0.5, 0.5)
                 })
             )
+            
             this.title.contentContainer.children[0].style.fontSize = 16
             this.title.contentContainer.children[0].x = 25
             this.title.contentContainer.children[0].y = 30
 
-            this.textContent.contentContainer.children[1].style.padding = 0 
-            this.textContent.contentContainer.children[1].style.wordWrapWidth = 200
-            this.connectedText.textStyles.default.fontSize = 13;
-            this.connectedText.textStyles.default.lineHeight = 16;
+
+            this.connectedText.setStyleForTag("default", {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "13px",
+                wordWrap: true,
+                lineHeight: 16,
+                padding: 10,
+                wordWrapWidth: 220,
+                leading: 1,
+                textBaseline: "middle"
+            })
+
+            this.connectedText.setStyleForTag("small", {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "13px",
+                wordWrap: true,
+                lineHeight: 16,
+                padding: 10,
+                wordWrapWidth: 220,
+                leading: 1,
+                textBaseline: "middle"
+            })
+
+            this.connectedText.setStyleForTag("bold", {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "13px",
+                fontWeight: 700,
+                lineHeight: 16,
+            })
+            
 
             this.leaveButtonWrapper.setLayoutOptions(
                 new PUXI.FastLayoutOptions({
@@ -1931,10 +2082,34 @@ class UIBuilder extends PIXI.Container {
             this.title.contentContainer.children[0].x = 25
             this.title.contentContainer.children[0].y = 30
 
-            this.textContent.contentContainer.children[1].style.padding = 0 
-            this.textContent.contentContainer.children[1].style.wordWrapWidth = 250
-            this.connectedText.textStyles.default.fontSize = 14;
-            this.connectedText.textStyles.default.lineHeight = 18;
+            this.connectedText.setStyleForTag("default", {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "14px",
+                wordWrap: true,
+                lineHeight: 17,
+                padding: 10,
+                wordWrapWidth: 250,
+                leading: 1,
+                textBaseline: "middle"
+            })
+
+            this.connectedText.setStyleForTag("small", {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "14px",
+                wordWrap: true,
+                lineHeight: 17,
+                padding: 10,
+                wordWrapWidth: 250,
+                leading: 1,
+                textBaseline: "middle"
+            })
+
+            this.connectedText.setStyleForTag("bold", {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "14px",
+                fontWeight: 700,
+                lineHeight: 17,
+            })
 
             this.leaveButtonWrapper.setLayoutOptions(
                 new PUXI.FastLayoutOptions({
@@ -1952,15 +2127,36 @@ class UIBuilder extends PIXI.Container {
             this.title.contentContainer.children[0].style.fontSize = 20
             this.title.contentContainer.children[0].x = 25
             this.title.contentContainer.children[0].y = 30
-            console.log()
-            console.log()
             
-            //this.textContent.contentContainer.children[1].style.lineHeight = 24
 
-            this.textContent.contentContainer.children[1].style.padding = 0 
-            this.textContent.contentContainer.children[1].style.wordWrapWidth = 270
-            this.connectedText.textStyles.default.fontSize = 15;
-            this.connectedText.textStyles.default.lineHeight = 19;
+            this.connectedText.setStyleForTag("default", {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "15px",
+                wordWrap: true,
+                lineHeight: 19,
+                padding: 10,
+                wordWrapWidth: 270,
+                leading: 1,
+                textBaseline: "middle"
+            })
+
+            this.connectedText.setStyleForTag("small", {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "15px",
+                wordWrap: true,
+                lineHeight: 19,
+                padding: 10,
+                wordWrapWidth: 270,
+                leading: 1,
+                textBaseline: "middle"
+            })
+
+            this.connectedText.setStyleForTag("bold", {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "15px",
+                fontWeight: 700,
+                lineHeight: 19,
+            })
 
 
            
@@ -1980,15 +2176,35 @@ class UIBuilder extends PIXI.Container {
             this.title.contentContainer.children[0].style.fontSize = 20
             this.title.contentContainer.children[0].x = 25
             this.title.contentContainer.children[0].y = 30
-            console.log()
-            console.log()
             
-            //this.textContent.contentContainer.children[1].style.lineHeight = 24
+            this.connectedText.setStyleForTag("default", {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "16px",
+                wordWrap: true,
+                lineHeight: 20,
+                padding: 10,
+                wordWrapWidth: 320,
+                leading: 1,
+                textBaseline: "middle"
+            })
 
-            this.textContent.contentContainer.children[1].style.padding = 0 
-            this.textContent.contentContainer.children[1].style.wordWrapWidth = 320
-            this.connectedText.textStyles.default.fontSize = 16;
-            this.connectedText.textStyles.default.lineHeight = 20;
+            this.connectedText.setStyleForTag("small", {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "16px",
+                wordWrap: true,
+                lineHeight: 20,
+                padding: 10,
+                wordWrapWidth: 320,
+                leading: 1,
+                textBaseline: "middle"
+            })
+
+            this.connectedText.setStyleForTag("bold", {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "16px",
+                fontWeight: 700,
+                lineHeight: 20,
+            })
 
 
             //this.textContent.contentContainer.children[1].updateText()
@@ -2011,6 +2227,49 @@ class UIBuilder extends PIXI.Container {
                 }),
             )
         } else {
+
+            this.connectedText.setStyleForTag("default", {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "32px",
+                wordWrap: true,
+                lineHeight: 40,
+                padding: 10,
+                wordWrapWidth: 800,
+                leading: 1,
+                textBaseline: "middle"
+            })
+
+            this.connectedText.setStyleForTag("subtitle", {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "32px",
+                wordWrap: true,
+                lineHeight: 55,
+                padding: 10,
+                wordWrapWidth: 800,
+                leading: 1,
+                textBaseline: "middle"
+            })
+
+            this.connectedText.setStyleForTag("small", {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "20px",
+                wordWrap: true,
+                lineHeight: 27,
+                padding: 10,
+                wordWrapWidth: 450,
+                leading: 1,
+                textBaseline: "middle"
+            })
+
+            this.connectedText.setStyleForTag("bold", {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "20px",
+                fontWeight: 700,
+                lineHeight: 27,
+                wordWrap: true,
+                wordWrapWidth: 450
+            })
+
             this.quoteWrapper.setLayoutOptions(
                 new PUXI.FastLayoutOptions({
                     width: 0.8,
@@ -2020,7 +2279,16 @@ class UIBuilder extends PIXI.Container {
                     anchor: new PIXI.Point(0.5, 0.5)
                 })
             )
-        }
+            this.leaveButtonWrapper.setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 40,
+                    height: 40,
+                    x: 0.967,
+                    y: 50,
+                    anchor: new PIXI.Point(0.5,0.5)
+                }),
+            )
+        } 
 
 
 
@@ -2141,13 +2409,8 @@ class UIBuilder extends PIXI.Container {
     update(delta){
         this.count++
 
-        //console.log(this.scrollContent)
-
         this.avatarBox.contentContainer.rotation += 1 * delta;
         
-        if(this.filters) {
-            //this.filters[0].seed = Math.random()
-        }
     }
 
 

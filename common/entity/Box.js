@@ -12,7 +12,7 @@ class Box {
 
         this.width = state.width
         this.height = state.height
-        this.rotation = state.rotation
+        //this.rotation = state.rotation
         this.color = state.color
         this.mass = state.mass
         this.radius = state.radius
@@ -22,10 +22,10 @@ class Box {
         
         if(state.name == "token") {
 
-
+            
             this.boxShape = new p2.Box({
-                width: state.width, 
-                height: state.height
+                width: state.height, 
+                height: state.width
             });
 
             //var vertices = [[-1,-1], [1,-1], [1,1], [-1,1]];
@@ -33,15 +33,40 @@ class Box {
             //body.addShape(convexShape);
 
             this.boxShape.material = state.material;
-            this.body = new p2.Body({
-                mass: state.mass,
-                position: [state.x, state.y],
-            });
-    
-            
+            if(this.type == "video") {
+                this.body = new p2.Body({
+                    mass: state.mass,
+                    angle: 1.5708,
+                    position: [state.x, state.y],
+                });
+            } else if(this.type == "like") {
+                this.body = new p2.Body({
+                    mass: state.mass,
+                    angle: 1.5708,
+                    angularForce: 1,
+                    angularVelocity: [1,1],
+                    position: [state.x, state.y],
+                });
+            } else {
+                this.body = new p2.Body({
+                    mass: state.mass,
+                    position: [state.x, state.y],
+                });
+            }
+
+          
+
+           
             this.body.addShape(this.boxShape)
 
-            this.collider = CollisionSystem.createRectangleColliderBox(0, 0, 35, 35)   
+            if(this.type == "video") {
+                this.collider = CollisionSystem.createRectangleColliderBoxy(0, 0, state.width, state.height)
+                //this.collider.polygon.angle = 1.5708   
+            } else {
+                this.collider = CollisionSystem.createRectangleColliderBox(0, 0, 35, 35)   
+            }
+
+            
 
         } else {
 
@@ -69,6 +94,7 @@ class Box {
     set x(value) {
         this.collider.x = value
     }
+
 
     get y() {
         return this.collider.y

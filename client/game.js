@@ -212,6 +212,8 @@ const create = () => {
     const partySound = Sound.from('audio/grunt-birthday-party.mp3');
     const messageSound = Sound.from('audio/message.mp3');
     const leftSound = Sound.from('audio/left.mp3');
+    partySound.volume = 0.008
+    let lastMessage
 
     client.on('message::Notification', message => {
 
@@ -221,6 +223,22 @@ const create = () => {
 
         if(message.type == "showQuote") {
             renderer.UIBuilder.showQuote(message.text)
+        }
+
+        if(message.type == "showArt") {
+            //console.log(lastMessage, message.text)
+            if((lastMessage != null) && (lastMessage != ""+message.text+"")) {
+                renderer.UIBuilder.showArt(message.text)
+            }
+            lastMessage = ""+lastMessage+"";
+        }
+
+        if(message.type == "hideArt") {
+            //console.log(lastMessage, message.text)
+            if((lastMessage != null) && (lastMessage != ""+message.text+"")) {
+                renderer.UIBuilder.hideArt(message.text)
+            }
+            lastMessage = ""+lastMessage+"";
         }
 
         if(message.type == "worldInfoTime") {
@@ -267,9 +285,9 @@ const create = () => {
 
         if(message.type == "text") {
             addMessage(renderer.middleground, message);
-            if(!messageSound.isPlaying) {
+            /*if(!messageSound.isPlaying) {
                 messageSound.play()
-            }
+            }*/
         }
 
         if(message.type == "talk") {
@@ -281,20 +299,20 @@ const create = () => {
             if(portalSound.isPlaying == false) {
                 portalSound.play(); 
             }
-            renderer.videoTexture.baseTexture.resource.source.pause()
+            //renderer.videoTexture.baseTexture.resource.source.pause()
 
         }
 
         if(message.type == "command") {
 
 
-            if(renderer.videoTexture.baseTexture.resource.source.paused) {
+            /*if(renderer.videoTexture.baseTexture.resource.source.paused) {
                 renderer.videoTexture.baseTexture.resource.source.play()
                 console.log('playing');
             } else {
                 //renderer.videoTexture.baseTexture.resource.source.pause()
                 //console.log('paused');
-            }
+            }*/
 
             
         }

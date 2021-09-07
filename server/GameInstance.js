@@ -12,6 +12,7 @@ import instanceHookAPI from './instanceHookAPI.js'
 import applyCommand from '../common/applyCommand.js'
 
 import setupFloors from './setupFloors.js'
+import Box from '../common/entity/Box.js'
 import setupObstacles from './setupObstacles.js'
 import Obstacle from '../common/entity/Obstacle.js'
 import setupBoxes from './setupBoxes.js'
@@ -121,17 +122,8 @@ class GameInstance {
             },{
                 name: "token",
                 type: "quote",
-                x: 3500,
-                y: 1800,
-                width: 35, 
-                height: 35, 
-                color: "quote1",
-                mass: 0
-            },{
-                name: "token",
-                type: "quote",
                 x: 2300,
-                y: 2210,
+                y: 2400,
                 width: 35, 
                 height: 35, 
                 color: "quote2",
@@ -139,68 +131,343 @@ class GameInstance {
             },{
                 name: "token",
                 type: "talking",
-                x: 1900,
-                y: 1950,
+                x: 1800,
+                y: 2150,
                 width: 35, 
                 height: 35, 
                 color: "#0000ff",
                 mass: 1
             }],
             portals: [{
-                x: 3500,
-                y: 50,
+                x: 2500,
+                y: 2500,
                 width: 100,
                 height: 10,
-                exit: [2210, 50]
+                exit: [6900, 950]
+            },{
+                x: 1900,
+                y: 2400,
+                width: 100,
+                height: 10,
+                exit: [8850, 2550]
+            },{
+                x: 2680,
+                y: 2100,
+                width: 10,
+                height: 100,
+                exit: [8850, 3500]
+            },{
+                x: 2180,
+                y: 1740,
+                width: 100,
+                height: 10,
+                exit: [10850, 4500]
             }]
         }
         this.floors = setupFloors(this.instance, this.room)
         
+        
         this.room2 = {
-            x: 100,
-            y: -400,
+            x: 6800,
+            y: 25,
+            name: "noah levenson",
             width: 1000,
-            height: 600,
-            backgroundColor: "#00ff00",
-            color: "#4DFA66",
+            height: 1000,
+            backgroundColor: "#ffff00",
+            color: "#FFE401",
             borderColor: "#FFFFFF",
             borderWidth: 25,
             objects: [{
                 name: "token",
-                type: "robot",
-                x: 1900,
-                y: 1900,
-                width: 35, 
-                height: 35, 
+                type: "quote",
+                x: 200,
+                y: 500,
+                width: 40, 
+                height: 40, 
+                color: "quote3",
+                mass: 0
+            },{
+                name: "token",
+                type: "art",
+                x: 800,
+                y: 500,
+                width: 100, 
+                height: 100, 
+                color: "art1",
+                mass: 0
+            },{
+                name: "token",
+                type: "video",
+                x: 500,
+                y: 500,
+                width: 177, 
+                height: 315, 
                 color: "#0000ff",
-                mass: 1
+                mass: 2
             }],
             portals: [{
-                x: 3000,
-                y: 50,
-                width: 20,
+                x: 0,
+                y: 925,
+                width: 10,
                 height: 100,
-                exit: [2210, 50]
+                exit: [2250, 2250]
             }]
         }
-        this.floors = setupFloors(this.instance, this.room2)
+        this.floors2 = setupFloors(this.instance, this.room2)
+
+
+        this.room3 = {
+            x: 8800,
+            y: 2000,
+            name: "noah levenson",
+            width: 2000,
+            height: 800,
+            backgroundColor: "#9C52FF",
+            color: "#471A8E",
+            borderColor: "#FFFFFF",
+            borderWidth: 25,
+            objects: [{
+                name: "token",
+                type: "quote",
+                x: 700,
+                y: 500,
+                width: 40, 
+                height: 40, 
+                color: "quote4",
+                mass: 0
+            },{
+                name: "token",
+                type: "art",
+                x: 1650,
+                y: 500,
+                width: 150, 
+                height: 150, 
+                color: "art2",
+                mass: 0
+            },{
+                name: "token",
+                type: "video",
+                x: 1100,
+                y: 600,
+                width: 354, 
+                height: 630, 
+                color: "#00ffff",
+                mass: 0
+            }],
+            portals: [{
+                x: 0,
+                y: 600,
+                width: 10,
+                height: 100,
+                exit: [2250, 2250]
+            }]
+        }
+        this.floors3 = setupFloors(this.instance, this.room3)
+
+
+
+        this.room4 = {
+            x: 8800,
+            y: 3500,
+            name: "noah levenson",
+            width: 800,
+            height: 1500,
+            backgroundColor: "#292929",
+            color: "#505050",
+            borderColor: "#FFFFFF",
+            borderWidth: 25,
+            objects: [{
+                name: "token",
+                type: "quote",
+                x: 700,
+                y: 500,
+                width: 40, 
+                height: 40, 
+                color: "quote4",
+                mass: 0
+            },{
+                name: "token",
+                type: "quote",
+                x: 650,
+                y: 1300,
+                width: 40, 
+                height: 40, 
+                color: "quote4",
+                mass: 0
+            },{
+                name: "token",
+                type: "art",
+                x: 400,
+                y: 300,
+                width: 200, 
+                height: 200, 
+                color: "art3",
+                mass: 0
+            },{
+                name: "token",
+                type: "video",
+                x: 250,
+                y: 1350,
+                width: 354, 
+                height: 630, 
+                color: "#505050",
+                mass: 0
+            }],
+            portals: [{
+                x: 0,
+                y: 600,
+                width: 10,
+                height: 100,
+                exit: [2250, 2250]
+            }]
+        }
+        this.floors4 = setupFloors(this.instance, this.room4)
+
+
+
+        this.room5 = {
+            x: 10800,
+            y: 3500,
+            name: "noah levenson",
+            width: 1500,
+            height: 1500,
+            backgroundColor: "#1DCFFF",
+            color: "#80EDFF",
+            borderColor: "#FFFFFF",
+            borderWidth: 25,
+            objects: [{
+                name: "token",
+                type: "quote",
+                x: 700,
+                y: 500,
+                width: 40, 
+                height: 40, 
+                color: "quote4",
+                mass: 0
+            },{
+                name: "token",
+                type: "quote",
+                x: 650,
+                y: 1300,
+                width: 40, 
+                height: 40, 
+                color: "quote4",
+                mass: 0
+            },{
+                name: "token",
+                type: "art",
+                x: 400,
+                y: 300,
+                width: 200, 
+                height: 200, 
+                color: "art4",
+                mass: 0
+            }],
+            portals: [{
+                x: 0,
+                y: 600,
+                width: 10,
+                height: 100,
+                exit: [2250, 2250]
+            }]
+        }
+        this.floors5 = setupFloors(this.instance, this.room5)
+
+       
+        //this.floors = setupFloors(this.instance, this.room2)
+        /*const floor = new Floor({ 
+            x: 4600, 
+            y: 0, 
+            width: 1000, 
+            height: 1000, 
+            color: "#FFFF00"
+        })
+        this.instance.addEntity(floor)
+        this.floors.set(floor.nid, floor)*/
+        const obstacles = new Map()
+        this.obstacles = setupObstacles(this.instance, this.room, obstacles)
+        this.obstacles2 = setupObstacles(this.instance, this.room2, obstacles)
+        this.obstacles3 = setupObstacles(this.instance, this.room3, obstacles)
+        this.obstacles3 = setupObstacles(this.instance, this.room4, obstacles)
+        this.obstacles3 = setupObstacles(this.instance, this.room5, obstacles)
+        this.obstacles = obstacles
 
         
         
         const boxes = new Map()
         this.boxes = setupBoxes(this.instance, this.world, this.room, boxes)
+        this.boxesTwo = setupBoxes(this.instance, this.world, this.room2, boxes)
+        this.boxesThree = setupBoxes(this.instance, this.world, this.room3, boxes)
+        this.boxesFour = setupBoxes(this.instance, this.world, this.room4, boxes)
+        this.boxesFour = setupBoxes(this.instance, this.world, this.room5, boxes)
         this.boxes = boxes
 
-        const obstacles = new Map()
-        this.obstacles = setupObstacles(this.instance, this.room, obstacles)
-        this.obstacles = obstacles
+       
 
         const portals = new Map()
         this.portals = setupPortals(this.instance, this.room, portals)
+        this.portals2 = setupPortals(this.instance, this.room2, portals)
+        this.portals3 = setupPortals(this.instance, this.room3, portals)
+        this.portals4 = setupPortals(this.instance, this.room4, portals)
+        this.portals4 = setupPortals(this.instance, this.room5, portals)
         this.portals = portals
 
 
+        const theInstance = this.instance
+        const theWorld = this.world
 
+        setInterval(function(){
+            let likePump = new Box({
+                name: "token",
+                type: "thumbs-up",
+                x: 7250,
+                y: 250,
+                width: 25,
+                height: 25,
+                mass: 0.001,
+                color: "0000ff",
+            })
+            theInstance.addEntity(likePump)
+            theWorld.addBody(likePump.body)
+            boxes.set(likePump.nid, likePump)
+        }, 2000)
+
+        setInterval(function(){
+            let size = Math.random() * 70
+            let likePump = new Box({
+                name: "token",
+                type: "dial",
+                x: 8900,
+                y: 4500,
+                width: size,
+                height: size,
+                mass: 0.001,
+                color: "0000ff",
+            })
+            theInstance.addEntity(likePump)
+            theWorld.addBody(likePump.body)
+            boxes.set(likePump.nid, likePump)
+        }, 2000)
+
+        setInterval(function(){
+            let size = Math.random() * 70
+            let likePump = new Box({
+                name: "token",
+                type: "robot",
+                x: 11500,
+                y: 4500,
+                width: size,
+                height: size,
+                mass: 0.001,
+                color: "0000ff",
+            })
+            theInstance.addEntity(likePump)
+            theWorld.addBody(likePump.body)
+            boxes.set(likePump.nid, likePump)
+        }, 2000)
+
+
+  
          //// SCIENCE GALLERY DESIGNS /////
          const reception = new Obstacle({ 
             name: "reception",
@@ -262,7 +529,6 @@ class GameInstance {
 
 
 
-         //LONG TRIANGLE PATTERNSED OBSTACLE SOUTH OF RECEPTION
          const easternEyeBuilding = new Obstacle({ 
             name: "easternEyeBuilding",
             x: 2500, 
@@ -280,7 +546,7 @@ class GameInstance {
 
         const easternEyeBuildingTwo = new Obstacle({ 
             name: "easternEyeBuilding",
-            x: 3400, 
+            x: 2700, 
             y: 2000, 
             width: 300, 
             height: 600, 
@@ -302,8 +568,8 @@ class GameInstance {
          //LONG TRIANGLE PATTERNSED OBSTACLE SOUTH OF RECEPTION
          const northernFlowerBuilding = new Obstacle({ 
             name: "northernFlowerBuilding",
-            x: 2500, 
-            y: 1000, 
+            x: 2000, 
+            y: 1200, 
             width: 1000, 
             height: 500, 
             border: "",
@@ -314,8 +580,8 @@ class GameInstance {
 
         const northernFlowerBuildingTwo = new Obstacle({ 
             name: "northernFlowerBuilding",
-            x: 3400, 
-            y: 500, 
+            x: 2800, 
+            y: 800, 
             width: 300, 
             height: 600, 
             border: "",
@@ -644,6 +910,7 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
                             setTimeout(function(){
                                 thisClient.x = portal.exit[0]
                                 thisClient.y = portal.exit[1]
+                                //console.log(port)
                                 client.view.x = thisClient.x
                                 client.view.y = thisClient.y
                                 client.positions = []
@@ -682,13 +949,15 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
                         if(this.instance.clients.array.length > 1) {
                             if(collided == true) {
 
-                                if(box.type != "quote") {
-                                    this.instance.message(new Notification(''+box.type+'', 'scoreIncrease'), value)
-                                } else {
-                                    console.log('quote')
+                                if(box.type == "quote") {
                                     this.instance.message(new Notification(''+box.color+'', 'showQuote'), value)
+                                    
+                                } else if (box.type == "art") {
+                                    this.instance.message(new Notification(''+box.color+'', 'showArt'), value)
+                                } else {
+                                    this.instance.message(new Notification(''+box.type+'', 'scoreIncrease'), value)
+                                    
                                 }
-                                
                                 //
                                 //box.collider = null
                                 /*this.world.removeBody(box.body)
@@ -705,16 +974,23 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
                                 break
                             } else {
                                 box.color = "#FFFFFF"
+
+                                if (box.type == "art") {
+                                    this.instance.message(new Notification(''+box.color+'', 'hideArt'), value)
+                                }
                                 //this.instance
                             }
                         } else {
                             if(collided == true) {
    
-                                if(box.type != "quote") {
-                                    this.instance.message(new Notification(''+box.type+'', 'scoreIncrease'), value)
-                                } else {
-                                    console.log('quote')
+                                if(box.type == "quote") {
                                     this.instance.message(new Notification(''+box.color+'', 'showQuote'), value)
+                                    
+                                } else if (box.type == "art") {
+                                    this.instance.message(new Notification(''+box.color+'', 'showArt'), value)
+                                } else {
+                                    this.instance.message(new Notification(''+box.type+'', 'scoreIncrease'), value)
+                                    
                                 }
                                 
                                 //
@@ -733,6 +1009,9 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
                                 //box.color = "#0000ff"
                                 break
                             } else {
+                                 if (box.type == "art") {
+                                    this.instance.message(new Notification(''+box.color+'', 'hideArt'), value)
+                                }
                                 //box.color = "#FFFFFF"
                             }
                         }
@@ -756,7 +1035,6 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
 
                     collided = SAT.testPolygonPolygon(box.collider.polygon, portal.collider.polygon) 
                     
-                    //console.log(collided)
 
                     if(collided) {
                         
@@ -779,10 +1057,19 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
             
             box.x = box.body.position[0]
             box.y = box.body.position[1]
-            box.rotation = box.body.angle 
+            if(box.type == "video") {
+                box.rotation = box.body.angle + 1.5708
+            } else {
+                box.rotation = box.body.angle 
+            }
+            var plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+            var plusOrMinus2 = Math.random() < 0.5 ? -1 : 1;
+            box.body.force[0] += 0.1 * Math.random() * plusOrMinus
+            box.body.force[1] += 0.1 * Math.random() * plusOrMinus2
+            
             
         })
-
+        
 
 
 

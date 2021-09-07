@@ -61,23 +61,18 @@ class PIXIRenderer {
 
 
 
+        const noahBackground = new PIXI.Graphics()
+        noahBackground.beginFill(0x000000)
+        noahBackground.drawCircle(7600, 525, 85)
+        noahBackground.endFill()
+        this.middleground.addChild(noahBackground)
 
-    
-        //ADD VIDEO
-        /*this.videoTexture = PIXI.Texture.from('/video/video.mp4');
-        this.videoTexture.baseTexture.resource.muted = true
-        this.videoTexture.baseTexture.resource.autoPlay = false
-        
-        const videoSprite = new PIXI.Sprite(this.videoTexture);
-        
-        videoSprite.width = 620;
-        videoSprite.height = 348;
-        videoSprite.x = -500;
-        videoSprite.y = -400;
-        videoSprite.rotation = -0.1
-
-        this.foreground.addChild(videoSprite);*/
-
+        const noahBackgroundTwo = new PIXI.Graphics()
+        noahBackground.beginFill(0xFFFFFF)
+        noahBackground.lineStyle(2, 0x000000)
+        noahBackground.drawCircle(7000, 525, 80)
+        noahBackground.endFill()
+        this.middleground.addChild(noahBackgroundTwo)
 
         
         window.addEventListener('resize', () => {

@@ -53,6 +53,7 @@ const addMessage = (layer, message) => {
 
             textBox = new PIXI.Graphics()
             textBox.beginFill(0xFFFFFF)
+            textBox.lineStyle(1,0x00000)
             if(message.type == 'notification') {
                 textBox.drawRoundedRect(window.innerWidth - 240, 10, text.width+40, text.height+25, 20)
             } else {
