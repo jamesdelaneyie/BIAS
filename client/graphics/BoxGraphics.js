@@ -49,27 +49,29 @@ class BoxGraphics extends PIXI.Container {
                     this.videoTexture = PIXI.Texture.from('/video/normalising_artist.mp4');
                 }
                 
+                if(this.videoTexture) {
+                    this.videoTexture.baseTexture.resource.source.muted = true
+                    this.videoTexture.baseTexture.resource.source.loop = true
+                    this.videoTexture.baseTexture.resource.source.playsinline = true
+                    this.videoTexture.baseTexture.resource.autoPlay = true
+                    this.videoTexture.baseTexture.resource.volume = 0
+                    this.videoTexture.baseTexture.resource.updateFPS = 10
+
+                    const video = this.videoTexture.baseTexture.resource.source
+                    setTimeout(function() {
+                        video.muted = true
+                    }, 1000)
+
+                    const videoSprite = new PIXI.Sprite(this.videoTexture);
+
+                    videoSprite.scale.y = -1
+                    videoSprite.anchor.set(0.5)
+                    videoSprite.width = state.width;
+                    videoSprite.height = state.height;
+                    this.addChild(videoSprite);
+
+                }
                 
-                this.videoTexture.baseTexture.resource.source.muted = true
-                this.videoTexture.baseTexture.resource.source.loop = true
-                this.videoTexture.baseTexture.resource.source.playsinline = true
-                this.videoTexture.baseTexture.resource.autoPlay = true
-                this.videoTexture.baseTexture.resource.volume = 0
-                this.videoTexture.baseTexture.resource.updateFPS = 10
-
-                const video = this.videoTexture.baseTexture.resource.source
-                setTimeout(function() {
-                    video.muted = true
-                }, 1000)
-
-                const videoSprite = new PIXI.Sprite(this.videoTexture);
-                //videoSprite.x = state.x
-                //videoSprite.y = state.y
-                videoSprite.scale.y = -1
-                videoSprite.anchor.set(0.5)
-                videoSprite.width = state.width;
-                videoSprite.height = state.height;
-                this.addChild(videoSprite);
 
             } else {
                 this.body = new PIXI.Graphics()
