@@ -786,6 +786,7 @@ class UIBuilder extends PIXI.Container {
             {
                 title:"DARK MATTERS",
                 subtitle:"Johann Diedrick",
+                credit:"——",
                 paragraph: "Emotion recognition-enabled cameras have been installed in Xinjiang, the north-western Chinese region where an estimated 1m mostly Uyghur Muslims are being held in detention camps. Li Xiaoyu, a policing expert and party cadre from the public security bureau in Altay city in Xinjiang, told the Financial Times in 2019 that the technology was deployed mostly at customs to ‘rapidly identify criminal suspects by analysing their mental state’.”\n\n- Madhumita Murgia",
                 style:"",
                 type: "talking"
@@ -793,6 +794,7 @@ class UIBuilder extends PIXI.Container {
             {
                 title:"STEALING UR FEELINGS",
                 subtitle:"Noah Levenson",
+                credit:"——",
                 paragraph: "“Emotion recognition-enabled cameras have been installed in Xinjiang, the north-western Chinese region where an estimated 1m mostly Uyghur Muslims are being held in detention camps. Li Xiaoyu, a policing expert and party cadre from the public security bureau in Altay city in Xinjiang, told the Financial Times in 2019 that the technology was deployed mostly at customs to ‘rapidly identify criminal suspects by analysing their mental state’.” - Madhumita Murgia\n\n“Emotion recognition-enabled cameras have been installed in Xinjiang, the north-western Chinese region where an estimated 1m mostly Uyghur Muslims are being held in detention camps. Li Xiaoyu, a policing expert and party cadre from the public security bureau in Altay city in Xinjiang, told the Financial Times in 2019 that the technology was deployed mostly at customs to ‘rapidly identify criminal suspects by analysing their mental state’.” - Madhumita Murgia",
                 style:"",
                 type: "face"

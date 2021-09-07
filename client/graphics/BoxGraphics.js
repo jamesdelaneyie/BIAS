@@ -27,13 +27,18 @@ class BoxGraphics extends PIXI.Container {
                 this.body.beginFill(this.color)
                 this.body.drawRect(state.width/2, state.height/2, state.width, state.height)
                 this.body.endFill()
+
                 //this.body.rotation = 1.5708
                 this.body.pivot.x = state.width
                 this.body.pivot.y = state.height
                 this.addChild(this.body)
 
-                console.log(state.color)
-                this.videoTexture = PIXI.Texture.from('/video/normalising_artist.mp4');
+                //console.log(state.color)
+
+
+                //this.videoTexture = PIXI.Texture.from('/video/normalising_artist.mp4');
+
+
                 if(state.color == "#00ffff") {
                     this.videoTexture = PIXI.Texture.from('/video/matters_artist.mp4');
                 }
@@ -43,10 +48,6 @@ class BoxGraphics extends PIXI.Container {
                 if (state.color == "#505050") {
                     this.videoTexture = PIXI.Texture.from('/video/normalising_artist.mp4');
                 }
-                if (state.color == "#80EDFF") {
-                    this.videoTexture = PIXI.Texture.from('/video/normalising_artist.mp4');
-                }
-
                 
                 
                 this.videoTexture.baseTexture.resource.source.muted = true
