@@ -1625,7 +1625,11 @@ class UIBuilder extends PIXI.Container {
     }
 
     hideArt(art){
-        this.showingArt = false
+        //let hideTheArt = this.showingArt
+        setTimeout(function(){
+            this.showingArt = false
+        }, 1000)
+        
     }
     
 
@@ -1642,34 +1646,37 @@ class UIBuilder extends PIXI.Container {
             link = "https://www.youtube.com/embed/Kz97PpPFF78"
         }
         if(!document.getElementById("iframe")) {
-            this.iframe = document.createElement('iframe');
-            this.iframe.src = link
-            this.iframe.style = "position:absolute;top:50%;left:50%;transform:translateX(-50%)translateY(-50%);border:0;z-index:3"
-            if (artNumber == 3) {
-                this.iframe.style = "position:absolute;top:50%;left:50%;transform:translateX(-50%)translateY(-50%);border:0;width:414px;height:789px;z-index:3"
+            if(this.showingArt == false) {
+
+                this.iframe = document.createElement('iframe');
+                this.iframe.src = link
+                this.iframe.style = "position:absolute;top:50%;left:50%;transform:translateX(-50%)translateY(-50%);border:0;z-index:3"
+                if (artNumber == 3) {
+                    this.iframe.style = "position:absolute;top:50%;left:50%;transform:translateX(-50%)translateY(-50%);border:0;width:414px;height:789px;z-index:3"
+                }
+                if (artNumber == 4) {
+                    this.iframe.frameborder="0" 
+                }
+                this.iframe.allow = "camera"
+                this.iframe.id = "iframe"
+                this.iframe.allowfullscreen = "allowfullscreen"
+                this.iframe.width = window.innerWidth
+                this.iframe.height = window.innerHeight
+                document.body.appendChild(this.iframe);
+                this.showingArt = true;
+                console.log(this.showingArt)
+                var close = document.createElement('div');
+                close.id = "back-to-bias"
+                var backTo = document.createTextNode('← Back to ')
+                var biasOnline = document.createTextNode('BIAS ONLINE')
+                var bold = document.createElement('span');
+                bold.appendChild(biasOnline)
+                bold.style = "font-weight:900;cursor:pointer;";
+                close.style = "position:absolute;top:0;width:100%;padding:10px 20px;background-color:#000000;font-size:18px;color:#4DFA66;width:100%;z-index:4"
+                close.appendChild(backTo)
+                close.appendChild(bold)
+                document.body.appendChild(close);
             }
-            if (artNumber == 4) {
-                this.iframe.frameborder="0" 
-            }
-            this.iframe.allow = "camera"
-            this.iframe.id = "iframe"
-            this.iframe.allowfullscreen = "allowfullscreen"
-            this.iframe.width = window.innerWidth
-            this.iframe.height = window.innerHeight
-            document.body.appendChild(this.iframe);
-            this.showingArt = true;
-            console.log(this.showingArt)
-            var close = document.createElement('div');
-            close.id = "back-to-bias"
-            var backTo = document.createTextNode('← Back to ')
-            var biasOnline = document.createTextNode('BIAS ONLINE')
-            var bold = document.createElement('span');
-            bold.appendChild(biasOnline)
-            bold.style = "font-weight:900;cursor:pointer;";
-            close.style = "position:absolute;top:0;width:100%;padding:10px 20px;background-color:#000000;font-size:18px;color:#4DFA66;width:100%;z-index:4"
-            close.appendChild(backTo)
-            close.appendChild(bold)
-            document.body.appendChild(close);
         }
         
     }
