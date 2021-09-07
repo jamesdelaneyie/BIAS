@@ -1687,7 +1687,7 @@ class UIBuilder extends PIXI.Container {
             this.scrollContent.forcePctPosition('y', 0)
 
             //console.log(this.scrollContent)
-            this.scrollContent.hideScrollBars()
+            //this.scrollContent.hideScrollBars()
 
             //this.textContent.text = this.quotesToShow[quoteNumber].paragraph
             this.title.text = this.quotesToShow[quoteNumber].title
@@ -1707,13 +1707,13 @@ class UIBuilder extends PIXI.Container {
                 height = 0.3
              } else if (height <= 250) {
                  height = 0.4
-                 scrollContentScrollBars.showScrollBars()
+                 //scrollContentScrollBars.showScrollBars()
              } else if (height <= 400) {
                 height = 0.5
-                scrollContentScrollBars.showScrollBars()
+                //scrollContentScrollBars.showScrollBars()
              } else {
                  height = 0.85
-                 scrollContentScrollBars.showScrollBars()
+                 //scrollContentScrollBars.showScrollBars()
              }
 
              
