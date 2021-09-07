@@ -416,7 +416,7 @@ class GameInstance {
         const theInstance = this.instance
         const theWorld = this.world
 
-        /*setInterval(function(){
+        setInterval(function(){
             let likePump = new Box({
                 name: "token",
                 type: "thumbs-up",
@@ -430,9 +430,9 @@ class GameInstance {
             theInstance.addEntity(likePump)
             theWorld.addBody(likePump.body)
             boxes.set(likePump.nid, likePump)
-        }, 30000)*/
+        }, 30000)
 
-        /*setInterval(function(){
+        setInterval(function(){
             let size = Math.random() * 70
             let likePump = new Box({
                 name: "token",
@@ -447,7 +447,7 @@ class GameInstance {
             theInstance.addEntity(likePump)
             theWorld.addBody(likePump.body)
             boxes.set(likePump.nid, likePump)
-        }, 2000)
+        }, 30000)
 
         setInterval(function(){
             let size = Math.random() * 70
@@ -464,7 +464,7 @@ class GameInstance {
             theInstance.addEntity(likePump)
             theWorld.addBody(likePump.body)
             boxes.set(likePump.nid, likePump)
-        }, 2000)*/
+        }, 30000)
 
 
   
