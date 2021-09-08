@@ -113,30 +113,12 @@ class GameInstance {
             },{
                 name: "token",
                 type: "quote",
-                x: 3550,
-                y: 1850,
-                width: 35, 
-                height: 35, 
-                color: "quote0",
-                mass: 0
-            },{
-                name: "token",
-                type: "quote",
                 x: 2300,
                 y: 2400,
                 width: 35, 
                 height: 35, 
-                color: "quote2",
+                color: "quote0",
                 mass: 0
-            },{
-                name: "token",
-                type: "talking",
-                x: 1800,
-                y: 2150,
-                width: 35, 
-                height: 35, 
-                color: "#0000ff",
-                mass: 1
             }],
             portals: [{
                 x: 2500,
@@ -914,7 +896,7 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
 
                             setTimeout(function(){
                                 thisClient.isAlive = true
-                                thisInstance.messageAll(new Notification('portal-noise', 'sound', 0, 0), client)
+                                thisInstance.message(new Notification('portal-noise', 'sound', 0, 0), client)
                             }, 100)
 
                             break
@@ -929,90 +911,30 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
             })
 
             //Play Boxes
-            for (let box of this.boxes.values()) {
 
-                for (const [key, value] of Object.entries(this.instance.clients.array)) {
+            for (const [key, value] of Object.entries(this.instance.clients.array)) {
 
+                 for (let box of this.boxes.values()) {
+
+                    let collided = false
 
                     if(value.rawEntity && box.name == "token") {
 
-                        let collided = false
-
                         collided = SAT.testCirclePolygon(value.rawEntity.collider.circle, box.collider.polygon) 
-                        //console.log(collided)
+                        
+                        if(collided == true) {
 
-                        if(this.instance.clients.array.length > 1) {
-                            if(collided == true) {
+                            if(box.type == "quote") {
+                                this.instance.message(new Notification(''+box.color+'', 'showQuote'), value) 
+                            } else if (box.type == "art") {
+                                this.instance.message(new Notification(''+box.color+'', 'showArt'), value)
+                            } 
 
-                                if(box.type == "quote") {
-                                    this.instance.message(new Notification(''+box.color+'', 'showQuote'), value)
-                                    
-                                } else if (box.type == "art") {
-                                    this.instance.message(new Notification(''+box.color+'', 'showArt'), value)
-                                } else {
-                                    this.instance.message(new Notification(''+box.type+'', 'scoreIncrease'), value)
-                                    
-                                }
-                                //
-                                //box.collider = null
-                                /*this.world.removeBody(box.body)
-                                this.boxes.delete(box.nid)
-                                value.channel.removeEntity(box)
-                                this.instance.removeEntity(box)*/
+                            //break
 
-                                //console.log(value.channel)
-                                
-                                
-                                
-                                
-                                //onsole.log(box)
-                                break
-                            } else {
-                                //box.color = "#FFFFFF"
-
-                                if (box.type == "art") {
-                                    this.instance.message(new Notification(''+box.color+'', 'hideArt'), value)
-                                }
-                                //this.instance
-                            }
-                        } else {
-                            if(collided == true) {
-   
-                                if(box.type == "quote") {
-                                    this.instance.message(new Notification(''+box.color+'', 'showQuote'), value)
-                                    
-                                } else if (box.type == "art") {
-                                    this.instance.message(new Notification(''+box.color+'', 'showArt'), value)
-                                } else {
-                                    this.instance.message(new Notification(''+box.type+'', 'scoreIncrease'), value)
-                                    
-                                }
-                                
-                                //
-                                //box.collider = null
-                                /*this.world.removeBody(box.body)
-                                this.boxes.delete(box.nid)
-                                value.channel.removeEntity(box)
-                                this.instance.removeEntity(box)*/
-
-                                //console.log(value.channel)
-                                
-                                
-                                
-                                
-                                //console.log(box)
-                                //box.color = "#0000ff"
-                                break
-                            } else {
-                                 if (box.type == "art") {
-                                    this.instance.message(new Notification(''+box.color+'', 'hideArt'), value)
-                                }
-                                //box.color = "#FFFFFF"
-                            }
-                        }
-
+                        } 
+               
                     }
-
 
                 }
 

@@ -217,20 +217,15 @@ const create = () => {
 
     client.on('message::Notification', message => {
 
-        if(message.type == "scoreIncrease") {
-            renderer.UIBuilder.increaseScore(message.text)
-        }
-
+        
         if(message.type == "showQuote") {
-            renderer.UIBuilder.showQuote(message.text)
+            if(!renderer.UIBuilder.showingQuote) {
+                renderer.UIBuilder.showQuote(message.text)
+            }
         }
 
         if(message.type == "showArt") {
-            //console.log(lastMessage, message.text)
-            if((lastMessage != null) && (lastMessage != ""+message.text+"")) {
-                renderer.UIBuilder.showArt(message.text)
-            }
-            lastMessage = ""+lastMessage+"";
+            renderer.UIBuilder.showArt(message.text)
         }
 
         if(message.type == "hideArt") {
@@ -358,8 +353,8 @@ const create = () => {
     })
 
 
-    //client.connect('ws://localhost:8079')
-    client.connect('wss://bias.jamesdelaney.ie/test')
+    client.connect('ws://localhost:8079')
+    //client.connect('wss://bias.jamesdelaney.ie/test')
 
 
     const update = (delta, tick, now) => {

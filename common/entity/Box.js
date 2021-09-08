@@ -63,7 +63,11 @@ class Box {
                 this.collider = CollisionSystem.createRectangleColliderBoxy(0, 0, state.width, state.height)
                 //this.collider.polygon.angle = 1.5708   
             } else {
-                this.collider = CollisionSystem.createRectangleColliderBox(0, 0, 35, 35)   
+                if(this.color != "quote0") {
+                    this.collider = CollisionSystem.createRectangleColliderBox(0, 0, 35, 35)   
+                } else {
+                    this.collider = CollisionSystem.createRectangleColliderBox(0, 0, 10, 10)   
+                }
             }
 
             

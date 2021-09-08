@@ -783,6 +783,16 @@ class UIBuilder extends PIXI.Container {
 
 
         this.quotesToShow = [
+            //Welcome 
+            {
+                title: "Welcome to BIAS ONLINE",
+                subtitle: "",
+                credit: "",
+                paragraph:"Welcome to a virtual exhibition space by Science Gallery at Trinity College Dublin showcasing digital artworks exploring data equity, privacy, surveillance culture, facial recognition, class and artificial intelligence.\n\nOur virtual gallery is very similar to the real world; you move your character through the 2D space to explore the exhibition. Kiosks like this one reveal further information and portals take you to other areas in the gallery.\n\nAnd just like the real world, you're here live with other people. You can chat using the text box below or if you're feeling shy, why not send an emoji blast to show your feelings?\n\nOK, go explore!",
+                style: "",
+                type: ""
+            },
+            //How to Move
             {
                 title:"DARK MATTERS",
                 subtitle:"Johann Diedrick",
@@ -1504,6 +1514,7 @@ class UIBuilder extends PIXI.Container {
         })
         //this.resetArt = true
         this.showingArt = false
+        this.showingQuote = false
         this.count = 0
 
         
@@ -1686,87 +1697,93 @@ class UIBuilder extends PIXI.Container {
         let quoteNumber = quote.slice(-1)
         console.log(quoteNumber)
         //console.log(quote)
-        let showingQuote = false;
-        if(this.quoteWrapper.contentContainer.alpha <= 0 && showingQuote == false) {
-            this.addChild(this.quoteStage)
-            this.quoteStage.resize(window.innerWidth, window.innerHeight)
-           
-            //console.log(this.textContent.text)
-            //console.log(this.connectedText.text)
-            //console.log(this.quotesToShow[quoteNumber].paragraph)
-            this.scrollContent.forcePctPosition('y', 0)
-
-            //console.log(this.scrollContent)
-            //this.scrollContent.hideScrollBars()
-
-            //this.textContent.text = this.quotesToShow[quoteNumber].paragraph
-            this.title.text = this.quotesToShow[quoteNumber].title
-            const continutedText = '<subtitle>' + this.quotesToShow[quoteNumber].subtitle + '</subtitle>\n' + this.quotesToShow[quoteNumber].paragraph + '\n<small>' + this.quotesToShow[quoteNumber].credit + '</small>'
-            this.connectedText.text = continutedText
-
-            const scrollContentScrollBars = this.scrollContent
+        //let showingQuote = false//;
+        //
+        if(this.showingQuote == false) {
+            if(this.quoteWrapper.contentContainer.alpha <= 0) {
+                this.addChild(this.quoteStage)
+                this.quoteStage.resize(window.innerWidth, window.innerHeight)
             
-            //this.connectedText.text = this.quotesToShow[quoteNumber].paragraph
+                //console.log(this.textContent.text)
+                //console.log(this.connectedText.text)
+                //console.log(this.quotesToShow[quoteNumber].paragraph)
+                this.scrollContent.forcePctPosition('y', 0)
 
-             //this.textContent.contentContainer.children[1].updateText()
-             let height = 400
+                //console.log(this.scrollContent)
+                //this.scrollContent.hideScrollBars()
 
-             console.log('Text height UI Builder:' + height)
+                //this.textContent.text = this.quotesToShow[quoteNumber].paragraph
+                this.title.text = this.quotesToShow[quoteNumber].title
+                let continutedText = '';
+                if(this.quotesToShow[quoteNumber].subtitle.length) {
+                    continutedText += "<subtitle>" + this.quotesToShow[quoteNumber].subtitle + "</subtitle>\n"
+                }
+                if(this.quotesToShow[quoteNumber].paragraph.length) {
+                    continutedText +=  "" + this.quotesToShow[quoteNumber].paragraph + "\n"
+                }
+                if(this.quotesToShow[quoteNumber].credit.length) {
+                    continutedText +=  "<small>" + this.quotesToShow[quoteNumber].credit + "</small>"
+                }
+                this.connectedText.text = continutedText
 
-             if(height <= 80) {
-                height = 0.3
-             } else if (height <= 250) {
-                 height = 0.4
-                 //scrollContentScrollBars.showScrollBars()
-             } else if (height <= 400) {
-                height = 0.5
-                //scrollContentScrollBars.showScrollBars()
-             } else {
-                 height = 0.85
-                 //scrollContentScrollBars.showScrollBars()
-             }
+                const scrollContentScrollBars = this.scrollContent
+                
+                //this.connectedText.text = this.quotesToShow[quoteNumber].paragraph
 
-             
-             this.quoteWrapper.setLayoutOptions(
-                 new PUXI.FastLayoutOptions({
-                     width: 0.9,
-                     height: height,
-                     x: 0.5,
-                     y: 0.45,
-                     anchor: new PIXI.Point(0.5, 0.5)          
-                 })
-             )
-             this.quoteWrapperBackground.clear()
-             this.quoteWrapperBackground = new PIXI.Graphics()
-             this.quoteWrapperBackground.beginFill(0xFFFFFF)
-             this.quoteWrapperBackground.lineStyle(1, 0x000000)
-             this.quoteWrapperBackground.drawRoundedRect(0, 0, (window.innerWidth/100)*90, (window.innerHeight/100)*(height*100), 35)
-             this.quoteWrapper.contentContainer.addChildAt(this.quoteWrapperBackground,0)
+                //this.textContent.contentContainer.children[1].updateText()
+                let height = this.textContent.contentContainer.height
+                let width = this.connectedText.getStyleForTag("default").wordWrap
+                console.log(width)
+                console.log(this.connectedText)
+                console.log('Text height UI Builder:' + height)
 
-            this.quoteStage.resize(window.innerWidth, window.innerHeight)
-            const quoteBounds = this.quoteWrapperBackground.getBounds()
-            this.quoteStage.stage.hitArea = new PIXI.Rectangle(
-                quoteBounds.x,
-                quoteBounds.y,
-                quoteBounds.width,
-                quoteBounds.height
-            );
+                if(height <= 80) {
+                    height = 0.3
+                } else if (height <= 250) {
+                    height = 0.4
+                    //scrollContentScrollBars.showScrollBars()
+                } else if (height <= 400) {
+                    height = 0.5
+                    //scrollContentScrollBars.showScrollBars()
+                } else {
+                    height = 0.85
+                    //scrollContentScrollBars.showScrollBars()
+                }
 
-            window.dispatchEvent(new Event('resize'));
+                
+                this.quoteWrapper.setLayoutOptions(
+                    new PUXI.FastLayoutOptions({
+                        width: 0.9,
+                        height: height,
+                        x: 0.5,
+                        y: 0.45,
+                        anchor: new PIXI.Point(0.5, 0.5)          
+                    })
+                )
+                this.quoteWrapperBackground.clear()
+                this.quoteWrapperBackground = new PIXI.Graphics()
+                this.quoteWrapperBackground.beginFill(0xFFFFFF)
+                this.quoteWrapperBackground.lineStyle(1, 0x000000)
+                this.quoteWrapperBackground.drawRoundedRect(0, 0, (window.innerWidth/100)*90, (window.innerHeight/100)*(height*100), 35)
+                this.quoteWrapper.contentContainer.addChildAt(this.quoteWrapperBackground,0)
 
-            //console.log(this.connectedText)
-            //this.quotesToShow[quoteNumber].paragraph
-            ease.add(this.quoteWrapper.contentContainer, this.fadeInStyles, this.fadeInSettings)
-            showingQuote = true 
-            //this.quoteStage.visible = true
+                this.quoteStage.resize(window.innerWidth, window.innerHeight)
+                const quoteBounds = this.quoteWrapperBackground.getBounds()
+                this.quoteStage.stage.hitArea = new PIXI.Rectangle(
+                    quoteBounds.x,
+                    quoteBounds.y,
+                    quoteBounds.width,
+                    quoteBounds.height
+                );
+
+                window.dispatchEvent(new Event('resize'));
+
+                ease.add(this.quoteWrapper.contentContainer, this.fadeInStyles, this.fadeInSettings)
+                this.showingQuote = true
+                
+            }
         }
 
-        
-       
-
-
-        
-        
     }
 
 
@@ -1774,10 +1791,17 @@ class UIBuilder extends PIXI.Container {
         ease.add(this.quoteWrapper.contentContainer, this.fadeOutStyles, this.fadeOutSettings)
         const quoteStage = this.quoteStage
         const theUI = this
+        const showingQuote = this.showingQuote
+        
         setTimeout(function(){
             theUI.removeChild(quoteStage)
+            theUI.setShowingQuote()
         }, 500)
-        //this.quoteStage.visible = false
+        
+    }
+
+    setShowingQuote(){
+        this.showingQuote = false
     }
 
 
@@ -2245,7 +2269,12 @@ class UIBuilder extends PIXI.Container {
                 lineHeight: 40,
                 padding: 10,
                 wordWrapWidth: 800,
-                leading: 1,
+                textBaseline: "middle"
+            })
+            this.connectedText.setStyleForTag("bold", {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "32px",
+                fontWeight: 700,
                 textBaseline: "middle"
             })
 
@@ -2271,14 +2300,7 @@ class UIBuilder extends PIXI.Container {
                 textBaseline: "middle"
             })
 
-            this.connectedText.setStyleForTag("bold", {
-                fontFamily: "Trade Gothic Next",
-                fontSize: "20px",
-                fontWeight: 700,
-                lineHeight: 27,
-                wordWrap: true,
-                wordWrapWidth: 450
-            })
+           
 
             this.quoteWrapper.setLayoutOptions(
                 new PUXI.FastLayoutOptions({

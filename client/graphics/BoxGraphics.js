@@ -19,6 +19,27 @@ class BoxGraphics extends PIXI.Container {
         //this.rotation = 1.57
 
         const type = this.type
+
+        if (state.color == "quote0") {
+            state.width = 120
+            state.height = 120
+            this.auraContainer = new PIXI.Container();   
+            var canvasRenderer = PIXI.autoDetectRenderer(120, 120); 
+            var auraTexture = new PIXI.RenderTexture.create(120, 120);
+            var auraSprite = new PIXI.Sprite(auraTexture);
+            this.auraContainer.addChild(auraSprite)
+            
+            const aura = new PIXI.Graphics();
+            const auraColor = PIXI.utils.string2hex("#1DCFFF");
+            aura.beginFill(auraColor);
+            aura.drawCircle(0, 0, 60);
+            aura.endFill();
+            this.auraContainer.addChild(aura);
+            canvasRenderer.render(this.auraContainer, auraTexture)
+            this.addChild(this.auraContainer)
+        }
+
+
         //console.log(type)
         if(this.name == "token") {
             if(this.type == "video") {
@@ -83,11 +104,17 @@ class BoxGraphics extends PIXI.Container {
                     this.tokenImage = new PIXI.Sprite.from('images/art3-icon.svg');
                 } else if (state.color == "art4") {
                     this.tokenImage = new PIXI.Sprite.from('images/art4-icon.svg');
+                } else if (state.color == "quote0") {
+                    this.tokenImage = new PIXI.Sprite.from('images/info-icon.svg');
                 } else {
                     this.tokenImage = new PIXI.Sprite.from('images/'+type+'-icon.svg');
                 }
                 this.tokenImage.width = state.width;
                 this.tokenImage.height = state.height;
+                if (state.color == "quote0") {
+                    this.tokenImage.width = state.width/2;
+                    this.tokenImage.height = state.height/2;
+                }
                 this.tokenImage.pivot.x = 0
                 this.tokenImage.pivot.y = 0
                 this.tokenImage.anchor.set(0.5)
@@ -108,6 +135,8 @@ class BoxGraphics extends PIXI.Container {
         this.buttonMode = true
 
         this.sprite_animation = false
+
+        this.count = 0
        
         
     }
@@ -145,6 +174,15 @@ class BoxGraphics extends PIXI.Container {
 
 
     update(delta) {
+
+        this.count++
+
+        if(this.color == "quote0") {
+            this.auraContainer.scale.set(1 + Math.sin((this.count/10)) * 0.1, 1 + Math.sin((this.count/10)) * 0.1);
+            this.auraContainer.alpha = 0.2 + Math.sin((this.count/10)) * 0.1;
+        }
+
+
         //this.rotation = this.rotation + 0.001
         if(this.color == "art2") {
             if(this.sprite_animation){

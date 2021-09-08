@@ -31,6 +31,23 @@ class PlayerGraphics extends PIXI.Container {
 
         console.log(state.avatar)
 
+        let randColor = '#'+(Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0');
+        const auraColor = PIXI.utils.string2hex(randColor);
+ 
+        var graphics = new PIXI.Graphics();
+        graphics.beginFill(0x7647a2);
+        graphics.lineStyle(1, 0x7647a2, 1);
+        graphics.drawRect(0,0,20,20);
+
+        var filter = new PIXI.filters.BlurFilter();
+        filter.blur = 2;
+        graphics.filters=[filter];
+        var canvasRenderer = PIXI.autoDetectRenderer(120, 120); 
+        var rt = PIXI.RenderTexture.create(120, 120);
+        canvasRenderer.render(graphics, rt);
+        var sprite = new PIXI.Sprite(rt);
+        this.addChild(sprite);
+
         
         //Give me a new space to draw something
         this.auraContainer = new PIXI.Container();   
@@ -40,11 +57,10 @@ class PlayerGraphics extends PIXI.Container {
         this.auraContainer.addChild(auraSprite)
         
         const aura = new PIXI.Graphics();
-        const auraColor = PIXI.utils.string2hex(""+this.color+"");
+        
         aura.beginFill(auraColor);
         aura.drawCircle(0, 0, 60);
         aura.endFill();
-        aura.blendMode = PIXI.BLEND_MODES.MULTIPLY;
         this.auraContainer.addChild(aura);
         canvasRenderer.render(this.auraContainer, auraTexture)
         this.playerBody.addChild(this.auraContainer)
