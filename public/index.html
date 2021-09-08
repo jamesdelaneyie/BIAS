@@ -8,7 +8,7 @@
     <link rel='stylesheet' href='css/styles-v0.0.1.css'>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+
 <body id="body">
     <script src='js/app-v0.0.1.js'></script>
    
@@ -489,85 +489,6 @@
     
     </main>
 
-    <script>
-        const enterButton = document.getElementById('enter-bias');
-        const world = document.getElementById('main-canvas');
-        const front = document.getElementById('front');
-        const rootElement = document.getElementById('body');
-        
-        enterButton.addEventListener('pointerdown', function(){
-            world.setAttribute('style', 'display:block')
-            front.parentNode.removeChild(front);
-            rootElement.setAttribute('style', "overflow:hidden")
-        })
-        
-        window.scrollTo(0,1);
-    </script>
-    <script>
-    var showArt = function(art) {
-        const artNumber = art
-        let link
-        if(artNumber == 1) {
-            link = "https://stealingurfeelin.gs/"
-        } else if (artNumber == 2) {
-            link = "https://darkmatters.ml/"
-        } else if (artNumber == 3) {
-            link = "https://normalizi.ng/"
-        } else if (artNumber == 4) {
-            link = "https://www.youtube.com/embed/Kz97PpPFF78"
-        }
-        if(!document.getElementById("iframe")) {
-            //if(this.showingArt == false) {
-                var wrapper = document.createElement('div');
-                wrapper.style = "text-align:center;position:fixed;width:100%;height:100vh;top:50%;left:50%;transform:translateX(-50%)translateY(-50%);border:0;z-index:3;background-color:#000000f0;z-index:10"
-                wrapper.width = window.innerWidth
-                wrapper.height = window.innerHeight
-                document.body.appendChild(wrapper);
-
-                this.iframe = document.createElement('iframe');
-                this.iframe.src = link
-                this.iframe.style = "border:0;"
-                if (artNumber == 3) {
-                    this.iframe.style = "border:0;width:414px;height:789px;z-index:3;max-width:100%;max-height:100vh"
-                }
-                if (artNumber == 4) {
-                    this.iframe.frameborder="0" 
-                }
-                this.iframe.allow = "camera; xr-spatial-tracking"
-                //this.iframe.allow = "camera"
-                
-                this.iframe.id = "iframe"
-                this.iframe.allowfullscreen = "allowfullscreen"
-                this.iframe.width = window.innerWidth
-                this.iframe.height = window.innerHeight
-
-                wrapper.appendChild(this.iframe);
-
-                
-               
-                var close = document.createElement('div');
-                close.id = "back-to-bias"
-                var backTo = document.createTextNode('← Back to ')
-                var biasOnline = document.createTextNode('BIAS ONLINE')
-                var bold = document.createElement('span');
-                bold.appendChild(biasOnline)
-                bold.style = "font-weight:900;text-align:center;";
-                close.style = "position:absolute;top:0;text-align:left;cursor:pointer;width:100%;padding:10px 20px;background-color:#000000;font-size:18px;color:#4DFA66;width:100%;z-index:4"
-                close.appendChild(backTo)
-                close.appendChild(bold)
-                wrapper.appendChild(close);
-
-                const closeButton = document.getElementById('back-to-bias');
-                closeButton.addEventListener('pointerdown', function(){
-                    document.body.removeChild(wrapper)
-                })
-            //}
-        } else {
-            document.body.removeChild(wrapper);
-        }
-        
-    }
-    </script>
-
+    
 </body>
 </html>
