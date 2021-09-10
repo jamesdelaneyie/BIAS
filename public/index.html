@@ -17,7 +17,7 @@
     
 
     <!--- FRONT -->
-    <main id="front">
+    <!--<main id="front">
 
         <section class="intro">
             <header>
@@ -417,7 +417,7 @@
 
             var PASSCODE = ['e','n','t','e','r'],
                 current = 0;
-                //logger = document.getElementById('logger');
+                
 
             function keyListener(e) {
                 var code = e.keyCode || e.which,
@@ -425,8 +425,7 @@
 
                 if(str === PASSCODE[current]){
                     current++;
-                    //logger.innerHTML += str;
-                    //console.log(current, PASSCODE.length);
+
                     if(current >= PASSCODE.length){
 
                         world.setAttribute('style', 'display:block')
@@ -436,14 +435,12 @@
                     }
             } else {
                 current = 0;
-                //logger.innerHTML = '';
             }
 
             }
 
             document.addEventListener("keypress", keyListener);
             
-            //window.scrollTo(0,1);
         </script>
         <script>
         var showArt = function(art) {
@@ -459,7 +456,6 @@
                 link = "https://www.youtube.com/embed/Kz97PpPFF78"
             }
             if(!document.getElementById("iframe")) {
-                //if(this.showingArt == false) {
                     var wrapper = document.createElement('div');
                     wrapper.style = "text-align:center;position:fixed;width:100%;height:100vh;top:50%;left:50%;transform:translateX(-50%)translateY(-50%);border:0;z-index:3;background-color:#000000f0;z-index:10"
                     wrapper.width = window.innerWidth
@@ -476,7 +472,6 @@
                         this.iframe.frameborder="0" 
                     }
                     this.iframe.allow = "camera; xr-spatial-tracking"
-                    //this.iframe.allow = "camera"
                     
                     this.iframe.id = "iframe"
                     this.iframe.allowfullscreen = "allowfullscreen"
@@ -503,7 +498,6 @@
                     closeButton.addEventListener('pointerdown', function(){
                         document.body.removeChild(wrapper)
                     })
-                //}
             } else {
                 document.body.removeChild(wrapper);
             }

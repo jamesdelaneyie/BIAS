@@ -69,7 +69,7 @@ class FloorGraphics extends PIXI.Container {
             fontWeight: 900
         }
 
-        if(state.color == '#FFE401') {
+        if(state.floorColor  == '#FFE401') {
 
             const firstName = "NOAH"
             const firstNameText = new PIXI.Text(firstName, fontStyle);
@@ -83,7 +83,7 @@ class FloorGraphics extends PIXI.Container {
             lastNameText.y = 763
             this.addChild(lastNameText)
 
-        } else if (state.color == "#471A8E") {
+        } else if (state.floorColor == "#471A8E") {
 
             const firstName = "JOHANN DIEDRICK"
             const firstNameText = new PIXI.Text(firstName, fontStyle);
@@ -91,7 +91,7 @@ class FloorGraphics extends PIXI.Container {
             firstNameText.y = 63
             this.addChild(firstNameText)
 
-        } else if (state.color == "#505050") {
+        } else if (state.floorColor == "#505050") {
 
             const firstName = "MUSHON"
             const firstNameText = new PIXI.Text(firstName, fontStyle);
@@ -105,7 +105,7 @@ class FloorGraphics extends PIXI.Container {
             lastNameText.y = 763
             this.addChild(lastNameText)
 
-        } else if (state.color == "#80EDFF") {
+        } else if (state.floorColor == "#80EDFF") {
 
 
             const firstName = "LIBBY HEANEY"

@@ -4,6 +4,7 @@ import CollisionSystem from '../CollisionSystem.js'
 class Portal {
     constructor(state) {
         this.nid = state.nid
+        this.name = state.name
         this.x = state.x
         this.y = state.y
         this.width = state.width

@@ -973,8 +973,6 @@ class UIBuilder extends PIXI.Container {
             y: 0.5,
             anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
         }))
-        .setBackground(0xFFFFFFF)
-        .setBackgroundAlpha(1)
         this.leaveButtonWrapper.addChild(this.leaveButton)
 
         const leaveButtonClick = new PUXI.ClickManager(this.leaveButton, true, false, false)
@@ -1864,7 +1862,6 @@ class UIBuilder extends PIXI.Container {
 
 
 
-
         
 
 
@@ -1929,9 +1926,41 @@ class UIBuilder extends PIXI.Container {
 
 
 
+
+    
+        const transitionScreen = new PIXI.Container()
+        this.transitionScreen = transitionScreen
+
+        const transitionScreenBackground = new PIXI.Graphics()
+        transitionScreenBackground.beginFill(0x000000)
+        transitionScreenBackground.drawRect(0,0,window.innerWidth, window.innerHeight)
+        transitionScreenBackground.endFill()
+        transitionScreen.addChild(transitionScreenBackground)
+        transitionScreen.alpha = 0
+        this.addChild(transitionScreen)
+
+        const areaText = new PIXI.Text('Main Lobby', {fontFamily: "Trade Gothic Next", fontSize: "48px", fontWeight: 300, fill: "#ffffff", align: "center", lineHeight: 24})
+        this.areaText = areaText
+        areaText.x = window.innerWidth / 2
+        areaText.y = window.innerHeight / 2
+        transitionScreen.addChild(areaText)
+        areaText.anchor.set(0.5);
+
+
         
 
         
+    }
+
+    teleporting(area) {
+        console.log(area)
+        this.areaText.text = area
+        ease.add(this.transitionScreen, {alpha: 1}, { duration: 250, ease: 'easeOutExpo'})
+        const transitionScreen = this.transitionScreen
+        setTimeout(function(){
+            ease.add(transitionScreen, {alpha: 0}, { duration: 650, ease: 'easeOutExpo'})
+        }, 2000)
+        //this.transitionScreen.alpha = 1
     }
 
     joinSession(){

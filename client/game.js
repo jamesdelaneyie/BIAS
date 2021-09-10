@@ -295,7 +295,10 @@ const create = () => {
         }
         
         if(message.type == "sound") {
-            
+
+
+            renderer.UIBuilder.teleporting(message.text)
+
             if(portalSound.isPlaying == false) {
                 //portalSound.play(); 
             }

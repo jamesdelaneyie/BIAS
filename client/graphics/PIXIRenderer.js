@@ -55,7 +55,8 @@ class PIXIRenderer {
         const fpsCounter = new PixiFps();
         //this.stage.addChild(fpsCounter)
 
-        this.fishCount = 7;
+        this.fishCountOne = 7;
+        this.fishCountTwo = 2;
         this.fishes = [];
         this.bounds = new PIXI.Rectangle(
             10200,
@@ -65,7 +66,7 @@ class PIXIRenderer {
             window.innerHeight + 500,
         );
 
-        for (let i = 0; i < this.fishCount; i++){
+        for (let i = 0; i < this.fishCountOne; i++){
             const fish = new PIXI.Sprite.from('images/fish.svg');
 
             fish.anchor.set(0.5);
@@ -82,8 +83,8 @@ class PIXIRenderer {
             this.fishes.push(fish);
         }
 
-        for (let i = 0; i < this.fishCount; i++){
-            const fish = new PIXI.Sprite.from('images/fish.svg');
+        for (let i = 0; i < this.fishCountTwo; i++){
+            const fish = new PIXI.Sprite.from('images/fish-white.svg');
 
             fish.anchor.set(0.5);
 
@@ -93,7 +94,7 @@ class PIXIRenderer {
 
             fish.x = Math.random() * 1000;
             fish.y = Math.random() * 1000;
-            fish.alpha = 0.5
+            fish.alpha = 0.2
 
             fish.scale.set(2.3 + (Math.random() * 0.8));
             this.foreground.addChild(fish);
@@ -110,8 +111,48 @@ class PIXIRenderer {
         this.displacementFilter = new PIXI.filters.DisplacementFilter(this.displacementSprite)
         this.displacementFilter.padding = 50
 
-        const introText = new PIXI.Text('What is bias? Why and how does it exist? How does bias get embedded in social and technological systems?')
+
+
+
+
+        const scienceGalleryLogo = PIXI.Sprite.from('images/sg-white.svg');
+        scienceGalleryLogo.x = 11050
+        scienceGalleryLogo.y = 5805
+        scienceGalleryLogo.alpha = 0.5
+        scienceGalleryLogo.width = 187
+        scienceGalleryLogo.height = 90
+
+        this.middleground.addChild(scienceGalleryLogo)
+
+
+
+        const welcomeText = new PIXI.Text('Welcome to BIAS ONLINE.\nA real-time virtual exhibition space at Science Gallery Dublin', {fontFamily: "Trade Gothic Next", fontSize: "18px", fill: "#ffffff", align: "center", lineHeight: 24})
+        welcomeText.x = (11055-130)
+        welcomeText.y = 5700-50
+        welcomeText.alpha = 0.5
+        this.middleground.addChild(welcomeText)
+
+
+
+        const introText = new PIXI.Text('What is bias? \nWhy and how does it exist?', {fontFamily: "Trade Gothic Next", fontSize: "18px", fill: "#ffffff", align: "center", lineHeight: 24})
+        introText.x = 11055
+        introText.y = 6000
+        introText.alpha = 0.5
         this.middleground.addChild(introText)
+
+
+        const directionText = new PIXI.Text('TO GALLERY ↓', {fontFamily: "Trade Gothic Next", fontSize: "18px", fontWeight: 700, fill: "#ffffff", align: "center", lineHeight: 24})
+        directionText.x = 11090
+        directionText.y = 6150
+        directionText.alpha = 0
+        this.middleground.addChild(directionText)
+        setTimeout(function(){
+            directionText.alpha = 1
+        }, 500)
+
+
+
+
 
 
         const noahBackground = new PIXI.Graphics()
@@ -126,6 +167,8 @@ class PIXIRenderer {
         noahBackground.drawCircle(7000, 525, 80)
         noahBackground.endFill()
         this.middleground.addChild(noahBackgroundTwo)
+
+
 
         
         window.addEventListener('resize', () => {

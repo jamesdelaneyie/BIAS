@@ -144,24 +144,28 @@ class GameInstance {
                 mass: 0
             }],*/
             portals: [{
+                name: "Noah Levenson",
                 x: 2500,
                 y: 2500,
                 width: 100,
                 height: 10,
                 exit: [6900, 950]
             },{
+                name: "Johann",
                 x: 1900,
                 y: 2400,
                 width: 100,
                 height: 10,
                 exit: [8850, 2550]
             },{
+                name: "Mushon",
                 x: 2680,
                 y: 2100,
                 width: 10,
                 height: 100,
                 exit: [8850, 3500]
             },{
+                name: "Libby",
                 x: 2180,
                 y: 1740,
                 width: 100,
@@ -175,12 +179,15 @@ class GameInstance {
         this.room2 = {
             x: 6800,
             y: 25,
-            name: "noah levenson",
+            name: "Noah",
             width: 1000,
             height: 1000,
             backgroundColor: "#ffff00",
             color: "#FFE401",
             borderColor: "#FFFFFF",
+            floorColor: "#FFE401",
+            wallColor: "#ffff00",
+            gridColor: "#454545",
             borderWidth: 25,
             objects: [{
                 name: "token",
@@ -211,6 +218,7 @@ class GameInstance {
                 mass: 2
             }],
             portals: [{
+                name: "Main Lobby",
                 x: 0,
                 y: 925,
                 width: 10,
@@ -224,9 +232,12 @@ class GameInstance {
         this.room3 = {
             x: 8800,
             y: 2000,
-            name: "noah levenson",
+            name: "Mushon",
             width: 2000,
             height: 800,
+            floorColor: "#471A8E",
+            wallColor: "#9C52FF",
+            gridColor: "#454545",
             backgroundColor: "#9C52FF",
             color: "#471A8E",
             borderColor: "#FFFFFF",
@@ -260,6 +271,7 @@ class GameInstance {
                 mass: 0
             }],
             portals: [{
+                name: "Main Lobby",
                 x: 0,
                 y: 600,
                 width: 10,
@@ -274,9 +286,12 @@ class GameInstance {
         this.room4 = {
             x: 8800,
             y: 3500,
-            name: "noah levenson",
+            name: "Johann",
             width: 800,
             height: 1500,
+            floorColor: "#505050",
+            wallColor: "#292929",
+            gridColor: "#454545",
             backgroundColor: "#292929",
             color: "#505050",
             borderColor: "#FFFFFF",
@@ -319,6 +334,7 @@ class GameInstance {
                 mass: 0
             }],
             portals: [{
+                name: "Main Lobby",
                 x: 0,
                 y: 600,
                 width: 10,
@@ -333,12 +349,12 @@ class GameInstance {
         this.room5 = {
             x: 10800,
             y: 3500,
-            name: "noah levenson",
+            name: "Libby",
             width: 1500,
             height: 1500,
-            backgroundColor: "#1DCFFF",
-            color: "#80EDFF",
-            borderColor: "#FFFFFF",
+            floorColor: "#80EDFF",
+            wallColor: "#1DCFFF",
+            gridColor: "#000000",
             borderWidth: 25,
             objects: [{
                 name: "token",
@@ -369,6 +385,7 @@ class GameInstance {
                 mass: 0
             }],
             portals: [{
+                name: "Main Lobby",
                 x: 0,
                 y: 600,
                 width: 10,
@@ -392,17 +409,26 @@ class GameInstance {
             color: "#000000",
             borderColor: "#4dfa66",
             borderWidth: 5,
-            objects: [],
+            objects: [{
+                name: "token",
+                type: "quote",
+                x: 100,
+                y: 600,
+                width: 35, 
+                height: 35, 
+                color: "quote0",
+                mass: 0
+            }],
             portals: [],
             door: "bottom"
         }
-        setupFloors(this.instance, this.room6)
-        setupObstacles(this.instance, this.room6, obstacles)
-        setupBoxes(this.instance, this.world, this.room6, boxes)
+        this.floors6 = setupFloors(this.instance, this.room6)
+        this.obstacles6 = setupObstacles(this.instance, this.room6, obstacles)
+        this.boxes6 = setupBoxes(this.instance, this.world, this.room6, boxes)
 
 
         this.room7 = {
-            x: 11200,
+            x: 11050,
             y: 6205,
             name: "reception",
             width: 200,
@@ -416,36 +442,22 @@ class GameInstance {
             borderWidth: 5,
             objects: [],
             portals: [{
-                x: 12200,
-                y: 6270,
-                width: 10,
-                height: 100,
+                name: "Entering BIAS Online",
+                x: 20,
+                y: 720,
+                width: 200,
+                height: 10,
                 exit: [2250, 2250]
             }],
             door: "",
             type: "corridor"
         }
-        setupFloors(this.instance, this.room7)
-        setupObstacles(this.instance, this.room7, obstacles)
+        this.floors7 = setupFloors(this.instance, this.room7)
+        this.obstacles7 = setupObstacles(this.instance, this.room7, obstacles)
+        this.boxes7 = setupBoxes(this.instance, this.world, this.room7, boxes)
 
 
 
-
-        //setupBoxes(this.instance, this.world, this.room7, boxes)
-
-
-
-        //this.floors = setupFloors(this.instance, this.room2)
-        /*const floor = new Floor({ 
-            x: 4600, 
-            y: 0, 
-            width: 1000, 
-            height: 1000, 
-            color: "#FFFF00"
-        })
-        this.instance.addEntity(floor)
-        this.floors.set(floor.nid, floor)*/
-        
         this.obstacles = setupObstacles(this.instance, this.room, obstacles)
         this.obstacles2 = setupObstacles(this.instance, this.room2, obstacles)
         this.obstacles3 = setupObstacles(this.instance, this.room3, obstacles)
@@ -469,6 +481,7 @@ class GameInstance {
         this.portals3 = setupPortals(this.instance, this.room3, portals)
         this.portals4 = setupPortals(this.instance, this.room4, portals)
         this.portals4 = setupPortals(this.instance, this.room5, portals)
+        
         this.portals5 = setupPortals(this.instance, this.room7, portals)
         this.portals = portals
 
@@ -476,7 +489,7 @@ class GameInstance {
         const theInstance = this.instance
         const theWorld = this.world
 
-        /*setInterval(function(){
+        setInterval(function(){
             let likePump = new Box({
                 name: "token",
                 type: "thumbs-up",
@@ -525,7 +538,7 @@ class GameInstance {
             theWorld.addBody(likePump.body)
             boxes.set(likePump.nid, likePump)
         }, 30000)
-        */
+        
 
   
          //// SCIENCE GALLERY DESIGNS /////
@@ -542,7 +555,7 @@ class GameInstance {
         obstacles.set(reception.nid, reception)
 
 
-     /* const crystal = new Obstacle({ 
+      const crystal = new Obstacle({ 
             name: "crystal",
             x: 1500, 
             y: 2000, 
@@ -1010,14 +1023,20 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
                         let collided = false
 
                         collided = SAT.testCirclePolygon(client.rawEntity.collider.circle, portal.collider.polygon) 
+
+                        //console.log('portal name: '+)
+                        //console.log(portal)
                         
                         if(collided) {
 
 
-                            let thisInstance = this.instance;
+                            let thisInstance = this.instance
                             let thisClient = client.rawEntity
+                            let portalName = portal.name
+
                             thisClient.isAlive = false;
-                            
+                           
+
                             setTimeout(function(){
                                 thisClient.x = portal.exit[0]
                                 thisClient.y = portal.exit[1]
@@ -1025,12 +1044,12 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
                                 client.view.x = thisClient.x
                                 client.view.y = thisClient.y
                                 client.positions = []
-                            }, 50)
+                            }, 500)
                             
-
                             setTimeout(function(){
                                 thisClient.isAlive = true
-                                thisInstance.message(new Notification('portal-noise', 'sound', 0, 0), client)
+                                console.log(portalName)
+                                thisInstance.message(new Notification(portalName, 'sound', 0, 0), client)
                             }, 100)
 
                             break

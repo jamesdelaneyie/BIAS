@@ -11,6 +11,7 @@ export default (instance, room, portals) => {
     if(portals) {
         portalList.forEach(portal => {
             let portalProps = new Portal({
+                name: portal.name,
                 x: portal.x + roomX + roomBorder,
                 y: portal.y + roomY,
                 width: portal.width,
