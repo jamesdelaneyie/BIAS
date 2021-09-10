@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <body id="body">
+
     <script src='js/app-v0.0.1.js?123'></script>
    
     <canvas id='main-canvas'></canvas>
@@ -427,9 +428,11 @@
                     //logger.innerHTML += str;
                     //console.log(current, PASSCODE.length);
                     if(current >= PASSCODE.length){
+
                         world.setAttribute('style', 'display:block')
                         front.parentNode.removeChild(front);
                         rootElement.setAttribute('style', "overflow:hidden")
+
                     }
             } else {
                 current = 0;
@@ -440,7 +443,7 @@
 
             document.addEventListener("keypress", keyListener);
             
-            window.scrollTo(0,1);
+            //window.scrollTo(0,1);
         </script>
         <script>
         var showArt = function(art) {
