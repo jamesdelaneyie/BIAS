@@ -3,10 +3,8 @@ import * as PIXI from 'pixi.js'
 import UIBuilder from './UIBuilder.js'
 import PixiFps from "pixi-fps";
  
-
-
 import { CRTFilter } from '@pixi/filter-crt'
-
+import { AsciiFilter } from '@pixi/filter-ascii'
 
 var FontFaceObserver = require('fontfaceobserver');
 
@@ -55,10 +53,65 @@ class PIXIRenderer {
         this.stage.addChild(this.UIBuilder)
 
         const fpsCounter = new PixiFps();
-        this.stage.addChild(fpsCounter)
+        //this.stage.addChild(fpsCounter)
+
+        this.fishCount = 7;
+        this.fishes = [];
+        this.bounds = new PIXI.Rectangle(
+            10200,
+            5205,
+
+            window.innerWidth + 500,
+            window.innerHeight + 500,
+        );
+
+        for (let i = 0; i < this.fishCount; i++){
+            const fish = new PIXI.Sprite.from('images/fish.svg');
+
+            fish.anchor.set(0.5);
+
+            fish.direction = Math.random() * Math.PI * 2;
+            fish.speed = 2 + (Math.random() * 2);
+            fish.turnSpeed = Math.random() - 0.8;
+
+            fish.x = Math.random() * 1000;
+            fish.y = Math.random() * 1000;
+
+            fish.scale.set(0.3 + (Math.random() * 0.8));
+            this.foreground.addChild(fish);
+            this.fishes.push(fish);
+        }
+
+        for (let i = 0; i < this.fishCount; i++){
+            const fish = new PIXI.Sprite.from('images/fish.svg');
+
+            fish.anchor.set(0.5);
+
+            fish.direction = Math.random() * Math.PI * 2;
+            fish.speed = 2 + (Math.random() * 2);
+            fish.turnSpeed = Math.random() - 0.8;
+
+            fish.x = Math.random() * 1000;
+            fish.y = Math.random() * 1000;
+            fish.alpha = 0.5
+
+            fish.scale.set(2.3 + (Math.random() * 0.8));
+            this.foreground.addChild(fish);
+            this.fishes.push(fish);
+        }
 
 
+        
+        this.ascaiiFilter = new AsciiFilter()
+        
+        this.displacementSprite = PIXI.Sprite.from('images/displacement-3.png');
+	    this.displacementSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
 
+        this.displacementFilter = new PIXI.filters.DisplacementFilter(this.displacementSprite)
+        this.displacementFilter.padding = 50
+
+        const introText = new PIXI.Text('What is bias? Why and how does it exist? How does bias get embedded in social and technological systems?')
+        this.middleground.addChild(introText)
 
 
         const noahBackground = new PIXI.Graphics()
@@ -114,6 +167,46 @@ class PIXIRenderer {
         })
         this.renderer.render(this.stage)
         this.UIBuilder.update(delta)
+
+        //this.biasShape.x += delta*50;
+        //this.biasShape.y -= delta*50;
+
+        this.displacementSprite.y = delta*500
+        this.displacementSprite.x = delta*500
+
+
+        this.foreground.filters =  [this.ascaiiFilter, this.displacementFilter]
+        
+
+
+        for (let i = 0; i < this.fishes.length; i++) {
+            const fish = this.fishes[i];
+
+            fish.direction += fish.turnSpeed * 0.01;
+
+            fish.x += Math.sin(fish.direction) * fish.speed;
+            fish.y += Math.cos(fish.direction) * fish.speed;
+
+            fish.rotation = -fish.direction - (Math.PI / 2);
+
+            if (fish.x < this.bounds.x)
+            {
+                fish.x += this.bounds.width;
+            }
+            if (fish.x > this.bounds.x + this.bounds.width)
+            {
+                fish.x -= this.bounds.width;
+            }
+            if (fish.y < this.bounds.y)
+            {
+                fish.y += this.bounds.height;
+            }
+            if (fish.y > this.bounds.y + this.bounds.height)
+            {
+                fish.y -= this.bounds.height;
+            }
+        }
+       // animatedSprite.x = entity.x;
     }
 }
 

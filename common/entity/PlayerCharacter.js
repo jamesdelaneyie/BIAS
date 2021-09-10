@@ -11,7 +11,7 @@ class PlayerCharacter {
         this.rotation = 0
         this.hitpoints = 100
         this.isAlive = false
-        this.speed = 700
+        this.speed = 420
         this.size = 30
         this.mass = 20
         this.material = new p2.Material();

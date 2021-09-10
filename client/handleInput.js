@@ -5,6 +5,7 @@ import applyCommand from '../common/applyCommand.js'
 import { fire } from '../common/weapon.js'
 import handleShot from './handleShot.js'
 import isMobile from 'ismobilejs'
+import * as PIXI from 'pixi.js'
 
 const handleInput = (inputSystem, state, client, renderer, delta) => {
 
@@ -35,6 +36,8 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
         const moveCommand = new MoveCommand(input.w, input.a, input.s, input.d, rotationAmount, delta)
         client.addCommand(moveCommand)
 
+        
+
         //console.log(input.mouseDown)
         if (input.mouseDown) {
             const coolEmoji = renderer.stage.children[1].coolEmoji.contentContainer;
@@ -59,12 +62,26 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
             });
         }
 
+        const sendMessage = renderer.stage.children[1].textBox.children[0].children[0].children[3]
+        sendMessage.on("pointerdown", function () {
+            let message = renderer.stage.children[1].mockInput.value;
+            //console.log(message)
+            if(message != "") {
+                const speakCommand = new SpeakCommand(message, "talk", myRawEntity.x, myRawEntity.y)
+                client.addCommand(speakCommand)
+            }
+            renderer.stage.children[1].mockInput.blur();
+            renderer.stage.children[1].mockInput.text = ""
+        });
+
 
 
         if(input.message != "") {
             const speakCommand = new SpeakCommand(input.message, "talk", myRawEntity.x, myRawEntity.y)
             client.addCommand(speakCommand)
         }
+
+       
 
         if(input.r == true) {
             //const respawnCommand = new RespawnCommand(true)
@@ -91,6 +108,12 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
             graphics.playerBody.rotation = rotationAmount
        
             renderer.centerCamera(graphics)
+
+            let trail = new PIXI.Graphics()
+            trail.beginFill()
+            trail.drawCircle(graphics.x, graphics.y, 10)
+            trail.endFill()
+            //renderer.middleground.addChild(trail)
         }
         /* end movement */
 

@@ -9,12 +9,15 @@
   "author": "jamesdelaneyie",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@pixi/filter-ascii": "^4.0.0",
+    "@2toad/profanity": "^1.3.1",
+    "@pixi/filter-ascii": "^4.1.3",
     "@pixi/filter-crt": "^4.0.0",
+    "@pixi/filter-drop-shadow": "^4.1.3",
     "@pixi/filter-glitch": "^4.1.3",
     "@pixi/filter-glow": "^4.1.3",
     "@pixi/sound": "^4.0.4",
     "audio-stream-meter": "^1.0.5",
+    "bad-words": "^3.0.4",
     "bezier-easing": "^2.1.0",
     "canvas": "^2.7.0",
     "chat-censoring": "^1.0.6",
@@ -43,7 +46,9 @@
     "pixi.js": "^5.1.5",
     "pixi.js-legacy": "^6.1.2",
     "puxi": "github:jamesdelaneyie/puxi-mods",
-    "sat": "^0.7.1"
+    "sat": "^0.7.1",
+    "spellchecker": "^3.7.1",
+    "swearjar": "^0.2.0"
   },
   "devDependencies": {
     "concurrently": "^4.1.2",

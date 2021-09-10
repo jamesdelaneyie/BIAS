@@ -25,16 +25,39 @@ import censoring from 'chat-censoring'
 import fs from 'fs'
 import SAT from 'sat'
 
+var SpellChecker = require('spellchecker')
 
+import { profanity } from '@2toad/profanity'
+
+var Filter = require('./cleanHacked');
+var filter = new Filter();
+
+var swearjar = require('swearjar');
+
+
+function uniqueInOrder(x) {
+    const result = [];
+    const input = Array.isArray(x) ? x : x.split('');
+  
+    for (let i = 0; i < input.length; ++i) {
+      if (input[i] == input[i + 1]) continue
+      result.push(input[i])
+    }
+    
+    return result
+  }
 
 class GameInstance {
     constructor() {
         this.instance = new nengi.Instance(nengiConfig, { port: 8079 })
         instanceHookAPI(this.instance)
 
-
         this.totalUsers = 0
         this.activeUsers = []
+
+        const portals = new Map()
+        const obstacles = new Map()
+        const boxes = new Map()
 
         this.world = new p2.World({gravity: [0, 0]});
         this.room = {
@@ -43,10 +66,10 @@ class GameInstance {
             width: 4500,
             height: 4500,
             backgroundColor: "#00ff00",
-            color: "#4DFA66",
+            floorColor: "#4DFA66",
             borderColor: "#FFFFFF",
             borderWidth: 25,
-            objects: [{
+            /*objects: [{
                 name: "token",
                 type: "robot",
                 x: 1900,
@@ -119,7 +142,7 @@ class GameInstance {
                 height: 35, 
                 color: "quote0",
                 mass: 0
-            }],
+            }],*/
             portals: [{
                 x: 2500,
                 y: 2500,
@@ -355,7 +378,63 @@ class GameInstance {
         }
         this.floors5 = setupFloors(this.instance, this.room5)
 
-       
+
+        this.room6 = {
+            x: 10800,
+            y: 5500,
+            name: "reception",
+            width: 700,
+            height: 700,
+            floorColor: "#131313",
+            wallColor: "#4DFA66",
+            gridColor: "#454545",
+            backgroundColor: "#FFFFFF",
+            color: "#000000",
+            borderColor: "#4dfa66",
+            borderWidth: 5,
+            objects: [],
+            portals: [],
+            door: "bottom"
+        }
+        setupFloors(this.instance, this.room6)
+        setupObstacles(this.instance, this.room6, obstacles)
+        setupBoxes(this.instance, this.world, this.room6, boxes)
+
+
+        this.room7 = {
+            x: 11200,
+            y: 6205,
+            name: "reception",
+            width: 200,
+            height: 700,
+            floorColor: "#131313",
+            wallColor: "#4DFA66",
+            gridColor: "#454545",
+            backgroundColor: "#FFFFFF",
+            color: "#000000",
+            borderColor: "#4dfa66",
+            borderWidth: 5,
+            objects: [],
+            portals: [{
+                x: 12200,
+                y: 6270,
+                width: 10,
+                height: 100,
+                exit: [2250, 2250]
+            }],
+            door: "",
+            type: "corridor"
+        }
+        setupFloors(this.instance, this.room7)
+        setupObstacles(this.instance, this.room7, obstacles)
+
+
+
+
+        //setupBoxes(this.instance, this.world, this.room7, boxes)
+
+
+
         //this.floors = setupFloors(this.instance, this.room2)
         /*const floor = new Floor({ 
             x: 4600, 
@@ -366,7 +445,7 @@ class GameInstance {
         })
         this.instance.addEntity(floor)
         this.floors.set(floor.nid, floor)*/
-        const obstacles = new Map()
+        
         this.obstacles = setupObstacles(this.instance, this.room, obstacles)
         this.obstacles2 = setupObstacles(this.instance, this.room2, obstacles)
         this.obstacles3 = setupObstacles(this.instance, this.room3, obstacles)
@@ -374,9 +453,7 @@ class GameInstance {
         this.obstacles3 = setupObstacles(this.instance, this.room5, obstacles)
         this.obstacles = obstacles
 
-        
-        
-        const boxes = new Map()
+
         this.boxes = setupBoxes(this.instance, this.world, this.room, boxes)
         this.boxesTwo = setupBoxes(this.instance, this.world, this.room2, boxes)
         this.boxesThree = setupBoxes(this.instance, this.world, this.room3, boxes)
@@ -386,19 +463,20 @@ class GameInstance {
 
        
 
-        const portals = new Map()
+        
         this.portals = setupPortals(this.instance, this.room, portals)
         this.portals2 = setupPortals(this.instance, this.room2, portals)
         this.portals3 = setupPortals(this.instance, this.room3, portals)
         this.portals4 = setupPortals(this.instance, this.room4, portals)
         this.portals4 = setupPortals(this.instance, this.room5, portals)
+        this.portals5 = setupPortals(this.instance, this.room7, portals)
         this.portals = portals
 
 
         const theInstance = this.instance
         const theWorld = this.world
 
-        setInterval(function(){
+        /*setInterval(function(){
             let likePump = new Box({
                 name: "token",
                 type: "thumbs-up",
@@ -447,7 +525,7 @@ class GameInstance {
             theWorld.addBody(likePump.body)
             boxes.set(likePump.nid, likePump)
         }, 30000)
-
+        */
 
   
          //// SCIENCE GALLERY DESIGNS /////
@@ -464,7 +542,7 @@ class GameInstance {
         obstacles.set(reception.nid, reception)
 
 
-      const crystal = new Obstacle({ 
+     /* const crystal = new Obstacle({ 
             name: "crystal",
             x: 1500, 
             y: 2000, 
@@ -625,7 +703,8 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
         // (the rest is just attached to client objects when they connect)
         this.instance.on('command::JoinCommand', ({ command, client }) => {
 
-            
+            console.log()
+
             const rawEntity = new PlayerCharacter({ self: true, avatar: ""+command.avatar+"" })
             const smoothEntity = new PlayerCharacter({ self: false, avatar: ""+command.avatar+""  })
 
@@ -640,19 +719,28 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
             const peerID = client.peerID;*/
 
 
-            let room2SpawnX = this.room.x + (this.room.width/2)
-            let room2SpawnY = this.room.y + (this.room.height/2)
+            let room2SpawnX = this.room6.x + (this.room6.width/2)
+            let room2SpawnY = this.room6.y + (this.room6.height/2)
+            
+            
+                rawEntity.x = room2SpawnX
+                rawEntity.y = room2SpawnY
+                smoothEntity.x = room2SpawnX
+                smoothEntity.y = room2SpawnY
 
-            rawEntity.x = room2SpawnX
-            rawEntity.y = room2SpawnY
+                /*if(client.invite.x > 0) {
+                    rawEntity.x = client.invite.x
+                    rawEntity.y = client.invite.y
+                    smoothEntity.x = client.invite.x
+                    smoothEntity.y = client.invite.y
+                }*/
+          
 
 
             this.world.addBody(rawEntity.body);
             this.instance.addEntity(rawEntity)
             client.channel.addEntity(rawEntity)
 
-            smoothEntity.x = this.room.width/2
-            smoothEntity.y = this.room.height/2
             smoothEntity.collidable = true
             this.instance.addEntity(smoothEntity)
 
@@ -680,15 +768,17 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
 
         })
 
-        this.instance.on('connect', ({ client, callback }) => {
+        this.instance.on('connect', ({ client, data, callback }) => {
             
+            //console.log()
+
             const channel = this.instance.createChannel()
             channel.subscribe(client)
             client.channel = channel
-
-            
             
             client.positions = []
+
+            client.invite = {x:data.fromClient.inviteX, y:data.fromClient.inviteY}
            
             client.view = {
                 x: 0,
@@ -730,20 +820,64 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
 
         this.instance.on('command::SpeakCommand', ({ command, client, tick }) => {
 
-            //console.log(command)
             if(command.type == "emojiBlast") {
 
                 this.instance.messageAll(new Notification(command.text, 'emojiBlast', command.x, command.y))
             
             } else if(command.type == "talk") {
 
-                let polite = censoring.checkMessage(command.text, '*');
-                let friendlyMessage = censoring.censorMessage(command.text, '*');
+                //set the message
+                const message = command.text
 
-                this.instance.messageAll(new Notification(friendlyMessage, 'text', command.x, command.y))
-                console.log(polite);
+                //remove duplicate characters over 2
+                let messageTrimmed = message.replace(/(.)\1{2,}/g, '$1$1')
+                console.log("Trimmed: "+messageTrimmed)
 
+
+                var exp = /[\u0000-\u001f-[-`{-þĀ-žƀ-Ɏɐ-ʮʰ-ϾЀ-ӾԀ-\u052e\u0530-\u058e\u0590-\u05fe\u0600-\u07be߀-\u07fe\u0800-\u083e\u0840-\u085e\u08a0-\u08fe\u0900-\u09fe\u0a00-\u0a7e\u0a80-\u0afe\u0b00-\u0b7e\u0b80-\u0bfe\u0c00-\u0cfe\u0d00-\u0dfe\u0e00-\u0e7e\u0e80-\u0efeༀ-\u0ffeက-\u10feᄀ-\u11feሀ-\u137eᎀ-\u139eᎠ-\u13fe\u1400-\u167e\u1680-\u169eᚠ-\u16feᜀ-\u171eᜠ-\u173eᝀ-\u175eᝠ-\u177eក-\u17fe᠀-\u18ae\u18b0-\u18feᤀ-\u197eᦀ-\u1aae\u1b00-\u1b7e\u1b80-\u1bbe\u1bc0-\u1bfeᰀ-᱿\u1cc0-\u1cce\u1cd0-\u1cfeᴀ-ᵾᶀ-Ỿἀ-῾\u2000-\u209e₠-\u20ce\u20d0-\u20fe℀-\u218e←-\u23fe␀-\u243e⑀-\u245e①-\u26fe\u2700-➾⟀-\u2bfeⰀ-ⱞⱠ-\u2c7eⲀ-\u2d2eⴰ-\u2d7eⶀ-ⷞ\u2de0-\u2e7e⺀-\u2efe⼀-\u2fde⿰-\u2ffe\u3000-\u312e\u3130-ㆎ㆐-\u31be㇀-\u31eeㇰ-㋾㌀-\u4dbe䷀-\u9ffeꀀ-\ua48e꒐-\ua4ce\ua4d0-\ua4feꔀ-\ua63eꙀ-\ua69e\ua6a0-\ua6fe꜀-\ua82e\ua830-\ua83eꡀ-\ua87e\ua880-\ua8de\ua8e0-\ua8fe꤀-\ua97e\ua980-\ua9deꨀ-\uaa7e\uaa80-\uaade\uaae0-\uaafe\uab00-\uab2e\uabc0-\uabfe가-\ud7ae\ud7b0-\ud7fe\ud806-\ud807\ud80a-\ud80b\ud80e-\ud819\ud81c-\ud82b\ud82d-\ud833\ud836-\ud83a\ud83e-\ud83f\ud86f-\ud87d\ud87f-\udb3f\udb41-\udb7f\udc00-\ufafeﬀ-\ufdfe\ufe00-\ufe1e\ufe20-\ufe2e︰-\ufe6eﹰ-￮\ufff0-\ufffe]|[\ud80c\ud835\ud840-\ud868\ud86a-\ud86c\udb80-\udbbe\udbc0-\udbfe][\udc00-\udfff]|\ud800[\udc00-\udc7e\udc80-\udcfe\udd00-\udd8e\udd90-\uddce\uddd0-\uddfe\ude80-\ude9e\udea0-\udede\udf00-\udf2e\udf30-\udf4e\udf80-\udfde]|\ud801[\udc00-\udc4e\udc50-\udcae]|\ud802[\udc00-\udc5e\udd00-\udd3f\udd80-\udd9e\udda0-\uddfe\ude00-\ude5e\ude60-\ude7e\udf00-\udf3e\udf40-\udf5e\udf60-\udf7e]|\ud803[\udc00-\udc4e\ude60-\ude7e]|\ud804[\udc00-\udc7e\udc80-\udcce\udcd0-\udcfe\udd00-\udd4e\udd80-\uddde]|\ud805[\ude80-\udece]|\ud808[\udc00-\udffe]|\ud809[\udc00-\udc7e]|\ud80d[\udc00-\udc2e]|\ud81a[\udc00-\ude3e]|\ud81b[\udf00-\udf9e]|\ud82c[\udc00-\udcfe]|\ud834[\udc00-\udcfe\udd00-\uddfe\ude00-\ude4e\udf00-\udf5e\udf60-\udf7e]|\ud83b[\ude00-\udefe]|\ud83c[\udc00-\udc2e\udc30-\udc9e\udca0-\udcfe\udd00-\uddfe\ude00-\udefe\udf00-\udfff]|\ud83d[\udc00-\uddfe\ude00-\ude4e\ude80-\udefe\udf00-\udf7e]|\ud869[\udc00-\udede\udf00-\udfff]|\ud86d[\udc00-\udf3e\udf40-\udfff]|\ud86e[\udc00-\udc1e]|\ud87e[\udc00-\ude1e]|\udb40[\udc00-\udc7f\udd00-\uddef]|\udbbf[\udc00-\udffe]|\udbff[\udc00-\udffe]|[\ud800-\ud805\ud808-\ud809\ud80c-\ud80d\ud81a-\ud81b\ud82c\ud834-\ud835\ud83b-\ud83d\ud840-\ud86e\ud87e\udb40\udb80-\udbff]/g;
+                let messageEnglishCharactersOnly = messageTrimmed.replace(exp, "")
+                console.log("Limited: "+messageEnglishCharactersOnly)
+
+
+                let newSentance = ""
+                let singleWords = messageEnglishCharactersOnly.split(" ")
+                singleWords.forEach(word => {
+                    let isMisspelled = SpellChecker.isMisspelled(word)
+                    console.log(isMisspelled);
+                    if(isMisspelled) {
+                        let replacementWord = SpellChecker.getCorrectionsForMisspelling(word)
+                        if(replacementWord[0]) {
+                            newSentance += " "+replacementWord[0]
+                        } else {
+                            newSentance += " ???"
+                        }
+                    } else {
+                        if(word == "rape") {
+                            newSentance += " ****"
+                        } else {
+                            newSentance += " "+word
+                        }
+                    }
+                })
+                var secondRound = newSentance.substring(1);
+              
+
+                let firstPass = swearjar.censor(secondRound);
+                console.log("First Pass: "+firstPass)
+
+                if(firstPass) {
+                    let secondPass = censoring.censorMessage(firstPass, '*');
+                    console.log("Second Pass: "+secondPass)
+
+                    let thirdPass = filter.cleanHacked(secondPass)
+                    console.log("Third Pass: "+thirdPass)
+
+                    this.instance.messageAll(new Notification(thirdPass, 'text', command.x, command.y))
+
+                }
+                
             }
+
         })
 
         this.instance.on('command::RespawnCommand', ({ command, client, tick }) => {
@@ -928,9 +1062,9 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
                                 this.instance.message(new Notification(''+box.color+'', 'showQuote'), value) 
                             } else if (box.type == "art") {
                                 this.instance.message(new Notification(''+box.color+'', 'showArt'), value)
-                            } 
-
-                            //break
+                            } else {
+                                this.instance.message(new Notification(''+box.type+'', 'scoreIncrease'), value)
+                            }
 
                         } 
                

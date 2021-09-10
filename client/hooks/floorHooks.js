@@ -8,6 +8,7 @@ export default ({ floors }, renderer) => {
             renderer.entities.set(data.nid, graphics)
             renderer.background.addChild(graphics)
 
+
             return graphics
         },
         delete({ nid, graphics }) {

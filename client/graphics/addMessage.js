@@ -111,7 +111,7 @@ const addMessage = (layer, message) => {
                 })
                 
             }, 600)
-        }, 2000)
+        }, 2500)
 
         
 

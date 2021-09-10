@@ -4,19 +4,14 @@ export default (instance, room) => {
 
     const floors = new Map()
 
-    let roomX = room.x
-    let roomY = room.y 
-    let roomWidth = room.width
-    let roomHeight = room.height
-    let roomColor = room.color
-
-
     const floor = new Floor({ 
-        x: roomX, 
-        y: roomY, 
-        width: roomWidth, 
-        height: roomHeight, 
-        color: roomColor
+        x: room.x, 
+        y: room.y, 
+        width: room.width, 
+        height: room.height, 
+        floorColor: room.floorColor,
+        wallColor: room.wallColor,
+        gridColor: room.gridColor
     })
     instance.addEntity(floor)
     floors.set(floor.nid, floor)

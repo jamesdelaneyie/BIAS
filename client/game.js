@@ -73,6 +73,7 @@ const create = () => {
         window.myName = state.name
 
         renderer.UIBuilder.joinInstance(state.name, state.myRawId)
+        input.leftController.alpha = 1
         
         /*
         const myPeer = new Peer(""+state.name+"",{
@@ -228,6 +229,10 @@ const create = () => {
             renderer.UIBuilder.showArt(message.text)
         }
 
+        if(message.type == "scoreIncrease") {
+            renderer.UIBuilder.increaseScore(message.text)
+        }
+
         if(message.type == "hideArt") {
             //console.log(lastMessage, message.text)
             if((lastMessage != null) && (lastMessage != ""+message.text+"")) {
@@ -292,7 +297,7 @@ const create = () => {
         if(message.type == "sound") {
             
             if(portalSound.isPlaying == false) {
-                portalSound.play(); 
+                //portalSound.play(); 
             }
             //renderer.videoTexture.baseTexture.resource.source.pause()
 
@@ -336,7 +341,7 @@ const create = () => {
         const telephone = new filters.TelephoneFilter(1)
         const distorsion = new filters.DistortionFilter(0.1)
         backgroundMusic.filters = [telephone, distorsion]
-        backgroundMusic.play()
+        //backgroundMusic.play()
 
         const name = localStorage.getItem('name');
         if(name) {
@@ -352,8 +357,13 @@ const create = () => {
 
     })
 
+    var inviteLocation = window.location.href
+    var location = new URL(inviteLocation);
+    var x = location.searchParams.get("x");
+    var y = location.searchParams.get("y")
+    var handshake = {inviteX:x, inviteY:y}
 
-    //client.connect('ws://localhost:8079')
+    //client.connect('ws://localhost:8079', handshake)
     client.connect('wss://bias.jamesdelaney.ie/test')
 
 

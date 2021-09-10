@@ -240,7 +240,7 @@ class InputSystem {
                 this.frameState.mouseMoving = false
             })
 
-            if(this.isMobile.any) {
+            if(this.isMobile.any || window.innerWidth < 600) {
                 var joypadSize = 0.5
             } else {
                 var joypadSize = 0.2
@@ -319,8 +319,7 @@ class InputSystem {
                         this.frameState.d = true
                         this.currentState.rotation = 0.785398
                         this.frameState.rotation = 0.785398
-                       
-                        
+   
                     }
                     
                     if (dd == 'bottom') {
@@ -345,8 +344,8 @@ class InputSystem {
                         this.frameState.s = true
                         this.currentState.d = false
                         this.frameState.d = false
-                        this.currentState.rotation = -1.5708
-                        this.frameState.rotation = -1.5708
+                        this.currentState.rotation = 2.35619
+                        this.frameState.rotation = 2.35619
             
                     }
             
@@ -359,11 +358,11 @@ class InputSystem {
                         this.frameState.s = false
                         this.currentState.d = false
                         this.frameState.d = false
-                        this.currentState.rotation = 2.35619
-                        this.frameState.rotation = 2.35619
+                        this.currentState.rotation = 3.141592//
+                        this.frameState.rotation = 3.141592//
                     }
             
-                    if (dd == 'left_top') {
+                    if (dd == 'top_left') {
                         this.currentState.w = true
                         this.frameState.w = true
                         this.currentState.a = true
@@ -372,8 +371,8 @@ class InputSystem {
                         this.frameState.s = false
                         this.currentState.d = false
                         this.frameState.d = false
-                        this.currentState.rotation = 2.35619
-                        this.frameState.rotation = 2.35619
+                        this.currentState.rotation = 3.92699
+                        this.frameState.rotation = 3.92699
                     }
             
             
@@ -387,41 +386,10 @@ class InputSystem {
             });
            
             
-
-            this.rightController = new Joystick({
-            
-                outerScale: { x: joypadSize, y: joypadSize },
-                innerScale: { x: joypadSize, y: joypadSize },
-            
-                onStart: (data) => {
-                    this.currentState.mouseDown = false
-                    this.frameState.mouseDown = false
-                },
-                
-                onChange: (data) => {
-
-                    let angle = data.angle
-
-                    var pi = Math.PI;
-                    angle =  (angle * (pi/180)*-1);
-
-                    this.currentState.mouseDown = false
-                    this.frameState.mouseDown = false
-                    this.currentState.rotation = (angle)
-                    this.frameState.rotation = (angle)
-                                
-                },
-                onEnd: () => {
-                    this.currentState.mouseDown = false
-                }
-
-
-                
-            });
-
              
             if(this.isMobile.any || window.innerWidth < 600) {
-                this.leftController.position.set(this.leftController.width, window.innerHeight - this.leftController.height*2);
+                this.leftController.position.set(60, window.innerHeight - this.leftController.height*2);
+                this.leftController.alpha = 0
                 renderer.stage.addChild(this.leftController);
             } else {
                 renderer.stage.removeChild(this.leftController);
@@ -430,12 +398,6 @@ class InputSystem {
 
             
 
-            if(this.isMobile.any || window.innerWidth < 600) {
-                this.rightController.position.set(window.innerWidth - this.rightController.width, window.innerHeight - this.rightController.height*1.5);
-                renderer.stage.addChild(this.rightController);
-            }else {
-                renderer.stage.removeChild(this.rightController);
-            }
     
    
 
@@ -448,11 +410,6 @@ class InputSystem {
     }
 
     placeJoySticks(){
-
-        if(this.isMobile.any || window.innerWidth < 600) {
-            this.rightController.position.set(window.innerWidth - this.rightController.width, window.innerHeight - this.rightController.height*1.5);
-            renderer.stage.addChild(this.rightController);
-        }
 
         if(this.isMobile.any || window.innerWidth < 600) {
             this.leftController.position.set(this.leftController.width, window.innerHeight - this.leftController.height*2);
