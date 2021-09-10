@@ -394,13 +394,13 @@
             </div>
         </section>
 
-        <section class="enter-bias" hidden="">
+        <!--<section class="enter-bias" hidden>
             <div class="wrapper">
                 <div class="link-wrapper">
                     <a href="#" id="enter-bias">Enter</a>
                 </div>
             </div>
-        </section>
+        </section>-->
     
         <script>
             const enterButton = document.getElementById('enter-bias');
@@ -413,6 +413,32 @@
                 front.parentNode.removeChild(front);
                 rootElement.setAttribute('style', "overflow:hidden")
             })
+
+            var PASSCODE = ['e','n','t','e','r'],
+                current = 0,
+                //logger = document.getElementById('logger');
+
+            function keyListener(e) {
+                var code = e.keyCode || e.which,
+                str = String.fromCharCode(code);
+
+                if(str === PASSCODE[current]){
+                    current++;
+                    //logger.innerHTML += str;
+                    //console.log(current, PASSCODE.length);
+                    if(current >= PASSCODE.length){
+                        world.setAttribute('style', 'display:block')
+                        front.parentNode.removeChild(front);
+                        rootElement.setAttribute('style', "overflow:hidden")
+                    }
+            } else {
+                current = 0;
+                //logger.innerHTML = '';
+            }
+
+            }
+
+            document.addEventListener("keypress", keyListener);
             
             window.scrollTo(0,1);
         </script>
