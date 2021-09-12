@@ -165,6 +165,10 @@ class PlayerGraphics extends PIXI.Container {
                 dialingSound.loop = true
                 dialingSound.play()
             }
+
+            setTimeout(function(){
+                dialingSound.stop()
+            }, 5000)
         
             call.on('stream', function(stream) { 
                 window.remoteAudio.srcObject = stream; 
@@ -178,6 +182,7 @@ class PlayerGraphics extends PIXI.Container {
                 var mediaStream = audioContext.createMediaStreamSource(stream);
                 var meter = AudioStreamMeter.audioStreamProcessor(audioContext, function() {
                     yourself.updateCircleSize(meter.volume);
+                    console.log(meter.volume)
                 });
 
                 this.volume = meter.volume

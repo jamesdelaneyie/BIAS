@@ -180,7 +180,7 @@ const create = () => {
                 var mediaStream = audioContext.createMediaStreamSource(stream);
 
                 var meter = AudioStreamMeter.audioStreamProcessor(audioContext, function() {
-                    //console.log("Their Volume:" + meter.volume * 100 + '%');
+                    console.log("Their Volume:" + meter.volume * 100 + '%');
                 });
                 
                 mediaStream.connect(meter);
@@ -243,6 +243,14 @@ const create = () => {
                 }
                 
             }
+
+            var c = Math.sqrt( a*a + b*b );
+            if(c < 400) {
+                
+                console.log(window.remoteAudio)
+                
+            }
+
         }
 
     })
