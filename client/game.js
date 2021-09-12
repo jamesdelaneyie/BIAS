@@ -75,6 +75,16 @@ const create = () => {
 
         renderer.UIBuilder.joinInstance(state.name, state.myRawId)
         input.leftController.alpha = 1
+
+        const backgroundMusic = Sound.from('audio/background-tom.mp3');
+        backgroundMusic.speed = 1
+        backgroundMusic.volume = 0.01
+        backgroundMusic.loop = true;
+
+        const telephone = new filters.TelephoneFilter(1)
+        const distorsion = new filters.DistortionFilter(0.1)
+        //backgroundMusic.filters = [telephone, distorsion]
+        backgroundMusic.play()
         
         /*
         const myPeer = new Peer(""+state.name+"",{
@@ -429,15 +439,7 @@ const create = () => {
         renderer.UIBuilder.updateConnection(res, true);
         
 
-        const backgroundMusic = Sound.from('audio/background-tom.mp3');
-        backgroundMusic.speed = 1
-        backgroundMusic.volume = 0.01
-        backgroundMusic.loop = true;
-
-        const telephone = new filters.TelephoneFilter(1)
-        const distorsion = new filters.DistortionFilter(0.1)
-        //backgroundMusic.filters = [telephone, distorsion]
-        backgroundMusic.play()
+       
 
         const name = localStorage.getItem('name');
         if(name) {
