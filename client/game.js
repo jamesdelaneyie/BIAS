@@ -246,12 +246,12 @@ const create = () => {
 
             var c = Math.sqrt( a*a + b*b );
             if(c < 400) {
-                var volume = 200 - c
-                console.log(volume)
-                console.log(window.remoteAudio)
-                console.log(window.remoteAudio.volume)
-                console.log(window.remoteAudio[0].volume)
 
+                var volume = 300 - c
+                var number = Math.min(Math.max(parseInt(volume), 1), 100);
+                var remoteVolume = number/100
+                console.log(remoteVolume)
+                window.remoteAudio.volume = remoteVolume
                 
             }
 
