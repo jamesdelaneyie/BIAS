@@ -1611,7 +1611,7 @@ class UIBuilder extends PIXI.Container {
 
 
 
-        /*this.addChild(this.introScreen)
+        this.addChild(this.introScreen)
 
         
         setTimeout(function(){
@@ -1666,7 +1666,7 @@ class UIBuilder extends PIXI.Container {
             ease.add(introScreenWrapper, {alpha: 0 }, { duration: 500, ease: 'easeOutExpo'})
             theUI.removeChild(introScreen)
         }, 10000)
-        */
+        
             
 
 
