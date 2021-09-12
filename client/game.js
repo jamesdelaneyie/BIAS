@@ -139,71 +139,73 @@ const create = () => {
         window.myPeer = myPeer
 
    
-    /*const hangUpBtn = document.querySelector('.hangup-btn');
-    hangUpBtn.addEventListener('click', function (){
-        conn.close();
-        showCallContent();
-    })*/
+        /*const hangUpBtn = document.querySelector('.hangup-btn');
+        hangUpBtn.addEventListener('click', function (){
+            conn.close();
+            showCallContent();
+        })*/
 
-    const callSound = Sound.from('audio/calling.mp3');
-    callSound.volume = 0.05
-    callSound.loop = true
+        const callSound = Sound.from('audio/calling.mp3');
+        callSound.volume = 0.005
+        callSound.loop = true
 
-    myPeer.on('call', function(call) {
+        myPeer.on('call', function(call) {
 
-        call.answer(window.localStream) 
-        const connectionId = call.connectionId
+            call.answer(window.localStream) 
+            const connectionId = call.connectionId
 
-        const text = new MultiStyleText("<dot>●</dot> Connected With: "+call.peer +" (ID:"+connectionId+")", {
-            "default": {
-                fontFamily: "Monaco",
-                fontSize: "10px",
-                fill: "#ececec",
-                align: "left"
-            },
-            "dot": {
-                fontSize: "15px",
-                fill: "#00ff00"
-            }
-        });
-        renderer.stage.addChild(text);
-        text.x = 10;
-        text.y = 30;
-        
-        call.on('stream', function(stream) { // C
-           window.remoteAudio.srcObject = stream;
-           window.remoteAudio.autoplay = true;
-           window.peerStream = stream;
-
-           var audioContext = new AudioContext();
-				
-            var mediaStream = audioContext.createMediaStreamSource(stream);
-
-            var meter = AudioStreamMeter.audioStreamProcessor(audioContext, function() {
-                //console.log("Their Volume:" + meter.volume * 100 + '%');
+            const text = new MultiStyleText("<dot>●</dot> Connected With: "+call.peer +" (ID:"+connectionId+")", {
+                "default": {
+                    fontFamily: "Monaco",
+                    fontSize: "10px",
+                    fill: "#ececec",
+                    align: "left"
+                },
+                "dot": {
+                    fontSize: "15px",
+                    fill: "#00ff00"
+                }
             });
+            renderer.stage.addChild(text);
+            text.x = 10;
+            text.y = 30;
             
-            mediaStream.connect(meter);
-        });
-     
+            call.on('stream', function(stream) { // C
+            window.remoteAudio.srcObject = stream;
+            window.remoteAudio.autoplay = true;
+            window.peerStream = stream;
+
+            var audioContext = new AudioContext();
+                    
+                var mediaStream = audioContext.createMediaStreamSource(stream);
+
+                var meter = AudioStreamMeter.audioStreamProcessor(audioContext, function() {
+                    //console.log("Their Volume:" + meter.volume * 100 + '%');
+                });
+                
+                mediaStream.connect(meter);
+            });
         
-     });
+            
+        });
+            
+
+    
+        myPeer.on('connection', function(conn){
+            conn.on('data', (data) => {
+                console.log(data);
+            });
+            conn.on('open', () => {
+                conn.send('hello!');
+            });
+        });
+
+    
+    
+        setTimeout(function(){
+            getLocalStream()
+        }, 5000)
         
-
-    
-    myPeer.on('connection', function(conn){
-        conn.on('data', (data) => {
-            console.log(data);
-        });
-        conn.on('open', () => {
-            conn.send('hello!');
-        });
-    });
-
-    
-    
-
-        getLocalStream();
        
     })
 
