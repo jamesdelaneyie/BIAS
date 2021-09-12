@@ -668,36 +668,36 @@ class UIBuilder extends PIXI.Container {
         this.addChild(this.worldInfo)
 
 
-        this.currentTimeHeader = new PIXI.Text("World Running For:", {fill: 0x000000, fontSize: 10, fontFamily: 'Iosveka'});
+        this.currentTimeHeader = new PIXI.Text("World Running For:", {fill: 0x000000, fontSize: 10, fontFamily: 'Trade Gothic Next'});
         this.currentTimeHeader.x = 10
         this.currentTimeHeader.y = 10
         this.worldInfoWrapper.contentContainer.addChild(this.currentTimeHeader);
         
-        this.currentTime = new PIXI.Text("00:00", {fill: 0x000000, fontSize: 10, fontFamily: 'Iosveka'});
+        this.currentTime = new PIXI.Text("00:00", {fill: 0x000000, fontSize: 10, fontFamily: 'Trade Gothic Next'});
         this.currentTime.x = 130
         this.currentTime.y = 11
         this.worldInfoWrapper.contentContainer.addChild(this.currentTime);
 
 
 
-        this.numberOfPeople = new PIXI.Text("Active Users:", {fill: 0x000000, fontSize: 10, fontFamily: 'Iosveka'});
+        this.numberOfPeople = new PIXI.Text("Active Users:", {fill: 0x000000, fontSize: 10, fontFamily: 'Trade Gothic Next'});
         this.numberOfPeople.x = 10
         this.numberOfPeople.y = 26
         this.worldInfoWrapper.contentContainer.addChild(this.numberOfPeople);
         
-        this.numberOfPeopleCounter = new PIXI.Text("0", {fill: 0x000000, fontSize: 10, fontFamily: 'Iosveka'});
+        this.numberOfPeopleCounter = new PIXI.Text("0", {fill: 0x000000, fontSize: 10, fontFamily: 'Trade Gothic Next'});
         this.numberOfPeopleCounter.x = 130
         this.numberOfPeopleCounter.y = 26
         this.worldInfoWrapper.contentContainer.addChild(this.numberOfPeopleCounter);
 
 
 
-        this.totalNumberOfPeople = new PIXI.Text("Total Users:", {fill: 0x000000, fontSize: 10, fontFamily: 'Iosveka'});
+        this.totalNumberOfPeople = new PIXI.Text("Total Users:", {fill: 0x000000, fontSize: 10, fontFamily: 'Trade Gothic Next'});
         this.totalNumberOfPeople.x = 10
         this.totalNumberOfPeople.y = 42
         this.worldInfoWrapper.contentContainer.addChild(this.totalNumberOfPeople);
         
-        this.totalNumberOfPeopleCounter = new PIXI.Text("0", {fill: 0x000000, fontSize: 10, fontFamily: 'Iosveka'});
+        this.totalNumberOfPeopleCounter = new PIXI.Text("0", {fill: 0x000000, fontSize: 10, fontFamily: 'Trade Gothic Next'});
         this.totalNumberOfPeopleCounter.x = 130
         this.totalNumberOfPeopleCounter.y = 43
         this.worldInfoWrapper.contentContainer.addChild(this.totalNumberOfPeopleCounter);
