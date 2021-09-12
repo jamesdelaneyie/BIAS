@@ -6,6 +6,7 @@ import { fire } from '../common/weapon.js'
 import handleShot from './handleShot.js'
 import isMobile from 'ismobilejs'
 import * as PIXI from 'pixi.js'
+import { Sound, filters } from '@pixi/sound'
 
 const handleInput = (inputSystem, state, client, renderer, delta) => {
 
@@ -33,10 +34,20 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
         if(isMobile(window.navigator).any === true) {
             rotationAmount = input.rotation
         }
+
+        
         const moveCommand = new MoveCommand(input.w, input.a, input.s, input.d, rotationAmount, delta)
         client.addCommand(moveCommand)
 
+        // apply moveCommand  to our local entity
+        applyCommand(myRawEntity, moveCommand, obstacles, boxes)
         
+        /*console.log(input.w)
+        if(input.w == true) {
+            if(!footstep.isPlaying) {
+                footstep.play()
+            }
+        }*/
 
         //console.log(input.mouseDown)
         if (input.mouseDown) {
@@ -88,8 +99,7 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
             //client.addCommand(respawnCommand)
         }
        
-        // apply moveCommand  to our local entity
-        applyCommand(myRawEntity, moveCommand, obstacles, boxes)
+      
 
         // save the result of applying the command as a prediction
         const prediction = {

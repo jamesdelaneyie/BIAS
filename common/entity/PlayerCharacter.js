@@ -37,6 +37,7 @@ class PlayerCharacter {
             mass: 10,
             position: [0, 0]
         });
+        this.body.name = "player"
         this.body.addShape(this.circleShape)
         this.body.addShape(convexShape)
         

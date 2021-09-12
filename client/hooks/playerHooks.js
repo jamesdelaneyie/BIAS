@@ -13,10 +13,6 @@ export default (state, renderer ) => {
             /* self, raw */
             if (data.nid === state.myRawId) {
                 state.myRawEntity = entity
-                if(data.self == false) {
-                    sound.add('login', 'audio/car.mp3');
-                    sound.play('login') 
-                }
             }
 
             /* self, smooth */

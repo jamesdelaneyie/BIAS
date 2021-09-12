@@ -2,6 +2,8 @@ import { Joystick } from './graphics/Joystick';
 import isMobile from 'ismobilejs'
 import JoinCommand from '../common/command/JoinCommand.js'
 import LeaveCommand from '../common/command/LeaveCommand.js'
+import { Sound, filters } from '@pixi/sound'
+
 
 class InputSystem {
 
@@ -18,6 +20,9 @@ class InputSystem {
         const joinButton = renderer.stage.children[1].joinButton
         const UIBuilder = this.UIBuilder
 
+        const footstep = Sound.from('audio/footstep.mp3');
+        footstep.speed = 2
+        footstep.volume = 0.005
         
         
         joinButton.on("click", function () {
@@ -130,21 +135,33 @@ class InputSystem {
                 if (event.keyCode === 87 || event.keyCode === 38) {
                     this.currentState.w = true
                     this.frameState.w = true
+                    if(!footstep.isPlaying) {
+                        footstep.play()
+                    }
                 }
                 // a or left arrow
                 if (event.keyCode === 65 || event.keyCode === 37) {
                     this.currentState.a = true
                     this.frameState.a = true
+                    if(!footstep.isPlaying) {
+                        footstep.play()
+                    }
                 }
                 // s or down arrow
                 if (event.keyCode === 83 || event.keyCode === 40) {
                     this.currentState.s = true
                     this.frameState.s = true
+                    if(!footstep.isPlaying) {
+                        footstep.play()
+                    }
                 }
                 // d or right arrow
                 if (event.keyCode === 68 || event.keyCode === 39) {
                     this.currentState.d = true
                     this.frameState.d = true
+                    if(!footstep.isPlaying) {
+                        footstep.play()
+                    }
                 }
 
             }
@@ -177,15 +194,19 @@ class InputSystem {
                 //console.log('keyup', event)
                 if (event.keyCode === 87 || event.keyCode === 38) {
                     this.currentState.w = false
+                    footstep.stop()
                 }
                 if (event.keyCode === 65 || event.keyCode === 37) {
                     this.currentState.a = false
+                    footstep.stop()
                 }
                 if (event.keyCode === 83 || event.keyCode === 40) {
                     this.currentState.s = false
+                    footstep.stop()
                 }
                 if (event.keyCode === 68 || event.keyCode === 39) {
                     this.currentState.d = false
+                    footstep.stop()
                 }
 
                 if (event.keyCode === 82) {
@@ -208,11 +229,6 @@ class InputSystem {
                    // this.frameState.message = ""
                     this.currentState.message = ""
                     this.UIBuilder.clearMessageText();
-                }
-
-                //Right Bracket
-                if(event.keyCode === 221) {
-                    this.currentState.viewArt = false
                 }
 
 

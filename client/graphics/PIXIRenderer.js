@@ -2,6 +2,7 @@
 import * as PIXI from 'pixi.js'
 import UIBuilder from './UIBuilder.js'
 import PixiFps from "pixi-fps";
+import TaggedText from 'pixi-tagged-text'
  
 import { CRTFilter } from '@pixi/filter-crt'
 import { AsciiFilter } from '@pixi/filter-ascii'
@@ -31,6 +32,7 @@ class PIXIRenderer {
         this.camera = new PIXI.Container()
 
         this.background = new PIXI.Container()
+        this.backbackground = new PIXI.Container()
         this.middleground = new PIXI.Container()
         this.foreground = new PIXI.Container()
         
@@ -39,21 +41,22 @@ class PIXIRenderer {
         
         font.load()
 
+        this.camera.addChild(this.backbackground)
         this.camera.addChild(this.background)
         this.camera.addChild(this.middleground)
         this.camera.addChild(this.foreground)
 
-        const noise = new PIXI.filters.NoiseFilter(0.1, 0.2893);
-        //this.stage.filters = [noise]
+        //this.noise = new PIXI.filters.NoiseFilter(0.01, 0.2893);
+        //this.stage.filters = [this.noise]
         
-        this.camera.x = 500
-        this.camera.y = 250
+        this.camera.x = 6000
+        this.camera.y = 6000
 
         this.stage.addChild(this.camera)
         this.stage.addChild(this.UIBuilder)
 
         const fpsCounter = new PixiFps();
-        //this.stage.addChild(fpsCounter)
+        this.stage.addChild(fpsCounter)
 
         this.fishCountOne = 7;
         this.fishCountTwo = 2;
@@ -79,8 +82,9 @@ class PIXIRenderer {
             fish.y = Math.random() * 1000;
 
             fish.scale.set(0.3 + (Math.random() * 0.8));
-            this.foreground.addChild(fish);
-            this.fishes.push(fish);
+            this.backbackground.addChild(fish);
+            fish.alpha = 0.5
+            this.fishes.push(fish)
         }
 
         for (let i = 0; i < this.fishCountTwo; i++){
@@ -97,7 +101,7 @@ class PIXIRenderer {
             fish.alpha = 0.2
 
             fish.scale.set(2.3 + (Math.random() * 0.8));
-            this.foreground.addChild(fish);
+            this.backbackground.addChild(fish);
             this.fishes.push(fish);
         }
 
@@ -115,40 +119,117 @@ class PIXIRenderer {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
         const scienceGalleryLogo = PIXI.Sprite.from('images/sg-white.svg');
         scienceGalleryLogo.x = 11050
-        scienceGalleryLogo.y = 5805
-        scienceGalleryLogo.alpha = 0.5
+        scienceGalleryLogo.y = 5605
+        scienceGalleryLogo.alpha = 1
         scienceGalleryLogo.width = 187
         scienceGalleryLogo.height = 90
 
         this.middleground.addChild(scienceGalleryLogo)
 
+       
 
-
-        const welcomeText = new PIXI.Text('Welcome to BIAS ONLINE.\nA real-time virtual exhibition space at Science Gallery Dublin', {fontFamily: "Trade Gothic Next", fontSize: "18px", fill: "#ffffff", align: "center", lineHeight: 24})
-        welcomeText.x = (11055-130)
-        welcomeText.y = 5700-50
-        welcomeText.alpha = 0.5
+        const welcomeText = new TaggedText("Welcome to <bold>BIAS ONLINE</bold>\nA real-time virtual exhibition space at Science Gallery Dublin", {
+            "default": {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "18px",
+                wordWrap: true,
+                fill: "#FFFFFF",
+                lineHeight: 24,
+                padding: 10,
+                wordWrapWidth: 300,
+                leading: 1,
+                align: "center",
+                textBaseline: "middle"
+            },
+            "bold": {
+                fontWeight: 900,
+                fontSize: "18px",
+                lineHeight: 24,
+            }
+        });
+        welcomeText.alpha = 0
+        welcomeText.x = (11055-60)
+        welcomeText.y = 5720
         this.middleground.addChild(welcomeText)
+       
 
 
 
-        const introText = new PIXI.Text('What is bias? \nWhy and how does it exist?', {fontFamily: "Trade Gothic Next", fontSize: "18px", fill: "#ffffff", align: "center", lineHeight: 24})
-        introText.x = 11055
-        introText.y = 6000
-        introText.alpha = 0.5
-        this.middleground.addChild(introText)
+
+        const controlsDesktop = new PIXI.Sprite.from('images/wasd-controls.svg');
+        controlsDesktop.anchor.set(0.5);
+        controlsDesktop.width = 267
+        controlsDesktop.height = 229
+        controlsDesktop.x = 11150
+        controlsDesktop.y = 6130
+        controlsDesktop.alpha = 0.5
+        this.middleground.addChild(controlsDesktop)
 
 
-        const directionText = new PIXI.Text('TO GALLERY ↓', {fontFamily: "Trade Gothic Next", fontSize: "18px", fontWeight: 700, fill: "#ffffff", align: "center", lineHeight: 24})
-        directionText.x = 11090
-        directionText.y = 6150
-        directionText.alpha = 0
-        this.middleground.addChild(directionText)
+
+
+
+        const desktopControlsTextLeft = new TaggedText("Use the WASD keys to \nmove your character", {
+            "default": {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "16px",
+                fill: "#FFFFFF",
+                lineHeight: 24,
+            }
+        });
+        desktopControlsTextLeft.alpha = 0
+        desktopControlsTextLeft.x = 10850
+        desktopControlsTextLeft.y = 5925
+        this.middleground.addChild(desktopControlsTextLeft)
+
+
+        const desktopControlsTextRight = new TaggedText("Bump into objects\nto activate them", {
+            "default": {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "16px",
+                fill: "#FFFFFF",
+                align: "right",
+                lineHeight: 24,
+            }
+        });
+        desktopControlsTextRight.alpha = 0
+        desktopControlsTextRight.x = 10950
+        desktopControlsTextRight.y = 5925
+        this.middleground.addChild(desktopControlsTextRight)
+
+
+        const downArrowFloor = new PIXI.Sprite.from('images/floor-arrow-down.svg');
+        downArrowFloor.anchor.set(0.5);
+        downArrowFloor.width = 32
+        downArrowFloor.height = 42
+        downArrowFloor.x = 11150
+        downArrowFloor.y = 6300
+        downArrowFloor.alpha = 0.25
+        this.middleground.addChild(downArrowFloor)
+
+
+
         setTimeout(function(){
-            directionText.alpha = 1
-        }, 500)
+            welcomeText.alpha = 1
+            desktopControlsTextLeft.alpha = 0.5
+            desktopControlsTextRight.alpha = 0.5
+        }, 200)
+
+
 
 
 
@@ -169,6 +250,40 @@ class PIXIRenderer {
         this.middleground.addChild(noahBackgroundTwo)
 
 
+
+/*
+
+        const introScreen = new PIXI.Container()
+        introScreen.width = window.innerWidth
+        introScreen.height = window.innerHeight
+
+        const introBackground = new PIXI.Graphics()
+        introBackground.beginFill(0xFF0000)
+        introBackground.drawRect(0, 0, window.innerWidth, window.innerHeight)
+        introBackground.endFill()
+        introScreen.addChild(introBackground)
+
+        const introText = new TaggedText("BIAS", {
+            "default": {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "54px",
+                fontWeight: 900,
+                align: "center"
+            }
+        })
+        introText.alpha = 0
+        setTimeout(function(){ 
+            introText.alpha = 1
+        }, 200)
+        
+        //introText.anchor.set(0.5);
+        introText.x = window.innerWidth/2
+        introText.y = window.innerHeight/2
+        introScreen.addChild(introText)
+        this.stage.addChild(introScreen)
+
+
+      */
 
         
         window.addEventListener('resize', () => {
@@ -211,6 +326,8 @@ class PIXIRenderer {
         this.renderer.render(this.stage)
         this.UIBuilder.update(delta)
 
+        //this.noise.seed = Math.random()
+
         //this.biasShape.x += delta*50;
         //this.biasShape.y -= delta*50;
 
@@ -218,7 +335,7 @@ class PIXIRenderer {
         this.displacementSprite.x = delta*500
 
 
-        this.foreground.filters =  [this.ascaiiFilter, this.displacementFilter]
+        this.backbackground.filters =  [this.ascaiiFilter, this.displacementFilter]
         
 
 

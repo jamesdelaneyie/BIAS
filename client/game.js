@@ -10,6 +10,7 @@ import reconcilePlayer from './reconcilePlayer.js'
 import shouldIgnore from './shouldIgnore.js'
 import addMessage from './graphics/addMessage.js'
 import emojiBlast from './graphics/emojiBlast.js'
+import * as PIXI from 'pixi.js'
 import { Sound, filters } from '@pixi/sound';
 import MultiStyleText from 'pixi-multistyle-text'
 import AudioStreamMeter from 'audio-stream-meter'
@@ -205,6 +206,81 @@ const create = () => {
         drawHitscan(renderer.background, x, y, tx, ty, 0x000000)
     })
 
+    
+
+    
+
+    client.on('message::Walking', message => {
+        if (message.id === state.mySmoothEntity.nid) {
+            return
+            //console.log('im walking here')
+        }
+        //console.log(message.x, message.y)
+        //console.log(state.mySmoothEntity.x, state.mySmoothEntity.y)
+
+        var a = message.x - state.mySmoothEntity.x;
+        var b = message.y - state.mySmoothEntity.y
+
+        var c = Math.sqrt( a*a + b*b );
+        if(c < 400) {
+            var volume = 400 - c
+            footstep.volume = volume/6000
+            //console.log('volume:' + c)
+            if(!footstep.isPlaying) {
+                footstep.play()
+            }
+            
+        }
+
+    })
+
+    const loader = new PIXI.Loader();
+    loader.add('boop', 'audio/boop.mp3');
+    loader.add('footstep', 'audio/footstep.mp3');
+
+    let boop = ""
+    let footstep = ""
+    loader.load(function(loader, resources) {
+        boop = resources.boop.sound
+        footstep = resources.footstep.sound
+        footstep.speed = 2
+        footstep.volume = 0.005
+
+    });
+
+
+    client.on('message::Hitting', message => {
+        if(message.id == 0) {
+
+        var a = message.x - state.mySmoothEntity.x;
+        var b = message.y - state.mySmoothEntity.y
+
+        if(!boop.isPlaying) {
+
+            var force = message.force;
+
+            var forceSound = Math.min(Math.max(parseInt(force), 1), 20);
+            
+            var c = Math.sqrt( a*a + b*b );
+            if(c < 400) {
+                var volume = 400 - c
+                boop.volume = volume/6000
+                boop.volume = boop.volume * (forceSound/5)
+                
+                    boop.play();
+
+                }
+                
+            }
+        
+            
+        } else {
+            if(!boop.isPlaying) {
+                boop.play();
+            }
+        }
+    })
+
 
 
 
@@ -216,8 +292,14 @@ const create = () => {
     partySound.volume = 0.008
     let lastMessage
 
+
+    const portalProximity = Sound.from('audio/portal-proximity.mp3');
+    portalProximity.volume = 0
+    portalProximity.play()
+
     client.on('message::Notification', message => {
 
+        //console.log(message)
         
         if(message.type == "showQuote") {
             if(!renderer.UIBuilder.showingQuote) {
@@ -306,6 +388,17 @@ const create = () => {
 
         }
 
+        if(message.type == "portalVolume") {
+
+            var volume = (200 - message.text) / 500
+            portalProximity.volume = volume
+            //console.log(volume)
+
+          // console.log(message)
+
+
+        }
+
         if(message.type == "command") {
 
 
@@ -336,15 +429,15 @@ const create = () => {
         renderer.UIBuilder.updateConnection(res, true);
         
 
-        const backgroundMusic = Sound.from('audio/background.mp3');
-        backgroundMusic.speed = 0.9
-        backgroundMusic.volume = 0.0001
+        const backgroundMusic = Sound.from('audio/background-tom.mp3');
+        backgroundMusic.speed = 1
+        backgroundMusic.volume = 0.01
         backgroundMusic.loop = true;
 
         const telephone = new filters.TelephoneFilter(1)
         const distorsion = new filters.DistortionFilter(0.1)
-        backgroundMusic.filters = [telephone, distorsion]
-        //backgroundMusic.play()
+        //backgroundMusic.filters = [telephone, distorsion]
+        backgroundMusic.play()
 
         const name = localStorage.getItem('name');
         if(name) {
@@ -366,8 +459,8 @@ const create = () => {
     var y = location.searchParams.get("y")
     var handshake = {inviteX:x, inviteY:y}
 
-    //client.connect('ws://localhost:8079', handshake)
-    client.connect('wss://bias.jamesdelaney.ie/test')
+    client.connect('ws://localhost:8079', handshake)
+    //client.connect('wss://bias.jamesdelaney.ie/test')
 
 
     const update = (delta, tick, now) => {

@@ -11,6 +11,24 @@
          url('../fonts/TradeGothicNextLTPro-Lt.woff2') format('woff2');
     font-weight: 300;
 }
+
+@font-face {
+    font-family: 'Trade Gothic Next';
+    src: url('../fonts/TradeGothicNextLTPro-Rg.woff2') format('woff2');
+    font-weight: 400;
+}
+@font-face {
+    font-family: 'Trade Gothic Next';
+    src: url('../fonts/TradeGothicNextLTPro-It.woff2') format('woff2');
+    font-weight: 400;
+    font-style: italic
+}
+@font-face {
+    font-family: 'Trade Gothic Next';
+    src: url('../fonts/TradeGothicNextLTPro-Bd.woff2') format('woff2');
+    font-weight: 700;
+}
+
 @font-face {
     font-family: 'Trade Gothic Next';
     src: url('../fonts/TradeGothicNextLTPro-Hv.woff') format('woff'),

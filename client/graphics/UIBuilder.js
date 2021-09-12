@@ -3,11 +3,11 @@ import * as PUXI from '../../node_modules/puxi/lib/puxi.mjs'
 import MultiStyleText from 'pixi-multistyle-text'
 import TaggedText from 'pixi-tagged-text'
 import { Ease, ease } from 'pixi-ease'
-import { sound } from '@pixi/sound'
+import { Sound, filters } from '@pixi/sound'
 import { CRTFilter } from '@pixi/filter-crt'
 import { GlowFilter } from '@pixi/filter-glow';
-import {DropShadowFilter} from '@pixi/filter-drop-shadow';
-
+import { DropShadowFilter } from '@pixi/filter-drop-shadow';
+import { GlitchFilter } from '@pixi/filter-glitch'
 //var PUXI = require('puxi');
 
 class UIBuilder extends PIXI.Container {
@@ -127,7 +127,7 @@ class UIBuilder extends PIXI.Container {
             x: 0,
             y: 0
         })
-        this.emojiStage.visible = false
+        //this.emojiStage.visible = false
 
         this.emojiWrapper = new PUXI.WidgetGroup({}).setLayoutOptions(
             new PUXI.FastLayoutOptions({
@@ -161,6 +161,8 @@ class UIBuilder extends PIXI.Container {
         this.emojiWrapper.addChild(this.coolEmoji)
         this.coolEmoji.contentContainer.buttonMode = true
         this.coolEmoji.contentContainer.interactive = true
+
+
 
         this.heartEmoji = new PUXI.Widget({}).setLayoutOptions(
             new PUXI.FastLayoutOptions({
@@ -241,7 +243,7 @@ class UIBuilder extends PIXI.Container {
             x: 0,
             y: 0
         })
-        this.scoreStage.visible = false
+        //this.scoreStage.visible = false
         
         this.scoreWrapper = new PUXI.WidgetGroup({}).setLayoutOptions(
             new PUXI.FastLayoutOptions({
@@ -770,19 +772,24 @@ class UIBuilder extends PIXI.Container {
             scrollY: true,
             scrollX: false,
             scrollBars: true,
-            dragScrolling: true,
+            dragScrolling: false,
             softness: 1,
-            expandMask: 0,
-            overflowY: -1000,
         }).setLayoutOptions(
             new PUXI.FastLayoutOptions({
-                width: 0.9999,
+                width: 0.999,
                 height: 0.999,
                 x: 0.5,
                 y: 0.5,
                 anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
             })
-        ).setPadding(0, 50, 0, 100)
+        ).setPadding(0, 50, 0, 50)
+        
+
+
+       
+
+
+
         this.scrollWrapper.addChild(this.scrollContent);
         this.quoteWrapper.addChild(this.scrollWrapper);
 
@@ -813,52 +820,54 @@ class UIBuilder extends PIXI.Container {
             leading: 1
         });
 
-
+        
+        
 
         this.quotesToShow = [
-            //About
+            //ABOUT
             {
-                title: "What is BIAS ONLINE",
+                title: "BIAS ONLINE",
                 subtitle: "",
                 credit: "",
-                paragraph:"Welcome to a virtual exhibition space by Science Gallery at Trinity College Dublin showcasing digital artworks exploring data equity, privacy, surveillance culture, facial recognition, class and artificial intelligence.\n\nOur virtual gallery is very similar to the real world; you move your character through the 2D space to explore the exhibition. Kiosks like this one reveal further information and portals take you to other areas in the gallery.\n\nAnd just like the real world, you're here live with other people. You can chat using the text box below or if you're feeling shy, why not send an emoji blast to show your feelings?\n\nOK, go explore!",
-               // paragraph: "BIAS ONLINE: a virtual exhibition space by Science Gallery at Trinity College Dublin showcasing digital artworks exploring data equity, privacy, surveillance culture, facial recognition, class and artificial intelligence.",
+                paragraph:"<intro>Welcome to a virtual exhibition space by Science Gallery at Trinity College Dublin showcasing digital artworks exploring data equity, privacy, surveillance culture, facial recognition, class and artificial intelligence.</intro><p>\n\nOur virtual gallery is very similar to the real world; you move your character through the 2D space to explore the exhibition. Kiosks like this one reveal further information and portals take you to other areas in the gallery.\n\nAnd just like the real world, you're here live with other people. You can chat using the text box below or if you're feeling shy, why not send an emoji blast to show your feelings?\n\nOK, go explore!</p>",
                 style: "",
                 type: ""
             },
+            //ARTISTS
             {
-                title: "Artists of BIAS",
+                title: "EXHIBITING ARTISTS",
                 subtitle: "",
                 credit: "",
-                paragraph:"Intro PARA\n\nARTIST 1 BIO\n\netc",
-               // paragraph: "BIAS ONLINE: a virtual exhibition space by Science Gallery at Trinity College Dublin showcasing digital artworks exploring data equity, privacy, surveillance culture, facial recognition, class and artificial intelligence.",
+                paragraph:"<img imgSrc='mushonThumb' imgDisplay='inline' />\n<p><bold>Mushon Zer-Aviv</bold> is a designer, researcher, educator and media activist based in Tel Aviv. His love/hate relationship with data informs his design work, art pieces, activism, research, teaching, workshops and city life. He is currently writing a non-fiction book about friction – a design theory of change. Among Mushon’s collaborations, he is the CO-founder of Shual.com – a foxy design studio – and multiple government transparency and civic participation initiatives with the Public Knowledge Workshop; Mushon also designed the maps for Waze.com and led the design of Localize.city. \n\nMushon is an alumni of Eyebeam art + technology center in New York. He is a senior faculty member at Shenkar College and has previously taught at NYU, Parsons, and Bezalel. Adam Kariv developed the code for the work. Additionally, Mushon Zer-Aviv would like to thank the Science Gallery at Trinity College Dublin for commissioning this work.\n\n<noahlink>mushon.com</noahlink> // @mushon\n\n\n<img imgSrc='johannThumb' imgDisplay='inline' />\n<bold>Johann Diedrick</bold> is an artist, engineer, and musician that makes installations, performances, and sculptures for encountering the world through our ears. He surfaces vibratory histories of past interactions inscribed in material and embedded in space, peeling back sonic layers to reveal hidden memories and untold stories. He shares his tools and techniques through listening tours, workshops, and open-source hardware/software.\n\nHe is the founder of A Quiet Life, a sonic engineering and research studio that designs and builds audio-related software and hardware products for revealing possibilities off the grid through sonic encounter. He is a 2021 Mozilla Creative Media Award recipient, a member of NEW INC, and an adjunct professor at NYU\'s ITP program. His work has been featured in Wire Magazine, Musicworks Magazine, and presented internationally at MoMA PS1, Ars Electronica, and the Somerset House, among others. This project is supported by the Mozilla Foundation.\n\n<noahlink>darkmatters.ml</noahlink> // @johanndiedrick\n\n\n<img imgSrc='libbyThumb' imgDisplay='inline' />\n<bold>Libby Heaney</bold>\'s post-disciplinary art practice includes moving image works, performances and participatory and interactive experiences that span quantum computing, virtual reality, AI and installation. Her practice uses affect, humour, surrealism and nonsense to subvert the capitalist appropriation of technology, the endless categorizations of humans and non-humans alike. She uses tools like machine learning and quantum computing against their \'proper\' use, to undo biases and to forge new expressions of collective identity and belonging with each other and the world. She has exhibited widely in the UK and internationally, including Tate Modern, the V&A, London and Mutek & Sonar Festivals. She is currently resident of the London institution Somerset House, where she is currently working on a major commission with quantum computing for Berlin\'s Light Art Space. Sound Design by Barney Kass and the artist would also like to thank Public Space Surveillance Manager at Hackney Council, Oliver Martin and acknowledge the Art Quest Adaptations Residency for acting as a catalyst for this work.\n\n<noahlink>libbyheaney.co.uk</noahlink> // @libby_heaney_\n\n\n<img imgSrc='noahThumb' imgDisplay='inline' />\n<bold>Noah Levenson</bold> leads research engineering as \"Hacker in Residence\" at Consumer Reports Digital Lab. He is a 2019 Rockefeller Foundation Bellagio fellow. His computer science work has been profiled by Scientific American, MIT, Engadget, CBC News, and Fast Company, among others. He lives in New York City, where he was born.\n\n<noahlink>noahlevenson.com</noahlink> // @noahlevenson</p>",
                 style: "",
                 type: ""
             },
+
+
+            //PROJECTS
             {
-                title: "Interogations of BIAS",
+                title: "INTEROGATIONS OF BIAS",
                 subtitle: "",
                 credit: "",
-                paragraph:"ARTIST 1-2-3-4 WORK IMG, LINK DIRECT FROM IMAGE, EXHIB TEXT\n\nx4",
-               // paragraph: "BIAS ONLINE: a virtual exhibition space by Science Gallery at Trinity College Dublin showcasing digital artworks exploring data equity, privacy, surveillance culture, facial recognition, class and artificial intelligence.",
+                 paragraph:'\n<img imgSrc="dialIconThumb" imgDisplay="inline" /> <boldtitle>NORMALIZI.NG</boldtitle>\n<subtitle>What does normal look like?</subtitle>\n<gap>\n</gap><p>NORMALIZI.NG by Mushon Zer-Aviv is a new digital commission further developing and adapting his existing work “The Normalizing Machine”. This experimental online research in machine-learning aims to analyze and understand how we decide who looks more “normal”. By contributing to the dataset and choosing between faces you deem more normal, the machine analyzes your decisions and will add you to its algorithmic map of normality.\n\nIn the late 1800s, the French forensics pioneer Alphonse Bertillon, the father of the mugshot, developed ‘Le Portrait Parle’ (the speaking portrait), a system for standardizing, indexing and classifying the human face. His statistical system was never meant to criminalize the face, but it was later widely adopted by both the eugenics movement and the Nazis to do exactly that.\n\nThe online work automates Alphonse’s speaking portraits and visualizes how today’s systematic discrimination is aggregated, amplified and conveniently hidden behind the seemingly objective black box of artificial intelligence.\n\n\n<img imgSrc="talkingIconThumb" imgDisplay="inline" /> <boldtitle>DARK MATTERS</boldtitle>\n<subtitle>What does bias sound like?</subtitle>\n<gap>\n</gap><p>Dark Matters exposes the absence of Black speech in the datasets used to train voice interface systems in consumer AI products like Alexa and Siri. Using 3D modeling, sound and storytelling, the project challenges us to grapple with racism and inequity through speech and the spoken word, and how AI systems underserve Black communities.</p>\n\n\n<img imgSrc="robotIconThumb" imgDisplay="inline" /> <boldtitle>CLASSES</boldtitle>\n<subtitle>How are biases translated into code?</subtitle>\n<gap>\n</gap><p>CLASSES is a video essay exploring the entanglements between machine learning classification and social class(ification). The artwork takes place in a simulated model of a London council estate, where the artist lives. Machine and human voices playfully narrate aspects of her in-depth research into accented speech recognition, natural language processing* and public space surveillance, to understand how historical and cultural biases around social class are being translated into code and how this affects people’s material conditions.\n\nTowards the end of the essay, the artist finds inspiration in her community gardening on the estate to propose a rewilded AI that removes rigid hierarchical categories to build stronger relations between people and the world.\n\n\n<img imgSrc="faceIconThumb" imgDisplay="inline" />  <boldtitle>STEALING UR FEELINGS</boldtitle>\n<subtitle>Can the internet read you?</subtitle>\n<gap>\n</gap><p>Meet the new A.I. that knows you better than you know yourself. STEALING UR FEELINGS is an interactive film that learns your deepest, darkest secrets - just by looking at your face.  That\'s the good news. The bad news? Your favourite apps are doing exactly the same thing.</p>',
                 style: "",
                 type: ""
             },
             //Credits
             {
-                title:"Credits",
+                title:"CREDITS",
                 subtitle:"",
-                credit:"——",
-                paragraph: "Project Team:\n\nAisling Murray, Mitzi D'Alton, \nRory McCorrmick, Niamh O' Doherty, \nJames Delaney \n\nArtists:\n\nJohann Diedrick\nLibby Heaney\nMushon Zer-Aviv\nNoah Levenson\n\nBackgrounds aduios loops by Eric Matyas|\nSound effect by Tom Winters\n\nScience Gallery Dublin is part of the Global Science Gallery Network pioneered by Trinity College Dublin.\n\nBIAS ONLINE was developed with the support of the European ARTificial Intelligence Lab, co-funded by the Creative Europe Programme of the European Union. (plus logos)\n\nBIAS ONLINE was created with the support of The Department of Tourism, Culture, Arts, Gaeltacht, Sport and Media.\n",
+                credit:"",
+                paragraph: "<intro><bold>BIAS ONLINE</bold> was developed with the support of the European ARTificial Intelligence Lab, co-funded by the Creative Europe Programme of the European Union\n\n<bold>BIAS ONLINE</bold> was created with the support of The Department of Tourism, Culture, Arts, Gaeltacht, Sport and Media.\n\n</intro><extrasmall>Project Team: Aisling Murray, Mitzi D'Alton, Rory McCorrmick, Niamh O' Doherty, James Delaney \nArtists: Johann Diedrick, Libby Heaney, Mushon Zer-Aviv, Noah Levenson\nAudio by Tom Winters\n\n</extrasmall>",
                 style:"",
                 type: ""
             },
             //Privacy
             {
-                title:"Privacy",
+                title:"SAFETY AND PRIVACY INFO",
                 subtitle:"",
                 credit:"",
-                paragraph: "Your private information: You should not share or provide your own private information in the chat functionality.  If you do, others may keep or store such information.  Science Gallery Dublin accepts no liability for such. For information on our Privacy Policy and Data Retention Policy please visit sciencegallery.org/privacy.\n\nOther information: You may not publish or post other people's private information (such as names, home phone number and address) without their express permission. We also prohibit threatening to expose private information or incentivizing others to do so.",
+                paragraph: "<privacy><bold>SAFETY</bold>\n\n<u>Violence</u>: You may not threaten violence against an individual or a group of people. \n\n<u>Terrorism/violent extremism</u>: You may not threaten or promote terrorism or violent extremism. \n\n<u>Child sexual exploitation</u>: We have zero tolerance for child sexual exploitation. \n\n<u>Abuse/harassment</u>: You may not engage in the targeted harassment of someone, or incite other people to do so. This includes wishing or hoping that someone experiences physical harm. \n\n<u>Hateful conduct</u>: You may not promote violence against, threaten, or harass other people on the basis of race, ethnicity, national origin, caste, sexual orientation, gender, gender identity, religious affiliation, age, disability, or serious disease. \n\n<u>Suicide or self-harm</u>: You may not promote or encourage suicide or self-harm. \n\n<u>Linking content</u>: You may not link any content through the comments section.  You may not post pictures, videos or any other contents through the comments section. \n\n<u>Illegal or certain regulated goods or services</u>: You may not use the chat function for any unlawful purpose or in furtherance of illegal activities. This includes selling, buying, or facilitating transactions in illegal goods or services, as well as certain types of regulated goods or services.\n\n<bold>PRIVACY</bold>\n\n<u><bold>Your private information</bold></u>: You should not share or provide your own private information in the chat functionality. If you do, others may keep or store such information. Science Gallery Dublin accepts no liability for such. For information on our Privacy Policy and Data Retention Policy please visit sciencegallery.org/privacy.\n\n<bold>Other information</bold>: You may not publish or post other people's private information (such as names, home phone number and address) without their express permission.\nWe also prohibit threatening to expose private information or incentivizing others to do so. \n\n<bold>Authenticity</bold>\nPlatform manipulation and spam: You may not use the comment section in a manner intended to artificially amplify or suppress information or engage in behaviour that manipulates or disrupts people’s experience. \n\n<u>Civic integrity</u>: You may not use the comment section for the purpose of manipulating or interfering in elections or other civic processes. This includes posting or sharing content that may suppress participation or mislead people about when, where, or how to participate in a civic process. \n\n<u>Impersonation</u>: You may not impersonate individuals, groups, or organizations in a manner that is intended to or does mislead, confuse, or deceive others. \n\n<u>Synthetic and manipulated media</u>: You may not deceptively share synthetic or manipulated media that are likely to cause harm. \n\n<u>Copyright and trademark</u>: You may not violate others’ intellectual property rights, including copyright and trademark. \n\n<u>Enforcement</u>\nIf you violate the rules your chat functionality will be disabled and you may be removed from the exhibition. \n\n<u>Complaints and Reporting</u> \nAny person using the chat functionality may report or make a complaint about content being posted by another user by emailing info@dublin.sciencegallery.com. \n \n</privacy>",
                 style:"",
                 type: "face"
             },{
@@ -889,69 +898,151 @@ class UIBuilder extends PIXI.Container {
 
         
 
-        this.title = "WELCOME TO BIAS ONLINE";
-        this.title = new TaggedText(this.title, {
-            "default": {
-                fontFamily: "Trade Gothic Next",
-                fontSize: "32px",
-                wordWrap: true,
-                lineHeight: 45,
-                padding: 10,
-                wordWrapWidth: 300,
-                leading: 1,
-                textBaseline: "middle"
-            },
-            "bold": {
-                fontWeight: 700,
-                fontSize: "32px",
-                lineHeight: 45,
-            }
-        });
-        this.title.alpha = 0
-        this.title.x = 50
-        this.title.y = 45
 
 
-        this.textContent = new PUXI.TextWidget("", style)
-       
+        this.textContent = new PUXI.TextWidget("", style)////setBackground(0xFF0000)
+        this.textContent.interactive = true
+        this.textContent.buttonMode = true
+
+
+
+        
+        const johannThumb = new PIXI.Sprite.from('images/johann-thumb-large.png')
+        const mushonThumb = new PIXI.Sprite.from('images/mushon-thumb-large.png')
+        const libbyThumb = new PIXI.Sprite.from('images/libby-thumb-large.png')
+        const noahThumb = new PIXI.Sprite.from('images/noah-thumb-large.png')
+        
+        const robotIconThumb = new PIXI.Sprite.from('images/robot-icon-ui.svg');
+        const dialIconThumb = new PIXI.Sprite.from('images/dial-icon.svg');
+        const faceIconThumb = new PIXI.Sprite.from('images/face-icon-black-lines.svg');
+        const talkingIconThumb = new PIXI.Sprite.from('images/talking-icon.svg');
+
+
+
+        //const imageStyles =
+
         this.connectedText = new TaggedText("", {
             "default": {
                 fontFamily: "Trade Gothic Next",
-                fontSize: "32px",
+                fontSize: "28px",
                 wordWrap: true,
                 lineHeight: 45,
                 padding: 10,
+                fontWeight: 300,
                 wordWrapWidth: 700,
                 leading: 1,
                 textBaseline: "middle"
             },
-            "subtitle": {
-                lineHeight: 55,
+            "intro": {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "28px",
+                wordWrap: true,
+                lineHeight: 36,
+                padding: 10,
+                fontWeight: 300,
+                wordWrapWidth: 700,
+                leading: 1,
+                textBaseline: "middle"
             },
             "bold": {
                 fontWeight: 700,
-                fontSize: "20px",
-                lineHeight: 24
             },
-            "small": {
-                fontSize: "20px",
-                lineHeight: 26,
+            "boldtitle": {
+                fontWeight: 900,
+                fontSize: "32px",
+                wordWrap: true,
+                lineHeight: 45,
+                wordWrapWidth: 700
+            },
+            "gap": {
+                fontSize: "12px",
+            },
+            "subtitle": {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "28px",
+                lineHeight: 36,
+                padding: 10,
+                fontWeight: 300,
+                wordWrap: true,
+                wordWrapWidth: 700,
+                leading: 1,
+                textBaseline: "middle"
             },
             "i": {
                 fontStyle: "italic"
             },
+            "p": {
+                fontSize: "21px",
+                lineHeight: 28,
+                fontWeight: 300,
+            },
             "noahlink": {
                 fill: "blue"
+            },
+            "u": {
+                textDecoration: "underline",
+                fontSize: "18px",
+                lineHeight: 22,
+            },
+            "imageWrapper": {
+                width: "200px",
+                wordWrap: true,
+                wordWrapWidth: 700,
+            },
+            "privacy": {
+                fontSize: "18px",
+                lineHeight: 22,
+                wordWrap: true,
+                wordWrapWidth: 600,
+                textBaseline: "alphabetical"
+            },
+            "extrasmall": {
+                fontSize: "16px",
+                lineHeight: 24,
+                wordWrap: true,
+                wordWrapWidth: 500,
+                textBaseline: "alphabetical"
+            },
+            "img": {
+                width: "200px",
+                wordWrap: true,
+                wordWrapWidth: 300,
             }
-        });
+        }, { imgMap: { johannThumb, mushonThumb, libbyThumb, noahThumb, robotIconThumb, talkingIconThumb, dialIconThumb, faceIconThumb },});
 
+      
+    
+        
+
+        
+       
+        //this.connectedText.height = 9000
+        //this.textContent.contentContainer.children[0].height = 9000
+       
         this.textContent.contentContainer.addChild(this.connectedText)
-        this.connectedText.interactive = true;
-        this.connectedText.visible = false
-        this.connectedText.visible = true
         this.textContent.contentContainer.children[0].alpha = 0
         
        
+        this.title = "WELCOME TO BIAS ONLINE";
+        this.title = new TaggedText(this.title, {
+            "default": {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "38px",
+                wordWrap: true,
+                lineHeight: 45,
+                padding: 10,
+                fontWeight: 900,
+                wordWrapWidth: 600,
+                leading: 1,
+                textBaseline: "middle"
+            }
+        });
+        this.title.alpha = 0
+        this.title.x = 50
+        this.title.y = 25
+
+
+
 
         this.leaveButtonWrapper = new PUXI.WidgetGroup({
         }).setLayoutOptions(
@@ -960,7 +1051,7 @@ class UIBuilder extends PIXI.Container {
                 height: 40,
                 x: 0.9725,
                 y: 60,
-                anchor: new PIXI.Point(1,0.5)
+                anchor: new PIXI.Point(0.5,0.5)
             }),
         )
 
@@ -1003,9 +1094,11 @@ class UIBuilder extends PIXI.Container {
 
         this.scrollContent.addChild(this.textContent)
         this.quoteWrapper.contentContainer.addChild(this.title)
+        this.quoteWrapper.contentContainer.alpha = 0
+
         this.quoteWrapper.addChild(this.leaveButtonWrapper)
         this.quoteStage.addChild(this.quoteWrapper)
-        this.quoteWrapper.contentContainer.alpha = 0
+        
 
 
         //this.addChild(this.quoteStage)
@@ -1331,7 +1424,6 @@ class UIBuilder extends PIXI.Container {
         
         joinButtonClick.onPress = function(){
             this.setBackground(0xffff00)
-            
         }
 
         const joinTitleWrapper = this.joinTitleWrapper
@@ -1339,8 +1431,8 @@ class UIBuilder extends PIXI.Container {
         
         joinButtonClick.onClick = function(){
 
-            sound.add('login', 'audio/login.mp3');
-            sound.play('login')
+            //Sound.add('login', 'audio/login.mp3');
+            //Sound.play('login')
             
             joinTitleWrapper.contentContainer.children[0].children[0].children[0].text = 'Select your avatar'
             joinModalWidgetGroup.removeChild(inputBox)
@@ -1383,7 +1475,7 @@ class UIBuilder extends PIXI.Container {
                 const rope = new PIXI.SimpleRope( nameText.texture, points );
                 container.addChild( rope );
                 const bounds = container.getLocalBounds();
-                console.log(bounds)
+                //console.log(bounds)
                 const matrix = new PIXI.Matrix();
                 matrix.tx = -bounds.x;
                 matrix.ty = -bounds.y;
@@ -1436,9 +1528,150 @@ class UIBuilder extends PIXI.Container {
 
 
 
-        //this.joinModal.resize(window.innerWidth, window.innerHeight)
 
+
+
+        //Modal Stage
+        this.introScreen = new PUXI.Stage(window.innerWidth+10, window.innerHeight+10)  
+        const introScreen = this.introScreen
+        this.introScreenWrapper = new PUXI.Widget({
+        }).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 0.999999, 
+                height: 0.999999,
+                x: 0.5,
+                y: 0.5,
+                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+            }),
+        ).setBackground(0x000000)
+        const introScreenWrapper = this.introScreenWrapper
+        this.introScreen.addChild(this.introScreenWrapper)
+
+        //Join Button 
+        this.introScreenTextWrapper = new PUXI.WidgetGroup({
+        }).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 300,
+                height: 100,
+                x: 0.5,
+                y: 0.5,
+                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+            }),
+        )
+
+        const introScreenBackground = new PIXI.Graphics()
+        introScreenBackground.beginFill(0x000000)
+        introScreenBackground.drawRect(0, 0, window.innerWidth*2, window.innerHeight)
+        introScreenBackground.endFill()
+        this.introScreenWrapper.contentContainer.addChild(introScreenBackground)
+
+        const introStyles = new PIXI.TextStyle({ 
+            fontFamily: 'Trade Gothic Next',
+            fill: "#4DFA66", 
+            fontWeight: 900,
+            fontSize: "64px", 
+            letterSpacing: 2
+        })
+
+        const introText = new PUXI.TextWidget('BIAS', introStyles)
+        this.introText = introText
+        introText.setLayoutOptions(new PUXI.FastLayoutOptions({
+            x: 0.5,
+            y: 0.5,
+            anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+        }))
+        this.introText.tint = 0xFFFFFF
+        this.introText.alpha = 0
+
+
+        ease.add(this.introText, {alpha: 1}, { duration: 250, ease: 'easeOutExpo', wait: 1000})
+
+        
+        
+        this.introScreenTextWrapper.addChild(this.introText)
+
+        this.introScreen.addChild(this.introScreenTextWrapper)
+        
+        
+        this.glitchOn = false
+
+        this.introGlitch = new GlitchFilter({
+            slices: 0,
+            offset: 0,
+            direction: 0,
+            seed: 0.5,
+        })
+      
+        this.introScreen.resize(window.innerWidth+10, window.innerHeight+10)
+
+        this.filters = [this.introGlitch]
+  
         const theUI = this
+
+
+
+
+        /*this.addChild(this.introScreen)
+
+        
+        setTimeout(function(){
+            theUI.toggleGlitch(true)
+        }, 3000)
+        setTimeout(function(){
+            theUI.toggleGlitch(false)
+            introText.text = "BIAS ONLINE"
+            introScreen.resize(window.innerWidth+10, window.innerHeight+10)
+        }, 4000)
+        setTimeout(function(){
+            theUI.toggleGlitch(true)
+        }, 6000)
+        setTimeout(function(){
+            theUI.toggleGlitch(false)
+        }, 7000)
+        setTimeout(function(){
+            ease.add(introText, {alpha: 0 }, { duration: 500, ease: 'easeOutExpo'})
+        }, 8000)
+
+
+        const disclaimerStyles = new PIXI.TextStyle({ 
+            fontFamily: 'Trade Gothic Next',
+            fill: "#4DFA66", 
+            fontWeight: 400,
+            fontSize: "18px", 
+            letterSpacing: 2, 
+            wordWrapWidth: 500, 
+            wordWrap: true
+        })
+
+
+        const disclaimerText = 'LIVE CHAT DISCLAIMER\n\nThis Live Chat service is operated between the hours of 9 a.m. and 5 p.m., and is intended for scheduling inquiries only. Psychological assessment, diagnosis, treatment and counselling services are not provided via this Live Chat service; please do not include any personal, sensitive, clinical or confidential information in the Live Chat. You expressly acknowledge that a patient-doctor relationship will not be established by use of this service. With any online service, there is some level of risk when communicating information over the Internet and we cannot assume any responsibility for any information that you may enter during your chat session. If you require emergency medical attention please call 911 or visit the Emergency department at your local hospital. CITC expressly disclaims any liability for any injury, loss or damage incurred by use of or reliance on the information provided via this Live Chat service. By using this Live Chat you accept these terms and conditions.'
+
+        const introDisclaimer = new PUXI.TextWidget(disclaimerText, disclaimerStyles)
+        this.introDisclaimer = introDisclaimer
+        introText.setLayoutOptions(new PUXI.FastLayoutOptions({
+            x: 0.5,
+            y: 0.5,
+            anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+        }))
+        this.introDisclaimer.tint = 0xFFFFFF
+        this.introDisclaimer.alpha = 1
+        this.introScreenTextWrapper.addChild(this.introText)
+      
+
+        //disclaimer
+        setTimeout(function(){
+            ease.add(introScreenWrapper, {alpha: 0 }, { duration: 500, ease: 'easeOutExpo'})
+        }, 9000)
+        setTimeout(function(){
+            ease.add(introScreenWrapper, {alpha: 0 }, { duration: 500, ease: 'easeOutExpo'})
+            theUI.removeChild(introScreen)
+        }, 10000)
+        */
+            
+
+
+
+       
         const joinModal = this.joinModal
         const quoteStage = this.quoteStage
 
@@ -1447,8 +1680,9 @@ class UIBuilder extends PIXI.Container {
             theUI.resizeText()
             joinModal.resize(window.innerWidth, window.innerHeight)
             quoteStage.resize(window.innerWidth, window.innerHeight)
+            
 
-        }, 500)
+        }, 2000)
 
         document.addEventListener("pointerdown", function(e) {
             if (e.target.nodeName === "DIV"){
@@ -1470,21 +1704,20 @@ class UIBuilder extends PIXI.Container {
                 this.iframe.height = window.innerHeight
             }
             
+            
+            this.introScreen.resize(window.innerWidth, window.innerHeight)
 
             this.joinModal.resize(window.innerWidth, window.innerHeight)
+            
+
+
+
             
             this.statusStage.resize(window.innerWidth, window.innerHeight)
             this.statusStage.stage.hitArea = new PIXI.Rectangle(0,0,0,0);
 
             
-            this.quoteStage.resize(window.innerWidth, window.innerHeight)
-            const quoteBounds = this.quoteWrapperBackground.getBounds()
-            this.quoteStage.stage.hitArea = new PIXI.Rectangle(
-                quoteBounds.x,
-                quoteBounds.y,
-                quoteBounds.width,
-                quoteBounds.height
-            );
+           
            
 
             this.quoteWrapperBackground.clear()
@@ -1498,6 +1731,17 @@ class UIBuilder extends PIXI.Container {
                 this.quoteWrapperBackground.drawRoundedRect(0, 0, (window.innerWidth/100)*80, (window.innerHeight/100)*80, 50)
             }
             this.quoteWrapper.contentContainer.addChildAt(this.quoteWrapperBackground,0)
+
+            this.quoteStage.resize(window.innerWidth, window.innerHeight)
+            const quoteBounds = this.quoteWrapperBackground.getBounds()
+            this.quoteStage.stage.hitArea = new PIXI.Rectangle(
+                quoteBounds.x,
+                quoteBounds.y,
+                quoteBounds.width,
+                quoteBounds.height
+            );
+
+            //this.scrollContent.innerBounds = new PIXI.Rectangle(0, 0, 1000, 2000)
             
 
 
@@ -1549,6 +1793,7 @@ class UIBuilder extends PIXI.Container {
 
 
         })
+
         //this.resetArt = true
         this.showingArt = false
         this.showingQuote = false
@@ -1562,6 +1807,10 @@ class UIBuilder extends PIXI.Container {
 
     getAvatar() {
         return this.avatarBox.contentContainer.children[0]._texture.textureCacheIds
+    }
+
+    toggleGlitch(boolean){
+        this.glitchOn = boolean
     }
 
 
@@ -1623,8 +1872,22 @@ class UIBuilder extends PIXI.Container {
 
 
 
+        const menuHover = Sound.from('audio/menu-hover.mp3');
+        const menuOpen = Sound.from('audio/menu-open.mp3');
+        const menuClose = Sound.from('audio/menu-close.mp3');
+        const menuHoverMain = Sound.from('audio/menu-hover.mp3');
+        
+        menuHoverMain.speed = 2
 
+        menuHover.volume = 0.001
+        menuOpen.volume = 0.01
+        menuClose.volume = 0.01
+        menuHoverMain.volume = 0.01
 
+        const telephone = new filters.TelephoneFilter(1)
+        const distorsion = new filters.DistortionFilter(0.1)
+       // menuHover
+        menuHoverMain.filters = [telephone, distorsion]
 
         //New UI Framework
         const menuIconGraphic = PIXI.Sprite.from('images/menu-icon.svg')
@@ -1640,25 +1903,33 @@ class UIBuilder extends PIXI.Container {
         menuIcon.interactive = true
         menuIcon.buttonMode = true
 
+       
+
+        menuIcon.on("pointerover", function () {
+            menuHoverMain.play()
+        })
+
         menuIcon.on("pointerdown", function () {
             if(menuIcon.name == 'menu-icon') {
                 menuIcon.texture = menuIconCloseGraphic.texture
                 menuIcon.name = 'menu-icon-close'
-                aboutLink.alpha = 1
-                creditsLink.alpha = 1
-                privacyLink.alpha = 1
-                artistsLink.alpha = 1
-                workLink.alpha = 1
-                logoStage.alpha = 1
+                aboutLink.visible = true
+                creditsLink.visible = true
+                privacyLink.visible = true
+                artistsLink.visible = true
+                workLink.visible = true
+                menuOpen.play()
+                //logoStage.alpha = 1
             } else if(menuIcon.name == 'menu-icon-close') {
                 menuIcon.texture = menuIconGraphic.texture
                 menuIcon.name = 'menu-icon'
-                aboutLink.alpha = 0
-                creditsLink.alpha = 0
-                privacyLink.alpha = 0
-                artistsLink.alpha = 0
-                workLink.alpha = 0
-                logoStage.alpha = 0
+                aboutLink.visible = false
+                creditsLink.visible = false
+                privacyLink.visible = false
+                artistsLink.visible = false
+                workLink.visible = false
+                menuClose.play()
+                //logoStage.alpha = 0
             }
         });
 
@@ -1692,7 +1963,7 @@ class UIBuilder extends PIXI.Container {
         const aboutLink = new TaggedText(aboutLinkText, navLinkTextStyles, {
             drawWhitespace: true,
         });
-        aboutLink.alpha = 0
+        aboutLink.visible = false
         aboutLink.x = 55
         aboutLink.y = 18
         aboutLink.interactive = true
@@ -1700,6 +1971,7 @@ class UIBuilder extends PIXI.Container {
 
         aboutLink.on("pointerover", function () {
             aboutLink.setText(aboutLinkUnderlineText)
+            menuHover.play()
         })
         
         aboutLink.on("pointerdown", function () {
@@ -1718,7 +1990,7 @@ class UIBuilder extends PIXI.Container {
         const artistsLink = new TaggedText(artistsLinkText, navLinkTextStyles, {
             drawWhitespace: true,
         });
-        artistsLink.alpha = 0
+        artistsLink.visible = false
         artistsLink.x = 55
         artistsLink.y = 38
         artistsLink.interactive = true
@@ -1726,9 +1998,10 @@ class UIBuilder extends PIXI.Container {
         
         artistsLink.on("pointerover", function () {
             artistsLink.setText(artistsLinkUnderlineText)
+            menuHover.play()
         })
         artistsLink.on("pointerdown", function () {
-            userInterface.showQuote("0")
+            userInterface.showQuote("1")
         })
         artistsLink.on("pointerout", function () {
             artistsLink.setText(artistsLinkText)
@@ -1744,7 +2017,7 @@ class UIBuilder extends PIXI.Container {
         const workLink = new TaggedText(workLinkText, navLinkTextStyles, {
             drawWhitespace: true,
         });
-        workLink.alpha = 0
+        workLink.visible = false
         workLink.x = 55
         workLink.y = 58
         workLink.interactive = true
@@ -1752,9 +2025,10 @@ class UIBuilder extends PIXI.Container {
         
         workLink.on("pointerover", function () {
             workLink.setText(workLinkUnderlineText)
+            menuHover.play()
         })
         workLink.on("pointerdown", function () {
-            userInterface.showQuote("0")
+            userInterface.showQuote("2")
         })
         workLink.on("pointerout", function () {
             workLink.setText(workLinkText)
@@ -1772,7 +2046,7 @@ class UIBuilder extends PIXI.Container {
         const creditsLink = new TaggedText(creditsLinkText, navLinkTextStyles, {
             drawWhitespace: true,
         });
-        creditsLink.alpha = 0
+        creditsLink.visible = false
         creditsLink.x = 55
         creditsLink.y = 78
         creditsLink.interactive = true
@@ -1780,6 +2054,7 @@ class UIBuilder extends PIXI.Container {
 
         creditsLink.on("pointerover", function () {
             creditsLink.setText(creditsLinkUnderlineText)
+            menuHover.play()
         })
         creditsLink.on("pointerdown", function () {
             userInterface.showQuote("3")
@@ -1792,13 +2067,13 @@ class UIBuilder extends PIXI.Container {
           
 
 
-        const privacyLinkText = 'Privacy';
-        const privacyLinkUnderlineText = '<underline>Privacy</underline>';
+        const privacyLinkText = 'Legal';
+        const privacyLinkUnderlineText = '<underline>Legal</underline>';
 
         const privacyLink = new TaggedText(privacyLinkText, navLinkTextStyles, {
             drawWhitespace: true,
         });
-        privacyLink.alpha = 0
+        privacyLink.visible = false
         privacyLink.x = 55
         privacyLink.y = 98
         privacyLink.interactive = true
@@ -1806,9 +2081,10 @@ class UIBuilder extends PIXI.Container {
 
         privacyLink.on("pointerover", function () {
             privacyLink.setText(privacyLinkUnderlineText)
+            menuHover.play()
         })
         privacyLink.on("pointerdown", function () {
-            userInterface.showQuote("2")
+            userInterface.showQuote("4")
         })
         privacyLink.on("pointerout", function () {
             privacyLink.setText(privacyLinkText)
@@ -1829,7 +2105,7 @@ class UIBuilder extends PIXI.Container {
         scienceGalleryLogo.on("pointerdown", function () {
            window.open('https://dublin.sciencegallery.com/')
         })
-        this.addChild(scienceGalleryLogo)
+        //this.addChild(scienceGalleryLogo)
         
 
             
@@ -1939,7 +2215,8 @@ class UIBuilder extends PIXI.Container {
         transitionScreen.alpha = 0
         this.addChild(transitionScreen)
 
-        const areaText = new PIXI.Text('Main Lobby', {fontFamily: "Trade Gothic Next", fontSize: "48px", fontWeight: 300, fill: "#ffffff", align: "center", lineHeight: 24})
+        const areaText = new PIXI.Text('Main Lobby', {fontFamily: "Trade Gothic Next", fontSize: "48px", fontWeight: 300, fill: "#ffffff", align: "center", lineHeight: 50})
+       
         this.areaText = areaText
         areaText.x = window.innerWidth / 2
         areaText.y = window.innerHeight / 2
@@ -1959,7 +2236,7 @@ class UIBuilder extends PIXI.Container {
         const transitionScreen = this.transitionScreen
         setTimeout(function(){
             ease.add(transitionScreen, {alpha: 0}, { duration: 650, ease: 'easeOutExpo'})
-        }, 2000)
+        }, 1700)
         //this.transitionScreen.alpha = 1
     }
 
@@ -2017,7 +2294,6 @@ class UIBuilder extends PIXI.Container {
     }
 
     hideArt(art){
-        //let hideTheArt = this.showingArt
         setTimeout(function(){
             this.showingArt = false
         }, 1000)
@@ -2077,23 +2353,17 @@ class UIBuilder extends PIXI.Container {
     
         let quoteNumber = quote.slice(-1)
         console.log(quoteNumber)
-        //console.log(quote)
-        //let showingQuote = false//;
-        //
+       
+       
+        
+
         if(this.showingQuote == false) {
             if(this.quoteWrapper.contentContainer.alpha <= 0) {
+                
                 this.addChild(this.quoteStage)
-                this.quoteStage.resize(window.innerWidth, window.innerHeight)
-            
-                //console.log(this.textContent.text)
-                //console.log(this.connectedText.text)
-                //console.log(this.quotesToShow[quoteNumber].paragraph)
+
+
                 this.scrollContent.forcePctPosition('y', 0)
-
-                //console.log(this.scrollContent)
-                //this.scrollContent.hideScrollBars()
-
-                //this.textContent.text = this.quotesToShow[quoteNumber].paragraph
                 this.title.text = this.quotesToShow[quoteNumber].title
                 let continutedText = '';
                 if(this.quotesToShow[quoteNumber].subtitle.length) {
@@ -2107,34 +2377,30 @@ class UIBuilder extends PIXI.Container {
                 }
                 this.connectedText.text = continutedText
 
-                const scrollContentScrollBars = this.scrollContent
-                
-                //this.connectedText.text = this.quotesToShow[quoteNumber].paragraph
 
-                //this.textContent.contentContainer.children[1].updateText()
                 let height = this.textContent.contentContainer.height
-                let width = this.connectedText.getStyleForTag("default").wordWrap
-                console.log(width)
-                console.log(this.connectedText)
-                console.log('Text height UI Builder:' + height)
+                let width = this.connectedText.getStyleForTag("default").wordWrapWidth
+
 
                 if(height <= 80) {
-                    height = 0.3
+                    //height = 0.3
                 } else if (height <= 250) {
-                    height = 0.4
+                    //height = 0.4
                     //scrollContentScrollBars.showScrollBars()
                 } else if (height <= 400) {
-                    height = 0.5
+                    //height = 0.5
                     //scrollContentScrollBars.showScrollBars()
                 } else {
-                    height = 0.85
+                    //height = 0.85
                     //scrollContentScrollBars.showScrollBars()
                 }
+
+                height = 0.8
 
                 
                 this.quoteWrapper.setLayoutOptions(
                     new PUXI.FastLayoutOptions({
-                        width: 0.9,
+                        width: 900,
                         height: height,
                         x: 0.5,
                         y: 0.45,
@@ -2145,22 +2411,56 @@ class UIBuilder extends PIXI.Container {
                 this.quoteWrapperBackground = new PIXI.Graphics()
                 this.quoteWrapperBackground.beginFill(0xFFFFFF)
                 this.quoteWrapperBackground.lineStyle(1, 0x000000)
-                this.quoteWrapperBackground.drawRoundedRect(0, 0, (window.innerWidth/100)*90, (window.innerHeight/100)*(height*100), 35)
-                this.quoteWrapper.contentContainer.addChildAt(this.quoteWrapperBackground,0)
+                this.quoteWrapperBackground.drawRoundedRect(0, 0, 900, (window.innerHeight/100)*(height*100), 35)
+                this.quoteWrapper.contentContainer.addChildAt(this.quoteWrapperBackground,0)   
+
+                ease.add(this.quoteWrapper.contentContainer, this.fadeInStyles, this.fadeInSettingsDelay)
+                this.showingQuote = true
+
+
+                
+                this.connectedText.textContainer.children.forEach(element => {
+                    //console.log(element)
+                    if(element._text == "noahlevenson.com") {
+                        console.log('link!')
+                        element.interactive = true
+                        element.buttonMode = true
+                        element.on('pointerdown', function(){
+                            console.log('firing')
+                        })
+                        //element.update()
+                    }
+                    if(element._text == "libbyheaney.co.uk") {
+                        console.log('link!')
+                        element.interactive = true
+                        element.buttonMode = true
+                        element.on('pointerdown', function(){
+                            console.log('firing2')
+                        })
+                        //element.update()
+                    }
+                    //console.log(element._text)
+                });
+
+               
+                
+                /*let theHeight = this.scrollContent.getMeasuredHeight()
+                
+                this.scrollContent.setLayoutOptions(
+                    new PUXI.FastLayoutOptions({
+                        width: 0.999,
+                        height: theHeight*2,
+                        x: 0.5,
+                        y: theHeight,
+                        anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+                    }))*/
 
                 this.quoteStage.resize(window.innerWidth, window.innerHeight)
-                const quoteBounds = this.quoteWrapperBackground.getBounds()
-                this.quoteStage.stage.hitArea = new PIXI.Rectangle(
-                    quoteBounds.x,
-                    quoteBounds.y,
-                    quoteBounds.width,
-                    quoteBounds.height
-                );
+                
+              
 
-                window.dispatchEvent(new Event('resize'));
+                
 
-                ease.add(this.quoteWrapper.contentContainer, this.fadeInStyles, this.fadeInSettings)
-                this.showingQuote = true
                 
             }
         }
@@ -2406,7 +2706,7 @@ class UIBuilder extends PIXI.Container {
             this.scoreStage.y = -5
             this.statusStage.visible = false
             this.worldInfo.visible = false
-            this.scrollWrapper.setPadding(25)
+            
         } else if (width <= 736) {
             this.statusStage.visible = false
             this.worldInfo.visible = false
@@ -2427,6 +2727,7 @@ class UIBuilder extends PIXI.Container {
         //this.scrollWrapper
 
         if(width <= 320) {
+            this.scrollWrapper.setPadding(15)
             this.quoteWrapper.setLayoutOptions(
                 new PUXI.FastLayoutOptions({
                     width: 0.9,
@@ -2437,19 +2738,41 @@ class UIBuilder extends PIXI.Container {
                 })
             )
             
-            this.title.contentContainer.children[0].style.fontSize = 16
-            this.title.contentContainer.children[0].x = 25
-            this.title.contentContainer.children[0].y = 30
-
-
-            this.connectedText.setStyleForTag("default", {
+            //Modal Title
+            this.title.setStyleForTag("default", {
                 fontFamily: "Trade Gothic Next",
-                fontSize: "13px",
+                fontSize: "16px",
                 wordWrap: true,
                 lineHeight: 16,
                 padding: 10,
                 wordWrapWidth: 220,
+                fontWeight: 700
+            })
+            this.title.x = 15
+            this.title.y = 30
+
+
+            this.connectedText.setStyleForTag("default", {
+                wordWrap: true,
+                padding: 10,
+                wordWrapWidth: 240,
+            })
+
+            this.connectedText.setStyleForTag("intro", {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "12px",
+                lineHeight: 17,
                 leading: 1,
+                fontWeight: 300,
+                textBaseline: "middle"
+            })
+
+            this.connectedText.setStyleForTag("p", {
+                fontFamily: "Trade Gothic Next",
+                fontSize: "12px",
+                lineHeight: 17,
+                leading: 1,
+                fontWeight: 300,
                 textBaseline: "middle"
             })
 
@@ -2476,8 +2799,8 @@ class UIBuilder extends PIXI.Container {
                 new PUXI.FastLayoutOptions({
                     width: 40,
                     height: 40,
-                    x: 0.970,
-                    y: 40,
+                    x: 0.990,
+                    y: 35,
                     anchor: new PIXI.Point(0.5,0.5)
                 }),
             )
@@ -2643,7 +2966,7 @@ class UIBuilder extends PIXI.Container {
             )
         } else {
 
-            this.connectedText.setStyleForTag("default", {
+            /*this.connectedText.setStyleForTag("default", {
                 fontFamily: "Trade Gothic Next",
                 fontSize: "32px",
                 wordWrap: true,
@@ -2679,13 +3002,13 @@ class UIBuilder extends PIXI.Container {
                 wordWrapWidth: 450,
                 leading: 1,
                 textBaseline: "middle"
-            })
+            })*/
 
            
 
             this.quoteWrapper.setLayoutOptions(
                 new PUXI.FastLayoutOptions({
-                    width: 0.8,
+                    width: 850,
                     height: 0.8,
                     x: 0.5,
                     y: 0.5,
@@ -2701,6 +3024,10 @@ class UIBuilder extends PIXI.Container {
                     anchor: new PIXI.Point(0.5,0.5)
                 }),
             )
+
+
+
+
         } 
 
 
@@ -2823,6 +3150,19 @@ class UIBuilder extends PIXI.Container {
         this.count++
 
         this.avatarBox.contentContainer.rotation += 1 * delta;
+
+        this.introGlitch.seed = Math.random();
+        const introGlitch = this.introGlitch
+        if(this.glitchOn == true) {
+            var rand = Math.floor(Math.random() * 50) + 1
+            introGlitch.slices = rand
+            introGlitch.offset = rand
+        } else {
+            introGlitch.slices = 0
+            introGlitch.offset = 0
+        }
+        this.filters = [this.introGlitch]
+        
         
     }
 
@@ -2830,3 +3170,5 @@ class UIBuilder extends PIXI.Container {
 }
 
 export default UIBuilder
+
+

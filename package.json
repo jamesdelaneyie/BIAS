@@ -47,7 +47,7 @@
     "pixi.js-legacy": "^6.1.2",
     "puxi": "github:jamesdelaneyie/puxi-mods",
     "sat": "^0.7.1",
-    "spellchecker": "github:goddessfreya/node-spellchecker",
+    "spellchecker": "^3.7.1",
     "swearjar": "^0.2.0"
   },
   "devDependencies": {

@@ -3784,7 +3784,9 @@ class ScrollWidget extends InteractiveGroup {
         this.forcePctPosition = (direction, pct) => {
             const bounds = this.getInnerBounds();
             const container = this.innerContainer.insetContainer;
+
             console.log('fire')
+
             if (this.scrollX && direction === 'x') {
                 container.position[direction] = -((bounds.width - this.width) * pct);
             }
@@ -3801,7 +3803,7 @@ class ScrollWidget extends InteractiveGroup {
 
                 setTimeout(function(){
                    
-                    //console.log(this.innerContainer.contentContainer.children[0])
+                    console.log(this.innerContainer.contentContainer.children[0])
                     textHeight = textHeight.height
                     boxHeight = boxHeight.height
                     console.log(textHeight)

@@ -20,6 +20,9 @@ import setupPortals from './setupPortals.js'
 
 import { fire } from '../common/weapon.js'
 import Notification from '../common/message/Notification'
+import Walking from '../common/message/Walking'
+import Hitting from '../common/message/Hitting'
+
 import lagCompensatedHitscanCheck from './lagCompensatedHitscanCheck'
 import censoring from 'chat-censoring'
 import fs from 'fs'
@@ -63,17 +66,53 @@ class GameInstance {
         this.room = {
             x: 0,
             y: 0,
-            width: 4500,
-            height: 4500,
+            width: 2000,
+            height: 2000,
             backgroundColor: "#00ff00",
             floorColor: "#4DFA66",
             borderColor: "#FFFFFF",
             borderWidth: 25,
-            /*objects: [{
+            objects: [{
+                name: "",
+                type: "",
+                x: 0,
+                y: 660,
+                width: 3000, 
+                height: 20, 
+                color: "#0000ff",
+                mass: 0
+            },{
+                name: "",
+                type: "",
+                x: 0,
+                y: 1330,
+                width: 3000, 
+                height: 20, 
+                color: "#0000ff",
+                mass: 0
+            },{
+                name: "",
+                type: "",
+                x: 560,
+                y: 0,
+                width: 20, 
+                height: 3000, 
+                color: "#0000ff",
+                mass: 0
+            },{
+                name: "",
+                type: "",
+                x: 1440,
+                y: 0,
+                width: 20, 
+                height: 3000, 
+                color: "#0000ff",
+                mass: 0
+            },{
                 name: "token",
                 type: "robot",
-                x: 1900,
-                y: 1900,
+                x: 950,
+                y: 950,
                 width: 35, 
                 height: 35, 
                 color: "#0000ff",
@@ -82,92 +121,56 @@ class GameInstance {
             {
                 name: "token",
                 type: "face",
-                x: 2350,
-                y: 1850,
+                x: 1050,
+                y: 1050,
                 width: 35, 
                 height: 35, 
                 color: "#0000ff",
                 mass: 1
             },{
                 name: "token",
-                type: "face",
-                x: 2550,
-                y: 1850,
+                type: "talking",
+                x: 950,
+                y: 1050,
                 width: 35, 
                 height: 35, 
                 color: "#0000ff",
                 mass: 1
             },{
                 name: "token",
-                type: "face",
-                x: 2750,
-                y: 1850,
+                type: "dial",
+                x: 1050,
+                y: 950,
                 width: 35, 
                 height: 35, 
                 color: "#0000ff",
                 mass: 1
-            },{
-                name: "token",
-                type: "face",
-                x: 2950,
-                y: 1850,
-                width: 35, 
-                height: 35, 
-                color: "#0000ff",
-                mass: 1
-            },{
-                name: "token",
-                type: "face",
-                x: 3150,
-                y: 1850,
-                width: 35, 
-                height: 35, 
-                color: "#0000ff",
-                mass: 1
-            },{
-                name: "token",
-                type: "face",
-                x: 3350,
-                y: 1850,
-                width: 35, 
-                height: 35, 
-                color: "#0000ff",
-                mass: 1
-            },{
-                name: "token",
-                type: "quote",
-                x: 2300,
-                y: 2400,
-                width: 35, 
-                height: 35, 
-                color: "quote0",
-                mass: 0
-            }],*/
+            }],
             portals: [{
-                name: "Noah Levenson",
-                x: 2500,
-                y: 2500,
+                name: "Noah Levenson\nSTEALING UR FEELINGS",
+                x: 950,
+                y: 1335,
                 width: 100,
                 height: 10,
                 exit: [6900, 950]
             },{
-                name: "Johann",
-                x: 1900,
-                y: 2400,
-                width: 100,
-                height: 10,
+                name: "Johann Dedrick\nDARK MATTERS",
+                x: 570,
+                y: 975,
+                width: 10,
+                height: 100,
                 exit: [8850, 2550]
             },{
-                name: "Mushon",
-                x: 2680,
-                y: 2100,
+                name: "Mushon Zer-Aviv\nNORMALISI.NG",
+                x: 1420,
+                y: 975,
                 width: 10,
                 height: 100,
                 exit: [8850, 3500]
             },{
-                name: "Libby",
-                x: 2180,
-                y: 1740,
+                name: "Libby Heaney\nCLASSES",
+                x: 950,
+                y: 700,
                 width: 100,
                 height: 10,
                 exit: [10850, 4500]
@@ -223,7 +226,7 @@ class GameInstance {
                 y: 925,
                 width: 10,
                 height: 100,
-                exit: [2250, 2250]
+                exit: [1000, 1000]
             }]
         }
         this.floors2 = setupFloors(this.instance, this.room2)
@@ -276,7 +279,7 @@ class GameInstance {
                 y: 600,
                 width: 10,
                 height: 100,
-                exit: [2250, 2250]
+                exit: [1000, 1000]
             }]
         }
         this.floors3 = setupFloors(this.instance, this.room3)
@@ -339,7 +342,7 @@ class GameInstance {
                 y: 600,
                 width: 10,
                 height: 100,
-                exit: [2250, 2250]
+                exit: [1000, 1000]
             }]
         }
         this.floors4 = setupFloors(this.instance, this.room4)
@@ -390,7 +393,7 @@ class GameInstance {
                 y: 600,
                 width: 10,
                 height: 100,
-                exit: [2250, 2250]
+                exit: [1000, 1000]
             }]
         }
         this.floors5 = setupFloors(this.instance, this.room5)
@@ -409,7 +412,7 @@ class GameInstance {
             color: "#000000",
             borderColor: "#4dfa66",
             borderWidth: 5,
-            objects: [{
+            objects: [/*{
                 name: "token",
                 type: "quote",
                 x: 100,
@@ -418,18 +421,31 @@ class GameInstance {
                 height: 35, 
                 color: "quote0",
                 mass: 0
-            }],
+            }*/],
             portals: [],
             door: "bottom"
         }
         this.floors6 = setupFloors(this.instance, this.room6)
         this.obstacles6 = setupObstacles(this.instance, this.room6, obstacles)
         this.boxes6 = setupBoxes(this.instance, this.world, this.room6, boxes)
+        /*
 
+        function findContacts(){
+    for(let i = 0; i < world.narrowphase.contactEquations.length; i++){
+        let eq = world.narrowphase.contactEquations[i]
+        let bodyAPosition = eq.bodyA.position
+        let contactPointA = eq.contactPointA
+    
+        let contactX = bodyAPosition[0] + contactPointA[0]
+        let contactY = bodyAPosition[1] + contactPointA[1]
+
+        spawnParticle(contactX, contactY)
+    }
+}&*/
 
         this.room7 = {
             x: 11050,
-            y: 6205,
+            y: 6200,
             name: "reception",
             width: 200,
             height: 700,
@@ -442,19 +458,19 @@ class GameInstance {
             borderWidth: 5,
             objects: [],
             portals: [{
-                name: "Entering BIAS Online",
+                name: "Main Lobby",
                 x: 20,
                 y: 720,
                 width: 200,
                 height: 10,
-                exit: [2250, 2250]
+                exit: [1000, 1000]
             }],
             door: "",
             type: "corridor"
         }
         this.floors7 = setupFloors(this.instance, this.room7)
         this.obstacles7 = setupObstacles(this.instance, this.room7, obstacles)
-        this.boxes7 = setupBoxes(this.instance, this.world, this.room7, boxes)
+        //this.boxes7 = setupBoxes(this.instance, this.world, this.room7, boxes)
 
 
 
@@ -480,16 +496,16 @@ class GameInstance {
         this.portals2 = setupPortals(this.instance, this.room2, portals)
         this.portals3 = setupPortals(this.instance, this.room3, portals)
         this.portals4 = setupPortals(this.instance, this.room4, portals)
-        this.portals4 = setupPortals(this.instance, this.room5, portals)
+        this.portals5 = setupPortals(this.instance, this.room5, portals)
         
-        this.portals5 = setupPortals(this.instance, this.room7, portals)
+        this.portals7 = setupPortals(this.instance, this.room7, portals)
         this.portals = portals
 
 
         const theInstance = this.instance
         const theWorld = this.world
 
-        setInterval(function(){
+       /* setInterval(function(){
             let likePump = new Box({
                 name: "token",
                 type: "thumbs-up",
@@ -538,57 +554,19 @@ class GameInstance {
             theWorld.addBody(likePump.body)
             boxes.set(likePump.nid, likePump)
         }, 30000)
+        */
+
         
 
-  
-         //// SCIENCE GALLERY DESIGNS /////
-         const reception = new Obstacle({ 
-            name: "reception",
-            x: 2000, 
-            y: 2000, 
-            width: 400, 
-            height: 200, 
-            border: "",
-            color: "#000000"
-        })
-        this.instance.addEntity(reception)
-        obstacles.set(reception.nid, reception)
 
-
-      const crystal = new Obstacle({ 
-            name: "crystal",
-            x: 1500, 
-            y: 2000, 
-            width: 200, 
-            height: 500, 
-            color: "#1DCFFF",
-            rotation: 0,
-            angle: 0
-            //shape: 
-        })
-        this.instance.addEntity(crystal)
-        obstacles.set(crystal.nid, crystal)
-
-        const crystalTwo = new Obstacle({ 
-            name: "crystal",
-            x: 1250, 
-            y: 1750, 
-            width: 200, 
-            height: 500, 
-            color: "#1DCFFF",
-            rotation: 0,
-            angle: 90
-            //shape: 
-        })
-        this.instance.addEntity(crystalTwo)
-        obstacles.set(crystalTwo.nid, crystalTwo)
+    
         
 
 
 
 
         //LONG TRIANGLE PATTERNSED OBSTACLE SOUTH OF RECEPTION
-        const southWall = new Obstacle({ 
+        /*const southWall = new Obstacle({ 
             name: "southWall",
             x: 1800, 
             y: 2400, 
@@ -598,16 +576,16 @@ class GameInstance {
             color: "#FF284D"
         })
         this.instance.addEntity(southWall)
-        obstacles.set(southWall.nid, southWall)
+        obstacles.set(southWall.nid, southWall)*/
 
 
 
          const easternEyeBuilding = new Obstacle({ 
             name: "easternEyeBuilding",
-            x: 2500, 
-            y: 2500, 
-            width: 1200, 
-            height: 500, 
+            x: 0, 
+            y: 775, 
+            width: 570, 
+            height: 450, 
             border: "",
             color: "#FFE401"
         })
@@ -619,12 +597,12 @@ class GameInstance {
 
         const easternEyeBuildingTwo = new Obstacle({ 
             name: "easternEyeBuilding",
-            x: 2700, 
-            y: 2000, 
-            width: 300, 
-            height: 600, 
+            x: 1430, 
+            y: 775, 
+            width: 570, 
+            height: 450, 
             border: "",
-            color: "#FFE401"
+            color: "#FF33FF"
         })
         this.instance.addEntity(easternEyeBuildingTwo)
         obstacles.set(easternEyeBuildingTwo.nid, easternEyeBuildingTwo)
@@ -641,28 +619,61 @@ class GameInstance {
          //LONG TRIANGLE PATTERNSED OBSTACLE SOUTH OF RECEPTION
          const northernFlowerBuilding = new Obstacle({ 
             name: "northernFlowerBuilding",
-            x: 2000, 
-            y: 1200, 
-            width: 1000, 
-            height: 500, 
+            x: 775, 
+            y: 0, 
+            width: 450, 
+            height: 675, 
             border: "",
             color: "#1DCFFF"
         })
         this.instance.addEntity(northernFlowerBuilding)
         obstacles.set(northernFlowerBuilding.nid, northernFlowerBuilding)
 
+
+
         const northernFlowerBuildingTwo = new Obstacle({ 
             name: "northernFlowerBuilding",
-            x: 2800, 
-            y: 800, 
-            width: 300, 
+            x: 775, 
+            y: 1320, 
+            width: 450, 
             height: 600, 
             border: "",
-            color: "#1DCFFF"
+            color: "#FF0000"
         })
         this.instance.addEntity(northernFlowerBuildingTwo)
         obstacles.set(northernFlowerBuildingTwo.nid, northernFlowerBuildingTwo)
 
+
+
+
+
+       /* const crystal = new Obstacle({ 
+            name: "crystal",
+            x: 300, 
+            y: 500, 
+            width: 200, 
+            height: 500, 
+            color: "#FF0000",
+            rotation: 0,
+            angle: 0
+            //shape: 
+        })
+        this.instance.addEntity(crystal)
+        obstacles.set(crystal.nid, crystal)
+
+        const crystalTwo = new Obstacle({ 
+            name: "crystal",
+            x: 50, 
+            y: 250, 
+            width: 200, 
+            height: 500, 
+            color: "#FF0000",
+            rotation: 0,
+            angle: 90
+            //shape: 
+        })
+        this.instance.addEntity(crystalTwo)
+        obstacles.set(crystalTwo.nid, crystalTwo)*/
 /*
       
   //LONG TRIANGLE PATTERNSED OBSTACLE SOUTH OF RECEPTION
@@ -732,8 +743,11 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
             const peerID = client.peerID;*/
 
 
-            let room2SpawnX = this.room6.x + (this.room6.width/2)
-            let room2SpawnY = this.room6.y + (this.room6.height/2)
+            //let room2SpawnX = this.room6.x + (this.room6.width/2)
+            //let room2SpawnY = this.room6.y + (this.room6.height/2) + 50
+
+            let room2SpawnX = this.room.x + (this.room.width/2)
+            let room2SpawnY = this.room.y + (this.room.height/2)
             
             
                 rawEntity.x = room2SpawnX
@@ -796,8 +810,8 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
             client.view = {
                 x: 0,
                 y: 0,
-                halfWidth: 99999,
-                halfHeight: 99999
+                halfWidth: 4000,
+                halfHeight: 4000
             }
 
 
@@ -901,8 +915,17 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
 
         this.instance.on('command::MoveCommand', ({ command, client, tick }) => {
             const rawEntity = client.rawEntity
+
+            //console.log(command.forward)
+            //this.instance.addLocalMessage(new Walking(rawEntity, 1000, 1000))
+            //console.log()
+            if(command.forward == true || command.backward == true || command.left == true || command.right == true) {
+                this.instance.addLocalMessage(new Walking(client.smoothEntity.nid, rawEntity.x, rawEntity.y))
+            }
             applyCommand(rawEntity, command, this.obstacles, this.boxes)
+
             //console.log(rawEntity);
+
             client.positions.push({
                 x: rawEntity.x,
                 y: rawEntity.y,
@@ -976,12 +999,17 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
 
         })
 
+        const theInstance = this.instance
+        
+
         this.world.step(1/20);
 
+       
 
-        this.instance.messageAll(new Notification(""+(this.world.time.toFixed())+"", 'worldInfoTime'))
-        this.instance.messageAll(new Notification(""+this.totalUsers+"", 'worldInfoTotalUsers'))
-        this.instance.messageAll(new Notification(""+this.activeUsers.length+"", 'worldInfoActiveUsers'))
+
+        //this.instance.messageAll(new Notification(""+(this.world.time.toFixed())+"", 'worldInfoTime'))
+        //this.instance.messageAll(new Notification(""+this.totalUsers+"", 'worldInfoTotalUsers'))
+        //this.instance.messageAll(new Notification(""+this.activeUsers.length+"", 'worldInfoActiveUsers'))
 
 
         //update touching
@@ -1023,15 +1051,13 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
                         let collided = false
 
                         collided = SAT.testCirclePolygon(client.rawEntity.collider.circle, portal.collider.polygon) 
-
-                        //console.log('portal name: '+)
-                        //console.log(portal)
                         
                         if(collided) {
 
 
                             let thisInstance = this.instance
                             let thisClient = client.rawEntity
+                            let thisClientSmooth = client.smoothEntity
                             let portalName = portal.name
 
                             thisClient.isAlive = false;
@@ -1040,6 +1066,8 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
                             setTimeout(function(){
                                 thisClient.x = portal.exit[0]
                                 thisClient.y = portal.exit[1]
+                                thisClientSmooth.x = portal.exit[0]
+                                thisClientSmooth.y = portal.exit[1]
                                 //console.log(port)
                                 client.view.x = thisClient.x
                                 client.view.y = thisClient.y
@@ -1048,11 +1076,24 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
                             
                             setTimeout(function(){
                                 thisClient.isAlive = true
-                                console.log(portalName)
+                                //console.log(portalName)
                                 thisInstance.message(new Notification(portalName, 'sound', 0, 0), client)
                             }, 100)
 
                             break
+                        } else {
+
+                            let thisClient = client.rawEntity
+                            let thisInstance = this.instance
+
+                            var a = thisClient.x - portal.x;
+                            var b = thisClient.y - portal.y
+                            var c = Math.sqrt( a*a + b*b );
+
+                            if(c < 200) {
+                                var portalVolume = c.toFixed(0)
+                                thisInstance.message(new Notification(portalVolume, 'portalVolume', 0, 0), client)
+                            }
                         }
                         
                     }
@@ -1076,6 +1117,8 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
                         collided = SAT.testCirclePolygon(value.rawEntity.collider.circle, box.collider.polygon) 
                         
                         if(collided == true) {
+
+                           
 
                             if(box.type == "quote") {
                                 this.instance.message(new Notification(''+box.color+'', 'showQuote'), value) 
@@ -1139,6 +1182,38 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
             
             
         })
+
+        this.world.on('beginContact', function (event) {
+
+           
+
+           
+            if(event.bodyA.name == "player" || event.bodyB.name == "player") {
+                
+               // console.log(event.bodyA.name)
+               // console.log(event.bodyB.name)
+
+                var velocityY = event.bodyA.velocity[1]
+                var mass = event.bodyA.mass
+                var momentum = mass*velocityY
+                var anngularVelocity = event.bodyA.angularVelocity
+                
+                //console.log(momentum)
+                //console.log(anngularVelocity)
+
+               // console.log(event.bodyA.velocity)
+               // console.log(event.bodyB.velocity)
+               // console.log(event.bodyA.angularVelocity)
+               // console.log(event.bodyB.angularVelocity)
+            }
+            
+            theInstance.addLocalMessage(new Hitting(0, momentum, event.bodyA.position[0], event.bodyA.position[1]))
+
+            //console.log('Collision registered...'); ]
+
+            event.bodyA.updateAABB();
+            event.bodyB.updateAABB();
+         });
         
 
 
