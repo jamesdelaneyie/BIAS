@@ -273,32 +273,35 @@ const create = () => {
     client.on('message::Hitting', message => {
         if(message.id == 0) {
 
-        var a = message.x - state.mySmoothEntity.x;
-        var b = message.y - state.mySmoothEntity.y
+            if(state.mySmoothEntity) {
 
-        if(!boop.isPlaying) {
+                var a = message.x - state.mySmoothEntity.x;
+                var b = message.y - state.mySmoothEntity.y
 
-            var force = message.force;
+                if(!boop.isPlaying) {
 
-            var forceSound = Math.min(Math.max(parseInt(force), 1), 20);
-            
-            var c = Math.sqrt( a*a + b*b );
-            if(c < 400) {
-                var volume = 400 - c
-                boop.volume = volume/6000
-                boop.volume = boop.volume * (forceSound/5)
+                    var force = message.force;
+
+                    var forceSound = Math.min(Math.max(parseInt(force), 1), 20);
+                    
+                    var c = Math.sqrt( a*a + b*b );
+                    if(c < 400) {
+                        var volume = 400 - c
+                        boop.volume = volume/6000
+                        boop.volume = boop.volume * (forceSound/5)
+                        
+                            boop.play();
+
+                        }
+                        
+                    }
                 
-                    boop.play();
-
+                    
+                } else {
+                    if(!boop.isPlaying) {
+                        boop.play();
+                    }
                 }
-                
-            }
-        
-            
-        } else {
-            if(!boop.isPlaying) {
-                boop.play();
-            }
         }
     })
 

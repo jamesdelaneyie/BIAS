@@ -182,7 +182,7 @@ class PlayerGraphics extends PIXI.Container {
                 var mediaStream = audioContext.createMediaStreamSource(stream);
                 var meter = AudioStreamMeter.audioStreamProcessor(audioContext, function() {
                     yourself.updateCircleSize(meter.volume);
-                    console.log(meter.volume)
+                    //console.log(meter.volume)
                 });
 
                 this.volume = meter.volume
