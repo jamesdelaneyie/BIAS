@@ -227,19 +227,20 @@ const create = () => {
         }
         //console.log(message.x, message.y)
         //console.log(state.mySmoothEntity.x, state.mySmoothEntity.y)
+        if(state.mySmoothEntity) {
+            var a = message.x - state.mySmoothEntity.x;
+            var b = message.y - state.mySmoothEntity.y
 
-        var a = message.x - state.mySmoothEntity.x;
-        var b = message.y - state.mySmoothEntity.y
-
-        var c = Math.sqrt( a*a + b*b );
-        if(c < 400) {
-            var volume = 200 - c
-            footstep.volume = volume/6000
-            //console.log('volume:' + c)
-            if(!footstep.isPlaying) {
-                footstep.play()
+            var c = Math.sqrt( a*a + b*b );
+            if(c < 400) {
+                var volume = 200 - c
+                footstep.volume = volume/6000
+                //console.log('volume:' + c)
+                if(!footstep.isPlaying) {
+                    footstep.play()
+                }
+                
             }
-            
         }
 
     })

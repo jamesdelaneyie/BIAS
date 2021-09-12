@@ -58,6 +58,24 @@ class GameInstance {
         this.totalUsers = 0
         this.activeUsers = []
 
+
+        const { PeerServer } = require('peer');
+        const peerServer = PeerServer({
+            port: 9000,
+            ssl: {
+               key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem'),
+               cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/cert.pem')
+            }
+        });
+
+        peerServer.on('connection', peer => {
+            console.log('peer connected', peer.id);
+        });
+        
+        peerServer.on('disconnect', peer => {
+            console.log('peer disconnected', peer.id);
+        });
+
         const portals = new Map()
         const obstacles = new Map()
         const boxes = new Map()
@@ -739,8 +757,8 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
             client.smoothEntity = smoothEntity
 
             /*const rawEntity = client.rawEntity
-            const smoothEntity = client.smoothEntity
-            const peerID = client.peerID;*/
+            const smoothEntity = client.smoothEntity*/
+            const peerID = client.peerID;
 
 
             //let room2SpawnX = this.room6.x + (this.room6.width/2)
@@ -786,7 +804,7 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
             smoothEntity.isAlive = true;
             rawEntity.isAlive = true;
             
-            this.instance.message(new Identity(rawEntity.nid, smoothEntity.nid, "peer", ""+ command.avatar +"",""+ command.name +""), client)
+            this.instance.message(new Identity(rawEntity.nid, smoothEntity.nid, ""+peerID+"", ""+ command.avatar +"",""+ command.name +""), client)
             this.instance.messageAll(new Notification(''+ command.name +'', 'personJoined', 20, 20))
 
             this.totalUsers++
