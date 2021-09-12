@@ -535,7 +535,7 @@ class UIBuilder extends PIXI.Container {
             }),
         )
 
-        this.textBoxWrapperBackground.clear()
+        //this.textBoxWrapperBackground.clear()
         this.textBoxWrapperBackground = new PIXI.Graphics()
         this.textBoxWrapperBackground.lineStyle(1, 0x000000, 1, 1, false)
         this.textBoxWrapperBackground.beginFill(0xFFFFFF)
