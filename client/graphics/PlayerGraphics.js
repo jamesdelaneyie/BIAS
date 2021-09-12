@@ -151,7 +151,7 @@ class PlayerGraphics extends PIXI.Container {
 
     onPointerDown(){
 
-        /*console.log(this.name)
+        console.log(this.name)
 
         var personToCall = this.name;
         var yourself = this
@@ -201,7 +201,7 @@ class PlayerGraphics extends PIXI.Container {
                 text.y = 30;// A
             })
 
-        }*/
+        }
         
     }
 

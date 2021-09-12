@@ -86,7 +86,7 @@ const create = () => {
         //backgroundMusic.filters = [telephone, distorsion]
         backgroundMusic.play()
         
-        /*
+        
         const myPeer = new Peer(""+state.name+"",{
             host:'/', 
             path: '/',
@@ -139,11 +139,11 @@ const create = () => {
         window.myPeer = myPeer
 
    
-    const hangUpBtn = document.querySelector('.hangup-btn');
+    /*const hangUpBtn = document.querySelector('.hangup-btn');
     hangUpBtn.addEventListener('click', function (){
         conn.close();
         showCallContent();
-    })
+    })*/
 
     const callSound = Sound.from('audio/calling.mp3');
     callSound.volume = 0.05
@@ -203,7 +203,7 @@ const create = () => {
     
     
 
-        getLocalStream();*/
+        getLocalStream();
        
     })
 
