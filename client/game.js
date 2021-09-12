@@ -233,7 +233,7 @@ const create = () => {
 
         var c = Math.sqrt( a*a + b*b );
         if(c < 400) {
-            var volume = 400 - c
+            var volume = 200 - c
             footstep.volume = volume/6000
             //console.log('volume:' + c)
             if(!footstep.isPlaying) {
@@ -305,6 +305,7 @@ const create = () => {
 
     const portalProximity = Sound.from('audio/portal-proximity.mp3');
     portalProximity.volume = 0
+    portalProximity.loop = true
     portalProximity.play()
 
     client.on('message::Notification', message => {
