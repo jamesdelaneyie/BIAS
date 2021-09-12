@@ -133,8 +133,8 @@ class UIBuilder extends PIXI.Container {
             new PUXI.FastLayoutOptions({
                 width: 260, 
                 height: 50,
-                x: 0.65,
-                y: 0.98,
+                x: 0.85,
+                y: 0.97,
                 anchor: new PIXI.Point(0.5, 1)
             })
         )
@@ -2633,7 +2633,7 @@ class UIBuilder extends PIXI.Container {
         if(boolean == true) {
             var connectedText = new TaggedText("<bluedot>●</bluedot> <b>Connected to Server</b> <y>["+value.text+"]</y>", {
                 "default": {
-                    fontFamily: "Iosevka",
+                    fontFamily: "Trade Gothic Next",
                     fontSize: "11px",
                     fill: "#efefef",
                     align: "left"
