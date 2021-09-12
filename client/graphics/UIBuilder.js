@@ -73,7 +73,7 @@ class UIBuilder extends PIXI.Container {
             width: 250,
             height: 100
         });
-        //this.statusStage.visible = false
+        this.statusStage.visible = false
 
         this.statusWrapper = new PUXI.WidgetGroup({
         }).setLayoutOptions(
@@ -139,8 +139,9 @@ class UIBuilder extends PIXI.Container {
             })
         )
 
+
         this.emojiWrapperBackground = new PIXI.Graphics()
-        this.emojiWrapperBackground.lineStyle(1.5, 0x000000, 1, 1, false)
+        this.emojiWrapperBackground.lineStyle(1, 0x000000, 1, 1, false)
         this.emojiWrapperBackground.beginFill(0xFFFFFF)
         this.emojiWrapperBackground.drawRoundedRect(0, 0, 260, 50, 25)
         this.emojiWrapperBackground.endFill()
@@ -243,7 +244,7 @@ class UIBuilder extends PIXI.Container {
             x: 0,
             y: 0
         })
-        //this.scoreStage.visible = false
+        this.scoreStage.visible = false
         
         this.scoreWrapper = new PUXI.WidgetGroup({}).setLayoutOptions(
             new PUXI.FastLayoutOptions({
@@ -535,7 +536,7 @@ class UIBuilder extends PIXI.Container {
         )
 
         this.textBoxWrapperBackground = new PIXI.Graphics()
-        this.textBoxWrapperBackground.lineStyle(1.5, 0x000000, 1, 1, false)
+        this.textBoxWrapperBackground.lineStyle(1, 0x000000, 1, 1, false)
         this.textBoxWrapperBackground.beginFill(0xFFFFFF)
         this.textBoxWrapperBackground.drawRoundedRect(0, 0, textBoxWidth, textBoxHeight, 25)
         this.textBoxWrapperBackground.endFill()
@@ -2243,8 +2244,9 @@ class UIBuilder extends PIXI.Container {
     joinSession(){
         this.joinModalWidgetGroup.contentContainer.alpha = 0
         this.joinModal.alpha = 0
-        this.removeChild(this.joinModal)
-        
+        this.statusStage.visible = true
+        this.scoreStage.visible = true
+        this.removeChild(this.joinModal)   
     }
 
 
