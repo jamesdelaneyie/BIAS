@@ -459,8 +459,8 @@ const create = () => {
     var y = location.searchParams.get("y")
     var handshake = {inviteX:x, inviteY:y}
 
-    client.connect('ws://localhost:8079', handshake)
-    //client.connect('wss://bias.jamesdelaney.ie/test')
+    //client.connect('ws://localhost:8079', handshake)
+    client.connect('wss://bias.jamesdelaney.ie/test')
 
 
     const update = (delta, tick, now) => {
