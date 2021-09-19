@@ -36,6 +36,9 @@ export default (state, renderer ) => {
             },
             avatar({ graphics, value }) {
                 graphics.setAvatar(value)
+            },
+            color({ graphics, value }) {
+                graphics.setColor(value)
             }
         }
     }

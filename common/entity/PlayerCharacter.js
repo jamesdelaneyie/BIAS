@@ -11,7 +11,7 @@ class PlayerCharacter {
         this.rotation = 0
         this.hitpoints = 100
         this.isAlive = false
-        this.speed = 420
+        this.speed = 300
         this.size = 30
         this.mass = 20
         this.material = new p2.Material();
@@ -52,7 +52,7 @@ class PlayerCharacter {
             acc: 0
         }
 
-        this.collider = CollisionSystem.createCircleCollider(0, 0, 25)
+        this.collider = CollisionSystem.createCircleCollider(25, 25, 25)
         
     }
 

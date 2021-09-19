@@ -40,16 +40,36 @@ var Joystick = /** @class */ (function (_super) {
             innerScale: { x: 1, y: 1 },
         }, opts);
         if (!_this.settings.outer) {
+
             var outer = new PIXI.Graphics();
-            outer.beginFill(0xffffff);
-            outer.drawCircle(0, 0, 60);
-            outer.alpha = 0.3;
+
+            var outerCircle = new PIXI.Graphics()
+            outerCircle.beginFill(0xffffff);
+            outerCircle.drawCircle(0, 0, 120);
+            outerCircle.endFill()
+
+            outer.cacheAsBitmap = true;
+
+            outer.addChild(outerCircle)
+            outerCircle.scale.set(0.5)
+
+            outerCircle.alpha = 0.3;
             _this.settings.outer = outer;
+
         }
         if (!_this.settings.inner) {
-            var inner = new PIXI.Graphics();
-            inner.beginFill(0xffffff);
-            inner.drawCircle(0, 0, 35);
+            var inner = new PIXI.Container();
+
+            var innerCircle = new PIXI.Graphics()
+            innerCircle.beginFill(0xffffff);
+            innerCircle.drawCircle(0, 0, 70);
+            innerCircle.endFill()
+            
+            inner.cacheAsBitmap = true;
+
+            inner.addChild(innerCircle)
+            innerCircle.scale.set(0.5)
+
             inner.alpha = _this.innerAlphaStandby;
             _this.settings.inner = inner;
         }
@@ -70,8 +90,11 @@ var Joystick = /** @class */ (function (_super) {
         this.addChild(this.outer);
         this.addChild(this.inner);
         // this.outerRadius = this.containerJoystick.width / 2;
-        this.outerRadius = this.width / 2.5;
-        this.innerRadius = this.inner.width / 2;
+        this.outerRadius = 24//this.width / 2.5;
+        this.innerRadius = 18//this.inner.width / 2;
+        //console.log(this.outerRadius)
+        //console.log(this.innerRadius)
+
         this.bindEvents();
     };
     Joystick.prototype.bindEvents = function () {

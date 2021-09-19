@@ -2,11 +2,12 @@ import nengi from 'nengi'
 import nengiConfig from '../common/nengiConfig.js'
 import MoveCommand from '../common/command/MoveCommand.js'
 import FireCommand from '../common/command/FireCommand.js'
+import applyCommand from '../common/applyCommand.js'
 
 const protocolMap = new nengi.ProtocolMap(nengiConfig, nengi.metaConfig)
 
 const address = 'ws://localhost:8079'
-const numberOfBots = 90
+const numberOfBots = 10
 const bots = new Map()
 
 function connectNewBot(id) {
@@ -19,7 +20,7 @@ function connectNewBot(id) {
         s: false,
         d: false,
         rotation: 0,
-        delta: 1/60
+        delta: 1/20
     }
 
     bot.onConnect(response => {
@@ -48,6 +49,7 @@ const loop = function() {
         if (bot.websocket) {
             bot.readNetwork()
             
+            //console.log(bot)
             // small percent chance of changing which keys are being held down
             // this causes the bots to travel in straight lines, for the most part
             if (Math.random() > 0.95) {
@@ -71,9 +73,12 @@ const loop = function() {
             )
 
             if (Math.random() > 0.7) {
-                // bot.addCommand(new FireCommand(500, 500))
+                 bot.addCommand(new FireCommand(500, 500))
             }
             bot.addCommand(input)
+             // apply moveCommand  to our local entity
+            applyCommand(bot, input, null, null)
+
             bot.update()
             bot.tick++
         }

@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js'
-import {GlowFilter} from '@pixi/filter-glow';
 import {DropShadowFilter} from '@pixi/filter-drop-shadow';
 
 
@@ -58,65 +57,6 @@ class FloorGraphics extends PIXI.Container {
         gridBackground.filters = [dropShadowFilter]
 
         this.addChild(gridBackground)
-
-
-
-
-        const fontStyle = {
-            fontFamily: 'Trade Gothic Next',
-            fill: 0x000000, 
-            fontSize: 139,
-            fontWeight: 900
-        }
-
-        if(state.floorColor  == '#FFE401') {
-
-            const firstName = "NOAH"
-            const firstNameText = new PIXI.Text(firstName, fontStyle);
-            firstNameText.x = 298
-            firstNameText.y = 63
-            this.addChild(firstNameText)
-
-            const lastName = "LEVENSON"
-            const lastNameText = new PIXI.Text(lastName, fontStyle);
-            lastNameText.x = 125
-            lastNameText.y = 763
-            this.addChild(lastNameText)
-
-        } else if (state.floorColor == "#471A8E") {
-
-            const firstName = "JOHANN DIEDRICK"
-            const firstNameText = new PIXI.Text(firstName, fontStyle);
-            firstNameText.x = 298
-            firstNameText.y = 63
-            this.addChild(firstNameText)
-
-        } else if (state.floorColor == "#505050") {
-
-            const firstName = "MUSHON"
-            const firstNameText = new PIXI.Text(firstName, fontStyle);
-            firstNameText.x = 98
-            firstNameText.y = 563
-            this.addChild(firstNameText)
-
-            const lastName = "ZER-AVIV"
-            const lastNameText = new PIXI.Text(lastName, fontStyle);
-            lastNameText.x = 95
-            lastNameText.y = 763
-            this.addChild(lastNameText)
-
-        } else if (state.floorColor == "#80EDFF") {
-
-
-            const firstName = "LIBBY HEANEY"
-            const firstNameText = new PIXI.Text(firstName, fontStyle);
-            firstNameText.x = 98
-            firstNameText.y = 563
-            this.addChild(firstNameText)
-
-
-        }
-        
 
 
     }

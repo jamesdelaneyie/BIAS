@@ -15,8 +15,6 @@ class InputSystem {
         
         let isJoined = false;
 
-        
-
         const joinButton = renderer.stage.children[1].joinButton
         const UIBuilder = this.UIBuilder
 
@@ -29,16 +27,15 @@ class InputSystem {
             
             if(isJoined == false) {
 
-                let name = renderer.UIBuilder.getText();
-                let avatar = renderer.UIBuilder.getAvatar();
 
                 if(UIBuilder.nameGiven == true) {
 
-                    client.addCommand(new JoinCommand(""+name+"", ""+avatar+""))
-                    renderer.UIBuilder.clearText();
-                    renderer.UIBuilder.joinSession();
-                    //console.log(name, avatar)
+                    let name = renderer.UIBuilder.getText();
+                    let color = renderer.UIBuilder.getColor()
+                    let avatar = renderer.UIBuilder.getAvatar();
 
+                    client.addCommand(new JoinCommand(""+name+"", ""+avatar+"", ""+color+""))
+                    
                     isJoined = true
                     
 
@@ -256,7 +253,7 @@ class InputSystem {
                 this.frameState.mouseMoving = false
             })
 
-            if(this.isMobile.any || window.innerWidth < 600) {
+            if(this.isMobile.any || window.innerWidth <= 500) {
                 var joypadSize = 0.5
             } else {
                 var joypadSize = 0.2
@@ -403,8 +400,8 @@ class InputSystem {
            
             
              
-            if(this.isMobile.any || window.innerWidth < 600) {
-                this.leftController.position.set(60, window.innerHeight - this.leftController.height*2);
+            if(this.isMobile.any || window.innerWidth <= 500) {
+                this.leftController.position.set(45, window.innerHeight - this.leftController.height*1.6);
                 this.leftController.alpha = 0
                 renderer.stage.addChild(this.leftController);
             } else {
@@ -427,9 +424,11 @@ class InputSystem {
 
     placeJoySticks(){
 
-        if(this.isMobile.any || window.innerWidth < 600) {
-            this.leftController.position.set(this.leftController.width, window.innerHeight - this.leftController.height*2);
+        if(this.isMobile.any || window.innerWidth <= 500) {
+            this.leftController.position.set(45, window.innerHeight - this.leftController.height*1.6);
             renderer.stage.addChild(this.leftController);
+        } else {
+            renderer.stage.removeChild(this.leftController);
         }
 
     }

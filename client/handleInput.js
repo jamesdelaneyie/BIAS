@@ -15,7 +15,7 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
 
 
 
-    const { myRawEntity, obstacles, boxes, floors} = state
+    const { myRawEntity, obstacles, boxes } = state
 
 
     if (myRawEntity) {
@@ -41,21 +41,13 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
 
         // apply moveCommand  to our local entity
         applyCommand(myRawEntity, moveCommand, obstacles, boxes)
-        
-        /*console.log(input.w)
-        if(input.w == true) {
-            if(!footstep.isPlaying) {
-                footstep.play()
-            }
-        }*/
 
-        //console.log(input.mouseDown)
         if (input.mouseDown) {
             const coolEmoji = renderer.stage.children[1].coolEmoji.contentContainer;
             coolEmoji.on("pointerdown", function () {
                 client.addCommand(new SpeakCommand("😎", "emojiBlast", myRawEntity.x, myRawEntity.y))
             });
-            const heartEmoji = renderer.stage.children[1].heartEmoji.contentContainer;
+           /*const heartEmoji = renderer.stage.children[1].heartEmoji.contentContainer;
             heartEmoji.on("pointerdown", function () {
                 client.addCommand(new SpeakCommand("❤️", "emojiBlast", myRawEntity.x, myRawEntity.y))
             });
@@ -70,7 +62,7 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
             const whateverEmoji = renderer.stage.children[1].whateverEmoji.contentContainer;
             whateverEmoji.on("pointerdown", function () {
                 client.addCommand(new SpeakCommand("🙄", "emojiBlast", myRawEntity.x, myRawEntity.y))
-            });
+            });*/
         }
 
         const sendMessage = renderer.stage.children[1].textBox.children[0].children[0].children[3]

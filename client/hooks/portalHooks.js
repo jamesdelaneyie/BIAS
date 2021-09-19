@@ -6,16 +6,21 @@ export default ({ portals }, renderer) => {
 
             //portals.set(data.nid, entity)
 
-            const graphics = new PortalGraphics(data)
+            const graphicsBottom = new PortalGraphics(data, "bottom")
+            const graphicsTop = new PortalGraphics(data, "top")
 
-            renderer.entities.set(data.nid, graphics)
-            renderer.middleground.addChild(graphics)
+            renderer.entities.set(data.nid, graphicsBottom)
+            renderer.entities.set(data.nid, graphicsTop)
 
-            return graphics
+            renderer.middleground.addChild(graphicsBottom)
+            renderer.foreground.addChild(graphicsTop)
+            
+
+            return graphicsBottom
         },
-        delete({ nid, graphics }) {
+        delete({ nid, graphicsBottom, graphicsTop }) {
             renderer.entities.delete(nid)
-            renderer.middleground.removeChild(graphics)
+            renderer.middleground.removeChild(graphicsBottom)
         }
     }
 }

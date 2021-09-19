@@ -16,7 +16,7 @@ const addMessage = (layer, message) => {
             fontFamily: 'Trade Gothic Next',
             fill: "black",
             fontSize: 18,
-            fontWeight: 300,
+            fontWeight: 400,
             lineJoin: "round",
             whiteSpace: "normal",
             wordWrap: true,
@@ -58,7 +58,6 @@ const addMessage = (layer, message) => {
                 textBox.drawRoundedRect(window.innerWidth - 240, 10, text.width+40, text.height+25, 20)
             } else {
                 textBox.drawRoundedRect(message.x - 70, message.y - (68 + text.height), text.width+40, text.height+25, 20)
-
             }
             
             textBox.endFill()

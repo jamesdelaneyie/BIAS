@@ -68,23 +68,23 @@ const create = () => {
         state.myPeerId = message.peerId
         state.myAvatar = message.avatar
         state.name = message.name;
+        state.color = message.color;
 
-        const userSettings = window.localStorage;
-        userSettings.setItem('name', state.name);
-        window.myName = state.name
+        window.localStorage.setItem('name', state.name);
+        window.localStorage.setItem('avatar', state.myAvatar);
+        window.localStorage.setItem('color', state.color);
+        
 
         renderer.UIBuilder.joinInstance(state.name, state.myRawId)
+        renderer.UIBuilder.joinSession();
+
+        renderer.UIBuilder.clearText();
+       
+
         input.leftController.alpha = 1
 
-        const backgroundMusic = Sound.from('audio/background-tom.mp3');
-        backgroundMusic.speed = 1
-        backgroundMusic.volume = 0.01
-        backgroundMusic.loop = true;
+      
 
-        const telephone = new filters.TelephoneFilter(1)
-        const distorsion = new filters.DistortionFilter(0.1)
-        //backgroundMusic.filters = [telephone, distorsion]
-        backgroundMusic.play()
         
         
         const myPeer = new Peer(""+state.name+"",{
@@ -97,23 +97,9 @@ const create = () => {
     
         myPeer.on('open', function(id) {
             peerID = id;
-    
-            const text = new MultiStyleText("<dot>●</dot> Device ID: "+peerID+"", {
-                "default": {
-                    fontFamily: "Monaco",
-                    fontSize: "10px",
-                    fill: "#ececec",
-                    align: "left"
-                },
-                "dot": {
-                    fontSize: "15px",
-                    fill: "#0000ff"
-                }
-            });
-            renderer.stage.addChild(text);
-            text.x = 10;
-            text.y = 10;
-    
+
+            renderer.UIBuilder.joinPeer(state.name, peerID)
+
         });
         myPeer.on('error', function (err) {
             console.log(err.type)
@@ -154,21 +140,7 @@ const create = () => {
             call.answer(window.localStream) 
             const connectionId = call.connectionId
 
-            const text = new MultiStyleText("<dot>●</dot> Connected With: "+call.peer +" (ID:"+connectionId+")", {
-                "default": {
-                    fontFamily: "Monaco",
-                    fontSize: "10px",
-                    fill: "#ececec",
-                    align: "left"
-                },
-                "dot": {
-                    fontSize: "15px",
-                    fill: "#00ff00"
-                }
-            });
-            renderer.stage.addChild(text);
-            text.x = 10;
-            text.y = 30;
+            renderer.UIBuilder.joinCall()
             
             call.on('stream', function(stream) { // C
             window.remoteAudio.srcObject = stream;
@@ -180,7 +152,7 @@ const create = () => {
                 var mediaStream = audioContext.createMediaStreamSource(stream);
 
                 var meter = AudioStreamMeter.audioStreamProcessor(audioContext, function() {
-                    console.log("Their Volume:" + meter.volume * 100 + '%');
+                    //console.log("Their Volume:" + meter.volume * 100 + '%');
                 });
                 
                 mediaStream.connect(meter);
@@ -211,8 +183,10 @@ const create = () => {
 
 
     client.on('message::WeaponFired', message => {
-        if (message.sourceId === state.mySmoothEntity.nid) {
-            return
+        if(state.mySmoothEntity) {
+            if (message.sourceId === state.mySmoothEntity.nid) {
+                return
+            }
         }
         const { x, y, tx, ty } = message
         drawHitscan(renderer.background, x, y, tx, ty, 0x000000)
@@ -223,12 +197,15 @@ const create = () => {
     
 
     client.on('message::Walking', message => {
+       
         if (message.id === state.mySmoothEntity.nid) {
+            renderer.UIBuilder.setOwnPlayerPositionMiniMap(state.myRawEntity.x, state.myRawEntity.y)
             return
-            //console.log('im walking here')
         }
-        //console.log(message.x, message.y)
-        //console.log(state.mySmoothEntity.x, state.mySmoothEntity.y)
+       
+       
+        renderer.UIBuilder.setPlayerPositionMiniMap(message.id, message.x, message.y)
+
         if(state.mySmoothEntity) {
             var a = message.x - state.mySmoothEntity.x;
             var b = message.y - state.mySmoothEntity.y
@@ -237,7 +214,6 @@ const create = () => {
             if(c < 400) {
                 var volume = 200 - c
                 footstep.volume = volume/6000
-                //console.log('volume:' + c)
                 if(!footstep.isPlaying) {
                     footstep.play()
                 }
@@ -250,7 +226,6 @@ const create = () => {
                 var volume = 300 - c
                 var number = Math.min(Math.max(parseInt(volume), 1), 100);
                 var remoteVolume = number/100
-                console.log(remoteVolume)
                 window.remoteAudio.volume = remoteVolume
                 
             }
@@ -286,13 +261,13 @@ const create = () => {
 
                     var force = message.force;
 
-                    var forceSound = Math.min(Math.max(parseInt(force), 1), 20);
+                    var forceSound = Math.min(Math.max(parseInt(force), 1), 10);
                     
                     var c = Math.sqrt( a*a + b*b );
                     if(c < 400) {
                         var volume = 400 - c
                         boop.volume = volume/6000
-                        boop.volume = boop.volume * (forceSound/5)
+                        boop.volume = boop.volume * (forceSound/3)
                         
                             boop.play();
 
@@ -303,7 +278,7 @@ const create = () => {
                     
                 } else {
                     if(!boop.isPlaying) {
-                        boop.play();
+                        //boop.play();
                     }
                 }
         }
@@ -329,6 +304,10 @@ const create = () => {
     client.on('message::Notification', message => {
 
         //console.log(message)
+
+        if(message.type == "mapInfo") {
+            renderer.UIBuilder.buildMiniMap(message.text)
+        }
         
         if(message.type == "showQuote") {
             if(!renderer.UIBuilder.showingQuote) {
@@ -419,13 +398,14 @@ const create = () => {
 
         if(message.type == "portalVolume") {
 
-            var volume = (200 - message.text) / 500
-            portalProximity.volume = volume
+            var volume = (100 - message.text) / 500
             //console.log(volume)
+            volume = Math.max(0, volume);
+            portalProximity.volume = volume
 
-          // console.log(message)
 
-
+        } else {
+            portalProximity.volume = 0
         }
 
         if(message.type == "command") {
@@ -453,35 +433,48 @@ const create = () => {
 
     client.on('connected', res => { 
 
-        console.log('connection?:', res)
+        //console.log('connection?:', res)
         
         renderer.UIBuilder.updateConnection(res, true);
-        
-
        
-
-        const name = localStorage.getItem('name');
-        if(name) {
-            console.log('lemme join!')
-        }
         
     })
 
+    client.on('error', res => { 
+
+        console.log('Problem')
+               
+        
+    })
+
+
+
+
     client.on('disconnected', () => { 
-        //console.log('connection closed') 
 
         renderer.UIBuilder.updateConnection(null, false);
 
     })
 
+
+
+
     var inviteLocation = window.location.href
     var location = new URL(inviteLocation);
     var x = location.searchParams.get("x");
     var y = location.searchParams.get("y")
-    var handshake = {inviteX:x, inviteY:y}
+    //var handshake = {inviteX:x, inviteY:y}
+    
+    const handshake = window.localStorage;
+    //console.log(handshake)
+    if(handshake.name) {
+        client.connect('ws://localhost:8079', handshake)
+    } else {
+        client.connect('ws://localhost:8079')
+    }
 
-    //client.connect('ws://localhost:8079', handshake)
-    client.connect('wss://bias.jamesdelaney.ie/test')
+    
+    //client.connect('wss://bias.jamesdelaney.ie/test')
 
 
     const update = (delta, tick, now) => {

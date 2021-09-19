@@ -49,22 +49,44 @@ class ObstacleGraphics extends PIXI.Container {
 
         } else {
             this.body = new PIXI.Graphics()
+            this.body.lineStyle(1, 0x000000)
             this.body.beginFill(this.color)
             this.body.drawRect(0, 0, state.width, state.height)
+
+            if(state.name == "easternEyeBuilding") {
+                const texture = PIXI.Texture.from('images/clouds-pattern.svg');
+                const tilingSprite = new PIXI.TilingSprite(texture, state.width, state.height);
+                this.body.addChild(tilingSprite)
+
+            } else if (state.name == "northernFlowerBuildingTwo") {
+                const texture = PIXI.Texture.from('images/memphis-2.svg');
+                const tilingSprite = new PIXI.TilingSprite(texture, state.width, state.height);
+                //tilingSprite.tileScale = new PIXI.Point(0.5, 0.5)
+                this.body.addChild(tilingSprite)
+
+            } else if (state.name == "northernFlowerBuilding") {
+                const texture = PIXI.Texture.from('images/flower-pattern.svg');
+                const tilingSprite = new PIXI.TilingSprite(texture, state.width, state.height);
+                tilingSprite.tilePosition = new PIXI.Point(-50, -55)
+                this.body.addChild(tilingSprite)
+
+            } else if (state.name == "easternEyeBuildingTwo") {
+                const texture = PIXI.Texture.from('images/pink-sprinkles.svg');
+                const tilingSprite = new PIXI.TilingSprite(texture, state.width, state.height);
+                tilingSprite.tilePosition = new PIXI.Point(-50, -55)
+                this.body.addChild(tilingSprite)
+
+            }
+            
+
+            
+            //this.middleground.addChild(tilingSprite);
+
             this.body.endFill()
         }
 
 
-        if(state.name == "reception") {
-
-            const logo = new PIXI.Sprite.from('images/sg-white.svg');
-            logo.width = 231
-            logo.height = 117
-            logo.x = 200
-            logo.y = 100
-            logo.anchor.set(0.5)
-            this.body.addChild(logo)
-        }
+       
 
         this.wrapper.addChild(this.body)
 

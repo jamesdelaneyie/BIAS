@@ -20,8 +20,8 @@ export default (instance, world, room, boxes) => {
 
    const topWall = new Box({ 
         name: 'topWall', 
-        x: roomX + roomWidth/2, 
-        y: roomY - borderWidth/2, 
+        x: roomX, 
+        y: roomY, 
         width: roomWidth, 
         height: borderWidth, 
         color: borderColor, 
@@ -36,10 +36,10 @@ export default (instance, world, room, boxes) => {
 
     const rightWall = new Box({ 
         name: 'rightWall', 
-        x: roomX + roomWidth + (borderWidth/2), 
-        y: roomY + roomHeight/2, 
+        x: roomX + roomWidth - borderWidth, 
+        y: roomY, 
         width: borderWidth, 
-        height: roomHeight + (borderWidth*2), 
+        height: roomHeight, 
         color: borderColor, 
         mass: 0, 
         spin: 0, 
@@ -52,9 +52,9 @@ export default (instance, world, room, boxes) => {
 
     const bottomWall = new Box({ 
         name: 'bottomWall', 
-        x: roomX + roomWidth/2, 
-        y: roomY + roomHeight + (borderWidth/2), 
-        width: roomWidth + (borderWidth*2), 
+        x: roomX, 
+        y: roomY + roomHeight - borderWidth, 
+        width: roomWidth, 
         height: borderWidth, 
         color: borderColor, 
         mass: 0, 
@@ -68,10 +68,10 @@ export default (instance, world, room, boxes) => {
 
     const leftWall = new Box({ 
         name: 'leftWall', 
-        x: roomX - (borderWidth/2), 
-        y: roomY + roomHeight/2, 
+        x: roomX, 
+        y: roomY, 
         width: borderWidth, 
-        height: roomHeight + borderWidth*2, 
+        height: roomHeight - borderWidth, 
         color: borderColor, 
         mass: 0, 
         spin: 0, 
@@ -105,37 +105,10 @@ export default (instance, world, room, boxes) => {
             boxes.set(objectProps.nid, objectProps)
         });
     }
-
-    /*setInterval(function(){
-        if(boxes.size < 14) {
-            objects.forEach(object => {
-                //.log(object.name)
-                let objectProps = new Box({
-                    name: object.name,
-                    x: object.x + roomX,
-                    y: object.y + roomY,
-                    width: object.width,
-                    height: object.height,
-                    mass: object.mass,
-                    color: object.color,
-                    spin: 0, 
-                    material: wallMaterial 
-                })
-                instance.addEntity(objectProps)
-                world.addBody(objectProps.body)
-                boxes.set(objectProps.nid, objectProps)
-            });
-        }
-    }, 2000)
-
-    console.log(boxes.size)*/
     
-
-
     var touch = new p2.ContactMaterial(circleMaterial, wallMaterial, {
         friction: 1,
-        restitution: 0.5,
-        surfaceVelocity: 20
+        restitution: 0.5
     });
 
     world.addContactMaterial(touch);

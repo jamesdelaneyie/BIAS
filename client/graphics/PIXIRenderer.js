@@ -16,16 +16,21 @@ class PIXIRenderer {
         this.entities = new Map()
         this.collection = []
 
+        let resolution
+        if(window.innerWidth < 500) {
+            resolution = 1
+        } else {
+            resolution = window.devicePixelRatio
+        }
+
         this.renderer = PIXI.autoDetectRenderer({
             width: window.innerWidth, 
             height: window.innerHeight, 
             view: this.canvas,
-            autoDensity: true,
             antialias: true,
             transparent: false,
-            resolution: 2
+            resolution: resolution
         })
-
         
 
         this.stage = new PIXI.Container()
@@ -41,22 +46,53 @@ class PIXIRenderer {
         
         font.load()
 
-        this.camera.addChild(this.backbackground)
-        this.camera.addChild(this.background)
-        this.camera.addChild(this.middleground)
-        this.camera.addChild(this.foreground)
+        this.cameraWrapper = new PIXI.Container()
+
+        this.cameraWrapper.addChild(this.backbackground)
+        this.cameraWrapper.addChild(this.background)
+        this.cameraWrapper.addChild(this.middleground)
+        this.cameraWrapper.addChild(this.foreground)
 
         //this.noise = new PIXI.filters.NoiseFilter(0.01, 0.2893);
         //this.stage.filters = [this.noise]
+
+        this.introCRTFilter = new CRTFilter({
+            vignetting: 0.1,
+            vignettingAlpha: 1,
+            vignettingBlur: 0.1,
+            padding: 0,
+            animating: true,
+            verticalLine: true,
+            lineContrast: 0.005,
+            noise: 0.005,
+            noiseSize: 1.0,
+            padding: 4,
+        })
+        
+
+       // this.cameraWrapper.filters = [this.introCRTFilter]
         
         this.camera.x = 6000
         this.camera.y = 6000
+        this.camera.addChild(this.cameraWrapper)
 
         this.stage.addChild(this.camera)
         this.stage.addChild(this.UIBuilder)
 
         const fpsCounter = new PixiFps();
-        this.stage.addChild(fpsCounter)
+        //this.stage.addChild(fpsCounter)
+
+
+
+
+
+
+
+
+
+
+
+        
 
         this.fishCountOne = 7;
         this.fishCountTwo = 2;
@@ -232,7 +268,19 @@ class PIXIRenderer {
 
 
 
+        const texture = PIXI.Texture.from('images/blue-black-capsule-pattern.svg');
+        const tilingSprite = new PIXI.TilingSprite(texture, 400, 200);
+        tilingSprite.x = 800
+        tilingSprite.y = 900
+        this.middleground.addChild(tilingSprite);
 
+        const scienceGalleryLogoFull = new PIXI.Sprite.from('images/science-gallery-full-logo.svg');
+        scienceGalleryLogoFull.anchor.set(0.5);
+        scienceGalleryLogoFull.x = 1000
+        scienceGalleryLogoFull.y = 1000
+        this.middleground.addChild(scienceGalleryLogoFull)
+
+        
 
 
 
@@ -295,6 +343,7 @@ class PIXIRenderer {
     
     resize() {
         this.renderer.resize(window.innerWidth, window.innerHeight)
+        this.UIBuilder.resize(window.innerWidth, window.innerHeight)
     }
  
     centerCamera(entity) {
@@ -326,18 +375,12 @@ class PIXIRenderer {
         this.renderer.render(this.stage)
         this.UIBuilder.update(delta)
 
-        //this.noise.seed = Math.random()
-
-        //this.biasShape.x += delta*50;
-        //this.biasShape.y -= delta*50;
-
         this.displacementSprite.y = delta*500
         this.displacementSprite.x = delta*500
 
 
         this.backbackground.filters =  [this.ascaiiFilter, this.displacementFilter]
-        
-
+    
 
         for (let i = 0; i < this.fishes.length; i++) {
             const fish = this.fishes[i];

@@ -63,8 +63,8 @@ class GameInstance {
         const peerServer = PeerServer({
             port: 9000,
             ssl: {
-               key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem'),
-               cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/cert.pem')
+               //key: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/privkey.pem'),
+               //cert: fs.readFileSync('/etc/letsencrypt/live/bias.jamesdelaney.ie/cert.pem')
             }
         });
 
@@ -93,13 +93,13 @@ class GameInstance {
             objects: [{
                 name: "",
                 type: "",
-                x: 0,
-                y: 660,
-                width: 3000, 
+                x: 775,
+                y: 655,
+                width: 450, 
                 height: 20, 
                 color: "#0000ff",
                 mass: 0
-            },{
+            },/*,{
                 name: "",
                 type: "",
                 x: 0,
@@ -126,7 +126,7 @@ class GameInstance {
                 height: 3000, 
                 color: "#0000ff",
                 mass: 0
-            },{
+            },*/{
                 name: "token",
                 type: "robot",
                 x: 950,
@@ -147,6 +147,15 @@ class GameInstance {
                 mass: 1
             },{
                 name: "token",
+                type: "soccer-ball",
+                x: 500,
+                y: 500,
+                width: 25, 
+                height: 25, 
+                color: "#0000ff",
+                mass: 0.001
+            },{
+                name: "token",
                 type: "talking",
                 x: 950,
                 y: 1050,
@@ -165,41 +174,41 @@ class GameInstance {
                 mass: 1
             }],
             portals: [{
-                name: "Noah Levenson\nSTEALING UR FEELINGS",
+                name: "Noah Levenson\n<bold>STEALING UR FEELINGS</bold>",
                 x: 950,
-                y: 1335,
+                y: 1345,
                 width: 100,
-                height: 10,
-                exit: [6900, 950]
+                height: 50,
+                exit: [2500, 100]
             },{
                 name: "Johann Dedrick\nDARK MATTERS",
                 x: 570,
                 y: 975,
                 width: 10,
                 height: 100,
-                exit: [8850, 2550]
+                exit: [50, 2550]
             },{
                 name: "Mushon Zer-Aviv\nNORMALISI.NG",
                 x: 1420,
                 y: 975,
                 width: 10,
                 height: 100,
-                exit: [8850, 3500]
+                exit: [2500, 1500]
             },{
                 name: "Libby Heaney\nCLASSES",
                 x: 950,
                 y: 700,
                 width: 100,
                 height: 10,
-                exit: [10850, 4500]
+                exit: [3500, 100]
             }]
         }
         this.floors = setupFloors(this.instance, this.room)
         
         
         this.room2 = {
-            x: 6800,
-            y: 25,
+            x: 2100,
+            y: 0,
             name: "Noah",
             width: 1000,
             height: 1000,
@@ -217,7 +226,7 @@ class GameInstance {
                 y: 500,
                 width: 40, 
                 height: 40, 
-                color: "quote3",
+                color: "quote5",
                 mass: 0
             },{
                 name: "token",
@@ -240,10 +249,10 @@ class GameInstance {
             }],
             portals: [{
                 name: "Main Lobby",
-                x: 0,
-                y: 925,
-                width: 10,
-                height: 100,
+                x: 475,
+                y: 50,
+                width: 100,
+                height: 10,
                 exit: [1000, 1000]
             }]
         }
@@ -251,9 +260,9 @@ class GameInstance {
 
 
         this.room3 = {
-            x: 8800,
-            y: 2000,
-            name: "Mushon",
+            x: 0,
+            y: 2100,
+            name: "Johann",
             width: 2000,
             height: 800,
             floorColor: "#471A8E",
@@ -270,7 +279,7 @@ class GameInstance {
                 y: 500,
                 width: 40, 
                 height: 40, 
-                color: "quote3",
+                color: "quote6",
                 mass: 0
             },{
                 name: "token",
@@ -305,9 +314,9 @@ class GameInstance {
 
 
         this.room4 = {
-            x: 8800,
-            y: 3500,
-            name: "Johann",
+            x: 2100,
+            y: 1100,
+            name: "Mushon",
             width: 800,
             height: 1500,
             floorColor: "#505050",
@@ -324,7 +333,7 @@ class GameInstance {
                 y: 500,
                 width: 40, 
                 height: 40, 
-                color: "quote4",
+                color: "quote5",
                 mass: 0
             },{
                 name: "token",
@@ -333,7 +342,7 @@ class GameInstance {
                 y: 1300,
                 width: 40, 
                 height: 40, 
-                color: "quote4",
+                color: "quote6",
                 mass: 0
             },{
                 name: "token",
@@ -368,8 +377,8 @@ class GameInstance {
 
 
         this.room5 = {
-            x: 10800,
-            y: 3500,
+            x: 3200,
+            y: 0,
             name: "Libby",
             width: 1500,
             height: 1500,
@@ -384,7 +393,7 @@ class GameInstance {
                 y: 500,
                 width: 40, 
                 height: 40, 
-                color: "quote4",
+                color: "quote5",
                 mass: 0
             },{
                 name: "token",
@@ -418,8 +427,8 @@ class GameInstance {
 
 
         this.room6 = {
-            x: 10800,
-            y: 5500,
+            x: 3100,
+            y: 1600,
             name: "reception",
             width: 700,
             height: 700,
@@ -462,8 +471,8 @@ class GameInstance {
 }&*/
 
         this.room7 = {
-            x: 11050,
-            y: 6200,
+            x: 3350,
+            y: 2300,
             name: "reception",
             width: 200,
             height: 700,
@@ -523,7 +532,7 @@ class GameInstance {
         const theInstance = this.instance
         const theWorld = this.world
 
-       /* setInterval(function(){
+        setInterval(function(){
             let likePump = new Box({
                 name: "token",
                 type: "thumbs-up",
@@ -539,7 +548,7 @@ class GameInstance {
             boxes.set(likePump.nid, likePump)
         }, 30000)
 
-        setInterval(function(){
+        /*setInterval(function(){
             let size = Math.random() * 70
             let likePump = new Box({
                 name: "token",
@@ -571,8 +580,8 @@ class GameInstance {
             theInstance.addEntity(likePump)
             theWorld.addBody(likePump.body)
             boxes.set(likePump.nid, likePump)
-        }, 30000)
-        */
+        }, 30000)*/
+        
 
         
 
@@ -614,7 +623,7 @@ class GameInstance {
       
 
         const easternEyeBuildingTwo = new Obstacle({ 
-            name: "easternEyeBuilding",
+            name: "easternEyeBuildingTwo",
             x: 1430, 
             y: 775, 
             width: 570, 
@@ -650,7 +659,7 @@ class GameInstance {
 
 
         const northernFlowerBuildingTwo = new Obstacle({ 
-            name: "northernFlowerBuilding",
+            name: "northernFlowerBuildingTwo",
             x: 775, 
             y: 1320, 
             width: 450, 
@@ -729,9 +738,10 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
 
 
            if(client.rawEntity.nid) {
+                this.instance.removeEntity(client.rawEntity)
+                this.instance.removeEntity(client.smoothEntity)
                client.channel.removeEntity(client.rawEntity)
-               this.instance.removeEntity(client.rawEntity)
-               this.instance.removeEntity(client.smoothEntity)
+              
            }
            client.channel.destroy()
 
@@ -739,16 +749,208 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
 
 
         })
+
+        
         
 
 
         // (the rest is just attached to client objects when they connect)
         this.instance.on('command::JoinCommand', ({ command, client }) => {
 
-            console.log()
+            this.joinSession(command, client)
+            
+        })
 
-            const rawEntity = new PlayerCharacter({ self: true, avatar: ""+command.avatar+"" })
-            const smoothEntity = new PlayerCharacter({ self: false, avatar: ""+command.avatar+""  })
+        this.instance.on('connect', ({ client, data, callback }) => {
+            
+            const channel = this.instance.createChannel()
+            channel.subscribe(client)
+            client.channel = channel
+            
+            client.positions = []
+
+            client.invite = {x:data.fromClient.inviteX, y:data.fromClient.inviteY}
+           
+            client.view = {
+                x: 0,
+                y: 0,
+                halfWidth: 4000,
+                halfHeight: 4000
+            }
+            
+           
+
+            let theWorldDesign = JSON.stringify([this.room, this.room2, this.room3, this.room4, this.room5, this.room6, this.room7])
+
+            this.instance.message(new Notification(theWorldDesign, 'mapInfo', 0, 0), client)
+
+            console.log(data)
+            if(data.fromClient.name) {
+                let command = {name: data.fromClient.name, avatar: data.fromClient.avatar, color: data.fromClient.color}
+                this.joinSession(command, client)  
+                console.log('name set')
+            }
+            //
+            //
+            
+
+
+            callback({ accepted: true, text: ""})
+
+        })
+
+
+
+
+        this.instance.on('disconnect', client => {
+            // clean up per client state
+            if(client.rawEntity) {
+                this.instance.messageAll(new Notification(''+ client.rawEntity.name +'', 'personLeft', 20, 20))
+            }
+
+            //console.log(''+ client.rawEntity.name +'')
+
+            if(client.rawEntity) {
+                client.channel.removeEntity(client.rawEntity)
+                this.instance.removeEntity(client.rawEntity)
+                this.instance.removeEntity(client.smoothEntity)
+            }
+            client.channel.destroy()
+        })
+
+
+
+
+        this.instance.on('command::SpeakCommand', ({ command, client, tick }) => {
+
+            if(command.type == "emojiBlast") {
+
+                this.instance.messageAll(new Notification(command.text, 'emojiBlast', command.x, command.y))
+            
+            } else if(command.type == "talk") {
+
+                //set the message
+                const message = command.text
+
+                //remove duplicate characters over 2
+                let messageTrimmed = message.replace(/(.)\1{2,}/g, '$1$1')
+                console.log("Trimmed: "+messageTrimmed)
+
+                //the regex motherlode haha
+                var exp = /[\u0000-\u001f-[-`{-þĀ-žƀ-Ɏɐ-ʮʰ-ϾЀ-ӾԀ-\u052e\u0530-\u058e\u0590-\u05fe\u0600-\u07be߀-\u07fe\u0800-\u083e\u0840-\u085e\u08a0-\u08fe\u0900-\u09fe\u0a00-\u0a7e\u0a80-\u0afe\u0b00-\u0b7e\u0b80-\u0bfe\u0c00-\u0cfe\u0d00-\u0dfe\u0e00-\u0e7e\u0e80-\u0efeༀ-\u0ffeက-\u10feᄀ-\u11feሀ-\u137eᎀ-\u139eᎠ-\u13fe\u1400-\u167e\u1680-\u169eᚠ-\u16feᜀ-\u171eᜠ-\u173eᝀ-\u175eᝠ-\u177eក-\u17fe᠀-\u18ae\u18b0-\u18feᤀ-\u197eᦀ-\u1aae\u1b00-\u1b7e\u1b80-\u1bbe\u1bc0-\u1bfeᰀ-᱿\u1cc0-\u1cce\u1cd0-\u1cfeᴀ-ᵾᶀ-Ỿἀ-῾\u2000-\u209e₠-\u20ce\u20d0-\u20fe℀-\u218e←-\u23fe␀-\u243e⑀-\u245e①-\u26fe\u2700-➾⟀-\u2bfeⰀ-ⱞⱠ-\u2c7eⲀ-\u2d2eⴰ-\u2d7eⶀ-ⷞ\u2de0-\u2e7e⺀-\u2efe⼀-\u2fde⿰-\u2ffe\u3000-\u312e\u3130-ㆎ㆐-\u31be㇀-\u31eeㇰ-㋾㌀-\u4dbe䷀-\u9ffeꀀ-\ua48e꒐-\ua4ce\ua4d0-\ua4feꔀ-\ua63eꙀ-\ua69e\ua6a0-\ua6fe꜀-\ua82e\ua830-\ua83eꡀ-\ua87e\ua880-\ua8de\ua8e0-\ua8fe꤀-\ua97e\ua980-\ua9deꨀ-\uaa7e\uaa80-\uaade\uaae0-\uaafe\uab00-\uab2e\uabc0-\uabfe가-\ud7ae\ud7b0-\ud7fe\ud806-\ud807\ud80a-\ud80b\ud80e-\ud819\ud81c-\ud82b\ud82d-\ud833\ud836-\ud83a\ud83e-\ud83f\ud86f-\ud87d\ud87f-\udb3f\udb41-\udb7f\udc00-\ufafeﬀ-\ufdfe\ufe00-\ufe1e\ufe20-\ufe2e︰-\ufe6eﹰ-￮\ufff0-\ufffe]|[\ud80c\ud835\ud840-\ud868\ud86a-\ud86c\udb80-\udbbe\udbc0-\udbfe][\udc00-\udfff]|\ud800[\udc00-\udc7e\udc80-\udcfe\udd00-\udd8e\udd90-\uddce\uddd0-\uddfe\ude80-\ude9e\udea0-\udede\udf00-\udf2e\udf30-\udf4e\udf80-\udfde]|\ud801[\udc00-\udc4e\udc50-\udcae]|\ud802[\udc00-\udc5e\udd00-\udd3f\udd80-\udd9e\udda0-\uddfe\ude00-\ude5e\ude60-\ude7e\udf00-\udf3e\udf40-\udf5e\udf60-\udf7e]|\ud803[\udc00-\udc4e\ude60-\ude7e]|\ud804[\udc00-\udc7e\udc80-\udcce\udcd0-\udcfe\udd00-\udd4e\udd80-\uddde]|\ud805[\ude80-\udece]|\ud808[\udc00-\udffe]|\ud809[\udc00-\udc7e]|\ud80d[\udc00-\udc2e]|\ud81a[\udc00-\ude3e]|\ud81b[\udf00-\udf9e]|\ud82c[\udc00-\udcfe]|\ud834[\udc00-\udcfe\udd00-\uddfe\ude00-\ude4e\udf00-\udf5e\udf60-\udf7e]|\ud83b[\ude00-\udefe]|\ud83c[\udc00-\udc2e\udc30-\udc9e\udca0-\udcfe\udd00-\uddfe\ude00-\udefe\udf00-\udfff]|\ud83d[\udc00-\uddfe\ude00-\ude4e\ude80-\udefe\udf00-\udf7e]|\ud869[\udc00-\udede\udf00-\udfff]|\ud86d[\udc00-\udf3e\udf40-\udfff]|\ud86e[\udc00-\udc1e]|\ud87e[\udc00-\ude1e]|\udb40[\udc00-\udc7f\udd00-\uddef]|\udbbf[\udc00-\udffe]|\udbff[\udc00-\udffe]|[\ud800-\ud805\ud808-\ud809\ud80c-\ud80d\ud81a-\ud81b\ud82c\ud834-\ud835\ud83b-\ud83d\ud840-\ud86e\ud87e\udb40\udb80-\udbff]/g;
+                let messageEnglishCharactersOnly = messageTrimmed.replace(exp, "")
+                console.log("Limited: "+messageEnglishCharactersOnly)
+
+                
+                let newSentance = ""
+                let singleWords = messageEnglishCharactersOnly.split(" ")
+                singleWords.forEach(word => {
+                    let isMisspelled = SpellChecker.isMisspelled(word)
+                    console.log(isMisspelled);
+                    if(isMisspelled) {
+                        let replacementWord = SpellChecker.getCorrectionsForMisspelling(word)
+                        if(replacementWord[0]) {
+                            newSentance += " "+replacementWord[0]
+                        } else {
+                            newSentance += " ???"
+                        }
+                    } else {
+                        if(word == "rape") {
+                            newSentance += " ****"
+                        } else {
+                            newSentance += " "+word
+                        }
+                    }
+                })
+                var secondRound = newSentance.substring(1);
+              
+
+                let firstPass = swearjar.censor(secondRound);
+                console.log("First Pass: "+firstPass)
+
+                if(firstPass.length > 0) {
+                    //console.log(firstPass)
+
+                    //let secondPass = censoring.censorMessage(firstPass, '*');
+                    //console.log("Second Pass: "+secondPass)
+
+                    let thirdPass = filter.cleanHacked(firstPass)
+                    console.log("Third Pass: "+thirdPass)
+
+                    this.instance.messageAll(new Notification(thirdPass, 'text', command.x, command.y))
+
+                }
+                
+            }
+
+        })
+
+        this.instance.on('command::RespawnCommand', ({ command, client, tick }) => {
+            const rawEntity = client.rawEntity
+            const smoothEntity = client.smoothEntity
+            respawnPlayer(rawEntity, smoothEntity);
+        })
+
+        this.instance.on('command::MoveCommand', ({ command, client, tick }) => {
+            const rawEntity = client.rawEntity
+
+            if(command.forward == true || command.backward == true || command.left == true || command.right == true) {
+                this.instance.addLocalMessage(new Walking(client.smoothEntity.nid, rawEntity.x, rawEntity.y))
+            }
+            applyCommand(rawEntity, command, this.obstacles, this.boxes)
+
+            client.positions.push({
+                x: rawEntity.x,
+                y: rawEntity.y,
+                delta: rawEntity.delta,
+                rotation: rawEntity.rotation
+            })
+
+            //this.instance.message(new Notification("", "playerPosition", rawEntity.x), client)
+
+        })
+
+        this.instance.on('command::FireCommand', ({ command, client, tick }) => {
+            // shoot from the perspective of this client's entity
+            const rawEntity = client.rawEntity
+            const smoothEntity = client.smoothEntity
+
+            if (fire(rawEntity)) {
+                let endX = command.x
+                let endY = command.y
+
+                this.obstacles.forEach(obstacle => {
+                    let hitObstacle
+                    if(obstacle.name == "circleBuilding") {
+                        hitObstacle = CollisionSystem.checkLinePolygon(rawEntity.x, rawEntity.y, command.x, command.y, obstacle.collider.circle)
+                    } else {
+                        hitObstacle = CollisionSystem.checkLinePolygon(rawEntity.x, rawEntity.y, command.x, command.y, obstacle.collider.polygon)
+                    }
+                    if (hitObstacle) {
+                        endX = hitObstacle.x
+                        endY = hitObstacle.y
+                    }
+                })
+
+                const timeAgo = client.latency + 100
+                const hits = lagCompensatedHitscanCheck(this.instance, rawEntity.x, rawEntity.y, endX, endY, timeAgo)
+
+                hits.forEach(victim => {
+                    if (victim.nid !== rawEntity.nid && victim.nid !== smoothEntity.nid) {
+                        damagePlayer(victim, 25)
+                    }
+                })
+
+                this.instance.addLocalMessage(new WeaponFired(smoothEntity.nid, smoothEntity.x, smoothEntity.y, command.x, command.y))
+            }
+        })
+    }
+
+    joinSession(command, client) {
+
+
+            const rawEntity = new PlayerCharacter({ self: true, avatar: ""+command.avatar+"", color: ""+command.color+"" })
+            const smoothEntity = new PlayerCharacter({ self: false, avatar: ""+command.avatar+"", color: ""+command.color+"" })
 
             rawEntity.client = client
             client.rawEntity = rawEntity
@@ -761,11 +963,10 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
             const peerID = client.peerID;
 
 
-            //let room2SpawnX = this.room6.x + (this.room6.width/2)
-            //let room2SpawnY = this.room6.y + (this.room6.height/2) + 50
-
-            let room2SpawnX = this.room.x + (this.room.width/2)
-            let room2SpawnY = this.room.y + (this.room.height/2)
+           //let room2SpawnX = this.room6.x + (this.room6.width/2)
+           //let room2SpawnY = this.room6.y + (this.room6.height/2) + 50
+           let room2SpawnX = this.room.x + (this.room.width/2)
+           let room2SpawnY = this.room.y + (this.room.height/2)
             
             
                 rawEntity.x = room2SpawnX
@@ -799,197 +1000,19 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
 
             smoothEntity.color = command.color
             rawEntity.color = command.color
-            
+            client.color = command.color
 
             smoothEntity.isAlive = true;
             rawEntity.isAlive = true;
+
+            //console.log('raw id: ' + rawEntity.nid)
             
-            this.instance.message(new Identity(rawEntity.nid, smoothEntity.nid, ""+peerID+"", ""+ command.avatar +"",""+ command.name +""), client)
+            
+            this.instance.message(new Identity(rawEntity.nid, smoothEntity.nid, ""+peerID+"", ""+ command.avatar +"",""+ command.name +"", ""+ command.color +""), client)
             this.instance.messageAll(new Notification(''+ command.name +'', 'personJoined', 20, 20))
 
             this.totalUsers++
             this.activeUsers.push({name: command.name})
-            
-
-        })
-
-        this.instance.on('connect', ({ client, data, callback }) => {
-            
-            //console.log()
-
-            const channel = this.instance.createChannel()
-            channel.subscribe(client)
-            client.channel = channel
-            
-            client.positions = []
-
-            client.invite = {x:data.fromClient.inviteX, y:data.fromClient.inviteY}
-           
-            client.view = {
-                x: 0,
-                y: 0,
-                halfWidth: 4000,
-                halfHeight: 4000
-            }
-
-
-            let server = this.instance.wsServer.httpServer._connectionKey;
-
-            callback({ accepted: true, text: ""+server+""})
-
-        })
-
-
-
-
-        this.instance.on('disconnect', client => {
-            // clean up per client state
-            if(client.rawEntity) {
-                this.instance.messageAll(new Notification(''+ client.rawEntity.name +'', 'personLeft', 20, 20))
-            }
-
-            //console.log(''+ client.rawEntity.name +'')
-
-        
-
-            if(client.rawEntity) {
-                client.channel.removeEntity(client.rawEntity)
-                this.instance.removeEntity(client.rawEntity)
-                this.instance.removeEntity(client.smoothEntity)
-            }
-            client.channel.destroy()
-        })
-
-
-
-
-        this.instance.on('command::SpeakCommand', ({ command, client, tick }) => {
-
-            if(command.type == "emojiBlast") {
-
-                this.instance.messageAll(new Notification(command.text, 'emojiBlast', command.x, command.y))
-            
-            } else if(command.type == "talk") {
-
-                //set the message
-                const message = command.text
-
-                //remove duplicate characters over 2
-                let messageTrimmed = message.replace(/(.)\1{2,}/g, '$1$1')
-                console.log("Trimmed: "+messageTrimmed)
-
-
-                var exp = /[\u0000-\u001f-[-`{-þĀ-žƀ-Ɏɐ-ʮʰ-ϾЀ-ӾԀ-\u052e\u0530-\u058e\u0590-\u05fe\u0600-\u07be߀-\u07fe\u0800-\u083e\u0840-\u085e\u08a0-\u08fe\u0900-\u09fe\u0a00-\u0a7e\u0a80-\u0afe\u0b00-\u0b7e\u0b80-\u0bfe\u0c00-\u0cfe\u0d00-\u0dfe\u0e00-\u0e7e\u0e80-\u0efeༀ-\u0ffeက-\u10feᄀ-\u11feሀ-\u137eᎀ-\u139eᎠ-\u13fe\u1400-\u167e\u1680-\u169eᚠ-\u16feᜀ-\u171eᜠ-\u173eᝀ-\u175eᝠ-\u177eក-\u17fe᠀-\u18ae\u18b0-\u18feᤀ-\u197eᦀ-\u1aae\u1b00-\u1b7e\u1b80-\u1bbe\u1bc0-\u1bfeᰀ-᱿\u1cc0-\u1cce\u1cd0-\u1cfeᴀ-ᵾᶀ-Ỿἀ-῾\u2000-\u209e₠-\u20ce\u20d0-\u20fe℀-\u218e←-\u23fe␀-\u243e⑀-\u245e①-\u26fe\u2700-➾⟀-\u2bfeⰀ-ⱞⱠ-\u2c7eⲀ-\u2d2eⴰ-\u2d7eⶀ-ⷞ\u2de0-\u2e7e⺀-\u2efe⼀-\u2fde⿰-\u2ffe\u3000-\u312e\u3130-ㆎ㆐-\u31be㇀-\u31eeㇰ-㋾㌀-\u4dbe䷀-\u9ffeꀀ-\ua48e꒐-\ua4ce\ua4d0-\ua4feꔀ-\ua63eꙀ-\ua69e\ua6a0-\ua6fe꜀-\ua82e\ua830-\ua83eꡀ-\ua87e\ua880-\ua8de\ua8e0-\ua8fe꤀-\ua97e\ua980-\ua9deꨀ-\uaa7e\uaa80-\uaade\uaae0-\uaafe\uab00-\uab2e\uabc0-\uabfe가-\ud7ae\ud7b0-\ud7fe\ud806-\ud807\ud80a-\ud80b\ud80e-\ud819\ud81c-\ud82b\ud82d-\ud833\ud836-\ud83a\ud83e-\ud83f\ud86f-\ud87d\ud87f-\udb3f\udb41-\udb7f\udc00-\ufafeﬀ-\ufdfe\ufe00-\ufe1e\ufe20-\ufe2e︰-\ufe6eﹰ-￮\ufff0-\ufffe]|[\ud80c\ud835\ud840-\ud868\ud86a-\ud86c\udb80-\udbbe\udbc0-\udbfe][\udc00-\udfff]|\ud800[\udc00-\udc7e\udc80-\udcfe\udd00-\udd8e\udd90-\uddce\uddd0-\uddfe\ude80-\ude9e\udea0-\udede\udf00-\udf2e\udf30-\udf4e\udf80-\udfde]|\ud801[\udc00-\udc4e\udc50-\udcae]|\ud802[\udc00-\udc5e\udd00-\udd3f\udd80-\udd9e\udda0-\uddfe\ude00-\ude5e\ude60-\ude7e\udf00-\udf3e\udf40-\udf5e\udf60-\udf7e]|\ud803[\udc00-\udc4e\ude60-\ude7e]|\ud804[\udc00-\udc7e\udc80-\udcce\udcd0-\udcfe\udd00-\udd4e\udd80-\uddde]|\ud805[\ude80-\udece]|\ud808[\udc00-\udffe]|\ud809[\udc00-\udc7e]|\ud80d[\udc00-\udc2e]|\ud81a[\udc00-\ude3e]|\ud81b[\udf00-\udf9e]|\ud82c[\udc00-\udcfe]|\ud834[\udc00-\udcfe\udd00-\uddfe\ude00-\ude4e\udf00-\udf5e\udf60-\udf7e]|\ud83b[\ude00-\udefe]|\ud83c[\udc00-\udc2e\udc30-\udc9e\udca0-\udcfe\udd00-\uddfe\ude00-\udefe\udf00-\udfff]|\ud83d[\udc00-\uddfe\ude00-\ude4e\ude80-\udefe\udf00-\udf7e]|\ud869[\udc00-\udede\udf00-\udfff]|\ud86d[\udc00-\udf3e\udf40-\udfff]|\ud86e[\udc00-\udc1e]|\ud87e[\udc00-\ude1e]|\udb40[\udc00-\udc7f\udd00-\uddef]|\udbbf[\udc00-\udffe]|\udbff[\udc00-\udffe]|[\ud800-\ud805\ud808-\ud809\ud80c-\ud80d\ud81a-\ud81b\ud82c\ud834-\ud835\ud83b-\ud83d\ud840-\ud86e\ud87e\udb40\udb80-\udbff]/g;
-                let messageEnglishCharactersOnly = messageTrimmed.replace(exp, "")
-                console.log("Limited: "+messageEnglishCharactersOnly)
-
-
-                let newSentance = ""
-                let singleWords = messageEnglishCharactersOnly.split(" ")
-                singleWords.forEach(word => {
-                    let isMisspelled = SpellChecker.isMisspelled(word)
-                    console.log(isMisspelled);
-                    if(isMisspelled) {
-                        let replacementWord = SpellChecker.getCorrectionsForMisspelling(word)
-                        if(replacementWord[0]) {
-                            newSentance += " "+replacementWord[0]
-                        } else {
-                            newSentance += " ???"
-                        }
-                    } else {
-                        if(word == "rape") {
-                            newSentance += " ****"
-                        } else {
-                            newSentance += " "+word
-                        }
-                    }
-                })
-                var secondRound = newSentance.substring(1);
-              
-
-                let firstPass = swearjar.censor(secondRound);
-                console.log("First Pass: "+firstPass)
-
-                if(firstPass) {
-                    let secondPass = censoring.censorMessage(firstPass, '*');
-                    console.log("Second Pass: "+secondPass)
-
-                    let thirdPass = filter.cleanHacked(secondPass)
-                    console.log("Third Pass: "+thirdPass)
-
-                    this.instance.messageAll(new Notification(thirdPass, 'text', command.x, command.y))
-
-                }
-                
-            }
-
-        })
-
-        this.instance.on('command::RespawnCommand', ({ command, client, tick }) => {
-            const rawEntity = client.rawEntity
-            const smoothEntity = client.smoothEntity
-            respawnPlayer(rawEntity, smoothEntity);
-        })
-
-        this.instance.on('command::MoveCommand', ({ command, client, tick }) => {
-            const rawEntity = client.rawEntity
-
-            //console.log(command.forward)
-            //this.instance.addLocalMessage(new Walking(rawEntity, 1000, 1000))
-            //console.log()
-            if(command.forward == true || command.backward == true || command.left == true || command.right == true) {
-                this.instance.addLocalMessage(new Walking(client.smoothEntity.nid, rawEntity.x, rawEntity.y))
-            }
-            applyCommand(rawEntity, command, this.obstacles, this.boxes)
-
-            //console.log(rawEntity);
-
-            client.positions.push({
-                x: rawEntity.x,
-                y: rawEntity.y,
-                delta: rawEntity.delta,
-                rotation: rawEntity.rotation
-            })
-        })
-
-        this.instance.on('command::FireCommand', ({ command, client, tick }) => {
-            // shoot from the perspective of this client's entity
-            const rawEntity = client.rawEntity
-            const smoothEntity = client.smoothEntity
-
-            
-
-            if (fire(rawEntity)) {
-                let endX = command.x
-                let endY = command.y
-
-                //console.log(this.obstacles)
-
-                this.obstacles.forEach(obstacle => {
-                    let hitObstacle
-                    if(obstacle.name == "circleBuilding") {
-                        hitObstacle = CollisionSystem.checkLinePolygon(rawEntity.x, rawEntity.y, command.x, command.y, obstacle.collider.circle)
-                    } else {
-                        hitObstacle = CollisionSystem.checkLinePolygon(rawEntity.x, rawEntity.y, command.x, command.y, obstacle.collider.polygon)
-                    }
-                    if (hitObstacle) {
-                        endX = hitObstacle.x
-                        endY = hitObstacle.y
-                    }
-                })
-
-                const timeAgo = client.latency + 100
-                const hits = lagCompensatedHitscanCheck(this.instance, rawEntity.x, rawEntity.y, endX, endY, timeAgo)
-
-                hits.forEach(victim => {
-                    if (victim.nid !== rawEntity.nid && victim.nid !== smoothEntity.nid) {
-                        damagePlayer(victim, 25)
-                    }
-                })
-
-                this.instance.addLocalMessage(new WeaponFired(smoothEntity.nid, smoothEntity.x, smoothEntity.y, command.x, command.y))
-            }
-        })
     }
 
     update(delta, tick, now) {
@@ -1028,35 +1051,6 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
         //this.instance.messageAll(new Notification(""+(this.world.time.toFixed())+"", 'worldInfoTime'))
         //this.instance.messageAll(new Notification(""+this.totalUsers+"", 'worldInfoTotalUsers'))
         //this.instance.messageAll(new Notification(""+this.activeUsers.length+"", 'worldInfoActiveUsers'))
-
-
-        //update touching
-        /*for (let obstacle of this.obstacles.values()) {
-            for (const [key, value] of Object.entries(this.instance.clients.array)) {
-
-                if(typeof value.smoothEntity != "undefined") {
-
-                    let collided = SAT.testCirclePolygon(value.rawEntity.collider.circle, obstacle.collider.polygon) 
-                    
-                    if(this.instance.clients.array.length > 1) {
-                        if(collided == true) {
-                            obstacle.color = "#ffff00"
-                            break
-                        } else {
-                            obstacle.color = "#FFffFF"
-                        }
-                    } else {
-                        if(collided == true) {
-                            obstacle.color = "#ffff00"
-                        } else {
-                            obstacle.color = "#FFffFF"
-                        }
-                    }
-                    
-                }
-                
-            }
-        }*/
 
         
             //Portals
@@ -1136,8 +1130,6 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
                         
                         if(collided == true) {
 
-                           
-
                             if(box.type == "quote") {
                                 this.instance.message(new Notification(''+box.color+'', 'showQuote'), value) 
                             } else if (box.type == "art") {
@@ -1214,7 +1206,7 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
                 var velocityY = event.bodyA.velocity[1]
                 var mass = event.bodyA.mass
                 var momentum = mass*velocityY
-                var anngularVelocity = event.bodyA.angularVelocity
+                var angularVelocity = event.bodyA.angularVelocity
                 
                 //console.log(momentum)
                 //console.log(anngularVelocity)

@@ -123,11 +123,16 @@ class BoxGraphics extends PIXI.Container {
             }
             
         } else {
+
             this.body = new PIXI.Graphics()
-            this.body.beginFill(this.color)
+            let color = PIXI.utils.string2hex(state.color);
+            this.body.beginFill(color)
             this.body.drawRect(-state.width/2, -state.height/2, state.width, state.height)
             this.body.endFill()
+            this.body.pivot.x = 0
+            this.body.pivot.y = 0
             this.addChild(this.body)
+
         }
 
         this.on('pointerdown', this.onPointerDown);
@@ -153,19 +158,19 @@ class BoxGraphics extends PIXI.Container {
     }
 
     updateColor(color) {
-        if(this.name == "token") {
+        /*if(this.name == "token") {
             /*let updateColor = PIXI.utils.string2hex(color);
             this.body.clear()
             this.body.beginFill(updateColor)
             this.body.drawRect(-this.width/2, -this.height/2, 25, 25)
-            this.body.endFill()*/
+            this.body.endFill()
         } else {
             let updateColor = PIXI.utils.string2hex(color);
             this.body.clear()
             this.body.beginFill(updateColor)
             this.body.drawRect(-this.width/2, -this.height/2, this.width, this.height)
             this.body.endFill()
-        }
+        }*/
         
         
     }

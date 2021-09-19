@@ -3,7 +3,7 @@ import * as PUXI from '../../node_modules/puxi/lib/puxi.mjs'
 import MultiStyleText from 'pixi-multistyle-text'
 import TaggedText from 'pixi-tagged-text'
 import { Ease, ease } from 'pixi-ease'
-import { Sound, filters } from '@pixi/sound'
+import { Sound, filters, sound } from '@pixi/sound'
 import { CRTFilter } from '@pixi/filter-crt'
 import { GlowFilter } from '@pixi/filter-glow';
 import { DropShadowFilter } from '@pixi/filter-drop-shadow';
@@ -16,11 +16,42 @@ class UIBuilder extends PIXI.Container {
 
         this.width  = window.innerWidth 
         this.height = window.innerHeight
+
+
+        this.black = PIXI.utils.string2hex("#1f1f1f")
+        const black = this.black
+
+        this.white = PIXI.utils.string2hex("#FFFFFF")
+        const white = this.white
+
+        this.green = PIXI.utils.string2hex("#4DFA66")
+        const green = this.green
+
+        this.darkGreen = PIXI.utils.string2hex("#031e04")
+        const darkGreen = this.darkGreen
+
+        this.blue = PIXI.utils.string2hex("#1DCFFF") 
+        const blue = this.blue
+
+        this.pink = PIXI.utils.string2hex("#F638D7")
+        const pink = this.pink 
+
+        this.yellow = PIXI.utils.string2hex("#FFE401") 
+        const yellow = this.yellow
+
+        this.red = PIXI.utils.string2hex("#FF284D")
+        const red = this.red
+
+
+
+        this.audio = Sound
+
         this.nameGiven = false
-        
-        
-        const colorBlack = PIXI.utils.string2hex("#292929"); //Black
-        const colorGreen = PIXI.utils.string2hex("#4DFA66") //Green
+
+        this.showingArt = false
+        this.showingQuote = false
+        this.count = 0
+
 
   
         this.fadeInStyles = { y: 0, alpha: 1 }
@@ -32,1749 +63,1011 @@ class UIBuilder extends PIXI.Container {
         this.fadeInSettingsDelay = { duration: 250, ease: 'easeOutExpo', wait: 1200 }
 
 
-
-
-
-
-
-
-       
-
-
-
-        let modalWidth = 0.9999
-        let modalHeight = 0.9999;
-
-
-
-        const puxiCenter = PUXI.FastLayoutOptions.CENTER_ANCHOR;
-
-        
-
-
-
-
-
-
-        
-
-
-
-
-       
-
-
-
-
-        
-
-
-        this.statusStage = new PUXI.Stage({
-            width: 250,
-            height: 100
-        });
-        this.statusStage.visible = false
-
-        this.statusWrapper = new PUXI.WidgetGroup({
-        }).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 250,
-                height: 100,
-                x: 10,
-                y: 0.985,
-                anchor: new PIXI.Point(0, 1)
-            }),
-        ).setBackground(0x000000).setBackgroundAlpha(0.3)
-
-
-        this.statusLayout = new PUXI.Widget({}).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                height: 0,
-                width: 250,
-                x: 5,
-                y: 0.8,
-                anchor: new PIXI.Point(0, 1)
-            }),
-        )
-        this.statusWrapper.addChild(this.statusLayout)
-        this.statusStage.addChild(this.statusWrapper)
-
-
-        const mask = new PIXI.Graphics();
-        mask.beginFill(0xFFFFFF)
-        mask.drawRect(0, 0, 250, 100);
-        mask.y = -185
-        mask.alpha = 0
-        this.statusLayout.contentContainer.addChild(mask)
-        this.statusLayout.mask = mask
-
-       
-        this.addChild(this.statusStage)
-
-        this.statusStage.resize(window.innerWidth, window.innerHeight)
-        this.statusStage.stage.hitArea = new PIXI.Rectangle(0, 0, 0, 0);
-
-
-
-
-
-        
-
-
-        this.emojiStage = new PUXI.Stage({
-            width: 260,
-            height: 50,
-            x: 0,
-            y: 0
+    
+        const scienceGalleryLogo = PIXI.Sprite.from('images/sg-white.svg');
+        scienceGalleryLogo.width = 88
+        scienceGalleryLogo.height = 42.5
+        scienceGalleryLogo.x = window.innerWidth - 100
+        scienceGalleryLogo.y = 12
+        scienceGalleryLogo.interactive = true
+        scienceGalleryLogo.buttonMode = true
+        scienceGalleryLogo.on("pointerdown", function () {
+           window.open('https://dublin.sciencegallery.com/')
         })
-        //this.emojiStage.visible = false
 
-        this.emojiWrapper = new PUXI.WidgetGroup({}).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 260, 
-                height: 50,
-                x: 0.85,
-                y: 0.97,
-                anchor: new PIXI.Point(0.5, 1)
+        
+
+
+        const userInterface = this
+        const loader = new PIXI.Loader();
+        PIXI.utils.clearTextureCache();
+
+        this.loaded = false
+        let loaded = this.loaded
+
+        let keys1 
+        let keys2
+
+        let menuHover
+        let menuOpen
+        let menuClose
+        let menuHoverMain
+
+        let avatars = [] 
+        let avatarBackgrounds, avatarMiddlegrounds, avatarForegrounds   
+
+        loader.add('keys1', 'audio/keys1.mp3');
+        loader.add('keys2', 'audio/keys2.mp3');
+
+        loader.add('menuHover', 'audio/menu-hover.mp3');
+        loader.add('menuOpen', 'audio/menu-open.mp3');
+        loader.add('menuClose', 'audio/menu-close.mp3');
+        loader.add('menuHoverMain', 'audio/menu-hover.mp3');
+
+
+        loader.add('avatarBackground1', 'images/avatars/avatar-background-1.svg');
+        loader.add('avatarBackground2', 'images/avatars/avatar-background-2.svg');
+        loader.add('avatarBackground3', 'images/avatars/avatar-background-3.svg');
+        loader.add('avatarBackground4', 'images/avatars/avatar-background-4.svg');
+        loader.add('avatarBackground5', 'images/avatars/avatar-background-5.svg');
+        loader.add('avatarBackground6', 'images/avatars/avatar-background-6.svg');
+        
+        loader.add('avatarMiddleground1', 'images/avatars/avatar-middleground-1.svg');
+        loader.add('avatarMiddleground2', 'images/avatars/avatar-middleground-2.svg');
+        loader.add('avatarMiddleground3', 'images/avatars/avatar-middleground-3.svg');
+        loader.add('avatarMiddleground4', 'images/avatars/avatar-middleground-4.svg');
+        loader.add('avatarMiddleground5', 'images/avatars/avatar-middleground-5.svg');
+        loader.add('avatarMiddleground6', 'images/avatars/avatar-middleground-6.svg');
+        
+        loader.add('avatarForeground1', 'images/avatars/avatar-frontground-1.svg');
+        loader.add('avatarForeground2', 'images/avatars/avatar-frontground-2.svg');
+        loader.add('avatarForeground3', 'images/avatars/avatar-frontground-3.svg');
+        loader.add('avatarForeground4', 'images/avatars/avatar-frontground-4.svg');
+        loader.add('avatarForeground5', 'images/avatars/avatar-frontground-5.svg');
+        loader.add('avatarForeground6', 'images/avatars/avatar-frontground-6.svg');
+
+       
+        
+        loader.load(function(loader, resources) {
+
+           
+
+            keys1 = resources.keys1.sound
+            keys1.volume = 0.005
+            keys2 = resources.keys2.sound
+            keys2.volume = 0.005
+
+            menuHover = resources.menuHover.sound
+            menuHover.volume = 0.001
+
+            menuOpen = resources.menuOpen.sound
+            menuOpen.volume = 0.01
+
+            menuClose = resources.menuClose.sound
+            menuClose.volume = 0.01
+
+            menuHoverMain = resources.menuHoverMain.sound
+            menuHoverMain.speed = 2
+            menuHoverMain.volume = 0.01
+
+            const telephone = new filters.TelephoneFilter(1)
+            const distorsion = new filters.DistortionFilter(0.1)
+           
+            menuHoverMain.filters = [telephone, distorsion]
+
+            avatarBackgrounds = [
+                resources.avatarBackground1, 
+                resources.avatarBackground2, 
+                resources.avatarBackground3, 
+                resources.avatarBackground4, 
+                resources.avatarBackground5, 
+                resources.avatarBackground6, 
+            ]
+            avatarMiddlegrounds = [
+                resources.avatarMiddleground1, 
+                resources.avatarMiddleground2, 
+                resources.avatarMiddleground3, 
+                resources.avatarMiddleground4, 
+                resources.avatarMiddleground5, 
+                resources.avatarMiddleground6, 
+            ]
+            avatarForegrounds = [
+                resources.avatarForeground1, 
+                resources.avatarForeground2, 
+                resources.avatarForeground3, 
+                resources.avatarForeground4, 
+                resources.avatarForeground5, 
+                resources.avatarForeground6, 
+            ]
+            avatars.push(avatarBackgrounds, avatarMiddlegrounds, avatarForegrounds)
+
+            loaded = true
+            
+        });
+    
+       
+        this.mainMenuOn = true
+        this.shareMenuOn = true
+
+        this.statusStageOn = true
+        this.scoreStageOn = true
+        this.chatStageOn = true
+        this.emojiStageOn = true
+        this.worldStageOn = true
+        this.miniMapOn = false
+
+        this.joinModalOn = true
+        this.introScreenOn = false
+
+        this.quoteStageOn = true
+
+    
+        this.transitionScreenOn = false
+        this.notificationStageOn = true
+       
+        
+
+
+        if(this.mainMenuOn == true) {
+
+            //New UI Framework
+            const menuIconGraphic = PIXI.Sprite.from('images/menu-icon.svg')
+            const menuIconCloseGraphic = PIXI.Sprite.from('images/menu-icon-close.svg')
+
+            this.menuIcon = new PIXI.Sprite.from('images/menu-icon.svg')
+            const menuIcon = this.menuIcon
+            menuIcon.name = 'menu-icon'
+            menuIcon.width = 24
+            menuIcon.height = 24
+            menuIcon.x = 14
+            menuIcon.y = 15
+            menuIcon.interactive = true
+            menuIcon.buttonMode = true
+
+
+            menuIcon.on("pointerover", function () {
+                menuHoverMain.play()
             })
-        )
+
+            menuIcon.on("pointermove", function () {
+                
+            })
+
+           
+
+            menuIcon.on("pointerdown", function () {
+                if(menuIcon.name == 'menu-icon') {
+                    menuIcon.texture = menuIconCloseGraphic.texture
+                    menuIcon.name = 'menu-icon-close'
+                    aboutLink.visible = true
+                    creditsLink.visible = true
+                    privacyLink.visible = true
+                    artistsLink.visible = true
+                    workLink.visible = true
+                    resetLink.visible = true
+                    menuOpen.play()
+                } else if(menuIcon.name == 'menu-icon-close') {
+                    menuIcon.texture = menuIconGraphic.texture
+                    menuIcon.name = 'menu-icon'
+                    aboutLink.visible = false
+                    creditsLink.visible = false
+                    privacyLink.visible = false
+                    artistsLink.visible = false
+                    workLink.visible = false
+                    resetLink.visible = false
+                    menuClose.play()
+                }
+            });
+
+            this.addChild(menuIcon)
+
+        
 
 
-        this.emojiWrapperBackground = new PIXI.Graphics()
-        this.emojiWrapperBackground.lineStyle(1, 0x000000, 1, 1, false)
-        this.emojiWrapperBackground.beginFill(0xFFFFFF)
-        this.emojiWrapperBackground.drawRoundedRect(0, 0, 260, 50, 25)
-        this.emojiWrapperBackground.endFill()
-        this.emojiWrapperBackground.moveTo(260, 23)
-        this.emojiWrapperBackground.lineTo(260, 30)
-        this.emojiWrapper.contentContainer.addChild(this.emojiWrapperBackground)
+            const navLinkTextStyles = {
+                default: {
+                    fontFamily: "Trade Gothic Next",
+                    fontSize: "13px",
+                    fill: white,
+                },
+                underline: {   
+                    fontFamily: "Trade Gothic Next",
+                    fontSize: "13px",
+                    fill: white,
+                    textDecoration: "underline", 
+                    fill: white
+                },
+            };
 
-        this.coolEmoji = new PUXI.Widget({}).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 60,
+
+            
+
+            const aboutLinkText = 'About';
+            const aboutLinkUnderlineText = '<underline>About</underline>';
+
+            const aboutLink = new TaggedText(aboutLinkText, navLinkTextStyles, {
+                drawWhitespace: true,
+            });
+            aboutLink.visible = false
+            aboutLink.x = 55
+            aboutLink.y = 18
+            aboutLink.interactive = true
+            aboutLink.buttonMode = true
+
+            aboutLink.on("pointerover", function () {
+                aboutLink.setText(aboutLinkUnderlineText)
+                menuHover.play()
+            })
+            
+            aboutLink.on("pointerdown", function () {
+                userInterface.showQuote("0")
+            })
+            aboutLink.on("pointerout", function () {
+                aboutLink.setText(aboutLinkText)
+            })
+
+            this.addChild(aboutLink)
+
+
+            const artistsLinkText = 'Artists';
+            const artistsLinkUnderlineText = '<underline>Artists</underline>';
+            
+            const artistsLink = new TaggedText(artistsLinkText, navLinkTextStyles, {
+                drawWhitespace: true,
+            });
+            artistsLink.visible = false
+            artistsLink.x = 55
+            artistsLink.y = 38
+            artistsLink.interactive = true
+            artistsLink.buttonMode = true
+            
+            artistsLink.on("pointerover", function () {
+                artistsLink.setText(artistsLinkUnderlineText)
+                menuHover.play()
+            })
+            artistsLink.on("pointerdown", function () {
+                userInterface.showQuote("1")
+            })
+            artistsLink.on("pointerout", function () {
+                artistsLink.setText(artistsLinkText)
+            })
+            
+            this.addChild(artistsLink)
+
+
+
+            const workLinkText = 'Work';
+            const workLinkUnderlineText = '<underline>Work</underline>';
+            
+            const workLink = new TaggedText(workLinkText, navLinkTextStyles, {
+                drawWhitespace: true,
+            });
+            workLink.visible = false
+            workLink.x = 55
+            workLink.y = 58
+            workLink.interactive = true
+            workLink.buttonMode = true
+            
+            workLink.on("pointerover", function () {
+                workLink.setText(workLinkUnderlineText)
+                menuHover.play()
+            })
+            workLink.on("pointerdown", function () {
+                userInterface.showQuote("2")
+            })
+            workLink.on("pointerout", function () {
+                workLink.setText(workLinkText)
+            })
+            
+            this.addChild(workLink)
+            
+
+
+
+
+            const creditsLinkText = 'Credits';
+            const creditsLinkUnderlineText = '<underline>Credits</underline>';
+
+            const creditsLink = new TaggedText(creditsLinkText, navLinkTextStyles, {
+                drawWhitespace: true,
+            });
+            creditsLink.visible = false
+            creditsLink.x = 55
+            creditsLink.y = 78
+            creditsLink.interactive = true
+            creditsLink.buttonMode = true
+
+            creditsLink.on("pointerover", function () {
+                creditsLink.setText(creditsLinkUnderlineText)
+                menuHover.play()
+            })
+            creditsLink.on("pointerdown", function () {
+                userInterface.showQuote("3")
+            })
+            creditsLink.on("pointerout", function () {
+                creditsLink.setText(creditsLinkText)
+            })
+
+            this.addChild(creditsLink)
+            
+
+
+            const privacyLinkText = 'Legal';
+            const privacyLinkUnderlineText = '<underline>Legal</underline>';
+
+            const privacyLink = new TaggedText(privacyLinkText, navLinkTextStyles, {
+                drawWhitespace: true,
+            });
+            privacyLink.visible = false
+            privacyLink.x = 55
+            privacyLink.y = 98
+            privacyLink.interactive = true
+            privacyLink.buttonMode = true
+
+            privacyLink.on("pointerover", function () {
+                privacyLink.setText(privacyLinkUnderlineText)
+                menuHover.play()
+            })
+            privacyLink.on("pointerdown", function () {
+                userInterface.showQuote("4")
+            })
+            privacyLink.on("pointerout", function () {
+                privacyLink.setText(privacyLinkText)
+            })
+
+            this.addChild(privacyLink)
+
+
+
+            const resetLinkText = 'Reset';
+            const resetLinkUnderlineText = '<underline>Reset</underline>';
+            
+            const resetLink = new TaggedText(resetLinkText, navLinkTextStyles, {
+                drawWhitespace: true,
+            });
+            resetLink.visible = false
+            resetLink.x = 55
+            resetLink.y = 118
+            resetLink.interactive = true
+            resetLink.buttonMode = true
+            
+            resetLink.on("pointerover", function () {
+                resetLink.setText(resetLinkUnderlineText)
+                menuHover.play()
+            })
+            resetLink.on("pointerdown", function () {
+                window.localStorage.removeItem('name');
+                window.localStorage.removeItem('avatar');
+                window.localStorage.removeItem('color');
+                setTimeout(function(){
+                    window.location.reload()
+                }, 500)
+            })
+            resetLink.on("pointerout", function () {
+                resetLink.setText(resetLinkText)
+            })
+            
+            this.addChild(resetLink)
+
+            
+
+            //New UI Framework
+            const soundOnGraphic = PIXI.Sprite.from('images/sound-on-icon.svg')
+            const soundOffGraphic = PIXI.Sprite.from('images/sound-off-icon.svg')
+
+            this.soundIcon = new PIXI.Sprite.from('images/sound-on-icon.svg')
+            const soundIcon = this.soundIcon
+            soundIcon.name = 'sound-icon-on'
+            soundIcon.width = 20
+            soundIcon.height = 17
+            soundIcon.x = 15
+            soundIcon.y = 90
+            soundIcon.interactive = true
+            soundIcon.buttonMode = true
+
+
+
+            soundIcon.on("pointerdown", function () {
+                if(soundIcon.name == 'sound-icon-on') {
+                    soundIcon.texture = soundOffGraphic.texture
+                    soundIcon.name = 'sound-icon-off'
+                    sound.toggleMuteAll()
+
+                } else if(soundIcon.name == 'sound-icon-off') {
+                    soundIcon.texture = soundOnGraphic.texture
+                    soundIcon.name = 'sound-icon-on'
+                    sound.toggleMuteAll()
+
+                }
+            });
+
+            this.addChild(soundIcon)
+
+            if(this.shareMenuOn == true) {
+
+                //Share Icon 
+                this.shareIcon = new PIXI.Sprite.from('images/share-icon.svg')
+                const shareIcon = this.shareIcon
+                shareIcon.state = 'closed'
+                shareIcon.width = 17
+                shareIcon.height = 20
+                shareIcon.x = 16
+                shareIcon.y = 53
+                shareIcon.interactive = true
+                shareIcon.buttonMode = true
+
+                shareIcon.on("pointerdown", function () {
+                    if(twitter.visible == true) {
+                        twitter.visible = false
+                        facebook.visible = false
+                        soundIcon.visible = true
+                    } else {
+                        twitter.visible = true
+                        facebook.visible = true
+                        soundIcon.visible = false
+                    }
+                });
+                this.addChild(shareIcon)
+
+
+
+                //Twitter Share Icon  
+                this.twitterShare = PIXI.Sprite.from('images/twitter-icon.svg');
+                const twitter = this.twitterShare
+                twitter.width = 20
+                twitter.height = 16
+                twitter.x = 15
+                twitter.y = 90
+                twitter.visible = false
+                twitter.interactive = true
+                twitter.buttonMode = true
+
+                twitter.on("pointerdown", function () {
+                    window.open("https://twitter.com/intent/tweet?url=https%3A%2F%2Fbiasonline.ie%2F&via=SciGalleryDub&text=I%27m%20exploring%20BIAS%20ONLINE%20an%20exhibition%20about%20data%20equity%2C%20privacy%2C%20surveillance%20culture%2C%20facial%20recognition%2C%20class%20and%20artificial%20intelligence.%20Join%20me%20in%20real-time%21", "_blank", "width=650,height=300");
+                });
+                this.addChild(twitter)
+
+
+
+                //facebook Share Icon  
+                this.facebookShare = PIXI.Sprite.from('images/facebook-icon.svg');
+                const facebook = this.facebookShare
+                facebook.width = 9
+                facebook.height = 18
+                facebook.x = 20
+                facebook.y = 120
+                facebook.visible = false
+                facebook.interactive = true
+                facebook.buttonMode = true
+
+                facebook.on("pointerdown", function () {
+                    window.open('https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fbiasonline.ie', '_blank', 'width=626,height=436');
+                });
+                this.addChild(facebook)
+
+            }
+        }
+
+
+
+        if(this.statusStageOn == true) {
+
+            this.statusStage = new PUXI.Stage({
+                width: 250,
+                height: 100
+            });
+            
+
+            this.statusWrapper = new PUXI.WidgetGroup({
+            }).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 250,
+                    height: 100,
+                    x: 10,
+                    y: 0.985,
+                    anchor: new PIXI.Point(0, 1)
+                }),
+            )
+
+
+            this.statusLayout = new PUXI.Widget({}).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    height: 0,
+                    width: 250,
+                    x: 5,
+                    y: 0.8,
+                    anchor: new PIXI.Point(0, 1)
+                }),
+            )
+            this.statusWrapper.addChild(this.statusLayout)
+            this.statusStage.addChild(this.statusWrapper)
+
+
+            const mask = new PIXI.Graphics();
+            mask.beginFill(white)
+            mask.drawRect(0, 0, 120, 100);
+            mask.y = -80
+            mask.alpha = 0
+            this.statusLayout.contentContainer.addChild(mask)
+            this.statusLayout.mask = mask
+
+        
+            this.addChild(this.statusStage)
+
+            this.statusStage.resize(window.innerWidth, window.innerHeight)
+            this.statusStage.stage.hitArea = new PIXI.Rectangle(0, 0, 0, 0);
+
+        }
+
+
+
+        if(this.scoreStageOn == true) {
+
+            this.scoreStage = new PUXI.Stage({
+                width: 120,
+                height: 250,
+                x: 0,
+                y: 0
+            })
+            
+
+            this.scoreWrapper = new PUXI.WidgetGroup({}).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 120, 
+                    height: 250,
+                    x: 0.99,
+                    y: 15,
+                    anchor: new PIXI.Point(1, 0)
+                })
+            )
+            this.scoreWrapper.contentContainer.scale.set(0.6, 0.6);
+            
+            this.scoreWrapperBackground = new PIXI.Graphics()
+            this.scoreWrapperBackground.beginFill(black)
+            this.scoreWrapperBackground.drawRoundedRect(0, 0, 200, 250, 34)
+            this.scoreWrapperBackground.endFill()
+            this.scoreWrapper.contentContainer.addChild(this.scoreWrapperBackground)
+            
+            this.talkingScore = new PUXI.Widget({}).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 64,
+                    height: 25,
+                    x: 85,
+                    y: 15
+                })
+            )
+            this.talkingScore.isComplete = false
+
+            const talkingIcon = new PIXI.Sprite.from('images/talking-icon.svg');
+            talkingIcon.x = -67
+            this.talkingScore.contentContainer.addChild(talkingIcon)
+            
+            this.talkingScoreText = new PIXI.Text("0/10", {fill: black, fontSize: 26, align: "right", wordWrap: true, fontWeight: 900});
+            this.talkingScoreText.x = 22
+            this.talkingScoreText.y = 7
+            this.talkingScoreTextBackground = new PIXI.Graphics()
+            this.talkingScoreTextBackground.beginFill(white)
+            this.talkingScoreTextBackground.drawRoundedRect(0, 0, 100, 43, 21)
+            this.talkingScoreTextBackground.endFill()
+            this.talkingScore.contentContainer.addChild(this.talkingScoreTextBackground)
+            this.talkingScore.contentContainer.addChild(this.talkingScoreText)
+            this.scoreWrapper.addChild(this.talkingScore)
+
+
+
+            this.robotScore = new PUXI.Widget({}).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 62,
+                    height: 22,
+                    x: 85,
+                    y: 72
+                })
+            )
+            this.robotScore.isComplete = false
+
+            const robotIcon = new PIXI.Sprite.from('images/robot-icon-ui.svg');
+            robotIcon.x = -67
+            robotIcon.y = 0
+            this.robotScore.contentContainer.addChild(robotIcon)
+
+            this.robotScoreText = new PIXI.Text("0/10", {fill: black, fontSize: 26, align: "right", wordWrap: true, fontWeight: 900});
+            this.robotScoreText.x = 22
+            this.robotScoreText.y = 7
+            this.robotScoreTextBackground = new PIXI.Graphics()
+            this.robotScoreTextBackground.beginFill(white)
+            this.robotScoreTextBackground.drawRoundedRect(0, 0, 100, 43, 21)
+            this.robotScoreTextBackground.endFill()
+            this.robotScore.contentContainer.addChild(this.robotScoreTextBackground)
+            this.robotScore.contentContainer.addChild(this.robotScoreText)
+            this.scoreWrapper.addChild(this.robotScore)
+
+
+
+
+            
+            this.dialScore = new PUXI.Widget({}).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 64,
+                    height: 25,
+                    x: 85,
+                    y: 130
+                })
+            )
+            this.dialScore.isComplete = false
+
+            const dialIcon = new PIXI.Sprite.from('images/dial-icon.svg');
+            dialIcon.x = -60
+            dialIcon.y = 0
+            this.dialScore.contentContainer.addChild(dialIcon)
+
+            this.dialScoreText = new PIXI.Text("0/10", {fill: black, fontSize: 26, align: "right", wordWrap: true, fontWeight: 900});
+            this.dialScoreText.x = 22
+            this.dialScoreText.y = 7
+            this.dialScoreTextBackground = new PIXI.Graphics()
+            this.dialScoreTextBackground.beginFill(white)
+            this.dialScoreTextBackground.drawRoundedRect(0, 0, 100, 43, 21)
+            this.dialScoreTextBackground.endFill()
+            this.dialScore.contentContainer.addChild(this.dialScoreTextBackground)
+            this.dialScore.contentContainer.addChild(this.dialScoreText)
+            this.scoreWrapper.addChild(this.dialScore)
+
+
+
+
+            
+            this.faceScore = new PUXI.Widget({}).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 64,
+                    height: 25,
+                    x: 85,
+                    y: 190
+                })
+            )
+            this.faceScore.isComplete = false
+
+            const faceIcon = new PIXI.Sprite.from('images/face-icon.svg');
+            faceIcon.x = -60
+            faceIcon.y = 0
+            this.faceScore.contentContainer.addChild(faceIcon)
+
+
+            this.faceScoreText = new PIXI.Text("0/10", {fill: black, fontSize: 26, align: "right", wordWrap: true, fontWeight: 900});
+            this.faceScoreText.x = 22
+            this.faceScoreText.y = 7
+            this.faceScoreTextBackground = new PIXI.Graphics()
+            this.faceScoreTextBackground.beginFill(white)
+            this.faceScoreTextBackground.drawRoundedRect(0, 0, 100, 43, 21)
+            this.faceScoreTextBackground.endFill()
+            this.faceScore.contentContainer.addChild(this.faceScoreTextBackground)
+            this.faceScore.contentContainer.addChild(this.faceScoreText)
+            this.scoreWrapper.addChild(this.faceScore)
+            
+
+            this.scoreStage.addChild(this.scoreWrapper);
+            this.addChild(this.scoreStage);
+            
+            this.scoreStage.resize(window.innerWidth, window.innerHeight)
+            this.scoreStage.stage.hitArea = new PIXI.Rectangle(0,0,0,0);
+
+        }
+
+
+
+        if(this.chatStageOn == true) {
+            let textBoxWidth = 100
+            if(window.innerWidth < 321) {
+                textBoxWidth = 290
+            } else if (window.innerWidth < 376) {
+                textBoxWidth = 320
+            } else if (window.innerWidth < 415) {
+                textBoxWidth = 390
+            } else {
+                textBoxWidth = 480
+            }
+    
+            //console.log(textBoxWidth)
+            //const textBoxWidth = 450
+            const textBoxHeight = 50
+            // Chat Text Entry Element 
+            this.textBox = new PUXI.Stage({
+                width: textBoxWidth,
+                height: textBoxHeight,
+                x: 0,
+                y: 0
+            })
+            
+            this.textBox.alpha = 1
+    
+            this.textBoxWrapper = new PUXI.WidgetGroup({
+            }).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: textBoxWidth,
+                    height: textBoxHeight,
+                    x: 0.5,
+                    y: 0.99,
+                    anchor: new PIXI.Point(0.5, 1)
+                }),
+            )
+    
+            //this.textBoxWrapperBackground.clear()
+            this.textBoxWrapperBackground = new PIXI.Graphics()
+            this.textBoxWrapperBackground.lineStyle(1, black, 1, 1, false)
+            this.textBoxWrapperBackground.beginFill(white)
+            this.textBoxWrapperBackground.drawRoundedRect(0, 0, textBoxWidth, textBoxHeight, 25)
+            this.textBoxWrapperBackground.endFill()
+            this.textBoxWrapperBackground.moveTo(textBoxWidth, 23)
+            this.textBoxWrapperBackground.lineTo(textBoxWidth, 30)
+            
+            this.textBoxWrapper.contentContainer.addChild(this.textBoxWrapperBackground)
+    
+            const textInputStyles = new PIXI.TextStyle({ 
+                fontFamily: 'Trade Gothic Next',
+                fill: black, 
+                fontSize: 24
+            })
+            
+            //The Text Input
+            this.mockInput = new PUXI.TextInput({
+                multiLine: false,
+                value: "",
+                padding: 10,
+                paddingLeft: 50,
+                maxLength: 30,
+                fontWeight: 300,
+                selectedColor: black,
+                selectedBackgroundColor: yellow,
+                caretWidth: 2,
+                style: textInputStyles,
+            }).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 0.999, 
+                    height: textBoxHeight,
+                    x: 5,
+                    y: 0,
+                }),
+            )
+            this.textBoxWrapper.addChild(this.mockInput);
+            this.textBoxWrapper.contentContainer.cursor = "text";
+    
+            this.TextBoxPlaceholder = new PUXI.TextWidget(
+                'Type to speak!', 
+                textInputStyles
+            ).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    x: 50,
+                    y: 9,
+                })
+            )
+            this.TextBoxPlaceholder.alpha = 0.4;
+            this.textBoxWrapper.addChild(this.TextBoxPlaceholder);
+    
+            this.textBoxWrapper.widgetChildren[0].on('focus', () => { 
+                this.TextBoxPlaceholder.alpha = 0;
+            });
+            this.textBoxWrapper.widgetChildren[0].on('blur', () => { 
+                if(this.mockInput.value == "") {
+                    this.TextBoxPlaceholder.alpha = 0.4;
+                }
+            });
+    
+            this.textBox.addChild(this.textBoxWrapper);
+            this.addChild(this.textBox)
+    
+            this.textBox.resize(window.innerWidth, window.innerHeight)
+            const textBoxBounds = this.textBoxWrapperBackground.getBounds()
+            this.textBox.stage.hitArea = new PIXI.Rectangle(
+                textBoxBounds.x,
+                textBoxBounds.y,
+                textBoxBounds.width,
+                textBoxBounds.height
+            );
+    
+    
+            const sendIcon = PIXI.Sprite.from('images/send-icon.svg');
+            sendIcon.width = 22.1
+            sendIcon.height = 17.6
+            sendIcon.anchor.set(0.5)
+            sendIcon.scale.set(0.8)
+            sendIcon.alpha = 0.4
+    
+            sendIcon.x = textBoxBounds.width - 30
+            sendIcon.y = textBoxBounds.height/2
+    
+            sendIcon.interactive = true;
+            sendIcon.buttonMode = true;
+    
+            this.textBoxWrapper.contentContainer.addChild(sendIcon)
+            
+        }
+
+        
+
+        if(this.emojiStageOn == true) {
+            this.emojiStage = new PUXI.Stage({
+                width: 450,
                 height: 50,
                 x: 0,
                 y: 0
             })
-        ).setPadding(15, 10)
-        const coolEmoji = new PIXI.Text("😎", {fontSize: 28});
-        this.coolEmoji.contentContainer.addChild(coolEmoji)
-        this.emojiWrapper.addChild(this.coolEmoji)
-        this.coolEmoji.contentContainer.buttonMode = true
-        this.coolEmoji.contentContainer.interactive = true
-
-
-
-        this.heartEmoji = new PUXI.Widget({}).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 60,
-                height: 50,
-                x: 50,
-                y: 0
-            })
-        ).setPadding(15, 10)
-        const heartEmoji = new PIXI.Text("❤️", {fontSize: 28});
-        this.heartEmoji.contentContainer.addChild(heartEmoji)
-        this.emojiWrapper.addChild(this.heartEmoji)
-        this.heartEmoji.contentContainer.buttonMode = true
-        this.heartEmoji.contentContainer.interactive = true
-
-        this.lighteningEmoji = new PUXI.Widget({}).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 60,
-                height: 50,
-                x: 100,
-                y: 0
-            })
-        ).setPadding(15, 10)
-        this.lighteningEmoji.buttonMode = true
-        const lighteningEmoji = new PIXI.Text("⚡", {fontSize: 28});
-        this.lighteningEmoji.contentContainer.addChild(lighteningEmoji)
-        this.emojiWrapper.addChild(this.lighteningEmoji)
-        this.lighteningEmoji.contentContainer.buttonMode = true
-        this.lighteningEmoji.contentContainer.interactive = true
-
-        this.sadEmoji = new PUXI.Widget({}).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 60,
-                height: 50,
-                x: 150,
-                y: 0
-            })
-        ).setPadding(15, 10)
-        const sadEmoji = new PIXI.Text("🎉", {fontSize: 28});
-        this.sadEmoji.contentContainer.addChild(sadEmoji)
-        this.emojiWrapper.addChild(this.sadEmoji)
-        this.sadEmoji.contentContainer.buttonMode = true
-        this.sadEmoji.contentContainer.interactive = true
-
-        this.whateverEmoji = new PUXI.Widget({}).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 60,
-                height: 50,
-                x: 200,
-                y: 0
-            })
-        ).setPadding(15, 10)
-        const whateverEmoji = new PIXI.Text("🙄", {fontSize: 28});
-        this.whateverEmoji.contentContainer.addChild(whateverEmoji)
-        this.whateverEmoji.contentContainer.buttonMode = true
-        this.whateverEmoji.contentContainer.interactive = true
-        this.emojiWrapper.addChild(this.whateverEmoji)
-
-        
-        this.emojiStage.addChild(this.emojiWrapper);
-        this.addChild(this.emojiStage);
-
-        this.emojiStage.resize(window.innerWidth, window.innerHeight)
-        const bounds = this.emojiWrapperBackground.getBounds()
-        this.emojiStage.stage.hitArea = new PIXI.Rectangle(
-            bounds.x,
-            bounds.y,
-            bounds.width,
-            bounds.height
-        );
-
-
-
-
-        this.scoreStage = new PUXI.Stage({
-            width: 200,
-            height: 250,
-            x: 0,
-            y: 0
-        })
-        this.scoreStage.visible = false
-        
-        this.scoreWrapper = new PUXI.WidgetGroup({}).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 200, 
-                height: 250,
-                x: 0.99,
-                y: 20,
-                anchor: new PIXI.Point(1, 0)
-            })
-        )
-        
-        this.scoreWrapperBackground = new PIXI.Graphics()
-        this.scoreWrapperBackground.beginFill(0x000000)
-        this.scoreWrapperBackground.drawRoundedRect(0, 0, 200, 250, 34)
-        this.scoreWrapperBackground.endFill()
-        this.scoreWrapper.contentContainer.addChild(this.scoreWrapperBackground)
-        
-        this.talkingScore = new PUXI.Widget({}).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 64,
-                height: 25,
-                x: 85,
-                y: 15
-            })
-        )
-        this.talkingScore.isComplete = false
-
-        const talkingIcon = new PIXI.Sprite.from('images/talking-icon.svg');
-        talkingIcon.x = -67
-        this.talkingScore.contentContainer.addChild(talkingIcon)
-        
-        this.talkingScoreText = new PIXI.Text("0/10", {fill: 0x000000, fontSize: 25, align: "right", wordWrap: true});
-        this.talkingScoreText.x = 22
-        this.talkingScoreText.y = 7
-        this.talkingScoreTextBackground = new PIXI.Graphics()
-        this.talkingScoreTextBackground.beginFill(0xFFFFFF)
-        this.talkingScoreTextBackground.drawRoundedRect(0, 0, 100, 43, 21)
-        this.talkingScoreTextBackground.endFill()
-        this.talkingScore.contentContainer.addChild(this.talkingScoreTextBackground)
-        this.talkingScore.contentContainer.addChild(this.talkingScoreText)
-        this.scoreWrapper.addChild(this.talkingScore)
-
-
-
-        this.robotScore = new PUXI.Widget({}).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 64,
-                height: 25,
-                x: 85,
-                y: 72
-            })
-        )
-        this.robotScore.isComplete = false
-
-        const robotIcon = new PIXI.Sprite.from('images/robot-icon-ui.svg');
-        robotIcon.x = -67
-        robotIcon.y = 0
-        this.robotScore.contentContainer.addChild(robotIcon)
-
-        this.robotScoreText = new PIXI.Text("0/10", {fill: 0x000000, fontSize: 25, align: "right", wordWrap: true});
-        this.robotScoreText.x = 22
-        this.robotScoreText.y = 7
-        this.robotScoreTextBackground = new PIXI.Graphics()
-        this.robotScoreTextBackground.beginFill(0xFFFFFF)
-        this.robotScoreTextBackground.drawRoundedRect(0, 0, 100, 43, 21)
-        this.robotScoreTextBackground.endFill()
-        this.robotScore.contentContainer.addChild(this.robotScoreTextBackground)
-        this.robotScore.contentContainer.addChild(this.robotScoreText)
-        this.scoreWrapper.addChild(this.robotScore)
-
-
-
-
-        
-        this.dialScore = new PUXI.Widget({}).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 64,
-                height: 25,
-                x: 85,
-                y: 130
-            })
-        )
-        this.dialScore.isComplete = false
-
-        const dialIcon = new PIXI.Sprite.from('images/dial-icon.svg');
-        dialIcon.x = -60
-        dialIcon.y = 0
-        this.dialScore.contentContainer.addChild(dialIcon)
-
-        this.dialScoreText = new PIXI.Text("0/10", {fill: 0x000000, fontSize: 25, align: "right", wordWrap: true});
-        this.dialScoreText.x = 22
-        this.dialScoreText.y = 7
-        this.dialScoreTextBackground = new PIXI.Graphics()
-        this.dialScoreTextBackground.beginFill(0xFFFFFF)
-        this.dialScoreTextBackground.drawRoundedRect(0, 0, 100, 43, 21)
-        this.dialScoreTextBackground.endFill()
-        this.dialScore.contentContainer.addChild(this.dialScoreTextBackground)
-        this.dialScore.contentContainer.addChild(this.dialScoreText)
-        this.scoreWrapper.addChild(this.dialScore)
-
-
-
-
-        
-        this.faceScore = new PUXI.Widget({}).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 64,
-                height: 25,
-                x: 85,
-                y: 190
-            })
-        )
-        this.faceScore.isComplete = false
-
-        const faceIcon = new PIXI.Sprite.from('images/face-icon.svg');
-        faceIcon.x = -60
-        faceIcon.y = 0
-        this.faceScore.contentContainer.addChild(faceIcon)
-
-
-        this.faceScoreText = new PIXI.Text("0/10", {fill: 0x000000, fontSize: 25, align: "right", wordWrap: true});
-        this.faceScoreText.x = 22
-        this.faceScoreText.y = 7
-        this.faceScoreTextBackground = new PIXI.Graphics()
-        this.faceScoreTextBackground.beginFill(0xFFFFFF)
-        this.faceScoreTextBackground.drawRoundedRect(0, 0, 100, 43, 21)
-        this.faceScoreTextBackground.endFill()
-        this.faceScore.contentContainer.addChild(this.faceScoreTextBackground)
-        this.faceScore.contentContainer.addChild(this.faceScoreText)
-        this.scoreWrapper.addChild(this.faceScore)
-
-
-        
-        
-        this.scoreStage.addChild(this.scoreWrapper);
-        this.addChild(this.scoreStage);
-        
-        this.scoreStage.resize(window.innerWidth, window.innerHeight)
-        const scoreBounds = this.scoreWrapperBackground.getBounds()
-        this.scoreStage.stage.hitArea = new PIXI.Rectangle(
-            scoreBounds.x,
-            scoreBounds.y,
-            scoreBounds.width,
-            scoreBounds.height
-        );
-        
-
-
-
-
-
-
-
-/*
-        this.leaveGameStage = new PUXI.Stage({
-            width: 100,
-            height: 50,
-            x: 0,
-            y: 0
-        })
-
-
-        //Leave Button 
-        this.leaveButtonWrapper = new PUXI.WidgetGroup({
-        }).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 100,
-                height: 40,
-                x: 0.985,
-                y: 0.5,
-                anchor: new PIXI.Point(1,0)
-            }),
-        ).setBackground(0x000000).setBackgroundAlpha(1);
-
-        this.leaveButton = new PUXI.Button({
-            text: ''
-        }).setLayoutOptions(new PUXI.FastLayoutOptions({
-            width: 0.97,
-            height: 0.95,
-            x: 0.5,
-            y: 0.5,
-            anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-        }))
-        .setBackground(0xFFFFFFF)
-        .setBackgroundAlpha(1)
-        this.leaveButtonWrapper.addChild(this.leaveButton)
-        this.leaveButton.on("hover", function (over) {
-            if(over == true) {
-                this.setBackground("#FFFF00")
-            } else {
-                this.setBackground("#FFFFFF")
-            }
-        });
-
-        
-
-        const leaveText = new PUXI.TextWidget('LEAVE', buttonStyles)
-        leaveText.setLayoutOptions(new PUXI.FastLayoutOptions({
-            width: 50,
-            height: 18,
-            x: 0.5,
-            y: 0.5,
-            anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-        }))
-        leaveText.tint = 0x000000
-        this.leaveButtonWrapper.addChild(leaveText)
-
-
-
-        const leaveTextTwo = new PUXI.TextWidget('LEAVE', buttonStyles)
-        leaveTextTwo.setLayoutOptions(new PUXI.FastLayoutOptions({
-            width: 50,
-            height: 18,
-            x: 0.5,
-            y: 0.5,
-            anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-        }))
-        leaveTextTwo.tint = 0xFFFFFF
-        leaveTextTwo.alpha = 0;
-        this.leaveButtonWrapper.addChild(leaveTextTwo)
-        this.leaveButtonWrapper.contentContainer.interactive = true;
-        this.leaveButtonWrapper.contentContainer.buttonMode = true;
-        this.leaveButtonWrapper.contentContainer.cursor = "pointer";
-
-        const leaveButtonClick = new PUXI.ClickManager(this.leaveButton, true, false, false)
-        
-        leaveButtonClick.onPress = function(){
-            this.setBackground(0xff0000)
-            joinText.alpha = 0
-            joinTextTwo.alpha = 1
-        }
-        leaveButtonClick.onClick = function(){
-            this.setBackground(0xffffff)
-            joinText.alpha = 1
-            joinTextTwo.alpha = 0
-
-            sound.add('login', 'audio/login.mp3');
-            sound.play('login')
-        }
-
-        this.leaveGameStage.addChild(this.leaveButtonWrapper)
-        this.addChild(this.leaveGameStage)
-        this.leaveButtonWrapper.contentContainer.alpha = 0
-        this.leaveGameStage.resize(window.innerWidth, window.innerHeight)
-        const leaveGameBounds = this.leaveButtonWrapper.contentContainer.getBounds()
-        this.leaveGameStage.stage.hitArea = new PIXI.Rectangle(
-            leaveGameBounds.x,
-            leaveGameBounds.y,
-            leaveGameBounds.width,
-            leaveGameBounds.height
-        );
-        ease.add(this.leaveButtonWrapper.contentContainer, fadeInStyles, fadeInSettings)
-*/
-        
-            console.log(window.innerWidth)
-
-        let textBoxWidth = 100
-        if(window.innerWidth < 321) {
-            textBoxWidth = 290
-        } else if (window.innerWidth < 376) {
-            textBoxWidth = 320
-        } else if (window.innerWidth < 415) {
-            textBoxWidth = 390
-        } else {
-            textBoxWidth = 450
-        }
-        console.log(textBoxWidth)
-        //const textBoxWidth = 450
-        const textBoxHeight = 50
-        // Chat Text Entry Element 
-        this.textBox = new PUXI.Stage({
-            width: textBoxWidth,
-            height: textBoxHeight,
-            x: 0,
-            y: 0
-        })
-        
-        this.textBox.alpha = 1
-
-        this.textBoxWrapper = new PUXI.WidgetGroup({
-        }).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: textBoxWidth,
-                height: textBoxHeight,
-                x: 0.5,
-                y: 0.97,
-                anchor: new PIXI.Point(0.5, 1)
-            }),
-        )
-
-        //this.textBoxWrapperBackground.clear()
-        this.textBoxWrapperBackground = new PIXI.Graphics()
-        this.textBoxWrapperBackground.lineStyle(1, 0x000000, 1, 1, false)
-        this.textBoxWrapperBackground.beginFill(0xFFFFFF)
-        this.textBoxWrapperBackground.drawRoundedRect(0, 0, textBoxWidth, textBoxHeight, 25)
-        this.textBoxWrapperBackground.endFill()
-        this.textBoxWrapperBackground.moveTo(textBoxWidth, 23)
-        this.textBoxWrapperBackground.lineTo(textBoxWidth, 30)
-        this.textBoxWrapper.contentContainer.addChild(this.textBoxWrapperBackground)
-
-        const textInputStyles = new PIXI.TextStyle({ 
-            fontFamily: 'Trade Gothic Next',
-            fill: "#000000", 
-            fontSize: 26
-        })
-        
-        //The Text Input
-        this.mockInput = new PUXI.TextInput({
-            multiLine: false,
-            value: "",
-            padding: 10,
-            maxLength: 30,
-            selectedColor: "#000000",
-            selectedBackgroundColor: "#FFFF00",
-            caretWidth: 2,
-            style: textInputStyles,
-        }).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 0.999, 
-                height: textBoxHeight,
-                x: 5,
-                y: 0,
-            }),
-        )
-        this.textBoxWrapper.addChild(this.mockInput);
-        this.textBoxWrapper.contentContainer.cursor = "text";
-
-        this.TextBoxPlaceholder = new PUXI.TextWidget(
-            'Type to speak!', 
-            textInputStyles
-        ).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                x: 15,
-                y: 10,
-            })
-        )
-        this.TextBoxPlaceholder.alpha = 0;
-        ease.add(this.TextBoxPlaceholder, this.fadeInStyles, this.fadeInSettingsDelay)
-        this.textBoxWrapper.addChild(this.TextBoxPlaceholder);
-
-        this.textBoxWrapper.widgetChildren[0].on('focus', () => { 
-            this.TextBoxPlaceholder.alpha = 0;
-        });
-        this.textBoxWrapper.widgetChildren[0].on('blur', () => { 
-            if(this.mockInput.value == "") {
-                this.TextBoxPlaceholder.alpha = 0.4;
-            }
-        });
-
-        this.textBox.addChild(this.textBoxWrapper);
-        this.addChild(this.textBox)
-
-        this.textBox.resize(window.innerWidth, window.innerHeight)
-        const textBoxBounds = this.textBoxWrapperBackground.getBounds()
-        this.textBox.stage.hitArea = new PIXI.Rectangle(
-            textBoxBounds.x,
-            textBoxBounds.y,
-            textBoxBounds.width,
-            textBoxBounds.height
-        );
-
-
-        const sendIcon = PIXI.Sprite.from('images/send-icon.svg');
-        sendIcon.width = 22.1
-        sendIcon.height = 17.6
-        sendIcon.alpha = 0.7
-        sendIcon.anchor.set(0.5)
-
-        sendIcon.x = textBoxBounds.width - 30
-        sendIcon.y = textBoxBounds.height/2
-
-        sendIcon.interactive = true;
-        sendIcon.buttonMode = true;
-
-        this.textBoxWrapper.contentContainer.addChild(sendIcon)
-        
-        
-        //sendIcon
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        this.worldInfo = new PUXI.Stage({
-            width: 200,
-            height: 63,
-            x: 0,
-            y: 0
-        })
-        this.worldInfo.visible = false
-        
-        this.worldInfoWrapper = new PUXI.WidgetGroup({}).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 200, 
-                height: 63,
-                x: 0.985,
-                y: 0.975,
-                anchor: new PIXI.Point(1, 1)
-            })
-        ).setPadding(10)
-        
-        this.worldInfoBackground = new PIXI.Graphics()
-        this.worldInfoBackground.beginFill(0xFFFFFF)
-        this.worldInfoBackground.drawRoundedRect(0, 0, 200, 63, 15)
-        this.worldInfoBackground.endFill()
-        this.worldInfoWrapper.contentContainer.addChild(this.worldInfoBackground)
-
-        this.worldInfo.addChild(this.worldInfoWrapper);
-        this.addChild(this.worldInfo)
-
-
-        this.currentTimeHeader = new PIXI.Text("World Running For:", {fill: 0x000000, fontSize: 10, fontFamily: 'Trade Gothic Next'});
-        this.currentTimeHeader.x = 10
-        this.currentTimeHeader.y = 10
-        this.worldInfoWrapper.contentContainer.addChild(this.currentTimeHeader);
-        
-        this.currentTime = new PIXI.Text("00:00", {fill: 0x000000, fontSize: 10, fontFamily: 'Trade Gothic Next'});
-        this.currentTime.x = 130
-        this.currentTime.y = 11
-        this.worldInfoWrapper.contentContainer.addChild(this.currentTime);
-
-
-
-        this.numberOfPeople = new PIXI.Text("Active Users:", {fill: 0x000000, fontSize: 10, fontFamily: 'Trade Gothic Next'});
-        this.numberOfPeople.x = 10
-        this.numberOfPeople.y = 26
-        this.worldInfoWrapper.contentContainer.addChild(this.numberOfPeople);
-        
-        this.numberOfPeopleCounter = new PIXI.Text("0", {fill: 0x000000, fontSize: 10, fontFamily: 'Trade Gothic Next'});
-        this.numberOfPeopleCounter.x = 130
-        this.numberOfPeopleCounter.y = 26
-        this.worldInfoWrapper.contentContainer.addChild(this.numberOfPeopleCounter);
-
-
-
-        this.totalNumberOfPeople = new PIXI.Text("Total Users:", {fill: 0x000000, fontSize: 10, fontFamily: 'Trade Gothic Next'});
-        this.totalNumberOfPeople.x = 10
-        this.totalNumberOfPeople.y = 42
-        this.worldInfoWrapper.contentContainer.addChild(this.totalNumberOfPeople);
-        
-        this.totalNumberOfPeopleCounter = new PIXI.Text("0", {fill: 0x000000, fontSize: 10, fontFamily: 'Trade Gothic Next'});
-        this.totalNumberOfPeopleCounter.x = 130
-        this.totalNumberOfPeopleCounter.y = 43
-        this.worldInfoWrapper.contentContainer.addChild(this.totalNumberOfPeopleCounter);
-
-
-
-        this.worldInfo.resize(window.innerWidth, window.innerHeight)
-        const worldBounds = this.worldInfoBackground.getBounds()
-        this.worldInfo.stage.hitArea = new PIXI.Rectangle(
-            worldBounds.x,
-            worldBounds.y,
-            worldBounds.width,
-            worldBounds.height
-        );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        let quoteWidth = 0.5
-
-        this.quoteStage = new PUXI.Stage(window.innerWidth, window.innerHeight);
-        this.quoteWrapper = new PUXI.WidgetGroup({
-        }).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: quoteWidth,
-                height: 0.8,
-                x: 0.3,
-                y: 0.5,
-                anchor: new PIXI.Point(0.5, 0.5)
-            }),
-        )
-        this.quoteWrapperBackground = new PIXI.Graphics()
-        this.quoteWrapperBackground.beginFill(0xFFFFFF)
-        this.quoteWrapperBackground.lineStyle(1, 0x000000)
-        if(window.innerWidth <=500) {
-            this.quoteWrapperBackground.drawRoundedRect(0, 0, (window.innerWidth/100)*90, (window.innerHeight/100)*85, 50)
-        } else {
-            this.quoteWrapperBackground.drawRoundedRect(0, 0, (window.innerWidth/100)*quoteWidth, (window.innerHeight/100)*80, 50)
-        }
-        this.quoteWrapper.contentContainer.addChild(this.quoteWrapperBackground)
-
-
-
-
-        this.scrollWrapper = new PUXI.WidgetGroup({
-        }).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 0.999,
-                height: 0.999,
-                x: 0.5,
-                y: 0.5,
-                anchor: new PIXI.Point(0.5, 0.5)
-            }),
-        )
-        
-
-
-
-        this.scrollContent = new PUXI.ScrollWidget({
-            scrollY: true,
-            scrollX: false,
-            scrollBars: true,
-            dragScrolling: false,
-            softness: 1,
-        }).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 0.999,
-                height: 0.999,
-                x: 0.5,
-                y: 0.5,
-                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-            })
-        ).setPadding(0, 50, 0, 50)
-        
-
-
-       
-
-
-
-        this.scrollWrapper.addChild(this.scrollContent);
-        this.quoteWrapper.addChild(this.scrollWrapper);
-
-        const style = new PIXI.TextStyle({
-            fontFamily: "Trade Gothic Next",
-            fontSize: 32,
-            breakWords: true,
-            fontWeight: 300,
-            lineHeight: 40,
-            whiteSpace: "pre",
-            wordWrap: true,
-            padding: 10,
-            wordWrapWidth: 700,
-            leading: 1,
-            textBaseline: "middle"
-        });
-
-        const styleHeading = new PIXI.TextStyle({
-            fontFamily: "Trade Gothic Next",
-            fontSize: 32,
-            breakWords: true,
-            fontWeight: 700,
-            lineHeight: 40,
-            whiteSpace: "pre",
-            letterSpacing: 1,
-            wordWrap: true,
-            wordWrapWidth: 600,
-            leading: 1
-        });
-
-        
-        
-
-        this.quotesToShow = [
-            //ABOUT
-            {
-                title: "BIAS ONLINE",
-                subtitle: "",
-                credit: "",
-                paragraph:"<intro>Welcome to a virtual exhibition space by Science Gallery at Trinity College Dublin showcasing digital artworks exploring data equity, privacy, surveillance culture, facial recognition, class and artificial intelligence.</intro><p>\n\nOur virtual gallery is very similar to the real world; you move your character through the 2D space to explore the exhibition. Kiosks like this one reveal further information and portals take you to other areas in the gallery.\n\nAnd just like the real world, you're here live with other people. You can chat using the text box below or if you're feeling shy, why not send an emoji blast to show your feelings?\n\nOK, go explore!</p>",
-                style: "",
-                type: ""
-            },
-            //ARTISTS
-            {
-                title: "EXHIBITING ARTISTS",
-                subtitle: "",
-                credit: "",
-                paragraph:"<img imgSrc='mushonThumb' imgDisplay='inline' />\n<p><bold>Mushon Zer-Aviv</bold> is a designer, researcher, educator and media activist based in Tel Aviv. His love/hate relationship with data informs his design work, art pieces, activism, research, teaching, workshops and city life. He is currently writing a non-fiction book about friction – a design theory of change. Among Mushon’s collaborations, he is the CO-founder of Shual.com – a foxy design studio – and multiple government transparency and civic participation initiatives with the Public Knowledge Workshop; Mushon also designed the maps for Waze.com and led the design of Localize.city. \n\nMushon is an alumni of Eyebeam art + technology center in New York. He is a senior faculty member at Shenkar College and has previously taught at NYU, Parsons, and Bezalel. Adam Kariv developed the code for the work. Additionally, Mushon Zer-Aviv would like to thank the Science Gallery at Trinity College Dublin for commissioning this work.\n\n<noahlink>mushon.com</noahlink> // @mushon\n\n\n<img imgSrc='johannThumb' imgDisplay='inline' />\n<bold>Johann Diedrick</bold> is an artist, engineer, and musician that makes installations, performances, and sculptures for encountering the world through our ears. He surfaces vibratory histories of past interactions inscribed in material and embedded in space, peeling back sonic layers to reveal hidden memories and untold stories. He shares his tools and techniques through listening tours, workshops, and open-source hardware/software.\n\nHe is the founder of A Quiet Life, a sonic engineering and research studio that designs and builds audio-related software and hardware products for revealing possibilities off the grid through sonic encounter. He is a 2021 Mozilla Creative Media Award recipient, a member of NEW INC, and an adjunct professor at NYU\'s ITP program. His work has been featured in Wire Magazine, Musicworks Magazine, and presented internationally at MoMA PS1, Ars Electronica, and the Somerset House, among others. This project is supported by the Mozilla Foundation.\n\n<noahlink>darkmatters.ml</noahlink> // @johanndiedrick\n\n\n<img imgSrc='libbyThumb' imgDisplay='inline' />\n<bold>Libby Heaney</bold>\'s post-disciplinary art practice includes moving image works, performances and participatory and interactive experiences that span quantum computing, virtual reality, AI and installation. Her practice uses affect, humour, surrealism and nonsense to subvert the capitalist appropriation of technology, the endless categorizations of humans and non-humans alike. She uses tools like machine learning and quantum computing against their \'proper\' use, to undo biases and to forge new expressions of collective identity and belonging with each other and the world. She has exhibited widely in the UK and internationally, including Tate Modern, the V&A, London and Mutek & Sonar Festivals. She is currently resident of the London institution Somerset House, where she is currently working on a major commission with quantum computing for Berlin\'s Light Art Space. Sound Design by Barney Kass and the artist would also like to thank Public Space Surveillance Manager at Hackney Council, Oliver Martin and acknowledge the Art Quest Adaptations Residency for acting as a catalyst for this work.\n\n<noahlink>libbyheaney.co.uk</noahlink> // @libby_heaney_\n\n\n<img imgSrc='noahThumb' imgDisplay='inline' />\n<bold>Noah Levenson</bold> leads research engineering as \"Hacker in Residence\" at Consumer Reports Digital Lab. He is a 2019 Rockefeller Foundation Bellagio fellow. His computer science work has been profiled by Scientific American, MIT, Engadget, CBC News, and Fast Company, among others. He lives in New York City, where he was born.\n\n<noahlink>noahlevenson.com</noahlink> // @noahlevenson</p>",
-                style: "",
-                type: ""
-            },
-
-
-            //PROJECTS
-            {
-                title: "INTEROGATIONS OF BIAS",
-                subtitle: "",
-                credit: "",
-                 paragraph:'\n<img imgSrc="dialIconThumb" imgDisplay="inline" /> <boldtitle>NORMALIZI.NG</boldtitle>\n<subtitle>What does normal look like?</subtitle>\n<gap>\n</gap><p>NORMALIZI.NG by Mushon Zer-Aviv is a new digital commission further developing and adapting his existing work “The Normalizing Machine”. This experimental online research in machine-learning aims to analyze and understand how we decide who looks more “normal”. By contributing to the dataset and choosing between faces you deem more normal, the machine analyzes your decisions and will add you to its algorithmic map of normality.\n\nIn the late 1800s, the French forensics pioneer Alphonse Bertillon, the father of the mugshot, developed ‘Le Portrait Parle’ (the speaking portrait), a system for standardizing, indexing and classifying the human face. His statistical system was never meant to criminalize the face, but it was later widely adopted by both the eugenics movement and the Nazis to do exactly that.\n\nThe online work automates Alphonse’s speaking portraits and visualizes how today’s systematic discrimination is aggregated, amplified and conveniently hidden behind the seemingly objective black box of artificial intelligence.\n\n\n<img imgSrc="talkingIconThumb" imgDisplay="inline" /> <boldtitle>DARK MATTERS</boldtitle>\n<subtitle>What does bias sound like?</subtitle>\n<gap>\n</gap><p>Dark Matters exposes the absence of Black speech in the datasets used to train voice interface systems in consumer AI products like Alexa and Siri. Using 3D modeling, sound and storytelling, the project challenges us to grapple with racism and inequity through speech and the spoken word, and how AI systems underserve Black communities.</p>\n\n\n<img imgSrc="robotIconThumb" imgDisplay="inline" /> <boldtitle>CLASSES</boldtitle>\n<subtitle>How are biases translated into code?</subtitle>\n<gap>\n</gap><p>CLASSES is a video essay exploring the entanglements between machine learning classification and social class(ification). The artwork takes place in a simulated model of a London council estate, where the artist lives. Machine and human voices playfully narrate aspects of her in-depth research into accented speech recognition, natural language processing* and public space surveillance, to understand how historical and cultural biases around social class are being translated into code and how this affects people’s material conditions.\n\nTowards the end of the essay, the artist finds inspiration in her community gardening on the estate to propose a rewilded AI that removes rigid hierarchical categories to build stronger relations between people and the world.\n\n\n<img imgSrc="faceIconThumb" imgDisplay="inline" />  <boldtitle>STEALING UR FEELINGS</boldtitle>\n<subtitle>Can the internet read you?</subtitle>\n<gap>\n</gap><p>Meet the new A.I. that knows you better than you know yourself. STEALING UR FEELINGS is an interactive film that learns your deepest, darkest secrets - just by looking at your face.  That\'s the good news. The bad news? Your favourite apps are doing exactly the same thing.</p>',
-                style: "",
-                type: ""
-            },
-            //Credits
-            {
-                title:"CREDITS",
-                subtitle:"",
-                credit:"",
-                paragraph: "<intro><bold>BIAS ONLINE</bold> was developed with the support of the European ARTificial Intelligence Lab, co-funded by the Creative Europe Programme of the European Union\n\n<bold>BIAS ONLINE</bold> was created with the support of The Department of Tourism, Culture, Arts, Gaeltacht, Sport and Media.\n\n</intro><extrasmall>Project Team: Aisling Murray, Mitzi D'Alton, Rory McCorrmick, Niamh O' Doherty, James Delaney \nArtists: Johann Diedrick, Libby Heaney, Mushon Zer-Aviv, Noah Levenson\nAudio by Tom Winters\n\n</extrasmall>",
-                style:"",
-                type: ""
-            },
-            //Privacy
-            {
-                title:"SAFETY AND PRIVACY INFO",
-                subtitle:"",
-                credit:"",
-                paragraph: "<privacy><bold>SAFETY</bold>\n\n<u>Violence</u>: You may not threaten violence against an individual or a group of people. \n\n<u>Terrorism/violent extremism</u>: You may not threaten or promote terrorism or violent extremism. \n\n<u>Child sexual exploitation</u>: We have zero tolerance for child sexual exploitation. \n\n<u>Abuse/harassment</u>: You may not engage in the targeted harassment of someone, or incite other people to do so. This includes wishing or hoping that someone experiences physical harm. \n\n<u>Hateful conduct</u>: You may not promote violence against, threaten, or harass other people on the basis of race, ethnicity, national origin, caste, sexual orientation, gender, gender identity, religious affiliation, age, disability, or serious disease. \n\n<u>Suicide or self-harm</u>: You may not promote or encourage suicide or self-harm. \n\n<u>Linking content</u>: You may not link any content through the comments section.  You may not post pictures, videos or any other contents through the comments section. \n\n<u>Illegal or certain regulated goods or services</u>: You may not use the chat function for any unlawful purpose or in furtherance of illegal activities. This includes selling, buying, or facilitating transactions in illegal goods or services, as well as certain types of regulated goods or services.\n\n<bold>PRIVACY</bold>\n\n<u><bold>Your private information</bold></u>: You should not share or provide your own private information in the chat functionality. If you do, others may keep or store such information. Science Gallery Dublin accepts no liability for such. For information on our Privacy Policy and Data Retention Policy please visit sciencegallery.org/privacy.\n\n<bold>Other information</bold>: You may not publish or post other people's private information (such as names, home phone number and address) without their express permission.\nWe also prohibit threatening to expose private information or incentivizing others to do so. \n\n<bold>Authenticity</bold>\nPlatform manipulation and spam: You may not use the comment section in a manner intended to artificially amplify or suppress information or engage in behaviour that manipulates or disrupts people’s experience. \n\n<u>Civic integrity</u>: You may not use the comment section for the purpose of manipulating or interfering in elections or other civic processes. This includes posting or sharing content that may suppress participation or mislead people about when, where, or how to participate in a civic process. \n\n<u>Impersonation</u>: You may not impersonate individuals, groups, or organizations in a manner that is intended to or does mislead, confuse, or deceive others. \n\n<u>Synthetic and manipulated media</u>: You may not deceptively share synthetic or manipulated media that are likely to cause harm. \n\n<u>Copyright and trademark</u>: You may not violate others’ intellectual property rights, including copyright and trademark. \n\n<u>Enforcement</u>\nIf you violate the rules your chat functionality will be disabled and you may be removed from the exhibition. \n\n<u>Complaints and Reporting</u> \nAny person using the chat functionality may report or make a complaint about content being posted by another user by emailing info@dublin.sciencegallery.com. \n \n</privacy>",
-                style:"",
-                type: "face"
-            },{
-                title:"WELCOME TO BIAS ONLINE",
-                subtitle:"Specially for the Ars festival",
-                credit:"——",
-                paragraph: "We’re launching our very first online-only exhibition: BIAS ONLINE bring online visitors on a journey of compelling exploration through datasets, emotion and facial recognition and artificial intelligence with new artworks from Libby Heaney, Johann Diedrick, Mushon Zer-Aviv, and Noah Levenson. BIAS ONLINE was developed and supported by Science Gallery at Trinity College Dublin as part of the European ARTificial Intelligence Lab project. Co-funded by Creative Europe.",
-                style:"",
-                type: "face"
-            },{
-                title:"STEALING UR FEELINGS",
-                subtitle:"Can the internet read you?",
-                credit:"Noah Levenson | USA | 2019",
-                paragraph: "Meet the new A.I. that knows you better than you know yourself. STEALING UR FEELINGS is an interactive film that learns your deepest, darkest secrets - <i>just by looking at your face</i>. That's the good news. The bad news? Your favourite apps are doing exactly the same thing.\n\n<small><bold>BIO</bold>\nNoah Levenson leads research engineering as 'Hacker in Residence' at Consumer Reports Digital Lab. He is a 2019 Rockefeller Foundation Bellagio fellow. His computer science work has been profiled by Scientific American, MIT, Engadget, CBC News, and Fast Company, among others. He lives in New York City, where he was born.\n\n<noahlink>noahlevenson.com</noahlink> // @noahlevenson</small>",
-                style:"",
-                type: "face"
-            },{
-                title:"DARK MATTERS",
-                subtitle:"What does bias sound like?",
-                credit: "Johann Diedrick | USA | 2021",
-                paragraph: "Dark Matters exposes the absence of Black speech in the datasets used to train voice interface systems in consumer AI products like Alexa and Siri. Using 3D modeling, sound and storytelling, the project challenges us to grapple with racism and inequity through speech and the spoken word, and how AI systems underserve Black communities.\n\nBIO\nJohann Diedrick is an artist, engineer, and musician that makes installations, performances, and sculptures for encountering the world through our ears. He surfaces vibratory histories of past interactions inscribed in material and embedded in space, peeling back sonic layers to reveal hidden memories and untold stories. He shares his tools and techniques through listening tours, workshops, and open-source hardware/software. He is the founder of A Quiet Life, a sonic engineering and research studio that designs and builds audio-related software and hardware products for revealing possibilities off the grid through sonic encounter. He is a 2021 Mozilla Creative Media Award recipient, a member of NEW INC, and an adjunct professor at NYU's ITP program. His work has been featured in Wire Magazine, Musicworks Magazine, and presented internationally at MoMA PS1, Ars Electronica, and the Somerset House, among others. This project is supported by the Mozilla Foundation.<small></small>",
-                style:"",
-                type: "talking"
-            }
-        ]
-        
-       
-
-        
-
-
-
-        this.textContent = new PUXI.TextWidget("", style)////setBackground(0xFF0000)
-        this.textContent.interactive = true
-        this.textContent.buttonMode = true
-
-
-
-        
-        const johannThumb = new PIXI.Sprite.from('images/johann-thumb-large.png')
-        const mushonThumb = new PIXI.Sprite.from('images/mushon-thumb-large.png')
-        const libbyThumb = new PIXI.Sprite.from('images/libby-thumb-large.png')
-        const noahThumb = new PIXI.Sprite.from('images/noah-thumb-large.png')
-        
-        const robotIconThumb = new PIXI.Sprite.from('images/robot-icon-ui.svg');
-        const dialIconThumb = new PIXI.Sprite.from('images/dial-icon.svg');
-        const faceIconThumb = new PIXI.Sprite.from('images/face-icon-black-lines.svg');
-        const talkingIconThumb = new PIXI.Sprite.from('images/talking-icon.svg');
-
-
-
-        //const imageStyles =
-
-        this.connectedText = new TaggedText("", {
-            "default": {
-                fontFamily: "Trade Gothic Next",
-                fontSize: "28px",
-                wordWrap: true,
-                lineHeight: 45,
-                padding: 10,
-                fontWeight: 300,
-                wordWrapWidth: 700,
-                leading: 1,
-                textBaseline: "middle"
-            },
-            "intro": {
-                fontFamily: "Trade Gothic Next",
-                fontSize: "28px",
-                wordWrap: true,
-                lineHeight: 36,
-                padding: 10,
-                fontWeight: 300,
-                wordWrapWidth: 700,
-                leading: 1,
-                textBaseline: "middle"
-            },
-            "bold": {
-                fontWeight: 700,
-            },
-            "boldtitle": {
-                fontWeight: 900,
-                fontSize: "32px",
-                wordWrap: true,
-                lineHeight: 45,
-                wordWrapWidth: 700
-            },
-            "gap": {
-                fontSize: "12px",
-            },
-            "subtitle": {
-                fontFamily: "Trade Gothic Next",
-                fontSize: "28px",
-                lineHeight: 36,
-                padding: 10,
-                fontWeight: 300,
-                wordWrap: true,
-                wordWrapWidth: 700,
-                leading: 1,
-                textBaseline: "middle"
-            },
-            "i": {
-                fontStyle: "italic"
-            },
-            "p": {
-                fontSize: "21px",
-                lineHeight: 28,
-                fontWeight: 300,
-            },
-            "noahlink": {
-                fill: "blue"
-            },
-            "u": {
-                textDecoration: "underline",
-                fontSize: "18px",
-                lineHeight: 22,
-            },
-            "imageWrapper": {
-                width: "200px",
-                wordWrap: true,
-                wordWrapWidth: 700,
-            },
-            "privacy": {
-                fontSize: "18px",
-                lineHeight: 22,
-                wordWrap: true,
-                wordWrapWidth: 600,
-                textBaseline: "alphabetical"
-            },
-            "extrasmall": {
-                fontSize: "16px",
-                lineHeight: 24,
-                wordWrap: true,
-                wordWrapWidth: 500,
-                textBaseline: "alphabetical"
-            },
-            "img": {
-                width: "200px",
-                wordWrap: true,
-                wordWrapWidth: 300,
-            }
-        }, { imgMap: { johannThumb, mushonThumb, libbyThumb, noahThumb, robotIconThumb, talkingIconThumb, dialIconThumb, faceIconThumb },});
-
-      
-    
-        
-
-        
-       
-        //this.connectedText.height = 9000
-        //this.textContent.contentContainer.children[0].height = 9000
-       
-        this.textContent.contentContainer.addChild(this.connectedText)
-        this.textContent.contentContainer.children[0].alpha = 0
-        
-       
-        this.title = "WELCOME TO BIAS ONLINE";
-        this.title = new TaggedText(this.title, {
-            "default": {
-                fontFamily: "Trade Gothic Next",
-                fontSize: "38px",
-                wordWrap: true,
-                lineHeight: 45,
-                padding: 10,
-                fontWeight: 900,
-                wordWrapWidth: 600,
-                leading: 1,
-                textBaseline: "middle"
-            }
-        });
-        this.title.alpha = 0
-        this.title.x = 50
-        this.title.y = 25
-
-
-
-
-        this.leaveButtonWrapper = new PUXI.WidgetGroup({
-        }).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 40,
-                height: 40,
-                x: 0.9725,
-                y: 60,
-                anchor: new PIXI.Point(0.5,0.5)
-            }),
-        )
-
-        this.leaveButton = new PUXI.Button({
-            text: '×'
-        }).setLayoutOptions(new PUXI.FastLayoutOptions({
-            width: 0.9999,
-            height: 0.9999,
-            x: 0,
-            y: 0.5,
-            anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-        }))
-        this.leaveButtonWrapper.addChild(this.leaveButton)
-
-        const leaveButtonClick = new PUXI.ClickManager(this.leaveButton, true, false, false)
-        
-        leaveButtonClick.onClick = function(){
-            theUI.closeModal()
-        }
-        
-        ease.add(this.leaveButtonWrapper.contentContainer, this.fadeInStyles, this.fadeInSettingsDelay)
-
-
-
-
-
-
-
-
-
-
-        let textContainer = this.textContent
-        let textTitle = this.title
-
-        setTimeout(function(){
-            textContainer.alpha = 1
-            textTitle.alpha = 1
-        }, 1000)
-
-
-        this.scrollContent.addChild(this.textContent)
-        this.quoteWrapper.contentContainer.addChild(this.title)
-        this.quoteWrapper.contentContainer.alpha = 0
-
-        this.quoteWrapper.addChild(this.leaveButtonWrapper)
-        this.quoteStage.addChild(this.quoteWrapper)
-        
-
-
-        //this.addChild(this.quoteStage)
-
-        //this.quoteStage.resize(window.innerWidth, window.innerHeight)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //Modal Stage
-        this.joinModal = new PUXI.Stage(window.innerWidth, window.innerHeight)   
-        
-        //Modal Background
-        this.joinModalWrapper = new PUXI.Widget({
-        }).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 0.999999, 
-                height: 0.99999,
-            }),
-        )
-        .setBackground(colorGreen)
-        
-        this.drawGridBackground(window.innerWidth, window.innerHeight)
-
-
-        
-       
-        
-
-
-        
-
-
-        //Modal Centre Box Wrapper 
-        this.joinModalWidgetGroup = new PUXI.WidgetGroup().setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                x: 0.5, y: 0.5,
-                anchor: puxiCenter,
-                width: modalWidth,
-                height: modalHeight
-            }),
-        )
-
-        
-        this.joinModalWidgetGroup.contentContainer.alpha = 0
-        this.joinModalWidgetGroup.contentContainer.y = 50
-
-
-
-        ease.add(this.joinModalWidgetGroup.contentContainer, this.fadeInStyles, this.fadeInSettingsDelay)
-        
-
-
-
-
-        //Whats your name
-        this.joinTitleWrapper = new PUXI.Widget({
-        }).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 0,
-                height: 0,
-                x: 0.5,
-                y: 0.3725,
-                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-            }),
-        ).setBackground(0xFFFFFF)
-
-        this.joinTitleStyles = new PIXI.TextStyle({ 
-            fontFamily: 'Trade Gothic Next',
-            fill: colorBlack, 
-            fontSize: 108,
-            fontWeight: 900, 
-        })
-
-        this.joinTitle = new PUXI.TextWidget(
-            'What’s your name?', 
-            this.joinTitleStyles
-        )
-        
-        this.joinTitle.contentContainer.children[0].anchor.set(0.5, 0.5);
-        this.joinTitle.contentContainer.children[0].x = 0
-        this.joinTitle.contentContainer.children[0].y = 0
-        this.joinTitleWrapper.addChild(this.joinTitle)
-        
-
-
-
-
-
-        
-
-
-        //Name Input Field
-        this.inputBox = new PUXI.WidgetGroup().setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 1100,
-                height: 100,
-                x: 0.5,
-                y: 0.545,
-                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-            }),
-        ).setBackground(0xFFFFFF).setBackgroundAlpha(1);
-        
-        //Text Styles for Input and Placeholder
-        const textStyles = new PIXI.TextStyle({ 
-            fontFamily: 'Trade Gothic Next',
-            fill: "#000000", 
-            fontSize: 52
-        })
-        //The Text Input
-        this.nameFieldInput = new PUXI.TextInput({
-            multiLine: false,
-            value: "",
-            padding: 20,
-            maxLength: 25,
-            align: "center",
-            fontVariant: "small-caps",
-            selectedColor: "#000000",
-            selectedBackgroundColor: "#FFFFFF",
-            caretWidth: 2,
-            style: textStyles,
-        }).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 0.99,
-                height: 0.95,
-                x: 0.5,
-                y: 0.5,
-                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-            }),
-        )
-        
-        this.inputBox.addChild(this.nameFieldInput)
-        
-        //Placeholder Text
-        this.nameFieldPlaceholder = new PUXI.TextWidget(
-            'Username', 
-            textStyles
-        ).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                x: 20,
-                y: 21,
-            })
-        )
-        this.nameFieldPlaceholder.alpha = 0.4;
-        const nameFieldPlaceholder = this.nameFieldPlaceholder
-        this.inputBox.widgetChildren[0].on('focus', () => { 
-            nameFieldPlaceholder.alpha = 0;
-        });
-        this.inputBox.widgetChildren[0].on('blur', () => { 
-            if(this.nameFieldInput.value != '') {
-                nameFieldPlaceholder.alpha = 0;
-            } else {
-                nameFieldPlaceholder.alpha = 0.4;
-            }
-        });
-        
-        this.inputBox.addChild(this.nameFieldPlaceholder);
-        this.inputBox.contentContainer.interactive = true;
-        this.inputBox.contentContainer.buttonMode = true;
-        this.inputBox.contentContainer.cursor = "text";
-
-        const inputBox = this.inputBox
-        this.inputBox.contentContainer.on("mouseover", function() {
-            inputBox.setBackground("#FFFF00")
-        });
-        this.inputBox.contentContainer.on("mouseout", function() {
-            inputBox.setBackground("#FFFFFF")
-        });
-
-
-
-
-
-
-
-
-
-        //select avatar 
-        //Logo Wrapper + Logo
-        const avatarWrapper = new PUXI.WidgetGroup({
-        }).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 100,
-                height: 100,
-                x: 0.5,
-                y: 0.55,
-                anchor: new PIXI.Point(0.5,0.5)
-            }),
-        )
-
-
-        this.avatarBox = new PUXI.Widget({
-        }).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 100,
-                height: 100,
-                x: 0.5,
-                y: 0.55,
-                anchor: new PIXI.Point(0,0)
-            }),
-        )
-        //this.avatarBox.contentContainer.children[0].anchor.set(0.5, 0.5)
-
-        //this.avatar = null
-        var avatarCounter = 1
-        let avatarBox = this.avatarBox
-        setInterval(function(){
-            if(avatarBox.contentContainer.children == 0) {
-                let avatarCurrent = PIXI.Sprite.from('images/avatar'+avatarCounter+'.svg');
-                avatarCurrent.width = 100
-                avatarCurrent.height = 100
-                avatarCurrent.x = -50
-                avatarCurrent.y = -50
-                avatarBox.contentContainer.addChild(avatarCurrent)
-            } else {
-                avatarBox.contentContainer.removeChildAt(0)
-                let avatarCurrent = PIXI.Sprite.from('images/avatar'+avatarCounter+'.svg');
-                this.avatar = avatarCurrent
-                avatarCurrent.width = 100
-                avatarCurrent.height = 100
-                avatarCurrent.x = -50
-                avatarCurrent.y = -50
-                avatarBox.contentContainer.addChild(avatarCurrent)
-
-            }
-            avatarCounter++
-            if(avatarCounter >= 5) {
-                avatarCounter = 1
-            }
-        }, 500)
-        this.avatarBox.alpha = 0
-        avatarWrapper.addChild(this.avatarBox)
-        this.joinModalWidgetGroup.addChild(avatarWrapper)
-
-
-
-
-       
-
-
-
-
-
-
-
-
-
-        
-
-
-        //Join Button 
-        this.joinButtonWrapper = new PUXI.WidgetGroup({
-        }).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 500,
-                height: 100,
-                x: 0.5,
-                y: 0.727,
-                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-            }),
-        ).setBackground(0x000000).setBackgroundAlpha(1);
-
-        this.joinButton = new PUXI.Button({
-            text: ''
-        }).setLayoutOptions(new PUXI.FastLayoutOptions({
-            width: 0.9999,
-            height: 0.9999,
-            x: 0.5,
-            y: 0.5,
-            anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-        }))
-        .setBackground(0xFF284D)
-        .setBackgroundAlpha(1)
-        this.joinButtonWrapper.addChild(this.joinButton)
-        this.joinButton.on("hover", function (over) {
-            if(over == true) {
-                this.setBackground("#FFFF00")
-            } else {
-                this.setBackground("#FF284D")
-            }
-        });
-
-        
-
-       const buttonStyles = new PIXI.TextStyle({ 
-            fontFamily: 'Trade Gothic Next',
-            fill: "#FFFFFF", 
-            fontWeight: 700,
-            fontSize: 64, 
-            letterSpacing: 2
-        })
-        this.joinText = new PUXI.TextWidget('CONTINUE', buttonStyles)
-        this.joinText.setLayoutOptions(new PUXI.FastLayoutOptions({
-            x: 0.5,
-            y: 0.5,
-            anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-        }))
-        this.joinText.tint = 0x000000
-        this.joinButtonWrapper.addChild(this.joinText)
-
-        this.joinButtonWrapper.contentContainer.interactive = true;
-        this.joinButtonWrapper.contentContainer.buttonMode = true;
-        this.joinButtonWrapper.contentContainer.cursor = "pointer";
-
-        const joinButtonClick = new PUXI.ClickManager(this.joinButton, true, false, false)
-        
-        joinButtonClick.onPress = function(){
-            this.setBackground(0xffff00)
-        }
-
-        const joinTitleWrapper = this.joinTitleWrapper
-        const joinModalWidgetGroup = this.joinModalWidgetGroup
-        
-        joinButtonClick.onClick = function(){
-
-            //Sound.add('login', 'audio/login.mp3');
-            //Sound.play('login')
+            //this.emojiStage.visible = false
+
+            this.emojiWrapper = new PUXI.WidgetGroup({}).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 480, 
+                    height: 50,
+                    x: 0.5,
+                    y: 0.99,
+                    anchor: new PIXI.Point(0.5, 1)
+                })
+            )
+
+
+            this.emojiWrapperBackground = new PIXI.Graphics()
+            //this.emojiWrapperBackground.lineStyle(1, black, 1, 1, false)
+            this.emojiWrapperBackground.beginFill(white)
+            this.emojiWrapperBackground.drawRoundedRect(2, 2, 50, 46, 25)
+            this.emojiWrapperBackground.endFill()
+            this.emojiWrapper.contentContainer.addChild(this.emojiWrapperBackground)
+
+            this.coolEmoji = new PUXI.Widget({}).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 60,
+                    height: 45,
+                    x: 0,
+                    y: 0
+                })
+            ).setPadding(7, 0)
+
+
+            const coolEmoji = new PIXI.Text("☺", {fontSize: 38});
+            coolEmoji.alpha = 0.35
+
+            this.coolEmoji.contentContainer.addChild(coolEmoji)
+            this.emojiWrapper.addChild(this.coolEmoji)
+            this.coolEmoji.contentContainer.buttonMode = true
+            this.coolEmoji.contentContainer.interactive = true
+
+
+
+            /*this.heartEmoji = new PUXI.Widget({}).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 60,
+                    height: 50,
+                    x: 50,
+                    y: 0
+                })
+            ).setPadding(15, 10)
+            const heartEmoji = new PIXI.Text("❤️", {fontSize: 28});
+            this.heartEmoji.contentContainer.addChild(heartEmoji)
+            this.emojiWrapper.addChild(this.heartEmoji)
+            this.heartEmoji.contentContainer.buttonMode = true
+            this.heartEmoji.contentContainer.interactive = true
+
+            this.lighteningEmoji = new PUXI.Widget({}).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 60,
+                    height: 50,
+                    x: 100,
+                    y: 0
+                })
+            ).setPadding(15, 10)
+            this.lighteningEmoji.buttonMode = true
+            const lighteningEmoji = new PIXI.Text("⚡", {fontSize: 28});
+            this.lighteningEmoji.contentContainer.addChild(lighteningEmoji)
+            this.emojiWrapper.addChild(this.lighteningEmoji)
+            this.lighteningEmoji.contentContainer.buttonMode = true
+            this.lighteningEmoji.contentContainer.interactive = true
+
+            this.sadEmoji = new PUXI.Widget({}).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 60,
+                    height: 50,
+                    x: 150,
+                    y: 0
+                })
+            ).setPadding(15, 10)
+            const sadEmoji = new PIXI.Text("🎉", {fontSize: 28});
+            this.sadEmoji.contentContainer.addChild(sadEmoji)
+            this.emojiWrapper.addChild(this.sadEmoji)
+            this.sadEmoji.contentContainer.buttonMode = true
+            this.sadEmoji.contentContainer.interactive = true
+
+            this.whateverEmoji = new PUXI.Widget({}).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 60,
+                    height: 50,
+                    x: 200,
+                    y: 0
+                })
+            ).setPadding(15, 10)
+            const whateverEmoji = new PIXI.Text("🙄", {fontSize: 28});
+            this.whateverEmoji.contentContainer.addChild(whateverEmoji)
+            this.whateverEmoji.contentContainer.buttonMode = true
+            this.whateverEmoji.contentContainer.interactive = true
+            this.emojiWrapper.addChild(this.whateverEmoji)
+                */
             
-            joinTitleWrapper.contentContainer.children[0].children[0].children[0].text = 'Select your avatar'
-            joinModalWidgetGroup.removeChild(inputBox)
-            avatarBox.alpha = 1
-
-            theUI.setName()
-            
-            
-            const nameStyles = new PIXI.TextStyle({ 
-                fontFamily: 'Trade Gothic Next',
-                fill: colorBlack, 
-                fontSize: 25,
-                fontWeight: 900, 
-                letterSpacing: 2
-            })
-            
-            setTimeout(function(){
-                let personName = theUI.getText()
-                personName = personName.padStart(20, ' ')
-                personName = personName.padEnd(20, ' ')
-                const nameText = new PIXI.Text(""+personName.toUpperCase()+"", nameStyles);
-                nameText.updateText();
-                
-
-                const radius = 68;
-                const maxRopePoints = 100;
-                const step = Math.PI / maxRopePoints;
-
-                let ropePoints = maxRopePoints - Math.round( (nameText.texture.width / (radius * Math.PI)) * maxRopePoints );
-                ropePoints /= 2;
-
-                const points = [];
-                for ( let i = maxRopePoints - ropePoints; i > ropePoints; i-- ) {
-                const x = radius * Math.cos( step * i );
-                const y = radius * Math.sin( step * i );
-                points.push( new PIXI.Point( x, -y ) );
-                }
-
-                const container = new PIXI.Container();
-                const rope = new PIXI.SimpleRope( nameText.texture, points );
-                container.addChild( rope );
-                const bounds = container.getLocalBounds();
-                //console.log(bounds)
-                const matrix = new PIXI.Matrix();
-                matrix.tx = -bounds.x;
-                matrix.ty = -bounds.y;
-
-                const renderTexture = PIXI.RenderTexture.create( bounds.width, bounds.height, PIXI.settings.SCALE_MODE.NEAREST, 2 );
-                renderer.render(container, renderTexture, true, matrix, false);
-                
-                PIXI.BaseTexture.addToCache( renderTexture.baseTexture, 'curvedText' );
-                PIXI.Texture.addToCache( renderTexture, 'curvedText' );
-                
-                const sprite = PIXI.Sprite.from('curvedText');
-                //sprite.anchor.set();
-                console.log(sprite.width)
-
-                sprite.y = -28
-                sprite.x = -33
-                //sprite.x = -moveBack
-                avatarWrapper.contentContainer.addChildAt(sprite)
-                
-                
-            }, 200)
-
-        
-            
-        }
-
-
-        
-
-        
-
-
-        
-
-        this.joinModalWidgetGroup.addChild(this.joinTitleWrapper)
-        this.joinModalWidgetGroup.addChild(this.inputBox)
-        this.joinModalWidgetGroup.addChild(this.joinButtonWrapper)
-        
-        this.joinModal.addChild(this.joinModalWidgetGroup)
-        
-        this.addChild(this.joinModal)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //Modal Stage
-        this.introScreen = new PUXI.Stage(window.innerWidth+10, window.innerHeight+10)  
-        const introScreen = this.introScreen
-        this.introScreenWrapper = new PUXI.Widget({
-        }).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 0.999999, 
-                height: 0.999999,
-                x: 0.5,
-                y: 0.5,
-                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-            }),
-        ).setBackground(0x000000)
-        const introScreenWrapper = this.introScreenWrapper
-        this.introScreen.addChild(this.introScreenWrapper)
-
-        //Join Button 
-        this.introScreenTextWrapper = new PUXI.WidgetGroup({
-        }).setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 300,
-                height: 100,
-                x: 0.5,
-                y: 0.5,
-                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-            }),
-        )
-
-        const introScreenBackground = new PIXI.Graphics()
-        introScreenBackground.beginFill(0x000000)
-        introScreenBackground.drawRect(0, 0, window.innerWidth*2, window.innerHeight)
-        introScreenBackground.endFill()
-        this.introScreenWrapper.contentContainer.addChild(introScreenBackground)
-
-        const introStyles = new PIXI.TextStyle({ 
-            fontFamily: 'Trade Gothic Next',
-            fill: "#4DFA66", 
-            fontWeight: 900,
-            fontSize: "64px", 
-            letterSpacing: 2
-        })
-
-        const introText = new PUXI.TextWidget('BIAS', introStyles)
-        this.introText = introText
-        introText.setLayoutOptions(new PUXI.FastLayoutOptions({
-            x: 0.5,
-            y: 0.5,
-            anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-        }))
-        this.introText.tint = 0xFFFFFF
-        this.introText.alpha = 0
-
-
-        ease.add(this.introText, {alpha: 1}, { duration: 250, ease: 'easeOutExpo', wait: 1000})
-
-        
-        
-        this.introScreenTextWrapper.addChild(this.introText)
-
-        this.introScreen.addChild(this.introScreenTextWrapper)
-        
-        
-        this.glitchOn = false
-
-        this.introGlitch = new GlitchFilter({
-            slices: 0,
-            offset: 0,
-            direction: 0,
-            seed: 0.5,
-        })
-      
-        this.introScreen.resize(window.innerWidth+10, window.innerHeight+10)
-
-        this.filters = [this.introGlitch]
-  
-        const theUI = this
-
-
-
-
-        this.addChild(this.introScreen)
-
-        
-        setTimeout(function(){
-            theUI.toggleGlitch(true)
-        }, 3000)
-        setTimeout(function(){
-            theUI.toggleGlitch(false)
-            introText.text = "BIAS ONLINE"
-            introScreen.resize(window.innerWidth+10, window.innerHeight+10)
-        }, 4000)
-        setTimeout(function(){
-            theUI.toggleGlitch(true)
-        }, 6000)
-        setTimeout(function(){
-            theUI.toggleGlitch(false)
-        }, 7000)
-        setTimeout(function(){
-            ease.add(introText, {alpha: 0 }, { duration: 500, ease: 'easeOutExpo'})
-        }, 8000)
-
-
-        const disclaimerStyles = new PIXI.TextStyle({ 
-            fontFamily: 'Trade Gothic Next',
-            fill: "#4DFA66", 
-            fontWeight: 400,
-            fontSize: "18px", 
-            letterSpacing: 2, 
-            wordWrapWidth: 500, 
-            wordWrap: true
-        })
-
-
-        const disclaimerText = 'LIVE CHAT DISCLAIMER\n\nThis Live Chat service is operated between the hours of 9 a.m. and 5 p.m., and is intended for scheduling inquiries only. Psychological assessment, diagnosis, treatment and counselling services are not provided via this Live Chat service; please do not include any personal, sensitive, clinical or confidential information in the Live Chat. You expressly acknowledge that a patient-doctor relationship will not be established by use of this service. With any online service, there is some level of risk when communicating information over the Internet and we cannot assume any responsibility for any information that you may enter during your chat session. If you require emergency medical attention please call 911 or visit the Emergency department at your local hospital. CITC expressly disclaims any liability for any injury, loss or damage incurred by use of or reliance on the information provided via this Live Chat service. By using this Live Chat you accept these terms and conditions.'
-
-        const introDisclaimer = new PUXI.TextWidget(disclaimerText, disclaimerStyles)
-        this.introDisclaimer = introDisclaimer
-        introText.setLayoutOptions(new PUXI.FastLayoutOptions({
-            x: 0.5,
-            y: 0.5,
-            anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-        }))
-        this.introDisclaimer.tint = 0xFFFFFF
-        this.introDisclaimer.alpha = 1
-        this.introScreenTextWrapper.addChild(this.introText)
-      
-
-        //disclaimer
-        setTimeout(function(){
-            ease.add(introScreenWrapper, {alpha: 0 }, { duration: 500, ease: 'easeOutExpo'})
-        }, 9000)
-        setTimeout(function(){
-            ease.add(introScreenWrapper, {alpha: 0 }, { duration: 500, ease: 'easeOutExpo'})
-            theUI.removeChild(introScreen)
-        }, 10000)
-        
-            
-
-
-
-       
-        const joinModal = this.joinModal
-        const quoteStage = this.quoteStage
-
-        setTimeout(function(){
-
-            theUI.resizeText()
-            joinModal.resize(window.innerWidth, window.innerHeight)
-            quoteStage.resize(window.innerWidth, window.innerHeight)
-            
-
-        }, 2000)
-
-        document.addEventListener("pointerdown", function(e) {
-            if (e.target.nodeName === "DIV"){
-                if(document.getElementById("iframe")) {
-                    document.getElementById("iframe").remove()
-                    e.target.remove()
-                }
-            }
-        })
-
-        window.addEventListener('resize', () => {
-            
-            this.resizeText()
-            
-            this.drawGridBackground(window.innerWidth, window.innerHeight)
-
-            if(this.iframe) {
-                this.iframe.width = window.innerWidth
-                this.iframe.height = window.innerHeight
-            }
-            
-            
-            this.introScreen.resize(window.innerWidth, window.innerHeight)
-
-            this.joinModal.resize(window.innerWidth, window.innerHeight)
-            
-
-
-
-            
-            this.statusStage.resize(window.innerWidth, window.innerHeight)
-            this.statusStage.stage.hitArea = new PIXI.Rectangle(0,0,0,0);
-
-            
-           
-           
-
-            this.quoteWrapperBackground.clear()
-            this.quoteWrapperBackground = new PIXI.Graphics()
-            this.quoteWrapperBackground.lineStyle(1, 0x000000)
-            this.quoteWrapperBackground.beginFill(0xFFFFFF)  
-
-            if(window.innerWidth <=500) {
-                this.quoteWrapperBackground.drawRoundedRect(0, 0, (window.innerWidth/100)*90, (window.innerHeight/100)*80, 50)
-            } else {
-                this.quoteWrapperBackground.drawRoundedRect(0, 0, (window.innerWidth/100)*80, (window.innerHeight/100)*80, 50)
-            }
-            this.quoteWrapper.contentContainer.addChildAt(this.quoteWrapperBackground,0)
-
-            this.quoteStage.resize(window.innerWidth, window.innerHeight)
-            const quoteBounds = this.quoteWrapperBackground.getBounds()
-            this.quoteStage.stage.hitArea = new PIXI.Rectangle(
-                quoteBounds.x,
-                quoteBounds.y,
-                quoteBounds.width,
-                quoteBounds.height
-            );
-
-            //this.scrollContent.innerBounds = new PIXI.Rectangle(0, 0, 1000, 2000)
-            
-
-
-
-            this.textBox.resize(window.innerWidth, window.innerHeight)
-            const textBoxbounds = this.textBoxWrapperBackground.getBounds()
-            this.textBox.stage.hitArea = new PIXI.Rectangle(
-                textBoxbounds.x,
-                textBoxbounds.y,
-                textBoxbounds.width,
-                textBoxbounds.height
-            );
+            this.emojiStage.addChild(this.emojiWrapper);
+            this.addChild(this.emojiStage);
 
             this.emojiStage.resize(window.innerWidth, window.innerHeight)
-            const emojiBounds = this.emojiWrapperBackground.getBounds()
+            const bounds = this.emojiWrapperBackground.getBounds()
             this.emojiStage.stage.hitArea = new PIXI.Rectangle(
-                emojiBounds.x,
-                emojiBounds.y,
-                emojiBounds.width,
-                emojiBounds.height
+                bounds.x,
+                bounds.y,
+                bounds.width,
+                bounds.height
             );
-            
-            this.scoreStage.resize(window.innerWidth, window.innerHeight)
-            const scoreBounds = this.scoreWrapperBackground.getBounds()
-            this.scoreStage.stage.hitArea = new PIXI.Rectangle(
-                scoreBounds.x,
-                scoreBounds.y,
-                scoreBounds.width,
-                scoreBounds.height
-            );
+        }
 
+
+
+        if(this.worldInfoOn == true) {
+
+            this.worldInfo = new PUXI.Stage({
+                width: 200,
+                height: 63,
+                x: 0,
+                y: 0
+            })
+            this.worldInfo.visible = false
+            
+            this.worldInfoWrapper = new PUXI.WidgetGroup({}).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 200, 
+                    height: 63,
+                    x: 0.985,
+                    y: 0.975,
+                    anchor: new PIXI.Point(1, 1)
+                })
+            ).setPadding(10)
+            
+            this.worldInfoBackground = new PIXI.Graphics()
+            this.worldInfoBackground.beginFill(white)
+            this.worldInfoBackground.drawRoundedRect(0, 0, 200, 63, 15)
+            this.worldInfoBackground.endFill()
+            this.worldInfoWrapper.contentContainer.addChild(this.worldInfoBackground)
+    
+            this.worldInfo.addChild(this.worldInfoWrapper);
+            //this.addChild(this.worldInfo)
+    
+    
+            this.currentTimeHeader = new PIXI.Text("World Running For:", {fill: black, fontSize: 10, fontFamily: 'Trade Gothic Next'});
+            this.currentTimeHeader.x = 10
+            this.currentTimeHeader.y = 10
+            this.worldInfoWrapper.contentContainer.addChild(this.currentTimeHeader);
+            
+            this.currentTime = new PIXI.Text("00:00", {fill: black, fontSize: 10, fontFamily: 'Trade Gothic Next'});
+            this.currentTime.x = 130
+            this.currentTime.y = 11
+            this.worldInfoWrapper.contentContainer.addChild(this.currentTime);
+    
+    
+    
+            this.numberOfPeople = new PIXI.Text("Active Users:", {fill: black, fontSize: 10, fontFamily: 'Trade Gothic Next'});
+            this.numberOfPeople.x = 10
+            this.numberOfPeople.y = 26
+            this.worldInfoWrapper.contentContainer.addChild(this.numberOfPeople);
+            
+            this.numberOfPeopleCounter = new PIXI.Text("0", {fill: black, fontSize: 10, fontFamily: 'Trade Gothic Next'});
+            this.numberOfPeopleCounter.x = 130
+            this.numberOfPeopleCounter.y = 26
+            this.worldInfoWrapper.contentContainer.addChild(this.numberOfPeopleCounter);
+    
+    
+    
+            this.totalNumberOfPeople = new PIXI.Text("Total Users:", {fill: black, fontSize: 10, fontFamily: 'Trade Gothic Next'});
+            this.totalNumberOfPeople.x = 10
+            this.totalNumberOfPeople.y = 42
+            this.worldInfoWrapper.contentContainer.addChild(this.totalNumberOfPeople);
+            
+            this.totalNumberOfPeopleCounter = new PIXI.Text("0", {fill: black, fontSize: 10, fontFamily: 'Trade Gothic Next'});
+            this.totalNumberOfPeopleCounter.x = 130
+            this.totalNumberOfPeopleCounter.y = 43
+            this.worldInfoWrapper.contentContainer.addChild(this.totalNumberOfPeopleCounter);
+    
+    
+    
             this.worldInfo.resize(window.innerWidth, window.innerHeight)
             const worldBounds = this.worldInfoBackground.getBounds()
             this.worldInfo.stage.hitArea = new PIXI.Rectangle(
@@ -1783,32 +1076,1579 @@ class UIBuilder extends PIXI.Container {
                 worldBounds.width,
                 worldBounds.height
             );
+    
 
-            /*this.leaveGameStage.resize(window.innerWidth, window.innerHeight)
-            const leaveGameBounds = this.leaveButtonWrapper.contentContainer.getBounds()
-            this.leaveGameStage.stage.hitArea = new PIXI.Rectangle(
-                leaveGameBounds.x,
-                leaveGameBounds.y,
-                leaveGameBounds.width,
-                leaveGameBounds.height
-            );*/
+        }
 
+        
+
+        if(this.quoteStageOn == true) {
+
+            this.quoteStage = new PUXI.Stage(0, 0, window.innerWidth, window.innerHeight);
+
+            this.quoteBackground = new PUXI.WidgetGroup({
+            }).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: window.innerWidth,
+                    height: window.innerHeight,
+                    x: 0.5,
+                    y: 0.5,
+                    anchor: new PIXI.Point(0.5, 0.5)
+                }),
+            ).setBackground(0x000000).setBackgroundAlpha(0.5)
+
+            this.quoteWrapper = new PUXI.WidgetGroup({
+            }).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 650,
+                    height: 600,
+                    x: 0.5,
+                    y: 0.5,
+                    anchor: new PIXI.Point(0.5, 0.5)
+                }),
+            )
+            this.quoteWrapperBackground = new PIXI.Graphics()
+            this.quoteWrapperBackground.beginFill(white)
+            this.quoteWrapperBackground.lineStyle(1, black)
+            if(window.innerWidth <=500) {
+                this.quoteWrapperBackground.drawRoundedRect(0, 0, (window.innerWidth/100)*90, (window.innerHeight/100)*85, 50)
+            } else {
+                this.quoteWrapperBackground.drawRoundedRect(0, 0, (window.innerWidth/100)*90, (window.innerHeight/100)*80, 50)
+            }
+            this.quoteWrapper.contentContainer.addChild(this.quoteWrapperBackground)
+
+
+
+
+            this.scrollWrapper = new PUXI.WidgetGroup({
+            }).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 0.999,
+                    height: 0.999,
+                    x: 0.5,
+                    y: 0.5,
+                    anchor: new PIXI.Point(0.5, 0.5)
+                }),
+            )
+            
+
+
+
+            this.scrollContent = new PUXI.ScrollWidget({
+                scrollY: true,
+                scrollX: false,
+                scrollBars: true,
+                softness: 1,
+                //overflowY: 3000
+            }).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 0.999,
+                    height: 0.999,
+                    x: 0.5,
+                    y: 0,
+                    anchor: new PIXI.Point(0.5, 0),
+                })
+            ).setPadding(25, 0, 25, 0)
+           
+
+
+        
+
+
+
+            this.scrollWrapper.addChild(this.scrollContent);
+            this.quoteWrapper.addChild(this.scrollWrapper);
+
+            //this.scrollContent.contentContainer.y = -60
+            //console.log()
+
+
+            const style = new PIXI.TextStyle({
+                fontFamily: "Trade Gothic Next",
+                fontSize: 32,
+                breakWords: true,
+                fontWeight: 300,
+                lineHeight: 40,
+                whiteSpace: "pre",
+                wordWrap: true,
+                padding: 10,
+                wordWrapWidth: 550,
+                leading: 1,
+                textBaseline: "middle"
+            });
+
+            
+            
+            
+
+            this.quotesToShow = [
+                //ABOUT
+                {
+                    title: "BIAS ONLINE",
+                    subtitle: "",
+                    credit: "",
+                    paragraph:"<intro>Welcome to a virtual exhibition space by Science Gallery at Trinity College Dublin showcasing digital artworks exploring data equity, privacy, surveillance culture, facial recognition, class and artificial intelligence.</intro><p>\n\nOur virtual gallery is very similar to the real world; you move your character through the 2D space to explore the exhibition. Kiosks like this one reveal further information and portals take you to other areas in the gallery.\n\nAnd just like the real world, you're here live with other people. You can chat using the text box below or if you're feeling shy, why not send an emoji blast to show your feelings?\n</p>",
+                    style: "",
+                    type: ""
+                },
+                //ARTISTS
+                {
+                    title: "EXHIBITING ARTISTS",
+                    subtitle: "",
+                    credit: "",
+                    paragraph:"<img imgSrc='mushonThumb' imgDisplay='inline' />\n<p><bold>Mushon Zer-Aviv</bold> is a designer, <link>noahlevenson.com</link>, researcher, educator and media activist based in Tel Aviv. His love/hate relationship with data informs his design work, art pieces, activism, research, teaching, workshops and city life. He is currently writing a non-fiction book about friction – a design theory of change. Among Mushon’s collaborations, he is the CO-founder of Shual.com – a foxy design studio – and multiple government transparency and civic participation initiatives with the Public Knowledge Workshop; Mushon also designed the maps for Waze.com and led the design of Localize.city. \n\n<link>noahlevenson.com</link> Mushon is an alumni of Eyebeam art + technology center in New York. He is a senior faculty member at Shenkar College and has previously taught at NYU, Parsons, and Bezalel. Adam Kariv developed the code for the work. Additionally, Mushon Zer-Aviv would like to thank the Science Gallery at Trinity College Dublin for commissioning this work.\n\n<link>mushon.com</link> // @mushon\n\n\n<img imgSrc='johannThumb' imgDisplay='inline' />\n<bold>Johann Diedrick</bold> is an artist, engineer, and musician that makes installations, performances, and sculptures for encountering the world through our ears. He surfaces vibratory histories of past interactions inscribed in material and embedded in space, peeling back sonic layers to reveal hidden memories and untold stories. He shares his tools and techniques through listening tours, workshops, and open-source hardware/software.\n\nHe is the founder of A Quiet Life, a sonic engineering and research studio that designs and builds audio-related software and hardware products for revealing possibilities off the grid through sonic encounter. He is a 2021 Mozilla Creative Media Award recipient, a member of NEW INC, and an adjunct professor at NYU\'s ITP program. His work has been featured in Wire Magazine, Musicworks Magazine, and presented internationally at MoMA PS1, Ars Electronica, and the Somerset House, among others. This project is supported by the Mozilla Foundation.\n\n<link>darkmatters.ml</link> // @johanndiedrick\n\n\n<img imgSrc='libbyThumb' imgDisplay='inline' />\n<bold>Libby Heaney</bold>\'s post-disciplinary art practice includes moving image works, performances and participatory and interactive experiences that span quantum computing, virtual reality, AI and installation. Her practice uses affect, humour, surrealism and nonsense to subvert the capitalist appropriation of technology, the endless categorizations of humans and non-humans alike. She uses tools like machine learning and quantum computing against their \'proper\' use, to undo biases and to forge new expressions of collective identity and belonging with each other and the world. She has exhibited widely in the UK and internationally, including Tate Modern, the V&A, London and Mutek & Sonar Festivals. She is currently resident of the London institution Somerset House, where she is currently working on a major commission with quantum computing for Berlin\'s Light Art Space. Sound Design by Barney Kass and the artist would also like to thank Public Space Surveillance Manager at Hackney Council, Oliver Martin and acknowledge the Art Quest Adaptations Residency for acting as a catalyst for this work.\n\n<link>libbyheaney.co.uk</link> // @libby_heaney_\n\n\n<img imgSrc='noahThumb' imgDisplay='inline' />\n<bold>Noah Levenson</bold> leads research engineering as \"Hacker in Residence\" at Consumer Reports Digital Lab. He is a 2019 Rockefeller Foundation Bellagio fellow. His computer science work has been profiled by Scientific American, MIT, Engadget, CBC News, and Fast Company, among others. He lives in New York City, where he was born.\n\n<link>noahlevenson.com</link> // @noahlevenson</p>",
+                    style: "",
+                    type: ""
+                },
+
+
+                //PROJECTS
+                {
+                    title: "INTEROGATIONS OF BIAS",
+                    subtitle: "",
+                    credit: "",
+                    paragraph:'\n<img imgSrc="dialIconThumb" imgDisplay="inline" /> <boldtitle>NORMALIZI.NG</boldtitle>\n<subtitle>What does normal look like?</subtitle>\n<gap>\n</gap><p>NORMALIZI.NG by Mushon Zer-Aviv is a new digital commission further developing and adapting his existing work “The Normalizing Machine”. This experimental online research in machine-learning aims to analyze and understand how we decide who looks more “normal”. By contributing to the dataset and choosing between faces you deem more normal, the machine analyzes your decisions and will add you to its algorithmic map of normality.\n\nIn the late 1800s, the French forensics pioneer Alphonse Bertillon, the father of the mugshot, developed ‘Le Portrait Parle’ (the speaking portrait), a system for standardizing, indexing and classifying the human face. His statistical system was never meant to criminalize the face, but it was later widely adopted by both the eugenics movement and the Nazis to do exactly that.\n\nThe online work automates Alphonse’s speaking portraits and visualizes how today’s systematic discrimination is aggregated, amplified and conveniently hidden behind the seemingly objective black box of artificial intelligence.\n\n\n<img imgSrc="talkingIconThumb" imgDisplay="inline" /> <boldtitle>DARK MATTERS</boldtitle>\n<subtitle>What does bias sound like?</subtitle>\n<gap>\n</gap><p>Dark Matters exposes the absence of Black speech in the datasets used to train voice interface systems in consumer AI products like Alexa and Siri. Using 3D modeling, sound and storytelling, the project challenges us to grapple with racism and inequity through speech and the spoken word, and how AI systems underserve Black communities.</p>\n\n\n<img imgSrc="robotIconThumb" imgDisplay="inline" /> <boldtitle>CLASSES</boldtitle>\n<subtitle>How are biases translated into code?</subtitle>\n<gap>\n</gap><p>CLASSES is a video essay exploring the entanglements between machine learning classification and social class(ification). The artwork takes place in a simulated model of a London council estate, where the artist lives. Machine and human voices playfully narrate aspects of her in-depth research into accented speech recognition, natural language processing* and public space surveillance, to understand how historical and cultural biases around social class are being translated into code and how this affects people’s material conditions.\n\nTowards the end of the essay, the artist finds inspiration in her community gardening on the estate to propose a rewilded AI that removes rigid hierarchical categories to build stronger relations between people and the world.\n\n\n<img imgSrc="faceIconThumb" imgDisplay="inline" />  <boldtitle>STEALING UR FEELINGS</boldtitle>\n<subtitle>Can the internet read you?</subtitle>\n<gap>\n</gap><p>Meet the new A.I. that knows you better than you know yourself. STEALING UR FEELINGS is an interactive film that learns your deepest, darkest secrets - just by looking at your face.  That\'s the good news. The bad news? Your favourite apps are doing exactly the same thing.</p>',
+                    style: "",
+                    type: ""
+                },
+                //Credits
+                {
+                    title:"CREDITS",
+                    subtitle:"",
+                    credit:"",
+                    paragraph: "<intro><bold>BIAS ONLINE</bold> was developed with the support of the European ARTificial Intelligence Lab, co-funded by the Creative Europe Programme of the European Union\n\n<bold>BIAS ONLINE</bold> was created with the support of The Department of Tourism, Culture, Arts, Gaeltacht, Sport and Media.\n\n</intro><extrasmall>Project Team: Aisling Murray, Mitzi D'Alton, Rory McCorrmick, Niamh O' Doherty, James Delaney \nArtists: Johann Diedrick, Libby Heaney, Mushon Zer-Aviv, Noah Levenson\nAudio by Tom Winters\n\n</extrasmall>",
+                    style:"",
+                    type: ""
+                },
+                //Privacy
+                {
+                    title:"SAFETY AND PRIVACY INFO",
+                    subtitle:"",
+                    credit:"",
+                    paragraph: "<privacy><bold>SAFETY</bold>\n\n<u>Violence</u>: You may not threaten violence against an individual or a group of people. \n\n<u>Terrorism/violent extremism</u>: You may not threaten or promote terrorism or violent extremism. \n\n<u>Child sexual exploitation</u>: We have zero tolerance for child sexual exploitation. \n\n<u>Abuse/harassment</u>: You may not engage in the targeted harassment of someone, or incite other people to do so. This includes wishing or hoping that someone experiences physical harm. \n\n<u>Hateful conduct</u>: You may not promote violence against, threaten, or harass other people on the basis of race, ethnicity, national origin, caste, sexual orientation, gender, gender identity, religious affiliation, age, disability, or serious disease. \n\n<u>Suicide or self-harm</u>: You may not promote or encourage suicide or self-harm. \n\n<u>Linking content</u>: You may not link any content through the comments section.  You may not post pictures, videos or any other contents through the comments section. \n\n<u>Illegal or certain regulated goods or services</u>: You may not use the chat function for any unlawful purpose or in furtherance of illegal activities. This includes selling, buying, or facilitating transactions in illegal goods or services, as well as certain types of regulated goods or services.\n\n<bold>PRIVACY</bold>\n\n<u><bold>Your private information</bold></u>: You should not share or provide your own private information in the chat functionality. If you do, others may keep or store such information. Science Gallery Dublin accepts no liability for such. For information on our Privacy Policy and Data Retention Policy please visit sciencegallery.org/privacy.\n\n<bold>Other information</bold>: You may not publish or post other people's private information (such as names, home phone number and address) without their express permission.\nWe also prohibit threatening to expose private information or incentivizing others to do so. \n\n<bold>Authenticity</bold>\nPlatform manipulation and spam: You may not use the comment section in a manner intended to artificially amplify or suppress information or engage in behaviour that manipulates or disrupts people’s experience. \n\n<u>Civic integrity</u>: You may not use the comment section for the purpose of manipulating or interfering in elections or other civic processes. This includes posting or sharing content that may suppress participation or mislead people about when, where, or how to participate in a civic process. \n\n<u>Impersonation</u>: You may not impersonate individuals, groups, or organizations in a manner that is intended to or does mislead, confuse, or deceive others. \n\n<u>Synthetic and manipulated media</u>: You may not deceptively share synthetic or manipulated media that are likely to cause harm. \n\n<u>Copyright and trademark</u>: You may not violate others’ intellectual property rights, including copyright and trademark. \n\n<u>Enforcement</u>\nIf you violate the rules your chat functionality will be disabled and you may be removed from the exhibition. \n\n<u>Complaints and Reporting</u> \nAny person using the chat functionality may report or make a complaint about content being posted by another user by emailing info@dublin.sciencegallery.com. \n \n</privacy>",
+                    style:"",
+                    type: "face"
+                },{
+                    title:"WELCOME TO BIAS ONLINE",
+                    subtitle:"Specially for the Ars festival",
+                    credit:"——",
+                    paragraph: "We’re launching our very first online-only exhibition: BIAS ONLINE bring online visitors on a journey of compelling exploration through datasets, emotion and facial recognition and artificial intelligence with new artworks from Libby Heaney, Johann Diedrick, Mushon Zer-Aviv, and Noah Levenson. BIAS ONLINE was developed and supported by Science Gallery at Trinity College Dublin as part of the European ARTificial Intelligence Lab project. Co-funded by Creative Europe.",
+                    style:"",
+                    type: "face"
+                },{
+                    title:"STEALING UR FEELINGS",
+                    subtitle:"Can the internet read you?",
+                    credit:"Noah Levenson | USA | 2019",
+                    paragraph: "Meet the new A.I. that knows you better than you know yourself. STEALING UR FEELINGS is an interactive film that learns your deepest, darkest secrets - <i>just by looking at your face</i>. That's the good news. The bad news? Your favourite apps are doing exactly the same thing.\n\n<small><bold>BIO</bold>\nNoah Levenson leads research engineering as 'Hacker in Residence' at Consumer Reports Digital Lab. He is a 2019 Rockefeller Foundation Bellagio fellow. His computer science work has been profiled by Scientific American, MIT, Engadget, CBC News, and Fast Company, among others. He lives in New York City, where he was born.\n\n<link>noahlevenson.com</link> // @noahlevenson</small>",
+                    style:"",
+                    type: "face"
+                },{
+                    title:"DARK MATTERS",
+                    subtitle:"What does bias sound like?",
+                    credit: "Johann Diedrick | USA | 2021",
+                    paragraph: "Dark Matters exposes the absence of Black speech in the datasets used to train voice interface systems in consumer AI products like Alexa and Siri. Using 3D modeling, sound and storytelling, the project challenges us to grapple with racism and inequity through speech and the spoken word, and how AI systems underserve Black communities.\n\nBIO\nJohann Diedrick is an artist, engineer, and musician that makes installations, performances, and sculptures for encountering the world through our ears. He surfaces vibratory histories of past interactions inscribed in material and embedded in space, peeling back sonic layers to reveal hidden memories and untold stories. He shares his tools and techniques through listening tours, workshops, and open-source hardware/software. He is the founder of A Quiet Life, a sonic engineering and research studio that designs and builds audio-related software and hardware products for revealing possibilities off the grid through sonic encounter. He is a 2021 Mozilla Creative Media Award recipient, a member of NEW INC, and an adjunct professor at NYU's ITP program. His work has been featured in Wire Magazine, Musicworks Magazine, and presented internationally at MoMA PS1, Ars Electronica, and the Somerset House, among others. This project is supported by the Mozilla Foundation.<small></small>",
+                    style:"",
+                    type: "talking"
+                }
+            ]
+            
+
+           
+            
+
+
+            
+            const johannThumb = new PIXI.Sprite.from('images/johann-thumb-large.png')
+            const mushonThumb = new PIXI.Sprite.from('images/mushon-thumb-large.png')
+            const libbyThumb = new PIXI.Sprite.from('images/libby-thumb-large.png')
+            const noahThumb = new PIXI.Sprite.from('images/noah-thumb-large.png')
+            
+            const robotIconThumb = new PIXI.Sprite.from('images/robot-icon-ui.svg');
+            const dialIconThumb = new PIXI.Sprite.from('images/dial-icon.svg');
+            const faceIconThumb = new PIXI.Sprite.from('images/face-icon-black-lines.svg');
+            const talkingIconThumb = new PIXI.Sprite.from('images/talking-icon.svg');
+
+
+
+            //const imageStyles =
+
+            this.textContent = new PUXI.TextWidget('', style)
+            this.textContent.contentContainer.interactive = true
+           // this.textContent.y = -70
+
+            this.connectedText = new TaggedText("", {
+                "default": {
+                    fontFamily: "Trade Gothic Next",
+                    fontSize: "28px",
+                    wordWrap: true,
+                    lineHeight: 45,
+                    padding: 10,
+                    fontWeight: 300,
+                    wordWrapWidth: 550,
+                    leading: 1,
+                    textBaseline: "middle",
+                    fill: this.black,
+                    textBaseline: "alphabetical"
+                },
+                "intro": {
+                    fontFamily: "Trade Gothic Next",
+                    fontSize: "28px",
+                    wordWrap: true,
+                    lineHeight: 36,
+                    padding: 10,
+                    fontWeight: 300,
+                    wordWrapWidth: 385,
+                    leading: 1,
+                    textBaseline: "middle"
+                },
+                "bold": {
+                    fontWeight: 700,
+                },
+                "boldtitle": {
+                    fontWeight: 900,
+                    fontSize: "32px",
+                    wordWrap: true,
+                    lineHeight: 45,
+                    wordWrapWidth: 385
+                },
+                "gap": {
+                    fontSize: "12px",
+                },
+                "subtitle": {
+                    fontFamily: "Trade Gothic Next",
+                    fontSize: "28px",
+                    lineHeight: 36,
+                    padding: 10,
+                    fontWeight: 300,
+                    wordWrap: true,
+                    wordWrapWidth: 385,
+                    leading: 1,
+                    textBaseline: "middle"
+                },
+                "i": {
+                    fontStyle: "italic"
+                },
+                "p": {
+                    fontSize: "21px",
+                    lineHeight: 28,
+                    fontWeight: 300,
+                },
+                "link": {
+                    fill: this.blue
+                },
+                "link": {
+                    fill: this.blue
+                },
+                "u": {
+                    textDecoration: "underline",
+                    fontSize: "18px",
+                    lineHeight: 22,
+                },
+                "privacy": {
+                    fontSize: "18px",
+                    lineHeight: 22,
+                    wordWrap: true,
+                    wordWrapWidth: 385,
+                    textBaseline: "alphabetical"
+                },
+                "extrasmall": {
+                    fontSize: "16px",
+                    lineHeight: 24,
+                    wordWrap: true,
+                    wordWrapWidth: 385,
+                    textBaseline: "alphabetical"
+                },
+                "img": {
+                    width: "200px",
+                    wordWrap: true,
+                    wordWrapWidth: 385,
+                }
+            }, { imgMap: { johannThumb, mushonThumb, libbyThumb, noahThumb, robotIconThumb, talkingIconThumb, dialIconThumb, faceIconThumb },});
+
+        
+        
+            this.textContent.contentContainer.addChild(this.connectedText)
+            this.textContent.contentContainer.children[0].alpha = 0
+            //this.textContent.contentContainer.children[0].y = -70
+            console.log(this.textContent.contentContainer)
+    
+            //this.connectedText.y = -70
+
+
+            this.leaveButtonWrapper = new PUXI.WidgetGroup({
+            }).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 40,
+                    height: 40,
+                    x: 0.982,
+                    y: 15,
+                    anchor: new PIXI.Point(1,0)
+                }),
+            )
+            this.leaveButtonWrapper.contentContainer.interactive = true
+            this.leaveButtonWrapper.contentContainer.buttonMode = true
+
+            const closeButtonStyles = new PIXI.TextStyle({ 
+                fontFamily: 'Trade Gothic Next',
+                fill: black, 
+                fontSize: "26px",
+                fontWeight: 300, 
+            })
+
+            this.leaveButton = new PUXI.Button({
+                text: '',
+            }).setLayoutOptions(new PUXI.FastLayoutOptions({
+                width: 0.9999,
+                height: 0.9999,
+                x: 0.5,
+                y: 0.5,
+                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+            }))
+            this.leaveButtonWrapper.addChild(this.leaveButton)
+
+            const leaveButtonText = new PIXI.Text('×', closeButtonStyles)
+            leaveButtonText.x = 12
+            leaveButtonText.y = 5
+            leaveButtonText.alpha = 0.8
+
+            this.leaveButton.contentContainer.addChild(leaveButtonText)
+            const leaveButtonClick = new PUXI.ClickManager(this.leaveButton, true, false, false)
+            this.leaveButton.contentContainer.alpha = 0
+            const leaveButton = this.leaveButton.contentContainer
+
+            leaveButtonClick.onClick = function(){
+                userInterface.closeModal()
+            }
+            leaveButtonClick.onHover = function(){
+                leaveButtonText.alpha = 1
+            }
+
+            setTimeout(function(){
+                leaveButton.alpha = 1
+            }, 500)
+            
+            ease.add(this.leaveButtonWrapper.contentContainer, this.fadeInStyles, this.fadeInSettingsDelay)
+
+
+
+
+
+
+
+
+
+
+            let textContainer = this.textContent
+            
+
+            setTimeout(function(){
+                textContainer.alpha = 1
+            }, 1000)
+
+
+            this.scrollContent.addChild(this.textContent)
+            this.quoteWrapper.contentContainer.alpha = 0
+            this.quoteWrapper.addChild(this.leaveButtonWrapper)
+            this.quoteBackground.addChild(this.quoteWrapper)
+            this.quoteStage.addChild(this.quoteBackground)
+            
+
+            this.quoteStage.resize(window.innerWidth, window.innerHeight)
+
+
+        }
+
+
+
+        if(this.joinModalOn == true) {
+
+       
+            //Modal Stage
+            this.joinModal = new PUXI.Stage(window.innerWidth, window.innerHeight)   
+            
+            //Modal Background
+            this.joinModalWrapper = new PUXI.Widget({
+            }).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 0.999999, 
+                    height: 0.99999,
+                }),
+            )
+            .setBackground(green)
+            
+            this.drawGridBackground(window.innerWidth, window.innerHeight)
+
+
+            
+        
+            
+
+
+            
+            let modalWidth = 0.9999
+            let modalHeight = 0.9999;
+
+            //Modal Centre Box Wrapper 
+            this.joinModalWidgetGroup = new PUXI.WidgetGroup().setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    x: 0.5, y: 0.5,
+                    anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+                    width: modalWidth,
+                    height: modalHeight
+                }),
+            )
+
+            
+            this.joinModalWidgetGroup.contentContainer.alpha = 0
+            this.joinModalWidgetGroup.contentContainer.y = 50
+
+
+
+            ease.add(this.joinModalWidgetGroup.contentContainer, this.fadeInStyles, this.fadeInSettingsDelay)
+            
+
+
+
+
+            //Whats your name
+            this.joinTitleWrapper = new PUXI.Widget({
+            }).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 0,
+                    height: 0,
+                    x: 0.5,
+                    y: 0.35,
+                    anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+                }),
+            ).setBackground(white)
+
+            this.joinTitleStyles = new PIXI.TextStyle({ 
+                fontFamily: 'Trade Gothic Next',
+                fill: black, 
+                fontSize: 108,
+                fontWeight: 900, 
+            })
+
+            this.joinTitle = new PUXI.TextWidget(
+                'What’s your name?', 
+                this.joinTitleStyles
+            )
+            
+            this.joinTitle.contentContainer.children[0].anchor.set(0.5, 0.5);
+            this.joinTitle.contentContainer.children[0].x = 0
+            this.joinTitle.contentContainer.children[0].y = 0
+            this.joinTitleWrapper.addChild(this.joinTitle)
+            
+
+
+
+
+
+            
+
+
+            //Name Input Field
+            this.inputBox = new PUXI.WidgetGroup().setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 1100,
+                    height: 100,
+                    x: 0.5,
+                    y: 0.5333,
+                    anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+                }),
+            ).setBackground(white).setBackgroundAlpha(1);
+            const inputBox = this.inputBox
+
+            //Text Styles for Input and Placeholder
+            const textStyles = new PIXI.TextStyle({ 
+                fontFamily: 'Trade Gothic Next',
+                fill: black, 
+                fontSize: 52
+            })
+            //The Text Input
+            this.nameFieldInput = new PUXI.TextInput({
+                multiLine: false,
+                value: "",
+                padding: 20,
+                maxLength: 25,
+                align: "center",
+                fontVariant: "small-caps",
+                selectedColor: black,
+                selectedBackgroundColor: white,
+                caretWidth: 2,
+                style: textStyles,
+            }).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 0.99,
+                    height: 0.95,
+                    x: 0.5,
+                    y: 0.5,
+                    anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+                }),
+            )
+            
+            this.inputBox.addChild(this.nameFieldInput)
+            
+            //Placeholder Text
+            this.nameFieldPlaceholder = new PUXI.TextWidget(
+                'Username', 
+                textStyles
+            ).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    x: 20,
+                    y: 21,
+                })
+            )
+            this.nameFieldPlaceholder.alpha = 0.4;
+            const nameFieldPlaceholder = this.nameFieldPlaceholder
+            this.inputBox.widgetChildren[0].on('focus', () => { 
+                nameFieldPlaceholder.alpha = 0;
+
+                const errorToRemove = inputBox.contentContainer.children[0].getChildByName("inputError")
+                console.log(errorToRemove)
+                inputBox.contentContainer.children[0].removeChild(errorToRemove)
+
+            });
+            this.inputBox.widgetChildren[0].on('blur', () => { 
+                if(this.nameFieldInput.value != '') {
+                    nameFieldPlaceholder.alpha = 0;
+                } else {
+                    nameFieldPlaceholder.alpha = 0.4;
+                }
+            });
+            
+            this.inputBox.addChild(this.nameFieldPlaceholder);
+            this.inputBox.contentContainer.interactive = true;
+            this.inputBox.contentContainer.buttonMode = true;
+            this.inputBox.contentContainer.cursor = "text";
+
+        
+            this.inputBox.contentContainer.on("mouseover", function() {
+                inputBox.setBackground(yellow)
+            });
+            this.inputBox.contentContainer.on("mouseout", function() {
+                inputBox.setBackground(white)
+            });
+
+
+
+
+
+
+
+
+
+            //select avatar 
+            //Logo Wrapper + Logo
+            this.avatarWrapper = new PUXI.WidgetGroup({
+            }).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 100,
+                    height: 100,
+                    x: 0.5,
+                    y: 0.5,
+                    anchor: new PIXI.Point(0.5,0.5)
+                }),
+            )
+
+
+            this.avatarBox = new PUXI.Widget({
+            }).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 100,
+                    height: 100,
+                    x: 0.5,
+                    y: 0.5,
+                    anchor: new PIXI.Point(0,0)
+                }),
+            )
+            //this.avatarBox.contentContainer.children[0].anchor.set(0.5, 0.5)
+
+            //this.avatar = null
+            var avatarCounter = 1
+            let avatarBox = this.avatarBox
+
+
+            let color
+            this.color = color
+
+            this.avatarImageWrapper = new PIXI.Container()
+            let avatarImageWrapper = this.avatarImageWrapper
+
+        
+                setInterval(function(){
+                    if(loaded == true) {
+
+                        let avatarBackground = Math.floor(Math.random() * 5) + 1
+                        let avatarMiddleground = Math.floor(Math.random() * 5) + 1
+                        let avatarMiddleground2 = Math.floor(Math.random() * 5) + 1
+                        let avatarForeground = Math.floor(Math.random() * 5) + 1
+
+                        let angle1 = Math.floor(Math.random() * 358) + 1
+                        let angle2 = Math.floor(Math.random() * 358) + 1
+                        let angle3 = Math.floor(Math.random() * 358) + 1
+                        let angle4 = Math.floor(Math.random() * 358) + 1
+            
+                        if(avatarBox.contentContainer.children.length > 0) {
+                            avatarImageWrapper.removeChildAt(0)
+                            avatarImageWrapper.removeChildAt(0)
+                            avatarImageWrapper.removeChildAt(0)
+                            avatarImageWrapper.removeChildAt(0)
+                            avatarBox.contentContainer.removeChildAt(0)
+                            avatarBox.contentContainer.removeChildAt(0)
+                            avatarBox.contentContainer.removeChildAt(0)
+                        }
+                        
+            
+                        avatarBackground = PIXI.Sprite.from(avatars[0][avatarBackground].url);
+                        avatarMiddleground= PIXI.Sprite.from(avatars[1][avatarMiddleground].url);
+                        avatarMiddleground2 = PIXI.Sprite.from(avatars[1][avatarMiddleground2].url);
+                        avatarForeground = PIXI.Sprite.from(avatars[2][avatarForeground].url);
+            
+                        avatarBackground.roundPixels = true
+                        avatarMiddleground.roundPixels = true
+                        avatarMiddleground2.roundPixels = true
+                        avatarForeground.roundPixels = true
+
+                        
+                        avatarBackground.width = 100
+                        avatarBackground.height = 100
+                        avatarBackground.anchor.set(0.5,0.5)
+                        avatarBackground.rotation = angle1
+
+                        avatarMiddleground.width = 100
+                        avatarMiddleground.height = 100
+                        avatarMiddleground.anchor.set(0.5,0.5)
+                        avatarMiddleground.rotation = angle2
+
+                        avatarMiddleground2.width = 100
+                        avatarMiddleground2.height = 100
+                        avatarMiddleground2.anchor.set(0.5,0.5)
+                        avatarMiddleground2.rotation = angle3
+
+                        avatarForeground.width = 100
+                        avatarForeground.height = 100
+                        avatarForeground.anchor.set(0.5,0.5)
+                        avatarForeground.rotation = angle4
+                    
+
+
+                        color = '#'+(Math.random() * white << 0).toString(16).padStart(6, '0');
+                        let colorNow = PIXI.utils.string2hex(color);
+                        userInterface.updateColor(color)
+
+                        let nose = new PIXI.Graphics()
+                        nose.moveTo(0, -48)
+                        nose.beginFill(colorNow)
+                        nose.moveTo(0, -48)
+                        nose.lineTo(85, 0)
+                        nose.lineTo(0, 48)
+                        nose.angle = 0//-0.1
+                        nose.endFill()
+
+                        let body = new PIXI.Graphics()
+                        body.beginFill(colorNow)
+                        body.drawCircle(0, 0, 48)
+                        body.endFill()
+
+                        
+
+                        const avatarMask = new PIXI.Graphics()
+                        avatarMask.beginFill(white)
+                        avatarMask.drawCircle(0, 0, 49)
+                        avatarMask.endFill()
+                        avatarBox.contentContainer.addChild(avatarMask)
+
+
+                        avatarImageWrapper.addChild(avatarBackground)
+                        avatarImageWrapper.addChild(avatarMiddleground)
+                        avatarImageWrapper.addChild(avatarMiddleground2)
+                        avatarImageWrapper.addChild(avatarForeground)
+
+                        avatarImageWrapper.mask = avatarMask
+
+                        
+                        avatarBox.contentContainer.addChildAt(body, 0)
+                        avatarBox.contentContainer.addChildAt(nose, 0)
+
+                        avatarBox.contentContainer.addChild(avatarImageWrapper)
+            
+                    
+
+                    
+                        
+
+                    
+                        
+            
+                        avatarCounter++
+                        if(avatarCounter >= 6) {
+                            avatarCounter = 1
+                        }
+                    }
+                }, 2000)
+            
+        
+
+            this.avatarBox.alpha = 0
+            this.avatarWrapper.addChild(this.avatarBox)
+
+        
+
+            
+            this.joinModalWidgetGroup.addChild(this.avatarWrapper)
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+            
+
+
+            //Join Button 
+            this.joinButtonWrapper = new PUXI.WidgetGroup({
+            }).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 500,
+                    height: 100,
+                    x: 0.5,
+                    y: 0.727,
+                    anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+                }),
+            ).setBackground(black).setBackgroundAlpha(1);
+
+            this.joinButton = new PUXI.Button({
+                text: ''
+            }).setLayoutOptions(new PUXI.FastLayoutOptions({
+                width: 0.9999,
+                height: 0.9999,
+                x: 0.5,
+                y: 0.5,
+                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+            }))
+            .setBackground(red)
+            .setBackgroundAlpha(1)
+            this.joinButtonWrapper.addChild(this.joinButton)
+            this.joinButton.on("hover", function (over) {
+                if(over == true) {
+                    this.setBackground(yellow)
+                } else {
+                    this.setBackground(red)
+                }
+            });
+
+            
+
+        const buttonStyles = new PIXI.TextStyle({ 
+                fontFamily: 'Trade Gothic Next',
+                fill: white, 
+                fontWeight: 700,
+                fontSize: 64, 
+                letterSpacing: 2
+            })
+            this.joinText = new PUXI.TextWidget('CONTINUE', buttonStyles)
+            this.joinText.setLayoutOptions(new PUXI.FastLayoutOptions({
+                x: 0.5,
+                y: 0.5,
+                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+            }))
+            this.joinText.tint = black
+            this.joinButtonWrapper.addChild(this.joinText)
+
+            this.joinButtonWrapper.contentContainer.interactive = true;
+            this.joinButtonWrapper.contentContainer.buttonMode = true;
+            this.joinButtonWrapper.contentContainer.cursor = "pointer";
+
+            const joinButtonClick = new PUXI.ClickManager(this.joinButton, true, false, false)
+            
+            joinButtonClick.onPress = function(){
+                this.setBackground(yellow)
+            }
+
+            const joinTitleWrapper = this.joinTitleWrapper
+            const joinModalWidgetGroup = this.joinModalWidgetGroup
+
+            const avatarWrapper = this.avatarWrapper
+            
+            joinButtonClick.onClick = function(){
+
+                if(userInterface.getText() != "") {
+                    joinTitleWrapper.contentContainer.children[0].children[0].children[0].text = 'Select your avatar'
+                    joinModalWidgetGroup.removeChild(inputBox)
+                    avatarBox.alpha = 1
+
+                    userInterface.setName()
+                    
+                    
+                    const nameStyles = new PIXI.TextStyle({ 
+                        fontFamily: 'Trade Gothic Next',
+                        fill: black, 
+                        fontSize: 25,
+                        fontWeight: 900, 
+                        letterSpacing: 2
+                    })
+                    
+                    setTimeout(function(){
+                        let personName = userInterface.getText()
+                        personName = personName.padStart(20, ' ')
+                        personName = personName.padEnd(20, ' ')
+                        const nameText = new PIXI.Text(""+personName.toUpperCase()+"", nameStyles);
+                        nameText.updateText();
+                        
+
+                        const radius = 68;
+                        const maxRopePoints = 100;
+                        const step = Math.PI / maxRopePoints;
+
+                        let ropePoints = maxRopePoints - Math.round( (nameText.texture.width / (radius * Math.PI)) * maxRopePoints );
+                        ropePoints /= 2;
+
+                        const points = [];
+                        for ( let i = maxRopePoints - ropePoints; i > ropePoints; i-- ) {
+                        const x = radius * Math.cos( step * i );
+                        const y = radius * Math.sin( step * i );
+                        points.push( new PIXI.Point( x, -y ) );
+                        }
+
+                        const container = new PIXI.Container();
+                        container.height = 50
+                        container.width = 50
+
+                        const rope = new PIXI.SimpleRope( nameText.texture, points );
+                        container.addChild( rope );
+                        const bounds = container.getLocalBounds();
+                        //console.log(bounds)
+                        const matrix = new PIXI.Matrix();
+                        matrix.tx = -bounds.x;
+                        matrix.ty = -bounds.y;
+
+                        const renderTexture = PIXI.RenderTexture.create( bounds.width, bounds.height, PIXI.settings.SCALE_MODE.NEAREST, 2 );
+                        renderer.render(container, renderTexture, true, matrix, false);
+                        
+                        PIXI.BaseTexture.addToCache( renderTexture.baseTexture, 'curvedText' );
+                        PIXI.Texture.addToCache( renderTexture, 'curvedText' );
+                        
+                        const sprite = PIXI.Sprite.from('curvedText');
+                        //sprite.anchor.set();
+                        //console.log(sprite.width)
+                        //container.addChild(sprite)
+                        /*sprite.x = 55
+                        sprite.y = 65
+                    
+                        
+                        sprite.pivot.x = 100
+                        sprite.pivot.y = 100
+                        //sprite.x = -moveBack*/
+
+                        container.x = 50
+                        container.y = 52
+
+                        avatarWrapper.contentContainer.addChildAt(container)
+                        
+                        
+                    }, 200)
+
+                } else {
+
+                    const inputError = new PIXI.Graphics()
+                    inputError.name = "inputError"
+                    inputError.lineStyle(5, red)
+                    inputError.drawRect(-3, 0, inputBox.contentContainer.children[0].hitArea.width+10, inputBox.contentContainer.children[0].hitArea.height)
+                    inputBox.contentContainer.children[0].addChild(inputError)
+                    
+
+                }
+
+                //Sound.add('login', 'audio/login.mp3');
+                //Sound.play('login')
+                
+                
+
+            
+                
+            }
+
+       
+        
+
+        
+
+
+        
+
+            this.joinModalWidgetGroup.addChild(this.joinTitleWrapper)
+            this.joinModalWidgetGroup.addChild(this.inputBox)
+            this.joinModalWidgetGroup.addChild(this.joinButtonWrapper)
+            
+            this.joinModal.addChild(this.joinModalWidgetGroup)
+            
+            this.addChild(this.joinModal)
+        }
+
+
+
+        if(this.introScreenOn == true) {
+
+            //Intro Screen
+            this.introScreen = new PUXI.Stage({
+                width:window.innerWidth,
+                height: window.innerHeight,
+                x: 0,
+                y: 0
+            })  
+            
+            this.introScreenWrapper = new PUXI.Widget({
+            }).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 0.999999, 
+                    height: 0.999999,
+                    x: 0.5,
+                    y: 0.5,
+                    anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+                }),
+            ).setBackground(darkGreen)
+            this.introScreen.addChild(this.introScreenWrapper)
+            
+            this.introScreenTextWrapper = new PUXI.WidgetGroup({
+            }).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    x: 0.5,
+                    y: 0.5,
+                    anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+                }),
+            )
+            this.introScreen.addChild(this.introScreenTextWrapper)
+
+            this.introText = new PUXI.TextWidget('')
+            this.introText.setLayoutOptions(new PUXI.FastLayoutOptions({
+                x: 0.5,
+                y: 0.5,
+                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+            }))
+
+            const introText = this.introText
+            const introScreenWrapper = this.introScreenWrapper
+            const introScreen = this.introScreen
+
+            const introTextTagged = new TaggedText("", {
+                "default": {
+                    fontFamily: 'Trade Gothic Next',
+                    fill: green, 
+                    fontWeight: 900,
+                    fontSize: "64px", 
+                    letterSpacing: 2,
+                },
+                "online": {
+                    fontFamily: 'Trade Gothic Next',
+                    fontWeight: 900,
+                    fontSize: "64px", 
+                    letterSpacing: 2,
+                    lineJoin: "round",
+                    stroke: green, 
+                    strokeThickness: 2,
+                    fill: 'transparent'
+                }, 
+                "disclaimer": {
+                    fontFamily: 'Trade Gothic Next',
+                    fontWeight: 300,
+                    fontSize: "16px", 
+                    lineHeight: 24,
+                    wordWrap: true,
+                    wordWrapWidth: 700,
+                    align: "center",
+                    fill: white,
+                    letterSpacing: 0
+                },
+                "bold": {
+                    fontWeight: 700
+                }
+                
+            })
+            this.introText.contentContainer.addChild(introTextTagged)
+            this.introScreenTextWrapper.addChild(this.introText)
+        
+            
+            this.glitchOn = false
+
+            this.introGlitch = new GlitchFilter({
+                slices: 0,
+                offset: 0,
+                direction: 0,
+                seed: 0.5,
+            })
+
+            this.introCRTFilter = new CRTFilter({
+                vignetting: 0.5,
+                vignettingAlpha: 0.5,
+                vignettingBlur: 0.5,
+                padding: 0,
+                animating: true,
+                verticalLine: true,
+                lineContrast: 0.05,
+                noise: 0.01,
+                noiseSize: 1.0,
+                padding: 4,
+            })
+
+            this.introScreen.resize(window.innerWidth, window.innerHeight)
+            this.filters = [this.introCRTFilter]
+            
+            
+
+            const disclaimerText = '<disclaimer><bold>LIVE CHAT DISCLAIMER</bold>\n\nThis Live Chat service is operated between the hours of 9 a.m. and 5 p.m., and is intended for scheduling inquiries only. Psychological assessment, diagnosis, treatment and counselling services are not provided via this Live Chat service; please do not include any personal, sensitive, clinical or confidential information in the Live Chat. You expressly acknowledge that a patient-doctor relationship will not be established by use of this service. With any online service, there is some level of risk when communicating information over the Internet and we cannot assume any responsibility for any information that you may enter during your chat session. If you require emergency medical attention please call 911 or visit the Emergency department at your local hospital. CITC expressly disclaims any liability for any injury, loss or damage incurred by use of or reliance on the information provided via this Live Chat service. By using this Live Chat you accept these terms and conditions.</disclaimer>'
+
+            this.addChild(this.introScreen)
+
+            ease.add(this.introText, {alpha: 1}, { duration: 250, ease: 'easeOutExpo', wait: 1000})
+
+            setTimeout(function(){
+                introTextTagged.text = "B"
+                introScreen.resize(window.innerWidth, window.innerHeight)
+                keys1.play()
+            }, 2000)
+            setTimeout(function(){
+                introTextTagged.text = "BI"
+                introScreen.resize(window.innerWidth, window.innerHeight)
+                keys2.play()
+            }, 2200)
+            setTimeout(function(){
+                introTextTagged.text = "BIA"
+                introScreen.resize(window.innerWidth, window.innerHeight)
+                keys1.play()
+            }, 2600)
+            setTimeout(function(){
+                introTextTagged.text = "BIAS"
+                introScreen.resize(window.innerWidth, window.innerHeight)
+                keys2.play()
+            }, 2800)
+            setTimeout(function(){
+                userInterface.toggleGlitch(true)
+            }, 3500)
+
+            setTimeout(function(){
+                userInterface.toggleGlitch(false)
+                introTextTagged.text = "BIAS <online>ONLINE</online>"
+                introScreen.resize(window.innerWidth, window.innerHeight)
+            }, 5000)
+            setTimeout(function(){
+                userInterface.toggleGlitch(true)
+            }, 7000)
+            setTimeout(function(){
+                userInterface.toggleGlitch(false)
+            }, 8000)
+            setTimeout(function(){
+                ease.add(introText, {alpha: 0 }, { duration: 500, ease: 'easeOutExpo'})
+            }, 9000)
+            setTimeout(function(){
+                introTextTagged.text = disclaimerText
+                introTextTagged.setStyleForTag("default", {
+                    fontFamily: "Trade Gothic Next",
+                    fontSize: "16px",
+                    wordWrap: true,
+                    lineHeight: 24,
+                    align: "center",
+                    wordWrapWidth: 700,
+                })
+                introTextTagged.update()
+            }, 9500)
+            setTimeout(function(){
+                introScreen.resize(window.innerWidth, window.innerHeight)
+            }, 9750)
+            setTimeout(function(){
+                ease.add(introText, {alpha: 1 }, { duration: 500, ease: 'easeOutExpo'})
+            }, 10000)
+            setTimeout(function(){
+                ease.add(introText, {alpha: 0 }, { duration: 500, ease: 'easeOutExpo'})
+            }, 12000)
+            setTimeout(function(){
+                ease.add(introScreenWrapper, {alpha: 0 }, { duration: 500, ease: 'easeOutExpo'})
+                introScreen.visible = false
+            }, 13000)
+            setTimeout(function(){
+                userInterface.removeChild(introScreen)
+            }, 13500)
+        }
+
+
+        
+        if(this.notificationStageOn == true) { 
+        
+            this.notificationStage = new PUXI.Stage(290, 70);
+            this.notificationWrapper = new PUXI.WidgetGroup({
+            }).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 290,
+                    height: 70,
+                    x: 0.995,
+                    y: 0.99,
+                    anchor: new PIXI.Point(1, 1)
+                }),
+            )
+            this.notificationStage.addChild(this.notificationWrapper)
+            this.notificationStage.alpha = 0 
+
+            ease.add(this.notificationStage, {alpha: 1}, { duration: 250, ease: 'easeOutExpo', wait: 1000 })
+            
+
+            this.notificationWrapperBackground = new PIXI.Graphics()
+            this.notificationWrapperBackground.beginFill(white)
+            this.notificationWrapperBackground.lineStyle(1, black)
+            this.notificationWrapperBackground.drawRoundedRect(0, 0, 290, 70, 15)
+            this.notificationWrapper.contentContainer.addChild(this.notificationWrapperBackground)
+
+            this.notificationContentWrapper = new PUXI.WidgetGroup({
+            }).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 0.999,
+                    height: 0.999,
+                    x: 0.5,
+                    y: 0.5,
+                    anchor: new PIXI.Point(0.5, 0.5)
+                })
+            ).setPadding(17, 10)
+            
+            this.notificationWrapper.addChild(this.notificationContentWrapper);
+
+            //<img imgSrc="notificationIcon" imgDisplay="inline" />
+            
+
+            this.notifications = [
+                {      
+                    text: 'Welcome to <extrabold>BIAS ONLINE</extrabold> \nIpsum dolor sit amet, consectetur adipiscing elit. Maecenas fermentum'
+                }
+            ]
+
+            const notificationIcon = new PIXI.Sprite.from('images/notification-icon.svg');
+            
+            this.notificationTextWidget = new PUXI.TextWidget("")
+
+            this.notificationTaggedText = new TaggedText(this.notifications[0].text, {
+                "default": {
+                    fontFamily: "Trade Gothic Next",
+                    fontSize: "13px",
+                    fontWeight: 400,
+                    lineHeight: 16,
+                    wordWrap: true,
+                    wordWrapWidth: 240,
+                    padding: 10,
+                    leading: 1
+                },
+                "img": {},
+                "bold": {
+                    fontWeight: 700
+                },
+                "extrabold": {
+                    fontWeight: 900
+                }
+                
+            }, { imgMap: { notificationIcon },});
+
+            this.notificationTaggedText.y = 1
+            this.notificationTaggedText.visible = false
+
+            this.notificationTextWidget.contentContainer.addChild(this.notificationTaggedText)
+
+            this.notificationContentWrapper.addChild(this.notificationTextWidget)
+
+
+            this.closeNotificationWrapper = new PUXI.WidgetGroup({
+            }).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 40,
+                    height: 40,
+                    x: 0.99999,
+                    y: 15,
+                    anchor: new PIXI.Point(0.5,0)
+                }),
+            )
+            this.closeNotificationWrapper.contentContainer.interactive = true
+            this.closeNotificationWrapper.contentContainer.buttonMode = true
+
+
+            this.closeNotificationButton = new PUXI.Button({
+                text: '',
+            }).setLayoutOptions(new PUXI.FastLayoutOptions({
+                width: 16,
+                height: 16,
+                anchor: new PIXI.Point(0.5,0.5)
+            }))
+
+            this.closeNotificationButtonText = new TaggedText('×', {
+                "default": {
+                    fontFamily: "Trade Gothic Next",
+                    fontSize: "18px",
+                    fontWeight: 300,
+                    fill: black,
+                    padding: 10,
+                }
+            });
+            
+
+
+            this.closeNotificationButtonText.visible = false
+
+            this.closeNotificationButton.contentContainer.addChild(this.closeNotificationButtonText)
+
+            this.closeNotificationWrapper.addChild(this.closeNotificationButton)
+
+            const closeNotificationButtonClick = new PUXI.ClickManager(this.closeNotificationButton, true, false, false)
+            const theNotification = this.notificationStage
+
+            closeNotificationButtonClick.onClick = function(){
+                ease.add(theNotification, {alpha: 0}, { duration: 250, ease: 'easeOutExpo'})
+                setTimeout(function(){
+                    theNotification.visible = false
+                }, 250)
+            }
+
+            this.notificationWrapper.addChild(this.closeNotificationWrapper)
+
+        
+            const notificationText =  this.notificationTaggedText
+            const notificationClose =  this.closeNotificationButtonText
+
+            setTimeout(function(){
+                notificationText.visible = true
+                notificationClose.visible = true
+            }, 500)
+            this.addChild(this.notificationStage)
+
+            this.notificationStage.resize(window.innerWidth, window.innerHeight)
+            const notificationBounds = this.notificationWrapperBackground.getBounds()
+            this.notificationStage.stage.hitArea = new PIXI.Rectangle(
+                notificationBounds.x,
+                notificationBounds.y,
+                notificationBounds.width,
+                notificationBounds.height
+            )
+        }
+
+
+
+        if(this.miniMapOn == true) {
+
+            this.miniMapWidth = 210
+            this.miniMapHeight = 150
+            
+            this.miniMapStage = new PUXI.Stage({
+                width: this.miniMapWidth,
+                height: this.miniMapHeight,
+                x: 10,
+                y: 10
+            })
+
+            this.miniMapStage.visible = false
+
+            this.miniMapWrapper = new PUXI.WidgetGroup({
+            }).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: this.miniMapWidth,
+                    height: this.miniMapHeight,
+                    x: 0.99,
+                    y: 0.9,
+                    anchor: new PIXI.Point(1,1)
+                })
+            ).setPadding(10)
+            
+            this.miniMapStage.addChild(this.miniMapWrapper)
+            
+
+            this.miniMap = new PIXI.Container()
+            this.miniMap.width = this.miniMapWidth
+            this.miniMap.height = this.miniMapHeight
+            //this.miniMap.pivot.x = 0
+            
+
+            this.miniMapBackground = new PIXI.Graphics()
+            this.miniMapBackground.beginFill(black, 0.5)
+            this.miniMapBackground.drawRoundedRect(0, 0, this.miniMapWidth, this.miniMapHeight, 10)
+            this.miniMapBackground.endFill()
+
+
+            this.miniMapPlayerPosition = new PIXI.Graphics()
+            this.miniMapPlayerPosition.lineStyle(1, black)
+            this.miniMapPlayerPosition.beginFill(yellow, 1)
+            this.miniMapPlayerPosition.drawCircle(0, 0, 2)
+            this.miniMapPlayerPosition.endFill()
+            this.miniMapPlayerPosition.alpha = 0
+            
+
+            this.miniMapWrapper.contentContainer.addChild(this.miniMapBackground)
+            this.miniMapWrapper.contentContainer.addChild(this.miniMap)
+            this.miniMapWrapper.contentContainer.addChild(this.miniMapPlayerPosition)
+
+            this.addChild(this.miniMapStage)
+            this.miniMapStage.resize(window.innerWidth, window.innerHeight)
+            this.miniMapStage.stage.hitArea = new PIXI.Rectangle(0, 0, 0, 0)
+
+
+        }
+
+
+        if(this.transitionScreenOn == true) {
+            //transition Screen
+            this.transitionScreen = new PUXI.Stage({
+                width:window.innerWidth,
+                height: window.innerHeight,
+                x: 0,
+                y: 0
+            })  
+            this.transitionScreen.visible = false
+            
+            this.transitionScreenWrapper = new PUXI.Widget({
+            }).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 0.999999, 
+                    height: 0.999999,
+                    x: 0.5,
+                    y: 0.5,
+                    anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+                }),
+            ).setBackground(black)
+            this.transitionScreen.addChild(this.transitionScreenWrapper)
+            
+            this.transitionScreenTextWrapper = new PUXI.WidgetGroup({
+            }).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    x: 0.5,
+                    y: 0.5,
+                    anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+                }),
+            )
+            this.transitionScreen.addChild(this.transitionScreenTextWrapper)
+            this.transitionScreenTextWrapper.alpha = 0
+            const transitionScreenTextWrapper = this.transitionScreenTextWrapper
+            setTimeout(function(){
+                transitionScreenTextWrapper.alpha = 1
+            }, 500)
+            this.transitionText = new PUXI.TextWidget('')
+            this.transitionText.setLayoutOptions(new PUXI.FastLayoutOptions({
+                x: 0.5,
+                y: 0.5,
+                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+            }))
+
+        
+            this.transitionTextTagged = new TaggedText("Main Lobby", {
+                "default": {
+                    fontFamily: 'Trade Gothic Next',
+                    fill: white, 
+                    fontWeight: 300,
+                    fontSize: "38px", 
+                    align: "center"
+                   
+                },
+                "bold": {
+                    fontWeight: 900,
+                    letterSpacing: 2
+                }
+                
+            })
+            this.transitionText.contentContainer.addChild(this.transitionTextTagged)
+            this.transitionScreenTextWrapper.addChild(this.transitionText)
+        
+            this.transitionScreen.resize(window.innerWidth, window.innerHeight)
+            
+            
+            this.addChild(this.transitionScreen)
+        
+            ease.add(this.transitionText, {alpha: 1}, { duration: 250, ease: 'easeOutExpo', wait: 1000})
+        
+        } 
+        
+       
+
+        window.addEventListener('pointermove', (event) => {
+
+            
+            const dx = event.clientX - window.innerWidth/2
+            const dy = event.clientY - window.innerHeight/2
+            const rotation = Math.atan2(dy, dx)
+
+            this.avatarBox.contentContainer.rotation = rotation + 0.18
+            this.avatarWrapper.contentContainer.children[0].rotation = rotation - 1.571
 
         })
 
-        //this.resetArt = true
-        this.showingArt = false
-        this.showingQuote = false
-        this.count = 0
 
+    }
+
+    resize(){
+        this.resizeText()
+
+
+         //Full Screen Stages
+         if(this.introScreenOn) {
+            this.introScreen.resize(window.innerWidth, window.innerHeight)
+        }
+        if(this.transitionScreenOn) {
+            this.transitionScreen.resize(window.innerWidth, window.innerHeight)
+        }
+        
+
+        //Non-Interactive Stages
+        if(this.introScreenOn == true) {
+            this.statusStage.resize(window.innerWidth, window.innerHeight)
+            this.statusStage.stage.hitArea = new PIXI.Rectangle(0,0,0,0);
+        }
+        if(this.scoreStageOn == true) {
+            this.scoreStage.resize(window.innerWidth, window.innerHeight)
+            this.scoreStage.stage.hitArea = new PIXI.Rectangle(0,0,0,0);
+        }
+        if(this.miniMapOn == true) {
+            this.miniMapStage.resize(window.innerWidth, window.innerHeight)
+            this.miniMapStage.stage.hitArea = new PIXI.Rectangle(0, 0, 0, 0)
+        }
+
+        if(this.statusStageOn == true) {
+            this.statusStage.resize(window.innerWidth, window.innerHeight)
+            this.statusStage.stage.hitArea = new PIXI.Rectangle(0, 0, 0, 0)
+        }
+
+       
+
+
+       
+        //Interactive Stages
+        if(this.quoteStageOn == true) {
+            this.quoteStage.resize(window.innerWidth, window.innerHeight)
+            const quoteBounds = this.quoteWrapperBackground.getBounds()
+            this.quoteStage.stage.hitArea = new PIXI.Rectangle(
+                quoteBounds.x,
+                quoteBounds.y,
+                quoteBounds.width,
+                quoteBounds.height
+            )
+        }
+
+        if(this.notificationStageOn == true) {
+            this.notificationStage.resize(window.innerWidth, window.innerHeight)
+            const notificationBounds = this.notificationWrapperBackground.getBounds()
+            this.notificationStage.stage.hitArea = new PIXI.Rectangle(
+                notificationBounds.x,
+                notificationBounds.y,
+                notificationBounds.width,
+                notificationBounds.height
+            )
+        }
+
+        if(this.chatStageOn == true) {
+            this.textBox.resize(window.innerWidth, window.innerHeight)
+            const textBoxbounds = this.textBoxWrapperBackground.getBounds()
+            this.textBox.stage.hitArea = new PIXI.Rectangle(
+                textBoxbounds.x,
+                textBoxbounds.y,
+                textBoxbounds.width,
+                textBoxbounds.height
+            )
+        }
+
+        if(this.emojiStageOn == true) {
+            this.emojiStage.resize(window.innerWidth, window.innerHeight)
+            const emojiBounds = this.emojiWrapperBackground.getBounds()
+            this.emojiStage.stage.hitArea = new PIXI.Rectangle(
+                emojiBounds.x,
+                emojiBounds.y,
+                emojiBounds.width,
+                emojiBounds.height
+            )
+        }
         
 
 
     }
 
 
+    //MiniMap Functions
+    setPlayerPositionMiniMap(id, x, y) {
+        if(this.miniMapOn == true) {
+            if(this.miniMap.getChildByName(""+id+"")) {
+                const thePlayer = this.miniMap.getChildByName(""+id+"")
+                thePlayer.x = (x / 25) + 10
+                thePlayer.y = (y / 25) + 10
+            } else {
+                const newPerson = new PIXI.Graphics()
+                newPerson.name = ""+id+""
+                newPerson.lineStyle(1, black)
+                newPerson.beginFill(0x00FFFF, 1)
+                newPerson.drawCircle(0, 0, 2)
+                newPerson.endFill()
+                this.miniMap.addChild(newPerson)
+            }
+        }
+    }
+
+    setOwnPlayerPositionMiniMap(x, y) {
+        if(this.miniMapOn == true) {
+            this.miniMapPlayerPosition.alpha = 1
+            this.miniMapPlayerPosition.x = (x / 25) + 10
+            this.miniMapPlayerPosition.y = (y / 25) + 10
+        }
+    }
+
+    buildMiniMap(room){
+        //console.log(JSON.parse(room))
+        if(this.miniMapOn == true) {
+       
+            let worldDesign = JSON.parse(room)
+
+            worldDesign.forEach(room => {
+                let miniRoom = new PIXI.Graphics()
+            
+                let miniRoomWidth = room.width / 25
+                let miniRoomHeight = room.height / 25
+
+                miniRoom.x = (room.x / 50) + 5
+                miniRoom.y = (room.y / 50) + 5
+
+
+                console.log(miniRoom.x, miniRoom.y, miniRoomWidth, miniRoomHeight)
+                
+                const roomColor = PIXI.utils.string2hex(room.floorColor)
+
+                miniRoom.beginFill(roomColor)
+                miniRoom.drawRect(miniRoom.x, miniRoom.y, miniRoomWidth, miniRoomHeight)
+                miniRoom.endFill()
+
+                this.miniMap.addChild(miniRoom)
+            });
+
+        }
+
+    }
+
+
     getAvatar() {
-        return this.avatarBox.contentContainer.children[0]._texture.textureCacheIds
+        console.log(this.avatarImageWrapper.children[0].rotation)
+        let avatar = [
+            this.avatarImageWrapper.children[0]._texture.textureCacheIds,
+            this.avatarImageWrapper.children[0].rotation,
+            this.avatarImageWrapper.children[1]._texture.textureCacheIds,
+            this.avatarImageWrapper.children[1].rotation,
+            this.avatarImageWrapper.children[2]._texture.textureCacheIds,
+            this.avatarImageWrapper.children[2].rotation,
+            this.avatarImageWrapper.children[3]._texture.textureCacheIds,
+            this.avatarImageWrapper.children[3].rotation,
+        ]
+        console.log(avatar)
+        return avatar
+    }
+
+    updateColor(color) {
+        this.color = color
+    }
+
+    getColor(){
+        return this.color
     }
 
     toggleGlitch(boolean){
@@ -1844,7 +2684,7 @@ class UIBuilder extends PIXI.Container {
 
         for (var i = 0; i < this.gridNumberOfLinesHorizontal; i++) {           
             let line = new PIXI.Graphics()
-            line.lineStyle(this.gridLine, 0x000000, 0.5)
+            line.lineStyle(this.gridLine, this.black, 0.5)
             line.moveTo(i * this.gridGap, 0)
             line.lineTo(i * this.gridGap, height)
             this.gridBackground.addChild(line)
@@ -1854,7 +2694,7 @@ class UIBuilder extends PIXI.Container {
             
         for (var i = 0; i < this.numberOfLinesVertical; i++) { 
             let line = new PIXI.Graphics()
-            line.lineStyle(this.gridLine, 0x000000, 0.5)
+            line.lineStyle(this.gridLine, this.black, 0.5)
             line.moveTo(0, i * this.gridGap)
             line.lineTo(width, i * this.gridGap)
             this.gridBackground.addChild(line)
@@ -1868,394 +2708,39 @@ class UIBuilder extends PIXI.Container {
         }
 
 
-
-
-
-
-
-
-        const menuHover = Sound.from('audio/menu-hover.mp3');
-        const menuOpen = Sound.from('audio/menu-open.mp3');
-        const menuClose = Sound.from('audio/menu-close.mp3');
-        const menuHoverMain = Sound.from('audio/menu-hover.mp3');
-        
-        menuHoverMain.speed = 2
-
-        menuHover.volume = 0.001
-        menuOpen.volume = 0.01
-        menuClose.volume = 0.01
-        menuHoverMain.volume = 0.01
-
-        const telephone = new filters.TelephoneFilter(1)
-        const distorsion = new filters.DistortionFilter(0.1)
-       // menuHover
-        menuHoverMain.filters = [telephone, distorsion]
-
-        //New UI Framework
-        const menuIconGraphic = PIXI.Sprite.from('images/menu-icon.svg')
-        const menuIconCloseGraphic = PIXI.Sprite.from('images/menu-icon-close.svg')
-
-        this.menuIcon = new PIXI.Sprite.from('images/menu-icon.svg')
-        const menuIcon = this.menuIcon
-        menuIcon.name = 'menu-icon'
-        menuIcon.width = 24
-        menuIcon.height = 24
-        menuIcon.x = 15
-        menuIcon.y = 15
-        menuIcon.interactive = true
-        menuIcon.buttonMode = true
-
-       
-
-        menuIcon.on("pointerover", function () {
-            menuHoverMain.play()
-        })
-
-        menuIcon.on("pointerdown", function () {
-            if(menuIcon.name == 'menu-icon') {
-                menuIcon.texture = menuIconCloseGraphic.texture
-                menuIcon.name = 'menu-icon-close'
-                aboutLink.visible = true
-                creditsLink.visible = true
-                privacyLink.visible = true
-                artistsLink.visible = true
-                workLink.visible = true
-                menuOpen.play()
-                //logoStage.alpha = 1
-            } else if(menuIcon.name == 'menu-icon-close') {
-                menuIcon.texture = menuIconGraphic.texture
-                menuIcon.name = 'menu-icon'
-                aboutLink.visible = false
-                creditsLink.visible = false
-                privacyLink.visible = false
-                artistsLink.visible = false
-                workLink.visible = false
-                menuClose.play()
-                //logoStage.alpha = 0
-            }
-        });
-
-        this.addChild(menuIcon)
-
-      
-
-
-        const navLinkTextStyles = {
-            default: {
-                fontFamily: "Trade Gothic Next",
-                fontSize: "13px",
-                fill: "#ffffff",
-            },
-            underline: {   
-                fontFamily: "Trade Gothic Next",
-                fontSize: "13px",
-                fill: "#ffffff",
-                textDecoration: "underline", 
-                fill: "#ffffff"
-            },
-          };
-
-
-        const userInterface = this
-
-
-        const aboutLinkText = 'About';
-        const aboutLinkUnderlineText = '<underline>About</underline>';
-
-        const aboutLink = new TaggedText(aboutLinkText, navLinkTextStyles, {
-            drawWhitespace: true,
-        });
-        aboutLink.visible = false
-        aboutLink.x = 55
-        aboutLink.y = 18
-        aboutLink.interactive = true
-        aboutLink.buttonMode = true
-
-        aboutLink.on("pointerover", function () {
-            aboutLink.setText(aboutLinkUnderlineText)
-            menuHover.play()
-        })
-        
-        aboutLink.on("pointerdown", function () {
-            userInterface.showQuote("0")
-        })
-        aboutLink.on("pointerout", function () {
-            aboutLink.setText(aboutLinkText)
-        })
-
-        this.addChild(aboutLink)
-
-
-        const artistsLinkText = 'Artists';
-        const artistsLinkUnderlineText = '<underline>Artists</underline>';
-        
-        const artistsLink = new TaggedText(artistsLinkText, navLinkTextStyles, {
-            drawWhitespace: true,
-        });
-        artistsLink.visible = false
-        artistsLink.x = 55
-        artistsLink.y = 38
-        artistsLink.interactive = true
-        artistsLink.buttonMode = true
-        
-        artistsLink.on("pointerover", function () {
-            artistsLink.setText(artistsLinkUnderlineText)
-            menuHover.play()
-        })
-        artistsLink.on("pointerdown", function () {
-            userInterface.showQuote("1")
-        })
-        artistsLink.on("pointerout", function () {
-            artistsLink.setText(artistsLinkText)
-        })
-        
-        this.addChild(artistsLink)
-
-
-
-        const workLinkText = 'Work';
-        const workLinkUnderlineText = '<underline>Work</underline>';
-        
-        const workLink = new TaggedText(workLinkText, navLinkTextStyles, {
-            drawWhitespace: true,
-        });
-        workLink.visible = false
-        workLink.x = 55
-        workLink.y = 58
-        workLink.interactive = true
-        workLink.buttonMode = true
-        
-        workLink.on("pointerover", function () {
-            workLink.setText(workLinkUnderlineText)
-            menuHover.play()
-        })
-        workLink.on("pointerdown", function () {
-            userInterface.showQuote("2")
-        })
-        workLink.on("pointerout", function () {
-            workLink.setText(workLinkText)
-        })
-        
-        this.addChild(workLink)
-        
-
-
-
-
-        const creditsLinkText = 'Credits';
-        const creditsLinkUnderlineText = '<underline>Credits</underline>';
-
-        const creditsLink = new TaggedText(creditsLinkText, navLinkTextStyles, {
-            drawWhitespace: true,
-        });
-        creditsLink.visible = false
-        creditsLink.x = 55
-        creditsLink.y = 78
-        creditsLink.interactive = true
-        creditsLink.buttonMode = true
-
-        creditsLink.on("pointerover", function () {
-            creditsLink.setText(creditsLinkUnderlineText)
-            menuHover.play()
-        })
-        creditsLink.on("pointerdown", function () {
-            userInterface.showQuote("3")
-        })
-        creditsLink.on("pointerout", function () {
-            creditsLink.setText(creditsLinkText)
-        })
-
-        this.addChild(creditsLink)
-          
-
-
-        const privacyLinkText = 'Legal';
-        const privacyLinkUnderlineText = '<underline>Legal</underline>';
-
-        const privacyLink = new TaggedText(privacyLinkText, navLinkTextStyles, {
-            drawWhitespace: true,
-        });
-        privacyLink.visible = false
-        privacyLink.x = 55
-        privacyLink.y = 98
-        privacyLink.interactive = true
-        privacyLink.buttonMode = true
-
-        privacyLink.on("pointerover", function () {
-            privacyLink.setText(privacyLinkUnderlineText)
-            menuHover.play()
-        })
-        privacyLink.on("pointerdown", function () {
-            userInterface.showQuote("4")
-        })
-        privacyLink.on("pointerout", function () {
-            privacyLink.setText(privacyLinkText)
-        })
-
-        this.addChild(privacyLink)
-
-
-
-
-        const scienceGalleryLogo = PIXI.Sprite.from('images/sg-white.svg');
-        scienceGalleryLogo.width = 88
-        scienceGalleryLogo.height = 42.5
-        scienceGalleryLogo.x = window.innerWidth - 100
-        scienceGalleryLogo.y = 12
-        scienceGalleryLogo.interactive = true
-        scienceGalleryLogo.buttonMode = true
-        scienceGalleryLogo.on("pointerdown", function () {
-           window.open('https://dublin.sciencegallery.com/')
-        })
-        //this.addChild(scienceGalleryLogo)
-        
-
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-
-
-        //Share Icon 
-        this.shareIcon = new PIXI.Sprite.from('images/share-icon.svg')
-        const shareIcon = this.shareIcon
-        shareIcon.state = 'closed'
-        shareIcon.width = 17
-        shareIcon.height = 20
-        shareIcon.x = 16
-        shareIcon.y = 53
-        shareIcon.interactive = true
-        shareIcon.buttonMode = true
-
-        shareIcon.on("pointerdown", function () {
-            if(twitter.alpha == 1) {
-                twitter.alpha = 0
-                facebook.alpha = 0
-            } else {
-                twitter.alpha = 1
-                facebook.alpha = 1
-            }
-        });
-        this.addChild(shareIcon)
-
-
-
-        //Twitter Share Icon  
-        this.twitterShare = PIXI.Sprite.from('images/twitter-icon.svg');
-        const twitter = this.twitterShare
-        twitter.width = 20
-        twitter.height = 16
-        twitter.x = 15
-        twitter.y = 90
-        twitter.alpha = 0
-        twitter.interactive = true
-        twitter.buttonMode = true
-
-        twitter.on("pointerdown", function () {
-            window.open("https://twitter.com/intent/tweet?url=https%3A%2F%2Fbiasonline.ie%2F&via=SciGalleryDub&text=I%27m%20exploring%20BIAS%20ONLINE%20an%20exhibition%20about%20data%20equity%2C%20privacy%2C%20surveillance%20culture%2C%20facial%20recognition%2C%20class%20and%20artificial%20intelligence.%20Join%20me%20in%20real-time%21", "_blank", "width=650,height=300");
-        });
-        this.addChild(twitter)
-
-
-
-        //facebook Share Icon  
-        this.facebookShare = PIXI.Sprite.from('images/facebook-icon.svg');
-        const facebook = this.facebookShare
-        facebook.width = 9
-        facebook.height = 18
-        facebook.x = 20
-        facebook.y = 115
-        facebook.alpha = 0
-        facebook.interactive = true
-        facebook.buttonMode = true
-
-        facebook.on("pointerdown", function () {
-            window.open('https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fbiasonline.ie', '_blank', 'width=626,height=436');
-        });
-        this.addChild(facebook)
-
-
-
-
-
-    
-        const transitionScreen = new PIXI.Container()
-        this.transitionScreen = transitionScreen
-
-        const transitionScreenBackground = new PIXI.Graphics()
-        transitionScreenBackground.beginFill(0x000000)
-        transitionScreenBackground.drawRect(0,0,window.innerWidth, window.innerHeight)
-        transitionScreenBackground.endFill()
-        transitionScreen.addChild(transitionScreenBackground)
-        transitionScreen.alpha = 0
-        this.addChild(transitionScreen)
-
-        const areaText = new PIXI.Text('Main Lobby', {fontFamily: "Trade Gothic Next", fontSize: "48px", fontWeight: 300, fill: "#ffffff", align: "center", lineHeight: 50})
-       
-        this.areaText = areaText
-        areaText.x = window.innerWidth / 2
-        areaText.y = window.innerHeight / 2
-        transitionScreen.addChild(areaText)
-        areaText.anchor.set(0.5);
-
-
-        
-
         
     }
 
     teleporting(area) {
-        console.log(area)
-        this.areaText.text = area
-        ease.add(this.transitionScreen, {alpha: 1}, { duration: 250, ease: 'easeOutExpo'})
-        const transitionScreen = this.transitionScreen
-        setTimeout(function(){
-            ease.add(transitionScreen, {alpha: 0}, { duration: 650, ease: 'easeOutExpo'})
-        }, 1700)
-        //this.transitionScreen.alpha = 1
+       
+        if(this.transitionScreenOn == true) {
+
+            this.transitionTextTagged.text = area
+            this.transitionScreen.visible = true
+            
+
+            ease.add(this.transitionScreenTextWrapper, {alpha: 1}, { duration: 250, ease: 'easeOutExpo'})
+            this.transitionScreen.resize(window.innerWidth, window.innerHeight)
+
+            const transitionScreen = this.transitionScreen
+            const transitionScreenTextWrapper = this.transitionScreenTextWrapper
+            setTimeout(function(){
+                ease.add(transitionScreenTextWrapper, {alpha: 0}, { duration: 650, ease: 'easeOutExpo'})
+            }, 1700)
+            setTimeout(function(){
+                transitionScreen.visible = false
+            }, 2200)
+            
+        }
+       
     }
 
     joinSession(){
-        this.joinModalWidgetGroup.contentContainer.alpha = 0
-        this.joinModal.alpha = 0
-        this.statusStage.visible = true
-        this.scoreStage.visible = true
-        this.removeChild(this.joinModal)   
+        this.removeChild(this.joinModal)
     }
 
 
-    
-
     leaveSession(){
-        this.joinModalWidgetGroup.contentContainer.alpha = 1
-        this.joinModal.alpha = 1
         this.addChild(this.joinModal)
     }
 
@@ -2266,6 +2751,43 @@ class UIBuilder extends PIXI.Container {
     clearText() {
         this.nameFieldInput.value = ""
         this.nameFieldInput.blur()
+    }
+
+    joinPeer() {
+        /*const text = new MultiStyleText("<dot>●</dot> Device ID: "+peerID+"", {
+            "default": {
+                fontFamily: "Monaco",
+                fontSize: "10px",
+                fill: "#ececec",
+                align: "left"
+            },
+            "dot": {
+                fontSize: "15px",
+                fill: "#0000ff"
+            }
+        });
+        renderer.stage.addChild(text);
+        text.x = 10;
+        text.y = 10;*/
+
+    }
+
+    joinCall(){
+        /*const text = new MultiStyleText("<dot>●</dot> Connected With: "+call.peer +" (ID:"+connectionId+")", {
+            "default": {
+                fontFamily: "Monaco",
+                fontSize: "10px",
+                fill: "#ececec",
+                align: "left"
+            },
+            "dot": {
+                fontSize: "15px",
+                fill: "#00ff00"
+            }
+        });
+        renderer.stage.addChild(text);
+        text.x = 10;
+        text.y = 30;*/
     }
 
     setName() {
@@ -2335,7 +2857,7 @@ class UIBuilder extends PIXI.Container {
                 this.iframe.height = window.innerHeight
                 document.body.appendChild(this.iframe);
                 this.showingArt = true;
-                console.log(this.showingArt)
+                //console.log(this.showingArt)
                 var close = document.createElement('div');
                 close.id = "back-to-bias"
                 var backTo = document.createTextNode('← Back to ')
@@ -2354,118 +2876,83 @@ class UIBuilder extends PIXI.Container {
 
     showQuote(quote) {
     
-        let quoteNumber = quote.slice(-1)
-        console.log(quoteNumber)
+        if(this.quoteStageOn == true) {
        
-       
-        
+            let quoteNumber = quote.slice(-1)
 
-        if(this.showingQuote == false) {
-            if(this.quoteWrapper.contentContainer.alpha <= 0) {
-                
-                this.addChild(this.quoteStage)
+            if(this.showingQuote == false) {
 
-
-                this.scrollContent.forcePctPosition('y', 0)
-                this.title.text = this.quotesToShow[quoteNumber].title
-                let continutedText = '';
-                if(this.quotesToShow[quoteNumber].subtitle.length) {
-                    continutedText += "<subtitle>" + this.quotesToShow[quoteNumber].subtitle + "</subtitle>\n"
-                }
-                if(this.quotesToShow[quoteNumber].paragraph.length) {
-                    continutedText +=  "" + this.quotesToShow[quoteNumber].paragraph + "\n"
-                }
-                if(this.quotesToShow[quoteNumber].credit.length) {
-                    continutedText +=  "<small>" + this.quotesToShow[quoteNumber].credit + "</small>"
-                }
-                this.connectedText.text = continutedText
+                if(this.quoteWrapper.contentContainer.alpha <= 0) {
+                    
+                    this.addChild(this.quoteStage)
+                    this.quoteStage.resize(window.innerWidth, window.innerHeight)
 
 
-                let height = this.textContent.contentContainer.height
-                let width = this.connectedText.getStyleForTag("default").wordWrapWidth
+                    this.scrollContent.forcePctPosition('y', 0)
 
-
-                if(height <= 80) {
-                    //height = 0.3
-                } else if (height <= 250) {
-                    //height = 0.4
-                    //scrollContentScrollBars.showScrollBars()
-                } else if (height <= 400) {
-                    //height = 0.5
-                    //scrollContentScrollBars.showScrollBars()
-                } else {
-                    //height = 0.85
-                    //scrollContentScrollBars.showScrollBars()
-                }
-
-                height = 0.8
-
-                
-                this.quoteWrapper.setLayoutOptions(
-                    new PUXI.FastLayoutOptions({
-                        width: 900,
-                        height: height,
-                        x: 0.5,
-                        y: 0.45,
-                        anchor: new PIXI.Point(0.5, 0.5)          
-                    })
-                )
-                this.quoteWrapperBackground.clear()
-                this.quoteWrapperBackground = new PIXI.Graphics()
-                this.quoteWrapperBackground.beginFill(0xFFFFFF)
-                this.quoteWrapperBackground.lineStyle(1, 0x000000)
-                this.quoteWrapperBackground.drawRoundedRect(0, 0, 900, (window.innerHeight/100)*(height*100), 35)
-                this.quoteWrapper.contentContainer.addChildAt(this.quoteWrapperBackground,0)   
-
-                ease.add(this.quoteWrapper.contentContainer, this.fadeInStyles, this.fadeInSettingsDelay)
-                this.showingQuote = true
-
-
-                
-                this.connectedText.textContainer.children.forEach(element => {
-                    //console.log(element)
-                    if(element._text == "noahlevenson.com") {
-                        console.log('link!')
-                        element.interactive = true
-                        element.buttonMode = true
-                        element.on('pointerdown', function(){
-                            console.log('firing')
-                        })
-                        //element.update()
+                    let continutedText = '<gap>\n</gap><boldtitle>' + this.quotesToShow[quoteNumber].title +'</boldtitle>\n<gap>\n</gap>'
+                    if(this.quotesToShow[quoteNumber].subtitle.length) {
+                        continutedText += "<subtitle>" + this.quotesToShow[quoteNumber].subtitle + "</subtitle>\n"
                     }
-                    if(element._text == "libbyheaney.co.uk") {
-                        console.log('link!')
-                        element.interactive = true
-                        element.buttonMode = true
-                        element.on('pointerdown', function(){
-                            console.log('firing2')
-                        })
-                        //element.update()
+                    if(this.quotesToShow[quoteNumber].paragraph.length) {
+                        continutedText +=  "" + this.quotesToShow[quoteNumber].paragraph + "\n"
                     }
-                    //console.log(element._text)
-                });
+                    if(this.quotesToShow[quoteNumber].credit.length) {
+                        continutedText +=  "<small>" + this.quotesToShow[quoteNumber].credit + "</small>"
+                    }
+                    this.connectedText.text = continutedText
+                    
 
-               
-                
-                /*let theHeight = this.scrollContent.getMeasuredHeight()
-                
-                this.scrollContent.setLayoutOptions(
-                    new PUXI.FastLayoutOptions({
-                        width: 0.999,
-                        height: theHeight*2,
-                        x: 0.5,
-                        y: theHeight,
-                        anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-                    }))*/
+                    this.quoteWrapperBackground.clear()
+                    this.quoteWrapperBackground = new PIXI.Graphics()
+                    this.quoteWrapperBackground.beginFill(this.white)
+                    this.quoteWrapperBackground.lineStyle(1, this.black)
+                    this.quoteWrapperBackground.drawRoundedRect(0, 0, 650, 600, 35)
+                    this.quoteWrapper.contentContainer.addChildAt(this.quoteWrapperBackground,0)   
+                    ease.add(this.quoteWrapper.contentContainer, this.fadeInStyles, this.fadeInSettingsDelay)
+                    this.showingQuote = true
 
-                this.quoteStage.resize(window.innerWidth, window.innerHeight)
-                
-              
+                    const theText = this.connectedText
+                    //console.log(this.connectedText)
+                    this.connectedText.textContainer.children.forEach(element => {
+                        //console.log(element)
+                        if(element._text == "noahlevenson.com") {
+                            console.log('link!')
+                            element.interactive = true
+                            element.buttonMode = true
+                            let underline = new PIXI.Graphics()
+                            underline.beginFill(this.blue)
+                            underline.drawRect(0, element.height - 4, element.width, 1)
+                            underline.endFill()
+                            element.on('pointerover', function(){                                
+                                element.addChild(underline)
+                            })
+                            element.on('pointerdown', function(){
+                               // console.log('firing')
+                            })
+                            element.on('pointerout', function(){
+                                element.removeChild(underline)
+                                //theText.setStyleForTag("link", {textDecoration: "normal", fill: "#1DCFFF" })
+                            })
+                            //element.update()
+                        }
+                        if(element._text == "libbyheaney.co.uk") {
+                            console.log('link!')
+                            element.interactive = true
+                            element.buttonMode = true
+                            element.on('pointerdown', function(){
+                                console.log('firing2')
+                            })
+                            //element.update()
+                        }
+                        //console.log(element._text)
+                    });
 
-                
-
-                
+                    this.quoteStage.resize(window.innerWidth, window.innerHeight)
+                    
+                }
             }
+
         }
 
     }
@@ -2474,13 +2961,13 @@ class UIBuilder extends PIXI.Container {
     closeModal() {
         ease.add(this.quoteWrapper.contentContainer, this.fadeOutStyles, this.fadeOutSettings)
         const quoteStage = this.quoteStage
-        const theUI = this
+        const userInterface = this
         const showingQuote = this.showingQuote
         
         setTimeout(function(){
-            theUI.removeChild(quoteStage)
-            theUI.setShowingQuote()
-        }, 500)
+            userInterface.removeChild(quoteStage)
+            userInterface.setShowingQuote()
+        }, 250)
         
     }
 
@@ -2490,7 +2977,7 @@ class UIBuilder extends PIXI.Container {
 
 
     personLeft(name) {
-        var joinText = "<reddot>●</reddot> <hi>"+ name +"</hi> left"
+        var joinText = "<reddot>—</reddot> "+ name +" left"
         var textBox = this.statusLayout.contentContainer.children[1];
         var currentText = textBox.text
         textBox.text = joinText + "\n" + currentText
@@ -2511,7 +2998,7 @@ class UIBuilder extends PIXI.Container {
                 if(newScore == 10) {
                     score.x = 16
                     this.talkingScore.isComplete = true
-                    this.talkingScoreTextBackground.tint = 0xFFFF00
+                    this.talkingScoreTextBackground.tint = this.yellow
                 }
             }
         }
@@ -2523,15 +3010,17 @@ class UIBuilder extends PIXI.Container {
             if(this.talkingScore.isComplete == false) {
                 score.text = newScoreText
                 const background = this.talkingScoreTextBackground
-                background.tint = 0xFFFF00
+                background.tint = this.yellow
+                let white = this.white
                 setTimeout(function(){
-                    background.tint = 0xFFFFFF
+                    background.tint = white
                 }, 250)
                 if(newScore == 10) {
                     score.x = 16
                     this.talkingScore.isComplete = true
+                    let yellow = this.yellow
                     setTimeout(function(){
-                        background.tint = 0xFFFF00
+                        background.tint = yellow
                     }, 250)
                    
                 }
@@ -2544,15 +3033,17 @@ class UIBuilder extends PIXI.Container {
             if(this.robotScore.isComplete == false) {
                 score.text = newScoreText
                 const background = this.robotScoreTextBackground
-                background.tint = 0xFFFF00
+                background.tint = this.yellow
+                let white = this.white
                 setTimeout(function(){
-                    background.tint = 0xFFFFFF
+                    background.tint = white
                 }, 250)
                 if(newScore == 10) {
                     score.x = 16
                     this.robotScore.isComplete = true
+                    let yellow = this.yellow
                     setTimeout(function(){
-                        background.tint = 0xFFFF00
+                        background.tint = yellow
                     }, 250)
                    
                 }
@@ -2566,17 +3057,18 @@ class UIBuilder extends PIXI.Container {
             if(this.dialScore.isComplete == false) {
                 score.text = newScoreText
                 const background = this.dialScoreTextBackground
-                background.tint = 0xFFFF00
+                background.tint = this.yellow
+                let white = this.white
                 setTimeout(function(){
-                    background.tint = 0xFFFFFF
+                    background.tint = white
                 }, 250)
                 if(newScore == 10) {
                     score.x = 16
                     this.dialScore.isComplete = true
+                    let yellow = this.yellow
                     setTimeout(function(){
-                        background.tint = 0xFFFF00
+                        background.tint = yellow
                     }, 250)
-                   
                 }
             }
            
@@ -2588,87 +3080,95 @@ class UIBuilder extends PIXI.Container {
             if(this.faceScore.isComplete == false) {
                 score.text = newScoreText
                 const background = this.faceScoreTextBackground
-                background.tint = 0xFFFF00
+                background.tint = this.yellow
+                let white = this.white
                 setTimeout(function(){
-                    background.tint = 0xFFFFFF
+                    background.tint = white
                 }, 250)
                 if(newScore == 10) {
                     score.x = 16
                     this.faceScore.isComplete = true
+                    let yellow = this.yellow
                     setTimeout(function(){
-                        background.tint = 0xFFFF00
+                        background.tint = yellow
                     }, 250)
                    
                 }
             }
             
         }
+
+       
         
     }
 
     personJoined(name) {
-        var joinText = "<whitedot>—</whitedot> <hi>"+ name +"</hi> joined ❤️"
+        var joinText = "<whitedot>+</whitedot> "+ name +" joined"
         var textBox = this.statusLayout.contentContainer.children[1];
         var currentText = textBox.text
         textBox.text = joinText + "\n" + currentText
-        console.log(textBox.y)
         if(textBox.y > -180) {
             textBox.y = textBox.y - 18
         }
     }
 
     joinInstance(name, id) {
-        var joinText = "<greendot>●</greendot> <b>Connected to Instance</b> <p>(ID: "+ id +")</p>"
+        var joinText = "<greendot>●</greendot> Joined <p>(ID: "+ id +")</p>"
         var textBox = this.statusLayout.contentContainer.children[1];
         var currentText = textBox.text
         textBox.text = joinText + "\n" + currentText
-        console.log(textBox.y)
+        //console.log(textBox.y)
         if(textBox.y > -180) {
             textBox.y = textBox.y - 18
         }
+        const backgroundMusic = this.audio.from('audio/background-tom.mp3');
+        backgroundMusic.speed = 1
+        backgroundMusic.volume = 0.01
+        backgroundMusic.loop = true;
+        backgroundMusic.play()
     }
 
     updateConnection(value, boolean){
 
         if(boolean == true) {
-            var connectedText = new TaggedText("<bluedot>●</bluedot> <b>Connected to Server</b> <y>["+value.text+"]</y>", {
+            var connectedText = new TaggedText("<bluedot>●</bluedot> Connected <y>["+value.text+"]</y>", {
                 "default": {
                     fontFamily: "Trade Gothic Next",
                     fontSize: "11px",
-                    fill: "#efefef",
+                    fill: this.white,
                     align: "left"
                 },
                 "bluedot": {
                     fontFamily: "Monaco",
                     fontSize: "15px",
-                    fill: "#0000ff"
+                    fill: this.blue
                 },
                 "greendot": {
                     fontFamily: "Monaco",
                     fontSize: "15px",
-                    fill: "#00ff00"
+                    fill: this.green
                 },
                 "whitedot": {
                     fontFamily: "Monaco",
                     fontSize: "15px",
-                    fill: "#FFFFFF"
+                    fill: this.white
                 },
                 "reddot": {
                     fontFamily: "Monaco",
                     fontSize: "15px",
-                    fill: "#FF00000"
+                    fill: this.red
                 },
                 "b": {
                     fontWeight: 700
                 },
                 "y": {
-                    fill: "#FFFF00"
+                    fill: this.yellow
                 },
                 "p": {
-                    fill: "#FF1493"
+                    fill: this.pink
                 },
                 "hi": {
-                    fill: "#ffffff",
+                    fill: this.white,
                     fontWeight: 700,
                     textDecoration: "underline"
                 }
@@ -2676,20 +3176,24 @@ class UIBuilder extends PIXI.Container {
             this.statusLayout.contentContainer.addChild(connectedText);
 
         } else {
+            sound.muteAll()
+
+
             this.statusLayout.contentContainer.removeChildAt(1);
-            var connectedText = new TaggedText("<dot>●</dot> Disconnected from Server.", {
+            var connectedText = new TaggedText("<dot>●</dot> Disconnected", {
                 "default": {
                     fontFamily: "Monaco",
                     fontSize: "10px",
-                    fill: "#000000",
+                    fill: this.black,
                     align: "left"
                 },
                 "dot": {
                     fontSize: "15px",
-                    fill: "#ff0000"
+                    fill: this.red
                 }
             });
             this.statusLayout.contentContainer.addChild(connectedText);
+
 
         }
         
@@ -2698,7 +3202,7 @@ class UIBuilder extends PIXI.Container {
 
     resizeText() {
         
-        const width = window.innerWidth
+        /*const width = window.innerWidth
 
         
             
@@ -3005,7 +3509,7 @@ class UIBuilder extends PIXI.Container {
                 wordWrapWidth: 450,
                 leading: 1,
                 textBaseline: "middle"
-            })*/
+            })
 
            
 
@@ -3065,7 +3569,7 @@ class UIBuilder extends PIXI.Container {
             this.nameFieldInput.caret = new PIXI.Graphics();
             this.nameFieldInput.caret.visible = false;
             this.nameFieldInput.caret._index = 0;
-            this.nameFieldInput.caret.lineStyle(1, 0x000000);
+            this.nameFieldInput.caret.lineStyle(1, black);
             this.nameFieldInput.caret.moveTo(0, 0);
             this.nameFieldInput.caret.lineTo(0, 25);
             this.nameFieldInput.lineHeight = 20
@@ -3125,7 +3629,7 @@ class UIBuilder extends PIXI.Container {
             this.nameFieldInput.caret = new PIXI.Graphics();
             this.nameFieldInput.caret.visible = false;
             this.nameFieldInput.caret._index = 0;
-            this.nameFieldInput.caret.lineStyle(1, 0x000000);
+            this.nameFieldInput.caret.lineStyle(1, black);
             this.nameFieldInput.caret.moveTo(0, 0);
             this.nameFieldInput.caret.lineTo(0, 60);
             this.nameFieldInput.lineHeight = 60
@@ -3138,7 +3642,7 @@ class UIBuilder extends PIXI.Container {
                     y: 21,
                 })
             )
-        }
+        }*/
 
 
 
@@ -3150,25 +3654,36 @@ class UIBuilder extends PIXI.Container {
 
  
     update(delta){
+
         this.count++
 
-        this.avatarBox.contentContainer.rotation += 1 * delta;
+        if(this.introScreenOn == true) {
 
-        this.introGlitch.seed = Math.random();
-        const introGlitch = this.introGlitch
-        if(this.glitchOn == true) {
-            var rand = Math.floor(Math.random() * 50) + 1
-            introGlitch.slices = rand
-            introGlitch.offset = rand
-        } else {
-            introGlitch.slices = 0
-            introGlitch.offset = 0
+            this.introGlitch.seed = Math.random();
+            const introGlitch = this.introGlitch
+
+            if(this.glitchOn == true) {
+                var rand = Math.floor(Math.random() * 50) + 1
+                introGlitch.slices = rand
+                introGlitch.offset = rand
+            } else {
+                introGlitch.slices = 0
+                introGlitch.offset = 0
+            }
+
+            this.introCRTFilter.seed = Math.random()
+            this.introCRTFilter.time += 0.5
+
+            
+            if(this.introScreen.visible) {
+                this.filters = [this.introCRTFilter, this.introGlitch]
+            } else {
+                this.filters = []
+            }
+
         }
-        this.filters = [this.introGlitch]
-        
-        
+    
     }
-
 
 }
 

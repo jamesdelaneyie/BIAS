@@ -81,7 +81,7 @@ class Box {
             this.boxShape.material = state.material;
             this.body = new p2.Body({
                 mass: state.mass,
-                position: [state.x, state.y],
+                position: [state.x + state.width/2, state.y + state.height/2],
             });
     
             

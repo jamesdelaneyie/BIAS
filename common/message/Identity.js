@@ -1,12 +1,13 @@
 import nengi from 'nengi'
 
 class Identity {
-    constructor(rawId, smoothId, peerId, avatar, name) {
+    constructor(rawId, smoothId, peerId, avatar, name, color) {
         this.rawId = rawId
         this.smoothId = smoothId
         this.peerId = peerId
         this.avatar = avatar
         this.name = name
+        this.color = color
     }
 }
 
@@ -16,6 +17,7 @@ Identity.protocol = {
     peerId: nengi.String,
     avatar: nengi.String,
     name: nengi.String,
+    color: nengi.String
 }
 
 export default Identity
