@@ -7,48 +7,35 @@ import WeaponFired from '../common/message/WeaponFired.js'
 import CollisionSystem from '../common/CollisionSystem.js'
 import followPath from './followPath.js'
 import damagePlayer from './damagePlayer.js'
-import respawnPlayer from './respawnPlayer.js'
 import instanceHookAPI from './instanceHookAPI.js'
 import applyCommand from '../common/applyCommand.js'
 
-import setupFloors from './setupFloors.js'
-import Box from '../common/entity/Box.js'
 import setupObstacles from './setupObstacles.js'
-import Obstacle from '../common/entity/Obstacle.js'
+import setupFloors from './setupFloors.js'
 import setupBoxes from './setupBoxes.js'
 import setupPortals from './setupPortals.js'
 
+import setupWalls from './setupWalls.js'
+import setupObjectWalls from './setupObjectWalls.js'
+
+import Box from '../common/entity/Box.js'
+import Obstacle from '../common/entity/Obstacle.js'
+
 import { fire } from '../common/weapon.js'
+
 import Notification from '../common/message/Notification'
 import Walking from '../common/message/Walking'
 import Hitting from '../common/message/Hitting'
 
 import lagCompensatedHitscanCheck from './lagCompensatedHitscanCheck'
-import censoring from 'chat-censoring'
+
 import fs from 'fs'
 import SAT from 'sat'
 
+var swearjar = require('swearjar');
 var SpellChecker = require('spellchecker')
-
-import { profanity } from '@2toad/profanity'
-
 var Filter = require('./cleanHacked');
 var filter = new Filter();
-
-var swearjar = require('swearjar');
-
-
-function uniqueInOrder(x) {
-    const result = [];
-    const input = Array.isArray(x) ? x : x.split('');
-  
-    for (let i = 0; i < input.length; ++i) {
-      if (input[i] == input[i + 1]) continue
-      result.push(input[i])
-    }
-    
-    return result
-  }
 
 class GameInstance {
     constructor() {
@@ -76,57 +63,31 @@ class GameInstance {
             console.log('peer disconnected', peer.id);
         });
 
-        const portals = new Map()
-        const obstacles = new Map()
-        const boxes = new Map()
+
+
+
+
+
+
+        this.portals = new Map()
+        this.obstacles = new Map()
+        this.boxes = new Map()
 
         this.world = new p2.World({gravity: [0, 0]});
+
+
+
         this.room = {
-            x: 0,
-            y: 0,
-            width: 2000,
-            height: 2000,
-            backgroundColor: "#00ff00",
-            floorColor: "#4DFA66",
-            borderColor: "#FFFFFF",
-            borderWidth: 25,
+            x: 60,
+            y: 60,
+            width: 1320,
+            height: 960,
+            floorColor: "#717a73",
+            gridColor: "#000000",
+            gridGap: 60,
+            wallThickness: 10,
+            wallColor: "#00FF00",
             objects: [{
-                name: "",
-                type: "",
-                x: 775,
-                y: 655,
-                width: 450, 
-                height: 20, 
-                color: "#0000ff",
-                mass: 0
-            },/*,{
-                name: "",
-                type: "",
-                x: 0,
-                y: 1330,
-                width: 3000, 
-                height: 20, 
-                color: "#0000ff",
-                mass: 0
-            },{
-                name: "",
-                type: "",
-                x: 560,
-                y: 0,
-                width: 20, 
-                height: 3000, 
-                color: "#0000ff",
-                mass: 0
-            },{
-                name: "",
-                type: "",
-                x: 1440,
-                y: 0,
-                width: 20, 
-                height: 3000, 
-                color: "#0000ff",
-                mass: 0
-            },*/{
                 name: "token",
                 type: "robot",
                 x: 950,
@@ -135,409 +96,239 @@ class GameInstance {
                 height: 35, 
                 color: "#0000ff",
                 mass: 1
-            },
-            {
-                name: "token",
-                type: "face",
-                x: 1050,
-                y: 1050,
-                width: 35, 
-                height: 35, 
-                color: "#0000ff",
-                mass: 1
-            },{
-                name: "token",
-                type: "soccer-ball",
-                x: 500,
-                y: 500,
-                width: 25, 
-                height: 25, 
-                color: "#0000ff",
-                mass: 0.001
-            },{
-                name: "token",
-                type: "talking",
-                x: 950,
-                y: 1050,
-                width: 35, 
-                height: 35, 
-                color: "#0000ff",
-                mass: 1
-            },{
-                name: "token",
-                type: "dial",
-                x: 1050,
-                y: 950,
-                width: 35, 
-                height: 35, 
-                color: "#0000ff",
-                mass: 1
             }],
-            portals: [{
-                name: "Noah Levenson\n<bold>STEALING UR FEELINGS</bold>",
-                x: 950,
-                y: 1345,
-                width: 100,
-                height: 50,
-                exit: [2500, 100]
+            holes: [{
+                offset: 500,
+                width: 0,
             },{
-                name: "Johann Dedrick\nDARK MATTERS",
-                x: 570,
-                y: 975,
-                width: 10,
-                height: 100,
-                exit: [50, 2550]
+                offset: 230,
+                width: 490,
             },{
-                name: "Mushon Zer-Aviv\nNORMALISI.NG",
-                x: 1420,
-                y: 975,
-                width: 10,
-                height: 100,
-                exit: [2500, 1500]
+                offset: 1010,
+                width: 180,
             },{
-                name: "Libby Heaney\nCLASSES",
-                x: 950,
-                y: 700,
-                width: 100,
-                height: 10,
-                exit: [3500, 100]
+                offset: 500,
+                width: 0,
             }]
         }
-        this.floors = setupFloors(this.instance, this.room)
-        
-        
-        this.room2 = {
-            x: 2100,
-            y: 0,
-            name: "Noah",
-            width: 1000,
-            height: 1000,
-            backgroundColor: "#ffff00",
-            color: "#FFE401",
-            borderColor: "#FFFFFF",
-            floorColor: "#FFE401",
-            wallColor: "#ffff00",
-            gridColor: "#454545",
-            borderWidth: 25,
-            objects: [{
-                name: "token",
-                type: "quote",
-                x: 200,
-                y: 500,
-                width: 40, 
-                height: 40, 
-                color: "quote5",
-                mass: 0
-            },{
-                name: "token",
-                type: "art",
-                x: 800,
-                y: 500,
-                width: 100, 
-                height: 100, 
-                color: "art1",
-                mass: 0
-            },{
-                name: "token",
-                type: "video",
-                x: 500,
-                y: 500,
-                width: 177, 
-                height: 315, 
-                color: "#0000ff",
-                mass: 2
-            }],
-            portals: [{
-                name: "Main Lobby",
-                x: 475,
-                y: 50,
-                width: 100,
-                height: 10,
-                exit: [1000, 1000]
-            }]
-        }
-        this.floors2 = setupFloors(this.instance, this.room2)
+        setupFloors(this.instance, this.room)
+        setupObjectWalls(this.instance, this.world, this.room, this.boxes)
+        setupWalls(this.instance, this.room, this.obstacles, 'wall')
+        setupBoxes(this.instance, this.world, this.room, this.boxes)
 
-
-        this.room3 = {
-            x: 0,
-            y: 2100,
-            name: "Johann",
-            width: 2000,
-            height: 800,
-            floorColor: "#471A8E",
-            wallColor: "#9C52FF",
-            gridColor: "#454545",
-            backgroundColor: "#9C52FF",
-            color: "#471A8E",
-            borderColor: "#FFFFFF",
-            borderWidth: 25,
-            objects: [{
-                name: "token",
-                type: "quote",
-                x: 700,
-                y: 500,
-                width: 40, 
-                height: 40, 
-                color: "quote6",
-                mass: 0
-            },{
-                name: "token",
-                type: "art",
-                x: 1650,
-                y: 500,
-                width: 150, 
-                height: 150, 
-                color: "art2",
-                mass: 0
-            },{
-                name: "token",
-                type: "video",
-                x: 1100,
-                y: 600,
-                width: 354, 
-                height: 630, 
-                color: "#00ffff",
-                mass: 0
-            }],
-            portals: [{
-                name: "Main Lobby",
-                x: 0,
-                y: 600,
-                width: 10,
-                height: 100,
-                exit: [1000, 1000]
-            }]
-        }
-        this.floors3 = setupFloors(this.instance, this.room3)
-
-
-
-        this.room4 = {
-            x: 2100,
-            y: 1100,
-            name: "Mushon",
-            width: 800,
-            height: 1500,
-            floorColor: "#505050",
-            wallColor: "#292929",
-            gridColor: "#454545",
-            backgroundColor: "#292929",
-            color: "#505050",
-            borderColor: "#FFFFFF",
-            borderWidth: 25,
-            objects: [{
-                name: "token",
-                type: "quote",
-                x: 700,
-                y: 500,
-                width: 40, 
-                height: 40, 
-                color: "quote5",
-                mass: 0
-            },{
-                name: "token",
-                type: "quote",
-                x: 650,
-                y: 1300,
-                width: 40, 
-                height: 40, 
-                color: "quote6",
-                mass: 0
-            },{
-                name: "token",
-                type: "art",
-                x: 400,
-                y: 300,
-                width: 200, 
-                height: 200, 
-                color: "art3",
-                mass: 0
-            },{
-                name: "token",
-                type: "video",
-                x: 250,
-                y: 1350,
-                width: 354, 
-                height: 630, 
-                color: "#505050",
-                mass: 0
-            }],
-            portals: [{
-                name: "Main Lobby",
-                x: 0,
-                y: 600,
-                width: 10,
-                height: 100,
-                exit: [1000, 1000]
-            }]
-        }
-        this.floors4 = setupFloors(this.instance, this.room4)
-
-
-
-        this.room5 = {
-            x: 3200,
-            y: 0,
-            name: "Libby",
-            width: 1500,
-            height: 1500,
-            floorColor: "#80EDFF",
-            wallColor: "#1DCFFF",
+        this.roomEntrance = {
+            x: 1080,
+            y: 1030,
+            width: 176,
+            height: 176,
+            floorColor: "#717a73",
             gridColor: "#000000",
-            borderWidth: 25,
-            objects: [{
-                name: "token",
-                type: "quote",
-                x: 700,
-                y: 500,
-                width: 40, 
-                height: 40, 
-                color: "quote5",
-                mass: 0
+            gridGap: 60,
+            wallThickness: 10,
+            wallColor: "#00FF00",
+            holes: [{
+                offset: 0,
+                width: 176,
             },{
-                name: "token",
-                type: "quote",
-                x: 650,
-                y: 1300,
-                width: 40, 
-                height: 40, 
-                color: "quote4",
-                mass: 0
+                offset: 0,
+                width: 0,
             },{
-                name: "token",
-                type: "art",
-                x: 400,
-                y: 300,
-                width: 200, 
-                height: 200, 
-                color: "art4",
-                mass: 0
+                offset: 0,
+                width: 176,
+            },{
+                offset: 0,
+                width: 0,
             }],
-            portals: [{
-                name: "Main Lobby",
-                x: 0,
-                y: 600,
-                width: 10,
-                height: 100,
-                exit: [1000, 1000]
-            }]
+            portals: [
+                {
+                    name: "Noah Levenson\n<bold>STEALING UR FEELINGS</bold>",
+                    x: 0,
+                    y: 0,
+                    width: 180,
+                    height: 20,
+                    exit: [150, 150]
+                }
+            ]
         }
-        this.floors5 = setupFloors(this.instance, this.room5)
-
-
-        this.room6 = {
-            x: 3100,
-            y: 1600,
-            name: "reception",
-            width: 700,
-            height: 700,
-            floorColor: "#131313",
-            wallColor: "#4DFA66",
-            gridColor: "#454545",
-            backgroundColor: "#FFFFFF",
-            color: "#000000",
-            borderColor: "#4dfa66",
-            borderWidth: 5,
-            objects: [/*{
-                name: "token",
-                type: "quote",
-                x: 100,
-                y: 600,
-                width: 35, 
-                height: 35, 
-                color: "quote0",
-                mass: 0
-            }*/],
-            portals: [],
-            door: "bottom"
-        }
-        this.floors6 = setupFloors(this.instance, this.room6)
-        this.obstacles6 = setupObstacles(this.instance, this.room6, obstacles)
-        this.boxes6 = setupBoxes(this.instance, this.world, this.room6, boxes)
-        /*
-
-        function findContacts(){
-    for(let i = 0; i < world.narrowphase.contactEquations.length; i++){
-        let eq = world.narrowphase.contactEquations[i]
-        let bodyAPosition = eq.bodyA.position
-        let contactPointA = eq.contactPointA
-    
-        let contactX = bodyAPosition[0] + contactPointA[0]
-        let contactY = bodyAPosition[1] + contactPointA[1]
-
-        spawnParticle(contactX, contactY)
-    }
-}&*/
-
-        this.room7 = {
-            x: 3350,
-            y: 2300,
-            name: "reception",
-            width: 200,
-            height: 700,
-            floorColor: "#131313",
-            wallColor: "#4DFA66",
-            gridColor: "#454545",
-            backgroundColor: "#FFFFFF",
-            color: "#000000",
-            borderColor: "#4dfa66",
-            borderWidth: 5,
-            objects: [],
-            portals: [{
-                name: "Main Lobby",
-                x: 20,
-                y: 720,
-                width: 200,
-                height: 10,
-                exit: [1000, 1000]
-            }],
-            door: "",
-            type: "corridor"
-        }
-        this.floors7 = setupFloors(this.instance, this.room7)
-        this.obstacles7 = setupObstacles(this.instance, this.room7, obstacles)
-        //this.boxes7 = setupBoxes(this.instance, this.world, this.room7, boxes)
-
-
-
-        this.obstacles = setupObstacles(this.instance, this.room, obstacles)
-        this.obstacles2 = setupObstacles(this.instance, this.room2, obstacles)
-        this.obstacles3 = setupObstacles(this.instance, this.room3, obstacles)
-        this.obstacles3 = setupObstacles(this.instance, this.room4, obstacles)
-        this.obstacles3 = setupObstacles(this.instance, this.room5, obstacles)
-        this.obstacles = obstacles
-
-
-        this.boxes = setupBoxes(this.instance, this.world, this.room, boxes)
-        this.boxesTwo = setupBoxes(this.instance, this.world, this.room2, boxes)
-        this.boxesThree = setupBoxes(this.instance, this.world, this.room3, boxes)
-        this.boxesFour = setupBoxes(this.instance, this.world, this.room4, boxes)
-        this.boxesFour = setupBoxes(this.instance, this.world, this.room5, boxes)
-        this.boxes = boxes
+        setupFloors(this.instance, this.roomEntrance)
+        setupObjectWalls(this.instance, this.world, this.roomEntrance, this.boxes)
+        setupWalls(this.instance, this.roomEntrance, this.obstacles, 'wall')
 
        
 
-        
-        this.portals = setupPortals(this.instance, this.room, portals)
-        this.portals2 = setupPortals(this.instance, this.room2, portals)
-        this.portals3 = setupPortals(this.instance, this.room3, portals)
-        this.portals4 = setupPortals(this.instance, this.room4, portals)
-        this.portals5 = setupPortals(this.instance, this.room5, portals)
-        
-        this.portals7 = setupPortals(this.instance, this.room7, portals)
-        this.portals = portals
+        let securityCamera1 = new Box({
+            name: "token",
+            type: "security-cam",
+            x: 1380,
+            y: 1020,
+            width: 150,
+            height: 75,
+            mass: 0,
+            color: "0000ff",
+        })
+        this.instance.addEntity(securityCamera1)
+        this.world.addBody(securityCamera1.body)
+        this.boxes.set(securityCamera1.nid, securityCamera1)
+
+        let securityCamera2 = new Box({
+            name: "token",
+            type: "security-cam",
+            x: 60,
+            y: 1020,
+            width: 150,
+            height: 75,
+            mass: 0,
+            color: "0000ff",
+        })
+        this.instance.addEntity(securityCamera2)
+        this.world.addBody(securityCamera2.body)
+        this.boxes.set(securityCamera2.nid, securityCamera2)
 
 
-        const theInstance = this.instance
-        const theWorld = this.world
+        let securityCamera3 = new Box({
+            name: "token",
+            type: "security-cam",
+            x: 60,
+            y: 60,
+            width: 150,
+            height: 75,
+            mass: 0,
+            color: "0000ff",
+        })
+        this.instance.addEntity(securityCamera3)
+        this.world.addBody(securityCamera3.body)
+        this.boxes.set(securityCamera3.nid, securityCamera3)
 
-        setInterval(function(){
+
+
+        let securityCamera4 = new Box({
+            name: "token",
+            type: "security-cam",
+            x: 1380,
+            y: 60,
+            width: 150,
+            height: 75,
+            mass: 0,
+            color: "0000ff",
+        })
+        this.instance.addEntity(securityCamera4)
+        this.world.addBody(securityCamera4.body)
+        this.boxes.set(securityCamera4.nid, securityCamera4)
+
+
+        this.room2 = {
+            x: 250,
+            y: 250,
+            width: 940,
+            height: 580,
+            floorColor: "#000000",
+            gridColor: "#4DFA66",
+            gridGap: 20,
+            wallThickness: 10,
+            wallColor: "#00FF00",
+            holes: [{
+                offset: 0,
+                width: 0,
+            },{
+                offset: 0,
+                width: 0,
+            },{
+                offset: 0,
+                width: 0,
+            },{
+                offset: 0,
+                width: 0,
+            }],
+        }
+        setupFloors(this.instance, this.room2)
+        setupObjectWalls(this.instance, this.world, this.room2, this.boxes)
+        setupWalls(this.instance, this.room2, this.obstacles, "artStarter")
+
+
+        let information = new Box({
+            name: "token",
+            type: "info2",
+            x: 690,
+            y: 850,
+            width: 80,
+            height: 30,
+            mass: 0,
+            color: "quote8",
+        })
+        this.instance.addEntity(information)
+        this.world.addBody(information.body)
+        this.boxes.set(information.nid, information)
+
+        let information2 = new Box({
+            name: "token",
+            type: "info2",
+            x: 1680,
+            y: 520,
+            width: 30,
+            height: 80,
+            mass: 0,
+            color: "quote9",
+        })
+        this.instance.addEntity(information2)
+        this.world.addBody(information2.body)
+        this.boxes.set(information2.nid, information2)
+
+        this.room3 = {
+            x: 1391,
+            y: 310,
+            width: 300,
+            height: 460,
+            floorColor: "#717a73",
+            gridColor: "#000000",
+            gridGap: 60,
+            wallThickness: 10,
+            wallColor: "#00FF00",
+            holes: [{
+                offset: 0,
+                width: 0,
+            },{
+                offset: 0,
+                width: 0,
+            },{
+                offset: 0,
+                width: 0,
+            },{
+                offset: 0,
+                width: 480,
+            }],
+        }
+        setupFloors(this.instance, this.room3)
+        setupObjectWalls(this.instance, this.world, this.room3, this.boxes)
+        setupWalls(this.instance, this.room3, this.obstacles, "wall")
+
+
+
+    
+       
+
+       const libbyVideoPreview = new Obstacle({ 
+            name: "libbyVideoPreview",
+            x: 290, 
+            y: 300, 
+            width: 860,
+            height: 480, 
+            color: "#FFE401"
+        })
+        this.instance.addEntity(libbyVideoPreview)
+        this.obstacles.set(libbyVideoPreview.nid, libbyVideoPreview)
+
+
+
+
+               
+       
+
+        /*setInterval(function(){
             let likePump = new Box({
                 name: "token",
-                type: "thumbs-up",
-                x: 7250,
-                y: 250,
+                type: "soccer-ball",
+                x: 900,
+                y: 900,
                 width: 25,
                 height: 25,
                 mass: 0.001,
@@ -545,185 +336,97 @@ class GameInstance {
             })
             theInstance.addEntity(likePump)
             theWorld.addBody(likePump.body)
-            boxes.set(likePump.nid, likePump)
-        }, 30000)
-
-        /*setInterval(function(){
-            let size = Math.random() * 70
-            let likePump = new Box({
-                name: "token",
-                type: "dial",
-                x: 8900,
-                y: 4500,
-                width: size,
-                height: size,
-                mass: 0.001,
-                color: "0000ff",
-            })
-            theInstance.addEntity(likePump)
-            theWorld.addBody(likePump.body)
-            boxes.set(likePump.nid, likePump)
-        }, 30000)
-
-        setInterval(function(){
-            let size = Math.random() * 70
-            let likePump = new Box({
-                name: "token",
-                type: "robot",
-                x: 11500,
-                y: 4500,
-                width: size,
-                height: size,
-                mass: 0.001,
-                color: "0000ff",
-            })
-            theInstance.addEntity(likePump)
-            theWorld.addBody(likePump.body)
-            boxes.set(likePump.nid, likePump)
-        }, 30000)*/
-        
-
-        
+            theBoxes.set(likePump.nid, likePump)
+        }, 3000)*/
 
 
-    
-        
-
-
-
-
-        //LONG TRIANGLE PATTERNSED OBSTACLE SOUTH OF RECEPTION
-        /*const southWall = new Obstacle({ 
-            name: "southWall",
-            x: 1800, 
-            y: 2400, 
-            width: 200, 
-            height: 1400, 
-            border: "",
-            color: "#FF284D"
-        })
-        this.instance.addEntity(southWall)
-        obstacles.set(southWall.nid, southWall)*/
-
-
-
-         const easternEyeBuilding = new Obstacle({ 
-            name: "easternEyeBuilding",
-            x: 0, 
-            y: 775, 
-            width: 570, 
-            height: 450, 
-            border: "",
-            color: "#FFE401"
-        })
-        this.instance.addEntity(easternEyeBuilding)
-        obstacles.set(easternEyeBuilding.nid, easternEyeBuilding)
-
- 
-      
-
-        const easternEyeBuildingTwo = new Obstacle({ 
-            name: "easternEyeBuildingTwo",
-            x: 1430, 
-            y: 775, 
-            width: 570, 
-            height: 450, 
-            border: "",
-            color: "#FF33FF"
-        })
-        this.instance.addEntity(easternEyeBuildingTwo)
-        obstacles.set(easternEyeBuildingTwo.nid, easternEyeBuildingTwo)
-
-
-
-
-
-
-
-
-
-
-         //LONG TRIANGLE PATTERNSED OBSTACLE SOUTH OF RECEPTION
-         const northernFlowerBuilding = new Obstacle({ 
-            name: "northernFlowerBuilding",
-            x: 775, 
-            y: 0, 
-            width: 450, 
-            height: 675, 
-            border: "",
-            color: "#1DCFFF"
-        })
-        this.instance.addEntity(northernFlowerBuilding)
-        obstacles.set(northernFlowerBuilding.nid, northernFlowerBuilding)
-
-
-
-        const northernFlowerBuildingTwo = new Obstacle({ 
-            name: "northernFlowerBuildingTwo",
-            x: 775, 
-            y: 1320, 
-            width: 450, 
-            height: 600, 
-            border: "",
-            color: "#FF0000"
-        })
-        this.instance.addEntity(northernFlowerBuildingTwo)
-        obstacles.set(northernFlowerBuildingTwo.nid, northernFlowerBuildingTwo)
-
-
-
-
-
-       /* const crystal = new Obstacle({ 
-            name: "crystal",
-            x: 300, 
-            y: 500, 
-            width: 200, 
-            height: 500, 
-            color: "#FF0000",
-            rotation: 0,
-            angle: 0
-            //shape: 
-        })
-        this.instance.addEntity(crystal)
-        obstacles.set(crystal.nid, crystal)
-
-        const crystalTwo = new Obstacle({ 
-            name: "crystal",
-            x: 50, 
-            y: 250, 
-            width: 200, 
-            height: 500, 
-            color: "#FF0000",
-            rotation: 0,
-            angle: 90
-            //shape: 
-        })
-        this.instance.addEntity(crystalTwo)
-        obstacles.set(crystalTwo.nid, crystalTwo)*/
-/*
-      
-  //LONG TRIANGLE PATTERNSED OBSTACLE SOUTH OF RECEPTION
-  const circleBuilding = new Obstacle({ 
-    name: "circleBuilding",
-    x: 3400, 
-    y: 3000, 
-    width: 600, 
-    height: 600, 
-    border: "",
-    color: "#FFE401"
-})
-this.instance.addEntity(circleBuilding)
-obstacles.set(circleBuilding.nid, circleBuilding)*/
-
-        
-        //crystal
 
 
         this.people = []
 
+
+        this.instance.on('connect', ({ client, data, callback }) => {
+            
+            const channel = this.instance.createChannel()
+
+            channel.subscribe(client)
+            client.channel = channel
+            
+            client.positions = []
+
+            client.invite = {x:data.fromClient.inviteX, y:data.fromClient.inviteY}
+           
+            client.view = {
+                x: 0,
+                y: 0,
+                halfWidth: 4000,
+                halfHeight: 4000
+            }
+
+            let theWorldDesign = JSON.stringify([this.room, this.room2, this.roomEntrance, this.room3])
+
+            this.instance.message(new Notification(theWorldDesign, 'mapInfo', 0, 0), client)
+            
+
+            if(data.fromClient.name) {
+                let command = {name: data.fromClient.name, avatar: data.fromClient.avatar, color: data.fromClient.color}
+                this.joinSession(command, client)  
+            }
+
+
+            callback({ accepted: true, text: ""})
+
+        })
+
+        this.instance.on('disconnect', client => {
+            
+            if(client.rawEntity) {
+                this.instance.messageAll(new Notification(''+ client.rawEntity.name +'', 'personLeft', 20, 20))
+            }
+
+            if(client.rawEntity) {
+                client.channel.removeEntity(client.rawEntity)
+                this.instance.removeEntity(client.rawEntity)
+                this.instance.removeEntity(client.smoothEntity)
+            }
+            client.channel.destroy()
+        })
+
+        this.instance.on('command::JoinCommand', ({ command, client }) => {
+
+            this.joinSession(command, client)
+            
+        })
         
-        // (the rest is just attached to client objects when they connect)
+
+        this.instance.on('command::ToggleCommand', ({ command, client }) => {
+
+            //console.log(command)
+            
+
+            if(command.type == "headphones" && command.boolean == true) {
+                client.rawEntity.headphones = true
+                client.smoothEntity.headphones = true
+            } else if (command.type == "headphones" && command.boolean == false) {
+                client.rawEntity.headphones = false
+                client.smoothEntity.headphones = false
+            }
+
+
+
+            if(command.type == "typing" && command.boolean == true) {
+                client.rawEntity.typing = true
+                client.smoothEntity.typing = true
+            } else if (command.type == "typing" && command.boolean == false) {
+                client.rawEntity.typing = false
+                client.smoothEntity.typing = false
+            }
+
+
+ 
+        })
+
+
         this.instance.on('command::LeaveCommand', ({ command, client }) => {
 
            /// clean up per client state
@@ -750,74 +453,26 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
 
         })
 
-        
-        
+        this.instance.on('command::MoveCommand', ({ command, client, tick }) => {
+            const rawEntity = client.rawEntity
 
 
-        // (the rest is just attached to client objects when they connect)
-        this.instance.on('command::JoinCommand', ({ command, client }) => {
-
-            this.joinSession(command, client)
-            
-        })
-
-        this.instance.on('connect', ({ client, data, callback }) => {
-            
-            const channel = this.instance.createChannel()
-            channel.subscribe(client)
-            client.channel = channel
-            
-            client.positions = []
-
-            client.invite = {x:data.fromClient.inviteX, y:data.fromClient.inviteY}
-           
-            client.view = {
-                x: 0,
-                y: 0,
-                halfWidth: 4000,
-                halfHeight: 4000
+            if(command.forward == true || command.backward == true || command.left == true || command.right == true) {
+                this.instance.addLocalMessage(new Walking(client.smoothEntity.nid, client.color, client.smoothEntity.rotation, rawEntity.x, rawEntity.y))
             }
-            
-           
 
-            let theWorldDesign = JSON.stringify([this.room, this.room2, this.room3, this.room4, this.room5, this.room6, this.room7])
+            applyCommand(rawEntity, command, this.obstacles, this.boxes)
 
-            this.instance.message(new Notification(theWorldDesign, 'mapInfo', 0, 0), client)
+            client.positions.push({
+                x: rawEntity.x,
+                y: rawEntity.y,
+                delta: rawEntity.delta,
+                rotation: rawEntity.rotation
+            })
 
-            console.log(data)
-            if(data.fromClient.name) {
-                let command = {name: data.fromClient.name, avatar: data.fromClient.avatar, color: data.fromClient.color}
-                this.joinSession(command, client)  
-                console.log('name set')
-            }
-            //
-            //
-            
-
-
-            callback({ accepted: true, text: ""})
+            //this.instance.message(new Notification("", "playerPosition", rawEntity.x), client)
 
         })
-
-
-
-
-        this.instance.on('disconnect', client => {
-            // clean up per client state
-            if(client.rawEntity) {
-                this.instance.messageAll(new Notification(''+ client.rawEntity.name +'', 'personLeft', 20, 20))
-            }
-
-            //console.log(''+ client.rawEntity.name +'')
-
-            if(client.rawEntity) {
-                client.channel.removeEntity(client.rawEntity)
-                this.instance.removeEntity(client.rawEntity)
-                this.instance.removeEntity(client.smoothEntity)
-            }
-            client.channel.destroy()
-        })
-
 
 
 
@@ -869,10 +524,6 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
                 console.log("First Pass: "+firstPass)
 
                 if(firstPass.length > 0) {
-                    //console.log(firstPass)
-
-                    //let secondPass = censoring.censorMessage(firstPass, '*');
-                    //console.log("Second Pass: "+secondPass)
 
                     let thirdPass = filter.cleanHacked(firstPass)
                     console.log("Third Pass: "+thirdPass)
@@ -882,31 +533,6 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
                 }
                 
             }
-
-        })
-
-        this.instance.on('command::RespawnCommand', ({ command, client, tick }) => {
-            const rawEntity = client.rawEntity
-            const smoothEntity = client.smoothEntity
-            respawnPlayer(rawEntity, smoothEntity);
-        })
-
-        this.instance.on('command::MoveCommand', ({ command, client, tick }) => {
-            const rawEntity = client.rawEntity
-
-            if(command.forward == true || command.backward == true || command.left == true || command.right == true) {
-                this.instance.addLocalMessage(new Walking(client.smoothEntity.nid, rawEntity.x, rawEntity.y))
-            }
-            applyCommand(rawEntity, command, this.obstacles, this.boxes)
-
-            client.positions.push({
-                x: rawEntity.x,
-                y: rawEntity.y,
-                delta: rawEntity.delta,
-                rotation: rawEntity.rotation
-            })
-
-            //this.instance.message(new Notification("", "playerPosition", rawEntity.x), client)
 
         })
 
@@ -965,8 +591,8 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
 
            //let room2SpawnX = this.room6.x + (this.room6.width/2)
            //let room2SpawnY = this.room6.y + (this.room6.height/2) + 50
-           let room2SpawnX = this.room.x + (this.room.width/2)
-           let room2SpawnY = this.room.y + (this.room.height/2)
+           let room2SpawnX = this.room.x + 900
+           let room2SpawnY = this.room.y + 120
             
             
                 rawEntity.x = room2SpawnX
@@ -1024,14 +650,11 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
                 client.view.x = client.rawEntity.x
                 client.view.y = client.rawEntity.y
                 
-                //console.log(client.rawEntity.body)
                 client.rawEntity.body.position[0] = client.rawEntity.x
                 client.rawEntity.body.position[1] = client.rawEntity.y
                 client.rawEntity.body.angle = client.rawEntity.rotation
             }
             
-            //console.log(client);
-            // have the smooth entity follow the raw entity
             const smoothEntity = client.smoothEntity
             if (smoothEntity) {
                 const maximumMovementPerFrameInPixels = 410 * delta
@@ -1045,136 +668,197 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
 
         this.world.step(1/20);
 
-       
-
-
         //this.instance.messageAll(new Notification(""+(this.world.time.toFixed())+"", 'worldInfoTime'))
         //this.instance.messageAll(new Notification(""+this.totalUsers+"", 'worldInfoTotalUsers'))
         //this.instance.messageAll(new Notification(""+this.activeUsers.length+"", 'worldInfoActiveUsers'))
 
-        
-            //Portals
-            this.instance.clients.forEach(client => {
-
-                for (let portal of this.portals.values()) {
-
-                    if(client.smoothEntity) {
-
-                        let collided = false
-
-                        collided = SAT.testCirclePolygon(client.rawEntity.collider.circle, portal.collider.polygon) 
-                        
-                        if(collided) {
 
 
-                            let thisInstance = this.instance
-                            let thisClient = client.rawEntity
-                            let thisClientSmooth = client.smoothEntity
-                            let portalName = portal.name
+        //Start Art
+        this.instance.clients.forEach(client => {
 
-                            thisClient.isAlive = false;
-                           
+            let touching = false
 
-                            setTimeout(function(){
-                                thisClient.x = portal.exit[0]
-                                thisClient.y = portal.exit[1]
-                                thisClientSmooth.x = portal.exit[0]
-                                thisClientSmooth.y = portal.exit[1]
-                                //console.log(port)
-                                client.view.x = thisClient.x
-                                client.view.y = thisClient.y
-                                client.positions = []
-                            }, 500)
-                            
-                            setTimeout(function(){
-                                thisClient.isAlive = true
-                                //console.log(portalName)
-                                thisInstance.message(new Notification(portalName, 'sound', 0, 0), client)
-                            }, 100)
+            for (let obstacle of this.obstacles.values()) {
 
-                            break
-                        } else {
+               if(client.rawEntity && obstacle.name == 'artStarter') {
 
-                            let thisClient = client.rawEntity
-                            let thisInstance = this.instance
+                   let collided = false
 
-                            var a = thisClient.x - portal.x;
-                            var b = thisClient.y - portal.y
-                            var c = Math.sqrt( a*a + b*b );
+                   collided = SAT.testCirclePolygon(client.rawEntity.collider.circle, obstacle.collider.polygon) 
+                   
+                   if(collided == true) {
 
-                            if(c < 200) {
-                                var portalVolume = c.toFixed(0)
-                                thisInstance.message(new Notification(portalVolume, 'portalVolume', 0, 0), client)
+                       // console.log('collided')
+
+                        if(obstacle.touching == false) {
+                            let direction 
+                            console.log(obstacle.name)
+                            if(client.rawEntity.x > obstacle.x) {
+                                direction = "left"
+                            } else {
+                                direction = "right"
                             }
+                            if(client.rawEntity.y > obstacle.y) {
+                                direction += " top"
+                            } else {
+                                direction += " bottom"
+                            }
+                            console.log(client.smoothEntity.bodyRotation)
+                            this.instance.message(new Notification(""+direction+"", 'showStartArtButton', client.rawEntity.bodyRotation, 0), client)
                         }
                         
-                    }
+                        obstacle.touching = true
+                        touching = true
+
+                        break
+
+                   } else {
+                        //
+                        obstacle.touching = false
+                   }
+          
+               }
 
 
-                }
+           }
+
+           if(touching == false) {
+            this.instance.message(new Notification("uo!", 'hideStartArtButton'), client)
+          }
 
 
-            })
+       })
 
-            //Play Boxes
+        for (const [key, value] of Object.entries(this.instance.clients.array)) {
 
-            for (const [key, value] of Object.entries(this.instance.clients.array)) {
+            let touching = false
 
-                 for (let box of this.boxes.values()) {
+            for (let box of this.boxes.values()) {
 
-                    let collided = false
+                let collided = false
 
-                    if(value.rawEntity && box.name == "token") {
+                if(value.rawEntity && box.name == "token") {
 
-                        collided = SAT.testCirclePolygon(value.rawEntity.collider.circle, box.collider.polygon) 
-                        
-                        if(collided == true) {
+                    collided = SAT.testCirclePolygon(value.rawEntity.collider.circle, box.collider.polygon) 
+                    
+                    if(collided == true) {
 
-                            if(box.type == "quote") {
+                        if(box.touching == false) {
+                            if(box.type == "info2") {
                                 this.instance.message(new Notification(''+box.color+'', 'showQuote'), value) 
-                            } else if (box.type == "art") {
-                                this.instance.message(new Notification(''+box.color+'', 'showArt'), value)
                             } else {
                                 this.instance.message(new Notification(''+box.type+'', 'scoreIncrease'), value)
                             }
+                        }
 
-                        } 
-               
+                        box.touching = true
+                        touching = true
+
+                        break
+
+                    } else {
+                        box.touching = false
                     }
-
+            
                 }
-
 
             }
 
+        }
 
 
-            //Play Boxes
-            for (let box of this.boxes.values()) {
+            
+        
+        
+        //Portals
+        this.instance.clients.forEach(client => {
 
-                for (let portal of this.portals.values()) {
+            for (let portal of this.portals.values()) {
+
+                if(client.smoothEntity) {
 
                     let collided = false
 
-                    collided = SAT.testPolygonPolygon(box.collider.polygon, portal.collider.polygon) 
+                    collided = SAT.testCirclePolygon(client.rawEntity.collider.circle, portal.collider.polygon) 
                     
-
                     if(collided) {
+
+
+                        let thisInstance = this.instance
+                        let thisClient = client.rawEntity
+                        let thisClientSmooth = client.smoothEntity
+                        let portalName = portal.name
+
+                        thisClient.isAlive = false;
                         
-                        box.body.position[0] = portal.exit[0]
-                        box.body.position[1] = portal.exit[1]
+
+                        setTimeout(function(){
+                            thisClient.x = portal.exit[0]
+                            thisClient.y = portal.exit[1]
+                            thisClientSmooth.x = portal.exit[0]
+                            thisClientSmooth.y = portal.exit[1]
+                            //console.log(port)
+                            client.view.x = thisClient.x
+                            client.view.y = thisClient.y
+                            client.positions = []
+                        }, 500)
                         
+                        setTimeout(function(){
+                            thisClient.isAlive = true
+                            //console.log(portalName)
+                            thisInstance.message(new Notification(portalName, 'sound', 0, 0), client)
+                        }, 100)
+
                         break
+                    } else {
+
+                        let thisClient = client.rawEntity
+                        let thisInstance = this.instance
+
+                        var a = thisClient.x - portal.x;
+                        var b = thisClient.y - portal.y
+                        var c = Math.sqrt( a*a + b*b );
+
+                        if(c < 200) {
+                            var portalVolume = c.toFixed(0)
+                            thisInstance.message(new Notification(portalVolume, 'portalVolume', 0, 0), client)
+                        }
                     }
-
-
+                    
                 }
 
 
             }
-            
-       
-        
+
+
+        })
+
+
+        //Play Boxes
+        for (let box of this.boxes.values()) {
+
+            for (let portal of this.portals.values()) {
+
+                let collided = false
+
+                collided = SAT.testPolygonPolygon(box.collider.polygon, portal.collider.polygon) 
+                
+
+                if(collided) {
+                    
+                    box.body.position[0] = portal.exit[0]
+                    box.body.position[1] = portal.exit[1]
+                    
+                    break
+                }
+
+
+            }
+
+
+        }
+
 
         this.boxes.forEach(box => {
             
@@ -1193,6 +877,7 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
             
         })
 
+
         this.world.on('beginContact', function (event) {
 
            
@@ -1206,7 +891,6 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
                 var velocityY = event.bodyA.velocity[1]
                 var mass = event.bodyA.mass
                 var momentum = mass*velocityY
-                var angularVelocity = event.bodyA.angularVelocity
                 
                 //console.log(momentum)
                 //console.log(anngularVelocity)
@@ -1221,12 +905,43 @@ obstacles.set(circleBuilding.nid, circleBuilding)*/
 
             //console.log('Collision registered...'); ]
 
-            event.bodyA.updateAABB();
-            event.bodyB.updateAABB();
-         });
-        
+            //event.bodyA.updateAABB();
+            //event.bodyB.updateAABB();
+        });
 
 
+        //Libbys Security Cameras
+        this.instance.clients.forEach(client => {
+
+            for (let box of this.boxes.values()) {
+
+                if(client.smoothEntity) {
+
+                    let thisClient = client.rawEntity
+
+                    var a = thisClient.x - box.x;
+                    var b = thisClient.y - box.y
+                    var c = Math.sqrt( a*a + b*b );
+
+                    if(c < 1000) {
+                        if(box.type == "security-cam") {
+
+                            const dx = box.x - thisClient.x
+                            const dy = box.y - thisClient.y
+                            const rotation = Math.atan2(dy, dx);
+
+                            box.rotation = rotation
+                           
+
+                        }
+                        
+                    }
+                }
+
+            }
+
+        })
+    
 
         // when instance.updates, nengi sends out snapshots to every client
         this.instance.update()

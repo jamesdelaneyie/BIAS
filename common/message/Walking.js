@@ -1,8 +1,10 @@
 import nengi from 'nengi'
 
 class Walking {
-    constructor(id, x, y) {
+    constructor(id, color, angle, x, y) {
         this.id = id
+        this.color = color
+        this.angle = angle
         this.x = x
         this.y = y
     }
@@ -10,6 +12,8 @@ class Walking {
 
 Walking.protocol = {
     id: nengi.Int32,
+    color: nengi.String, 
+    angle: nengi.RotationFloat32,
     x: nengi.Int32,
     y: nengi.Int32
 }

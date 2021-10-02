@@ -10,9 +10,11 @@ import reconcilePlayer from './reconcilePlayer.js'
 import shouldIgnore from './shouldIgnore.js'
 import addMessage from './graphics/addMessage.js'
 import emojiBlast from './graphics/emojiBlast.js'
+
+
+
 import * as PIXI from 'pixi.js'
 import { Sound, filters } from '@pixi/sound';
-import MultiStyleText from 'pixi-multistyle-text'
 import AudioStreamMeter from 'audio-stream-meter'
 import { GlitchFilter } from '@pixi/filter-glitch'
 
@@ -20,10 +22,6 @@ import { GlitchFilter } from '@pixi/filter-glitch'
 const create = () => {
     
     const client = new nengi.Client(nengiConfig, 100)
-    const renderer = new PIXIRenderer()
-    let input = new InputSystem(renderer, client)
-
-    window.renderer = renderer
 
     const state = {
         myRawId: null,
@@ -34,6 +32,48 @@ const create = () => {
         floors: new Map()
     }
 
+    const renderer = new PIXIRenderer(state)
+    window.renderer = renderer
+
+    let input = new InputSystem(renderer, client)
+
+    const loader = new PIXI.Loader();
+    loader.add('boop', 'audio/boop.mp3');
+    loader.add('footstep', 'audio/footstep.mp3');
+
+    let boop = ""
+    let footstep = ""
+    loader.load(function(loader, resources) {
+        boop = resources.boop.sound
+
+        footstep = resources.footstep.sound
+        footstep.speed = 2
+        footstep.volume = 0.005
+    });
+
+    const portalSound = Sound.from('audio/car.mp3');
+    const partySound = Sound.from('audio/grunt-birthday-party.mp3');
+    const messageSound = Sound.from('audio/message.mp3');
+    const leftSound = Sound.from('audio/left.mp3');
+    partySound.volume = 0.008
+    let lastMessage
+
+
+    const portalProximity = Sound.from('audio/portal-proximity.mp3');
+    portalProximity.volume = 0
+    portalProximity.loop = true
+    portalProximity.play()
+/*
+
+    var inviteLocation = window.location.href
+    var location = new URL(inviteLocation);
+    var x = location.searchParams.get("x");
+    var y = location.searchParams.get("y")
+    //var handshake = {inviteX:x, inviteY:y}
+    
+    
+    //console.log(handshake)
+*/
     
 
     clientHookAPI(
@@ -60,9 +100,8 @@ const create = () => {
 
 
 
-
-
     client.on('message::Identity', message => {
+
         state.myRawId = message.rawId
         state.mySmoothId = message.smoothId
         state.myPeerId = message.peerId
@@ -74,20 +113,15 @@ const create = () => {
         window.localStorage.setItem('avatar', state.myAvatar);
         window.localStorage.setItem('color', state.color);
         
-
         renderer.UIBuilder.joinInstance(state.name, state.myRawId)
         renderer.UIBuilder.joinSession();
 
         renderer.UIBuilder.clearText();
        
-
         input.leftController.alpha = 1
 
       
-
-        
-        
-        const myPeer = new Peer(""+state.name+"",{
+        /*const myPeer = new Peer(""+state.name+"",{
             host:'/', 
             path: '/',
             port: 9000
@@ -104,7 +138,7 @@ const create = () => {
         myPeer.on('error', function (err) {
             console.log(err.type)
             if(err.type == 'server-error') {
-                const text = new MultiStyleText("<dot>●</dot> Unable to connect to peer server. Please reload page.", {
+                /*const text = new MultiStyleText("<dot>●</dot> Unable to connect to peer server. Please reload page.", {
                     "default": {
                         fontFamily: "Monaco",
                         fontSize: "10px",
@@ -129,7 +163,7 @@ const create = () => {
         hangUpBtn.addEventListener('click', function (){
             conn.close();
             showCallContent();
-        })*/
+        })
 
         const callSound = Sound.from('audio/calling.mp3');
         callSound.volume = 0.005
@@ -175,11 +209,12 @@ const create = () => {
     
     
         setTimeout(function(){
-            getLocalStream()
-        }, 5000)
-        
+            //getLocalStream()
+        }, 5000)*/
        
     })
+
+    var emitter
 
 
     client.on('message::WeaponFired', message => {
@@ -190,20 +225,71 @@ const create = () => {
         }
         const { x, y, tx, ty } = message
         drawHitscan(renderer.background, x, y, tx, ty, 0x000000)
+
+
+
+        
+
     })
 
-    
-
+    const trails = []
+    let stepCounter = 0
     
 
     client.on('message::Walking', message => {
+
+        let trail = new PIXI.Graphics()
+        let color = PIXI.utils.string2hex(message.color)
+
+        trail.beginFill(color, 0.2)
+        trail.drawCircle(message.x, message.y, 3)
+        trail.endFill()
+
+        trails.push(trail)
+        stepCounter++
+
+        let angle
+        if(message.angle > -1.5708 && message.angle < -0.7853) {
+            angle = 'top'
+        } else if (message.angle > -0.7853 && message.angle < 0) {
+            angle = 'right'
+        } else if (message.angle > 0 && message.angle < 0.7853) {
+            angle = 'right'
+        } else if (message.angle > 0.7853 && message.angle < 1.5708) {
+            angle = 'bottom'
+        } else if (message.angle > 1.5708 && message.angle < 2.3561) {
+            angle = 'bottom'
+        } else if (message.angle > 2.3561 && message.angle < 3.1415) {
+            angle = 'left'
+        } else if (message.angle > 3.1415 && message.angle < 3.92699) {
+            angle = 'left'
+        } else {
+            angle = 'top'
+        }
+
+        if(stepCounter % 5 == 0) {
+            if(stepCounter % 10 == 0) {
+                if(angle == "top" || angle == "bottom") {
+                    trail.x = -10
+                } else {
+                    trail.x = 10
+                }
+                if(angle == "right" || angle == "left") {
+                    trail.y = -10
+                } else {
+                    trail.y = 10
+                }
+            } 
+            renderer.background.addChild(trail)
+        }
+        
        
         if (message.id === state.mySmoothEntity.nid) {
             renderer.UIBuilder.setOwnPlayerPositionMiniMap(state.myRawEntity.x, state.myRawEntity.y)
             return
         }
-       
-       
+
+
         renderer.UIBuilder.setPlayerPositionMiniMap(message.id, message.x, message.y)
 
         if(state.mySmoothEntity) {
@@ -234,19 +320,7 @@ const create = () => {
 
     })
 
-    const loader = new PIXI.Loader();
-    loader.add('boop', 'audio/boop.mp3');
-    loader.add('footstep', 'audio/footstep.mp3');
 
-    let boop = ""
-    let footstep = ""
-    loader.load(function(loader, resources) {
-        boop = resources.boop.sound
-        footstep = resources.footstep.sound
-        footstep.speed = 2
-        footstep.volume = 0.005
-
-    });
 
 
     client.on('message::Hitting', message => {
@@ -288,18 +362,7 @@ const create = () => {
 
 
 
-    const portalSound = Sound.from('audio/car.mp3');
-    const partySound = Sound.from('audio/grunt-birthday-party.mp3');
-    const messageSound = Sound.from('audio/message.mp3');
-    const leftSound = Sound.from('audio/left.mp3');
-    partySound.volume = 0.008
-    let lastMessage
-
-
-    const portalProximity = Sound.from('audio/portal-proximity.mp3');
-    portalProximity.volume = 0
-    portalProximity.loop = true
-    portalProximity.play()
+   
 
     client.on('message::Notification', message => {
 
@@ -315,6 +378,14 @@ const create = () => {
             }
         }
 
+        if(message.type == "showStartArtButton") {
+            renderer.UIBuilder.showStartArtButton(message.text, message.x)
+        }
+        if(message.type == "hideStartArtButton") {
+            renderer.UIBuilder.hideStartArtButton()
+        }
+
+    
         if(message.type == "showArt") {
             renderer.UIBuilder.showArt(message.text)
         }
@@ -358,7 +429,7 @@ const create = () => {
                 partySound.play()
             }
 
-            if(message.text == "⚡") {
+            /*if(message.text == "⚡") {
                const fuckMeUp = new GlitchFilter({animating: true})
                renderer.camera.filters = [fuckMeUp]
                renderer.UIBuilder.filters = [fuckMeUp]
@@ -368,13 +439,14 @@ const create = () => {
                 const fuckMeUp = new GlitchFilter({animating: true})
                 renderer.camera.filters = []
                 renderer.UIBuilder.filters = []
-             }
+             }*/
 
             
         }
 
         if(message.type == "text") {
             addMessage(renderer.middleground, message);
+            console.log(message)
             /*if(!messageSound.isPlaying) {
                 messageSound.play()
             }*/
@@ -386,28 +458,22 @@ const create = () => {
         
         if(message.type == "sound") {
 
-
             renderer.UIBuilder.teleporting(message.text)
-
-            if(portalSound.isPlaying == false) {
-                //portalSound.play(); 
-            }
-            //renderer.videoTexture.baseTexture.resource.source.pause()
-
+            portalSound.play(); 
+  
         }
 
         if(message.type == "portalVolume") {
 
             var volume = (100 - message.text) / 500
-            //console.log(volume)
             volume = Math.max(0, volume);
             portalProximity.volume = volume
-
 
         } else {
             portalProximity.volume = 0
         }
 
+        //Group Effect
         if(message.type == "command") {
 
 
@@ -432,8 +498,6 @@ const create = () => {
     })
 
     client.on('connected', res => { 
-
-        //console.log('connection?:', res)
         
         renderer.UIBuilder.updateConnection(res, true);
        
@@ -447,9 +511,6 @@ const create = () => {
         
     })
 
-
-
-
     client.on('disconnected', () => { 
 
         renderer.UIBuilder.updateConnection(null, false);
@@ -457,27 +518,29 @@ const create = () => {
     })
 
 
-
-
-    var inviteLocation = window.location.href
-    var location = new URL(inviteLocation);
-    var x = location.searchParams.get("x");
-    var y = location.searchParams.get("y")
-    //var handshake = {inviteX:x, inviteY:y}
-    
-    const handshake = window.localStorage;
-    //console.log(handshake)
-    if(handshake.name) {
+    /*if(handshake.name) {
         client.connect('ws://localhost:8079', handshake)
     } else {
-        client.connect('ws://localhost:8079')
-    }
+        
+    }*/
+    const handshake = window.localStorage;
+    client.connect('ws://localhost:8079', handshake)
 
     
     //client.connect('wss://bias.jamesdelaney.ie/test')
 
 
+
     const update = (delta, tick, now) => {
+
+        if(trails.length > 200) {
+            let trailToRemove = trails.shift()
+            renderer.background.removeChild(trailToRemove)
+        }
+
+            
+       
+
         client.readNetworkAndEmit()
         handleInput(input, state, client, renderer, delta)
         renderer.update(delta)

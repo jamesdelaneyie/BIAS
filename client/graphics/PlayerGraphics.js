@@ -1,9 +1,8 @@
 import * as PIXI from 'pixi.js'
 import * as PUXI from '../../node_modules/puxi/lib/puxi.mjs'
-
+import { ease } from 'pixi-ease'
 import HitpointBar from './HitpointBar.js'
 import { Sound } from '@pixi/sound';
-import MultiStyleText from 'pixi-multistyle-text'
 import AudioStreamMeter from 'audio-stream-meter'
 
 class PlayerGraphics extends PIXI.Container {
@@ -14,7 +13,9 @@ class PlayerGraphics extends PIXI.Container {
         this.y = state.y
         this.isAlive = state.isAlive
         this.hitpoints = state.hitpoints
+
         this.rotation = state.rotation
+
         this.count = 0
         this.hitpointBar = new HitpointBar()
         this.hitpointBar.x = -6
@@ -26,17 +27,19 @@ class PlayerGraphics extends PIXI.Container {
         this.volume = 0
         this.wrapper = new PIXI.Container()
         this.playerBody = new PIXI.Graphics();
+        const playerBody = this.playerBody
+        playerBody.alpha = 0
+        
         this.size = 25
         this.avatar = ''+state.avatar+''
 
+        this.headphones = state.headphones
+        this.typing = state.headphones
  
         this.auraContainer = new PIXI.Container();   
-        
+
 
         let color = PIXI.utils.string2hex(this.color);
-        //console.log(state.color)
-        //console.log(this.color)
-
         
         const aura = new PIXI.Graphics();
         
@@ -48,86 +51,183 @@ class PlayerGraphics extends PIXI.Container {
 
         this.body = new PIXI.Graphics()
         this.body.beginFill(color)
-        this.body.drawCircle(0, 0, this.size)
+        this.body.drawCircle(0, 0, (this.size*2) - 2)
         this.body.endFill()
+        this.body.cacheAsBitmap = true;
+        this.body.scale.set(0.5)
         this.playerBody.addChild(this.body)
         
 
         this.nose = new PIXI.Graphics()
-        this.nose.moveTo(0, -this.size)
+        this.nose.moveTo(0, -this.size*2)
         this.nose.beginFill(color)
-        this.nose.moveTo(0, -this.size)
-        this.nose.lineTo(40, 0)
-        this.nose.lineTo(0, this.size)
+        this.nose.moveTo(0, -this.size*2)
+        this.nose.lineTo(80, 0)
+        this.nose.lineTo(0, this.size*2)
         this.nose.endFill()
+        this.nose.cacheAsBitmap = true;
+        this.nose.scale.set(0.5)
         this.playerBody.addChild(this.nose)
 
         this.avatarContainer = new PIXI.Container();   
+        const avatarContainer = this.avatarContainer
 
         const avatar = (this.avatar).split(',')
 
-        let avatarBackground = avatar[1]
-        let avatarMiddleground = avatar[4]
-        let avatarMiddleground2 = avatar[7]
-        let avatarForeground = avatar[10]
+        console.log(avatar)
 
-        let angle1 = avatar[2]
-        let angle2 = avatar[5]
-        let angle3 = avatar[8]
-        let angle4 = avatar[11]
+        let avatarBackground = avatar[0]
+        let avatarMiddleground = avatar[2]
+        let avatarMiddleground2 = avatar[4]
+        let avatarForeground = avatar[6]
 
-        //console.log(avatar)
+        let angle1 = avatar[1]
+        let angle2 = avatar[3]
+        let angle3 = avatar[5]
+        let angle4 = avatar[7]
 
-        avatarBackground = new PIXI.Sprite.from(''+avatarBackground+'');
-        avatarMiddleground = new PIXI.Sprite.from(''+avatarMiddleground+'');
-        avatarMiddleground2 = new PIXI.Sprite.from(''+avatarMiddleground2+'');
-        avatarForeground = new PIXI.Sprite.from(''+avatarForeground+'');
+        const loader = new PIXI.Loader();
 
-        avatarBackground.roundPixels = true
-        avatarMiddleground.roundPixels = true
-        avatarMiddleground2.roundPixels = true
-        avatarForeground.roundPixels = true
+        this.headphoneGraphics = new PIXI.Container()
+        const headphoneGraphics = this.headphoneGraphics
+
+        this.typingIcon = new PIXI.Container()
+        const typingIcon = this.typingIcon
+        typingIcon.visible = false
+
+        const player = this
+
+       /* loader.add('avatarBackground', ''+avatarBackground+'');
+        loader.add('avatarMiddleground', ''+avatarMiddleground+'');
+        loader.add('avatarMiddleground2', ''+avatarMiddleground2+'');
+        loader.add('avatarForeground', ''+avatarForeground+'');*/
+
+        this.name = this.name.toUpperCase();
+        
+        this.info = new PUXI.Stage(20,100)
+        const textStyle = new PIXI.TextStyle({
+            fontFamily: 'Trade Gothic Next',
+            fill: "#000000", 
+            fontWeight: 900,
+            fontSize: "16px"
+        });
+        
+        const nameText = new PUXI.TextWidget('', textStyle)
+        nameText.tint = 0xffffff
+        //this.info.alpha = 0 
+        this.info.addChild(nameText)
+        
+
+
+        loader.load(function(loader, resources) {
+
+            avatarBackground = new PIXI.Sprite.from(''+avatarBackground+'');
+            avatarMiddleground = new PIXI.Sprite.from(''+avatarMiddleground+'');
+            avatarMiddleground2 = new PIXI.Sprite.from(''+avatarMiddleground2+'');
+            avatarForeground = new PIXI.Sprite.from(''+avatarForeground+'');
+            
+
+            avatarBackground.roundPixels = true
+            avatarMiddleground.roundPixels = true
+            avatarMiddleground2.roundPixels = true
+            avatarForeground.roundPixels = true
+
+            
+            avatarBackground.width = 50
+            avatarBackground.height = 50
+            avatarBackground.anchor.set(0.5,0.5)
+            avatarBackground.angle = angle1
+
+            avatarMiddleground.width = 50
+            avatarMiddleground.height = 50
+            avatarMiddleground.anchor.set(0.5, 0.5)
+            avatarMiddleground.angle = angle2 
+
+            avatarMiddleground2.width = 50
+            avatarMiddleground2.height = 50
+            avatarMiddleground2.anchor.set(0.5, 0.5)
+            avatarMiddleground2.angle = angle3    
+
+            avatarForeground.width = 52
+            avatarForeground.height = 52
+            avatarForeground.anchor.set(0.5, 0.5)
+            avatarForeground.angle = angle4        
+
+            avatarBackground.x = 0
+            avatarBackground.y = 0
+
+            avatarMiddleground.x = 0
+            avatarMiddleground.y = 0
+
+            avatarMiddleground2.x = 0
+            avatarMiddleground2.y = 0
+
+            avatarForeground.x = 0
+            avatarForeground.y = 0
+
+            avatarBackground.cacheAsBitmap = true
+            avatarMiddleground.cacheAsBitmap = true
+            avatarMiddleground2.cacheAsBitmap = true
+            avatarForeground.cacheAsBitmap = true
+            
+
+
+            avatarContainer.addChild(avatarBackground)
+            avatarContainer.addChild(avatarMiddleground)
+            avatarContainer.addChild(avatarMiddleground2)
+            avatarContainer.addChild(avatarForeground)
+
+            
+
+            playerBody.addChild(avatarContainer)
+            
+            
+            const headband = new PIXI.Graphics()
+            headband.beginFill(0x000000)
+            headband.drawRect(-5, -30, 10, 63)
+            headband.endFill()
+            headband.pivot.set(0.5)
+
+            const leftPhone = new PIXI.Graphics()
+            leftPhone.beginFill()
+            leftPhone.drawRoundedRect(-10, -32, 20, 10, 5)
+            leftPhone.endFill()
+
+            const rightPhone = new PIXI.Graphics()
+            rightPhone.beginFill()
+            rightPhone.drawRoundedRect(-10, 23, 20, 10, 5)
+            rightPhone.endFill()
+
+            headphoneGraphics.addChild(headband)
+            headphoneGraphics.addChild(leftPhone)
+            headphoneGraphics.addChild(rightPhone)
+            headphoneGraphics.visible = false
+            headphoneGraphics.angle = 90
+
+            const typingGraphic = new PIXI.Graphics()
+            typingGraphic.beginFill(0xFFFFFF)
+            typingGraphic.drawRoundedRect(-50*2, -50*2, 30*2, 15*2, 5*2)
+            typingGraphic.pivot.set(0.5,0.5)
+            typingGraphic.scale.set(0.5)
+            typingGraphic.endFill()
+
+            const typingDot1 = new PIXI.Graphics()
+            typingDot1.beginFill()
+            typingDot1.drawCircle(5, 5, 3)
+            typingDot1.endFill()
+            //nameText.contentContainer.addChild(typingDot1)
+
+            typingIcon.addChild(typingGraphic)
+            nameText.contentContainer.addChild(typingIcon)
+
+
+            playerBody.addChild(headphoneGraphics)
+            ease.add(playerBody, {alpha: 1}, { duration: 250, ease: 'easeOutExpo'})
+
+
+        })
 
         
-        avatarBackground.width = 50
-        avatarBackground.height = 50
-        avatarBackground.anchor.set(0.5,0.5)
-        avatarBackground.angle = angle1
-
-        avatarMiddleground.width = 50
-        avatarMiddleground.height = 50
-        avatarMiddleground.anchor.set(0.5, 0.5)
-        avatarMiddleground.angle = angle2 
-
-        avatarMiddleground2.width = 50
-        avatarMiddleground2.height = 50
-        avatarMiddleground2.anchor.set(0.5, 0.5)
-        avatarMiddleground2.angle = angle3    
-
-        avatarForeground.width = 51
-        avatarForeground.height = 51
-        avatarForeground.anchor.set(0.5, 0.5)
-        avatarForeground.angle = angle4        
-
-        avatarBackground.x = 0
-        avatarBackground.y = 0
-
-        avatarMiddleground.x = 0
-        avatarMiddleground.y = 0
-
-        avatarMiddleground2.x = 0
-        avatarMiddleground2.y = 0
-
-        avatarForeground.x = 0
-        avatarForeground.y = 0
-
-
-        this.avatarContainer.addChild(avatarBackground)
-        this.avatarContainer.addChild(avatarMiddleground)
-        this.avatarContainer.addChild(avatarMiddleground2)
-        this.avatarContainer.addChild(avatarForeground)
-
-        this.playerBody.addChild(this.avatarContainer)
 
 
 
@@ -146,25 +246,11 @@ class PlayerGraphics extends PIXI.Container {
 
 
         
-        this.name = this.name.toUpperCase();
         
-        this.info = new PUXI.Stage(20,100)
-        const textStyle = new PIXI.TextStyle({
-            fontFamily: 'Trade Gothic Next',
-            fill: "#000000", 
-            fontWeight: 900,
-            fontSize: "16px"
-        });
-        
-        const nameText = new PUXI.TextWidget('', textStyle)
-        nameText.tint = 0xffffff
-        this.info.alpha = 0 
-        this.info.addChild(nameText)
 
         
         const nameTextCurved = new PIXI.Text(""+this.name+"", textStyle);
         nameTextCurved.updateText();
-        //nameText.contentContainer.addChild(nameTextCurved)
 
         const radius = 40;
         const maxRopePoints = 100;
@@ -183,7 +269,7 @@ class PlayerGraphics extends PIXI.Container {
         const container = new PIXI.Container();
         container.height = 50
         container.width = 50
-
+        container.alpha = 0
         const rope = new PIXI.SimpleRope( nameTextCurved.texture, points );
         container.addChild( rope );
         nameText.contentContainer.addChild(container)
@@ -202,9 +288,10 @@ class PlayerGraphics extends PIXI.Container {
 
         this.wrapper.addChild(this.info)
         this.wrapper.addChild(this.playerBody)
+
         this.addChild(this.wrapper)
 
-
+       
 
         if(this.self == false) {
             this.body.visible = 0
@@ -216,9 +303,29 @@ class PlayerGraphics extends PIXI.Container {
         
     }
 
+    putOnHeadphones(boolean) {
+        if(boolean) {
+            this.headphones = true
+        } else {
+            this.headphones = false
+        }
+    }
+
+    isTyping(boolean) {
+        if(boolean) {
+            this.typing = true
+        } else {
+            this.typing = false
+        }
+    }
+
 
     onPointerOver(){
-        this.children[0].alpha = 1
+        //this.children[0].alpha = 1
+    }
+
+    onPointerOut(){
+        //this.children[0].alpha = 0
     }
 
     setName(name){
@@ -235,7 +342,7 @@ class PlayerGraphics extends PIXI.Container {
 
     onPointerDown(){
 
-        var personToCall = this.name;
+        /*var personToCall = this.name;
         var yourself = this
         if(this.name != window.myName) {
             myPeer.connect(this.name)
@@ -272,7 +379,7 @@ class PlayerGraphics extends PIXI.Container {
                     
                     mediaStream.connect(meter);
     
-                    const text = new MultiStyleText("<dot>●</dot> Connected With: "+ personToCall +" (ID:"+stream.id+")", {
+                    /*const text = new MultiStyleText("<dot>●</dot> Connected With: "+ personToCall +" (ID:"+stream.id+")", {
                         "default": {
                             fontFamily: "Monaco",
                             fontSize: "10px",
@@ -292,7 +399,7 @@ class PlayerGraphics extends PIXI.Container {
            
 
         }
-        
+        */
     }
 
     updateCircleSize(size){
@@ -300,9 +407,7 @@ class PlayerGraphics extends PIXI.Container {
         this.auraContainer.scale.set(size)
     }
 
-    onPointerOut(){
-        this.children[0].alpha = 0
-    }
+    
 
     hide() {
         this.body.visible = 0
@@ -320,11 +425,28 @@ class PlayerGraphics extends PIXI.Container {
         this.avatarContainer.visible = 1
     }
 
+    setRotation(rotation){
+        this.playerBody.rotation = rotation
+    }
+
 
 
     update(delta) {
-        
-        //console.log(this.size)
+
+        if(this.headphones == false) {
+           this.headphoneGraphics.visible = false
+        } else {
+            if(this.self == false) {
+                this.headphoneGraphics.visible = true
+            }
+        }
+
+        if(this.typing == false) {
+            this.typingIcon.visible = false
+         } else {
+            this.typingIcon.visible = true
+         }
+    
 
         this.count++
         if (!this.isAlive) {
@@ -342,8 +464,8 @@ class PlayerGraphics extends PIXI.Container {
                 this.avatarContainer.visible = 1
             }
         }
-        this.auraContainer.scale.set(0.6 + Math.sin((this.count/10)) * 0.1, 0.6 + Math.sin((this.count/10)) * 0.1);
-        this.auraContainer.alpha = 0.2 + Math.sin((this.count/10)) * 0.1;
+        this.auraContainer.scale.set(0.2 + Math.sin((this.count/10)) * 0.1, 0.2 + Math.sin((this.count/10)) * 0.1);
+        this.auraContainer.alpha = 0.1 + Math.sin((this.count/10)) * 0.1;
 
 
     }

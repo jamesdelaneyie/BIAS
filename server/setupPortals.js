@@ -1,6 +1,5 @@
 import Portal from '../common/entity/Portal.js'
 
-// setup a few obstacles
 export default (instance, room, portals) => {
 
     const roomX = room.x

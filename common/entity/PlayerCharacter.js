@@ -20,6 +20,9 @@ class PlayerCharacter {
         this.name = state.name
         this.self = state.self;
         this.avatar = state.avatar
+        this.headphones = false
+        this.typing = false
+        this.bodyRotation = 0
 
         this.circleShape = new p2.Circle({
             radius: this.size
@@ -79,13 +82,16 @@ PlayerCharacter.protocol = {
     footDown: nengi.Boolean,
     power: { type: nengi.Float32, interp: true },
     rotation: { type: nengi.RotationFloat32, interp: true },
+    bodyRotation: { type: nengi.RotationFloat32, interp: true },
     delta: nengi.Number,
     isAlive: nengi.Boolean,
     color: nengi.String,
     avatar: nengi.String,
     name: nengi.String,
     self: nengi.Boolean,
-    hitpoints: nengi.UInt8
+    hitpoints: nengi.UInt8,
+    headphones: nengi.Boolean,
+    typing: nengi.Boolean
 }
 
 export default PlayerCharacter

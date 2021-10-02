@@ -1,7 +1,7 @@
-import { Graphics } from 'pixi.js'
+import * as PIXI from 'pixi.js'
 
 const drawHitscan = (layer, x, y, targetX, targetY, color) => {
-    const graphics = new Graphics()
+    const graphics = new PIXI.Graphics()
     graphics.lineStyle(1, color)
     graphics.moveTo(x, y)
     graphics.lineTo(targetX, targetY)
@@ -19,6 +19,11 @@ const drawHitscan = (layer, x, y, targetX, targetY, color) => {
             baseTexture: true
         })
     }, 120)
+
+
+
+
+    
 }
 
 export default drawHitscan

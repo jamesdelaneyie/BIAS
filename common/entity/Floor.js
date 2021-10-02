@@ -7,9 +7,9 @@ class Floor {
         this.y = state.y
         this.width = state.width
         this.height = state.height
-        this.wallColor = state.wallColor
         this.gridColor = state.gridColor
         this.floorColor = state.floorColor
+        this.gridGap = state.gridGap
     }
 }
 
@@ -19,8 +19,8 @@ Floor.protocol = {
     width: nengi.UInt16,
     height: nengi.UInt16,
     floorColor: nengi.String,
-    wallColor: nengi.String,
-    gridColor: nengi.String
+    gridColor: nengi.String,
+    gridGap: nengi.UInt16
 }
 
 export default Floor

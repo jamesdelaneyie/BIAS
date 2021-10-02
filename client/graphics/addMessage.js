@@ -56,8 +56,12 @@ const addMessage = (layer, message) => {
             textBox.lineStyle(1,0x00000)
             if(message.type == 'notification') {
                 textBox.drawRoundedRect(window.innerWidth - 240, 10, text.width+40, text.height+25, 20)
+                textBox.cacheAsBitmap = true;
+                //textBox.scale.set(0.5)
             } else {
-                textBox.drawRoundedRect(message.x - 70, message.y - (68 + text.height), text.width+40, text.height+25, 20)
+                textBox.drawRoundedRect(message.x - 70, message.y - (68 + text.height), (text.width)+40, (text.height)+25, 20)
+                textBox.cacheAsBitmap = true;
+                //textBox.scale.set(0.5)
             }
             
             textBox.endFill()

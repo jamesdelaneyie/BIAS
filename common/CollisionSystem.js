@@ -85,7 +85,7 @@ CollisionSystem.createCircleCollider = (x, y, radius) => {
 CollisionSystem.createRectangleCollider = (x, y, width, height) => {
     return {
         baseType: 'sat-polygon',
-        polygon: new SAT.Box(new SAT.Vector(x - 25, y - 25), width, height).toPolygon(),
+        polygon: new SAT.Box(new SAT.Vector(x, y), width, height).toPolygon(),
 
         get x() {
             return this.polygon.pos.x
@@ -104,7 +104,8 @@ CollisionSystem.createRectangleCollider = (x, y, width, height) => {
     }
 }
 
-CollisionSystem.createRectangleColliderBoxy = (x, y, width, height) => {
+
+CollisionSystem.createRectangleColliderBox = (x, y, width, height) => {
     return {
         baseType: 'sat-polygon',
         polygon: new SAT.Box(new SAT.Vector(x, y), width, height).toPolygon(),
@@ -122,28 +123,6 @@ CollisionSystem.createRectangleColliderBoxy = (x, y, width, height) => {
         },
         set y(value) {
             this.polygon.pos.y = value - (height/2)
-        }
-    }
-}
-
-CollisionSystem.createRectangleColliderBox = (x, y, width, height) => {
-    return {
-        baseType: 'sat-polygon',
-        polygon: new SAT.Box(new SAT.Vector(x, y), width, height).toPolygon(),
-
-        get x() {
-            return this.polygon.pos.x + 12.5
-        },
-        set x(value) {
-            this.polygon.pos.x = value - 12.5
-            this.polygon._recalc()
-        },
-
-        get y() {
-            return this.polygon.pos.y + 12.5
-        },
-        set y(value) {
-            this.polygon.pos.y = value - 12.5
         }
     }
 }

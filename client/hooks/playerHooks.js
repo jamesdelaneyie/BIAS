@@ -1,5 +1,4 @@
 import PlayerGraphics from '../graphics/PlayerGraphics.js'
-import { sound } from '@pixi/sound';
 
 export default (state, renderer ) => {
     return {
@@ -39,6 +38,15 @@ export default (state, renderer ) => {
             },
             color({ graphics, value }) {
                 graphics.setColor(value)
+            },
+            headphones({ graphics, value }) {
+                graphics.putOnHeadphones(value)
+            },
+            typing({ graphics, value }) {
+                graphics.isTyping(value)
+            },
+            bodyRotation({ graphics, value }) {
+                graphics.setRotation(value)
             }
         }
     }

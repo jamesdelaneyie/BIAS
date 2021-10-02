@@ -1,8 +1,8 @@
 import { Joystick } from './graphics/Joystick';
 import isMobile from 'ismobilejs'
 import JoinCommand from '../common/command/JoinCommand.js'
-import LeaveCommand from '../common/command/LeaveCommand.js'
-import { Sound, filters } from '@pixi/sound'
+import ToggleCommand from '../common/command/ToggleCommand.js'
+import { Sound } from '@pixi/sound'
 
 
 class InputSystem {
@@ -12,6 +12,10 @@ class InputSystem {
         this.onmousemove = null
 
         this.UIBuilder = renderer.UIBuilder
+
+        /* document.addEventListener('contextmenu', event =>
+            event.preventDefault()
+        )*/
         
         let isJoined = false;
 
@@ -21,12 +25,26 @@ class InputSystem {
         const footstep = Sound.from('audio/footstep.mp3');
         footstep.speed = 2
         footstep.volume = 0.005
+
+        const viewArtButton = renderer.stage.children[1].viewArtButton
+        viewArtButton.on('pointerdown', function(){
+            client.addCommand(new ToggleCommand(true, "headphones"))
+        })
+
+        document.addEventListener( "pointerdown", closeArtButton );
+        function closeArtButton(event){
+            var element = event.target;
+            if(element.id == 'back-to-bias'){
+                setTimeout(()=>{
+                    client.addCommand(new ToggleCommand(false, "headphones"))
+                }, 1700)
+            }
+        }
         
         
         joinButton.on("click", function () {
             
             if(isJoined == false) {
-
 
                 if(UIBuilder.nameGiven == true) {
 
@@ -44,18 +62,6 @@ class InputSystem {
             }
         });
 
-        //let isJoined = false;
-        /*const leaveButton = renderer.stage.children[1].leaveButton
-        leaveButton.on("click", function () {
-            
-            if(isJoined == true) {
-                let name = renderer.UIBuilder.getText();
-                client.addCommand(new LeaveCommand(""+name+""))
-                renderer.UIBuilder.clearText();
-                renderer.UIBuilder.leaveSession();
-                isJoined = false
-            }
-        });*/
 
         window.addEventListener('resize', () => {
             
@@ -73,15 +79,13 @@ class InputSystem {
             a: false,
             d: false,
             r: false,
-            spacebar: false,
             f: 0,
             rotation: 0,
             mx: 0,
             my: 0,
             mouseDown: false,
             mouseMoving: false,
-            message: "",
-            viewArt: false
+            message: false
             
         }
 
@@ -98,22 +102,13 @@ class InputSystem {
             spacebarRelease: false,
             mouseDown: false,
             mouseMoving: false,
-            message: "",
-            viewArt: false,
-            spacebar: false
+            message: false
         }
 
         
 
         this.isMobile = isMobile();
 
-        // disable right click
-       /* document.addEventListener('contextmenu', event =>
-            event.preventDefault()
-        )*/
-
-
-       
 
         //if(isMobile == false) {
 
@@ -174,12 +169,9 @@ class InputSystem {
                     this.currentState.spacebar = true
                     this.frameState.spacebar = true
                 }
-
-                    //enter
-                if (event.keyCode === 13) {
-                    this.currentState.message = this.UIBuilder.getMessageText();
-                    this.frameState.message = this.UIBuilder.getMessageText();
-                }
+            
+                this.currentState.message = this.UIBuilder.getMessageText();
+                this.frameState.message = this.UIBuilder.getMessageText();
 
                 
 
@@ -221,12 +213,12 @@ class InputSystem {
                     this.currentState.spacebar = false
                 }
 
-                //enter
-                if (event.keyCode === 13) {
-                   // this.frameState.message = ""
-                    this.currentState.message = ""
-                    this.UIBuilder.clearMessageText();
-                }
+                 //enter
+                 if (event.keyCode === 13) {
+                     this.frameState.message = ""
+                     this.currentState.message = ""
+                 }
+
 
 
             })
@@ -273,9 +265,7 @@ class InputSystem {
                 },
                 
                 onChange: (data) => {
-                            
-                    //console.log(data.power);
-            
+                                        
                     this.currentState.mouseDown = false
                     this.frameState.mouseDown = false
                     
@@ -371,8 +361,8 @@ class InputSystem {
                         this.frameState.s = false
                         this.currentState.d = false
                         this.frameState.d = false
-                        this.currentState.rotation = 3.141592//
-                        this.frameState.rotation = 3.141592//
+                        this.currentState.rotation = 3.141592
+                        this.frameState.rotation = 3.141592
                     }
             
                     if (dd == 'top_left') {
@@ -408,18 +398,6 @@ class InputSystem {
                 renderer.stage.removeChild(this.leftController);
             }
     
-
-            
-
-    
-   
-
-            
-           
-            
-
-
-        //}
     }
 
     placeJoySticks(){
@@ -455,7 +433,6 @@ class InputSystem {
         this.frameState.mouseDown = this.currentState.mouseDown
         this.frameState.mouseMoving = this.currentState.mouseMoving
         this.frameState.message = this.currentState.message
-        this.frameState.viewArt = this.currentState.viewArt
     }
 }
 

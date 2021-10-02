@@ -16,11 +16,9 @@ class BoxGraphics extends PIXI.Container {
        
         this.color = PIXI.utils.string2hex(this.color);
 
-        //this.rotation = 1.57
-
         const type = this.type
 
-        if (state.color == "quote0") {
+        /*if (state.color == "quote0") {
             state.width = 120
             state.height = 120
             this.auraContainer = new PIXI.Container();   
@@ -37,142 +35,47 @@ class BoxGraphics extends PIXI.Container {
             this.auraContainer.addChild(aura);
             canvasRenderer.render(this.auraContainer, auraTexture)
             this.addChild(this.auraContainer)
-        }
-
-
+        }*/
         //console.log(type)
+
         if(this.name == "token") {
-            if(this.type == "video") {
-
-                this.body = new PIXI.Graphics()
-                this.body.beginFill(this.color)
-                this.body.drawRect(state.width/2, state.height/2, state.width, state.height)
-                this.body.endFill()
-
-                //this.body.rotation = 1.5708
-                this.body.pivot.x = state.width
-                this.body.pivot.y = state.height
-                this.addChild(this.body)
-
-                //console.log(state.color)
-
-
-                //this.videoTexture = PIXI.Texture.from('/video/normalising_artist.mp4');
-
-
-                if(state.color == "#00ffff") {
-                    this.videoTexture = PIXI.Texture.from('/video/matters_artist.mp4');
-                }
-                if (state.color == "#0000ff") {
-                    this.videoTexture = PIXI.Texture.from('/video/stealing_artist.mp4');
-                }
-                if (state.color == "#505050") {
-                    this.videoTexture = PIXI.Texture.from('/video/normalising_artist.mp4');
-                }
-                
-                if(this.videoTexture) {
-                    this.videoTexture.baseTexture.resource.source.muted = true
-                    this.videoTexture.baseTexture.resource.source.loop = true
-                    this.videoTexture.baseTexture.resource.source.playsinline = true
-                    this.videoTexture.baseTexture.resource.autoPlay = true
-                    this.videoTexture.baseTexture.resource.volume = 0
-                    this.videoTexture.baseTexture.resource.updateFPS = 10
-
-                    const video = this.videoTexture.baseTexture.resource.source
-                    setTimeout(function() {
-                        video.muted = true
-                    }, 1000)
-
-                    const videoSprite = new PIXI.Sprite(this.videoTexture);
-
-                    videoSprite.scale.y = -1
-                    videoSprite.anchor.set(0.5)
-                    videoSprite.width = state.width;
-                    videoSprite.height = state.height;
-                    this.addChild(videoSprite);
-
-                }
-                
-
-            } else {
-                this.body = new PIXI.Graphics()
-                if(state.color == "art1") {
-                    this.tokenImage = new PIXI.Sprite.from('images/art1-icon.svg');
-                } else if (state.color == "art2") {
-                    this.tokenImage = new PIXI.Sprite.from('images/art2-icon.svg');
-                } else if (state.color == "art3") {
-                    this.tokenImage = new PIXI.Sprite.from('images/art3-icon.svg');
-                } else if (state.color == "art4") {
-                    this.tokenImage = new PIXI.Sprite.from('images/art4-icon.svg');
-                } else if (state.color == "quote0") {
-                    this.tokenImage = new PIXI.Sprite.from('images/info-icon.svg');
-                } else {
-                    this.tokenImage = new PIXI.Sprite.from('images/'+type+'-icon.svg');
-                }
-                this.tokenImage.width = state.width;
-                this.tokenImage.height = state.height;
-                if (state.color == "quote0") {
-                    this.tokenImage.width = state.width/2;
-                    this.tokenImage.height = state.height/2;
-                }
-                this.tokenImage.pivot.x = 0
-                this.tokenImage.pivot.y = 0
-                this.tokenImage.anchor.set(0.5)
-                this.body.addChild(this.tokenImage)
-                this.addChild(this.body)
-            }
-            
-        } else {
-
             this.body = new PIXI.Graphics()
-            let color = PIXI.utils.string2hex(state.color);
-            this.body.beginFill(color)
-            this.body.drawRect(-state.width/2, -state.height/2, state.width, state.height)
+            this.tokenImage = new PIXI.Sprite.from('images/'+type+'-icon.svg');
+            this.tokenImage.width = state.width;
+            this.tokenImage.height = state.height;
+            this.tokenImage.x = -state.width/2
+            this.tokenImage.y = -state.height/2
+            if(state.type == "security-cam") {
+                this.tokenImage.x = 0
+                this.tokenImage.y = 0
+                this.tokenImage.angle = -90
+                this.tokenImage.anchor.set(0.5, 0.8)
+            }
+            this.body.addChild(this.tokenImage)
+            this.addChild(this.body)
+
+        } else {
+            this.body = new PIXI.Graphics()
+            this.body.beginFill(this.color)
+            //this.body.lineStyle(2, 0x000000)
+            this.body.drawRoundedRect((-state.width/2)*2, (-state.height/2)*2, state.width*2, state.height*2, 10)
             this.body.endFill()
-            this.body.pivot.x = 0
-            this.body.pivot.y = 0
+            this.body.pivot.set(0.5,0.5)
+            this.body.scale.set(0.5)
             this.addChild(this.body)
 
         }
 
-        this.on('pointerdown', this.onPointerDown);
-        this.interactive = true
-        this.buttonMode = true
-
-        this.sprite_animation = false
 
         this.count = 0
        
         
     }
 
-    onPointerDown(){
-        if(this.videoTexture.baseTexture.resource.source.muted) {
-            this.videoTexture.baseTexture.resource.source.muted = false
-        } else if (this.videoTexture.baseTexture.resource.source.paused && !this.videoTexture.baseTexture.resource.source.muted) {
-            this.videoTexture.baseTexture.resource.source.play()
-        } else {
-            this.videoTexture.baseTexture.resource.source.muted = true
-            this.videoTexture.baseTexture.resource.source.pause()
-        }
-    }
+   
 
     updateColor(color) {
-        /*if(this.name == "token") {
-            /*let updateColor = PIXI.utils.string2hex(color);
-            this.body.clear()
-            this.body.beginFill(updateColor)
-            this.body.drawRect(-this.width/2, -this.height/2, 25, 25)
-            this.body.endFill()
-        } else {
-            let updateColor = PIXI.utils.string2hex(color);
-            this.body.clear()
-            this.body.beginFill(updateColor)
-            this.body.drawRect(-this.width/2, -this.height/2, this.width, this.height)
-            this.body.endFill()
-        }*/
-        
-        
+       
     }
 
     
@@ -187,23 +90,6 @@ class BoxGraphics extends PIXI.Container {
             this.auraContainer.alpha = 0.2 + Math.sin((this.count/10)) * 0.1;
         }
 
-
-        //this.rotation = this.rotation + 0.001
-        if(this.color == "art2") {
-            if(this.sprite_animation){
-                this.body.scale.x -= 0.01;
-                if(this.body.scale.x < 0 ){
-                    this.sprite_animation = false; 
-                }
-            }else{
-                this.body.scale.x += 0.01;
-                if(this.body.scale.x > 1 ){
-                    this.sprite_animation = true;
-                }
-    
-            }
-    
-        }
     }
 }
 

@@ -1,18 +1,18 @@
+import p2 from 'p2'
 import nengi from 'nengi'
 import CollisionSystem from '../CollisionSystem.js'
-import p2 from 'p2'
+
 
 class Box {
     constructor(state) {
         this.nid = state.nid
-        //this.x = state.x
-        //this.y = state.y
+        
         this.name = state.name
         this.type = state.type
 
         this.width = state.width
         this.height = state.height
-        //this.rotation = state.rotation
+        
         this.color = state.color
         this.mass = state.mass
         this.radius = state.radius
@@ -22,7 +22,7 @@ class Box {
         
         if(state.name == "token") {
 
-            
+
             this.boxShape = new p2.Box({
                 width: state.height, 
                 height: state.width
@@ -58,17 +58,12 @@ class Box {
 
            
             this.body.addShape(this.boxShape)
-
-            if(this.type == "video") {
-                this.collider = CollisionSystem.createRectangleColliderBoxy(0, 0, state.width, state.height)
-                //this.collider.polygon.angle = 1.5708   
+            if(this.type == "security-cam") {
+                this.collider = CollisionSystem.createRectangleColliderBox(0, 0, 1, 1)
             } else {
-                if(this.color != "quote0") {
-                    this.collider = CollisionSystem.createRectangleColliderBox(0, 0, 35, 35)   
-                } else {
-                    this.collider = CollisionSystem.createRectangleColliderBox(0, 0, 10, 10)   
-                }
+                this.collider = CollisionSystem.createRectangleColliderBox(0, 0, state.width, state.height)
             }
+            
 
             
 
@@ -79,6 +74,7 @@ class Box {
                 height: state.height
             });
             this.boxShape.material = state.material;
+            
             this.body = new p2.Body({
                 mass: state.mass,
                 position: [state.x + state.width/2, state.y + state.height/2],
@@ -86,7 +82,7 @@ class Box {
     
             
             this.body.addShape(this.boxShape)
-            this.collider = CollisionSystem.createRectangleCollider(0,0,0,0)    
+            this.collider = CollisionSystem.createRectangleColliderBox(0, 0, state.width, state.height)
         }
 
         

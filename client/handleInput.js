@@ -1,24 +1,22 @@
 import MoveCommand from '../common/command/MoveCommand.js'
 import FireCommand from '../common/command/FireCommand.js'
 import SpeakCommand from '../common/command/SpeakCommand.js'
+import ToggleCommand from '../common/command/ToggleCommand.js'
 import applyCommand from '../common/applyCommand.js'
 import { fire } from '../common/weapon.js'
 import handleShot from './handleShot.js'
 import isMobile from 'ismobilejs'
 import * as PIXI from 'pixi.js'
-import { Sound, filters } from '@pixi/sound'
 
 const handleInput = (inputSystem, state, client, renderer, delta) => {
 
     const input = inputSystem.frameState
     inputSystem.releaseKeys()
 
-
-
     const { myRawEntity, obstacles, boxes } = state
 
 
-    if (myRawEntity) {
+    if (myRawEntity && myRawEntity.headphones == false) {
         
         // which way are we pointing?
         const worldCoord = renderer.toWorldCoordinates(
@@ -33,6 +31,16 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
         var rotationAmount = rotation
         if(isMobile(window.navigator).any === true) {
             rotationAmount = input.rotation
+        }
+
+        
+
+        if(input.message != "") {
+            //console.log('typing')
+            client.addCommand(new ToggleCommand(true, "typing"))
+        } else {
+            //console.log('not typing')
+            client.addCommand(new ToggleCommand(false, "typing"))
         }
 
         
@@ -68,7 +76,6 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
         const sendMessage = renderer.stage.children[1].textBox.children[0].children[0].children[3]
         sendMessage.on("pointerdown", function () {
             let message = renderer.stage.children[1].mockInput.value;
-            //console.log(message)
             if(message != "") {
                 const speakCommand = new SpeakCommand(message, "talk", myRawEntity.x, myRawEntity.y)
                 client.addCommand(speakCommand)
@@ -78,20 +85,17 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
         });
 
 
+        document.addEventListener('keydown', event => {
+            if (event.key == "Enter") {
+                let message = renderer.stage.children[1].mockInput.value;
+                const speakCommand = new SpeakCommand(message, "talk", myRawEntity.x, myRawEntity.y)
+                client.addCommand(speakCommand)
+                renderer.stage.children[1].mockInput.blur();
+                renderer.stage.children[1].mockInput.text = ""
+            }
+        })
 
-        if(input.message != "") {
-            const speakCommand = new SpeakCommand(input.message, "talk", myRawEntity.x, myRawEntity.y)
-            client.addCommand(speakCommand)
-        }
 
-       
-
-        if(input.r == true) {
-            //const respawnCommand = new RespawnCommand(true)
-            //client.addCommand(respawnCommand)
-        }
-       
-      
 
         // save the result of applying the command as a prediction
         const prediction = {
@@ -110,12 +114,6 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
             graphics.playerBody.rotation = rotationAmount
        
             renderer.centerCamera(graphics)
-
-            let trail = new PIXI.Graphics()
-            trail.beginFill()
-            trail.drawCircle(graphics.x, graphics.y, 10)
-            trail.endFill()
-            //renderer.middleground.addChild(trail)
         }
         /* end movement */
 

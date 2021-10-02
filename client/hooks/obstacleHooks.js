@@ -16,11 +16,6 @@ export default ({ obstacles }, renderer) => {
         delete({ nid, graphics }) {
             renderer.entities.delete(nid)
             renderer.middleground.removeChild(graphics)
-        },
-        watch: {
-            color({ graphics, value }) {
-                graphics.updateColor(value)
-            }
         }
     }
 }
