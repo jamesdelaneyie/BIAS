@@ -455,6 +455,7 @@ class GameInstance {
             console.log('connection')
 
             if(data.fromClient.name) {
+                console.log('login')
                 this.instance.message(new Notification('', 'login', 0, 0), client)
                 let command = {name: data.fromClient.name, avatar: data.fromClient.avatar, color: data.fromClient.color, x: data.fromClient.x, y: data.fromClient.y}
                 this.joinSession(command, client, doc, creds, true)  
