@@ -370,7 +370,9 @@ class PlayerGraphics extends PIXI.Container {
 
 
     onPointerOver(){
-        this.nameHolder.visible = true
+        if(this.self != false) {
+            this.nameHolder.visible = true
+        }
     }
 
     onPointerOut(){
