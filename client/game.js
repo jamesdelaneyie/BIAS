@@ -14,9 +14,7 @@ import emojiBlast from './graphics/emojiBlast.js'
 
 
 import * as PIXI from 'pixi.js'
-import { Sound, filters } from '@pixi/sound';
-import AudioStreamMeter from 'audio-stream-meter'
-import { GlitchFilter } from '@pixi/filter-glitch'
+import { Sound, filters } from '@pixi/sound'
 
 
 
