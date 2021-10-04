@@ -548,7 +548,7 @@ class GameInstance {
 
 
             if(command.forward == true || command.backward == true || command.left == true || command.right == true) {
-                this.instance.addLocalMessage(new Walking(client.smoothEntity.nid, client.color, client.smoothEntity.rotation, rawEntity.x, rawEntity.y))
+                //this.instance.addLocalMessage(new Walking(client.smoothEntity.nid, client.color, client.smoothEntity.rotation, rawEntity.x, rawEntity.y))
             }
 
             applyCommand(rawEntity, command, this.obstacles, this.boxes)
@@ -1049,7 +1049,7 @@ class GameInstance {
                // console.log(event.bodyB.angularVelocity)
             }
             
-            theInstance.addLocalMessage(new Hitting(0, momentum, event.bodyA.position[0], event.bodyA.position[1]))
+            //theInstance.addLocalMessage(new Hitting(0, momentum, event.bodyA.position[0], event.bodyA.position[1]))
 
             //console.log('Collision registered...'); ]
 
