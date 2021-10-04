@@ -21,9 +21,6 @@ import { GlitchFilter } from '@pixi/filter-glitch'
 
 
 const create = () => {
-
-
-
     
     const client = new nengi.Client(nengiConfig, 100)
 
@@ -280,10 +277,11 @@ const create = () => {
             renderer.background.addChild(trail)
         }
         
-       
-        if (message.id === state.mySmoothEntity.nid) {
-            renderer.UIBuilder.setOwnPlayerPositionMiniMap(state.myRawEntity.x, state.myRawEntity.y)
-            return
+        if(state.mySmoothEntity) {
+            if (message.id === state.mySmoothEntity.nid) {
+                renderer.UIBuilder.setOwnPlayerPositionMiniMap(state.myRawEntity.x, state.myRawEntity.y)
+                return
+            }
         }
 
 
@@ -363,6 +361,10 @@ const create = () => {
 
         if(message.type == "mapInfo") {
             renderer.UIBuilder.buildMiniMap(message.text)
+        }
+
+        if(message.type == "login") {
+            renderer.UIBuilder.introScreenOn = false
         }
 
         if(message.type == "flower") {

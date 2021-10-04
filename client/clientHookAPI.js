@@ -115,6 +115,8 @@ export default (client, hooks) => {
         const name = graphics.protocol.name
         const hooks = client.hooks[name]
 
+        //console.log(name)
+
         if (client.entities.has(nid)) {
             client.entities.delete(nid)
         } else {

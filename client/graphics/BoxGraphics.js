@@ -57,7 +57,7 @@ class BoxGraphics extends PIXI.Container {
         } else {
             this.body = new PIXI.Graphics()
             this.body.beginFill(this.color)
-            //this.body.lineStyle(2, 0x000000)
+            this.body.lineStyle(2, 0xffffff)
             this.body.drawRoundedRect((-state.width/2)*2, (-state.height/2)*2, state.width*2, state.height*2, 10)
             this.body.endFill()
             this.body.pivot.set(0.5,0.5)

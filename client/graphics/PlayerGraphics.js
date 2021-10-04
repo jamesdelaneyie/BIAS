@@ -76,7 +76,7 @@ class PlayerGraphics extends PIXI.Container {
 
         const avatar = (this.avatar).split(',')
 
-        console.log(avatar)
+        //console.log(avatar)
 
         let avatarBackground = avatar[1]
         let avatarMiddleground = avatar[4]
@@ -146,7 +146,7 @@ class PlayerGraphics extends PIXI.Container {
             const typingGraphic = new Graphics()
             typingGraphic.lineStyle(0)
             typingGraphic.beginFill(0xFFFFFF, 1.0, true)
-            typingGraphic.drawRoundedRect(0, 0, 28, 16, 7)
+            typingGraphic.drawRoundedRect(0, 0, 28, 16, 3)
             typingGraphic.endFill()
             typingGraphic.x = -50
             typingGraphic.y = -50

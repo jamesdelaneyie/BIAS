@@ -9,6 +9,10 @@ export default ({ floors }, renderer) => {
             renderer.background.addChild(graphics)
 
             return graphics
+        },
+        delete({ nid, graphics }) {
+            renderer.entities.delete(nid)
+            renderer.background.removeChild(graphics)
         }
     }
 }

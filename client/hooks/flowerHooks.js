@@ -9,6 +9,10 @@ export default ({ flowers }, renderer) => {
             renderer.backbackground.addChild(graphics)
 
             return graphics
+        },
+        delete({ nid, graphics }) {
+            renderer.entities.delete(nid)
+            renderer.backbackground.removeChild(graphics)
         }
     }
 }

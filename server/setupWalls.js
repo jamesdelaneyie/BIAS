@@ -13,7 +13,7 @@ export default (instance, room, obstacles, type) => {
     let holes = room.holes
     let index = 0
 
-    console.log(obstacleType)
+    //console.log(obstacleType)
 
     holes.forEach(hole => {
         if(hole.width > 0) {

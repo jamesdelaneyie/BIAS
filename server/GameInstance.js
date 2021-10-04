@@ -431,6 +431,8 @@ class GameInstance {
 
 
         this.instance.on('connect', ({ client, data, callback }) => {
+
+            console.log('connection')
             
             const channel = this.instance.createChannel()
 
@@ -442,16 +444,18 @@ class GameInstance {
             client.view = {
                 x: 0,
                 y: 0,
-                halfWidth: 4000,
-                halfHeight: 4000
+                halfWidth: 2000,
+                halfHeight: 1800
             }
 
             let theWorldDesign = JSON.stringify([this.room, this.room2, this.roomEntrance, this.room3])
 
             this.instance.message(new Notification(theWorldDesign, 'mapInfo', 0, 0), client)
             
+            console.log('connection')
 
             if(data.fromClient.name) {
+                this.instance.message(new Notification('', 'login', 0, 0), client)
                 let command = {name: data.fromClient.name, avatar: data.fromClient.avatar, color: data.fromClient.color, x: data.fromClient.x, y: data.fromClient.y}
                 this.joinSession(command, client, doc, creds, true)  
             }
@@ -476,8 +480,10 @@ class GameInstance {
         })
 
         this.instance.on('command::JoinCommand', ({ command, client }) => {
+            
+            //console.log('join command')
 
-            this.joinSession(command, client, doc, creds, false)
+            this.joinSession(command, client, doc, creds, true)
             
         })
         
@@ -667,14 +673,10 @@ class GameInstance {
             const flower = new Flower({ x: command.x, y: command.y, color: ""+command.color+"" })
 
             this.instance.addEntity(flower)
-           // 
-           //this.instance.addEntity(rawEntity)
-          // console.log(client)
+       
             client.channel.addEntity(flower)
 
             this.instance.messageAll(new Notification('', 'flower', 20, 20))
-
-            //client.channel.addEntity(flower)
             
             
     }
@@ -699,9 +701,11 @@ class GameInstance {
 
     joinSession(command, client, doc, creds, login) {
 
-            if(!login) {
+            //console.log('im joining')
+            if(login == false) {
                 this.addIdentity(doc, creds, command)
             }
+            
 
             const rawEntity = new PlayerCharacter({ self: true, avatar: ""+command.avatar+"", color: ""+command.color+"" })
             const smoothEntity = new PlayerCharacter({ self: false, avatar: ""+command.avatar+"", color: ""+command.color+"" })
@@ -739,6 +743,8 @@ class GameInstance {
                 smoothEntity.y = spawnY
             }
 
+            //console.log(spawnX, spawnY)
+
 
             this.world.addBody(rawEntity.body);
             this.instance.addEntity(rawEntity)
@@ -769,6 +775,8 @@ class GameInstance {
             this.totalUsers++
             this.activeUsers.push({name: command.name})
 
+           // console.log('im joining')
+
             
     }
 
@@ -783,6 +791,7 @@ class GameInstance {
                 
                 client.rawEntity.body.position[0] = client.rawEntity.x
                 client.rawEntity.body.position[1] = client.rawEntity.y
+
                 client.rawEntity.body.angle = client.rawEntity.rotation
             }
             
@@ -824,7 +833,7 @@ class GameInstance {
 
                         //if(obstacle.touching == false) {
                             let directionvertical, directionHorizontal
-                            console.log(obstacle.name)
+                            //console.log(obstacle.name)
                             if(client.rawEntity.x < obstacle.x) {
                                 directionHorizontal = "left"
                             } else if (client.rawEntity.x > obstacle.x + obstacle.width) {
@@ -839,7 +848,7 @@ class GameInstance {
                             } else {
                                 directionvertical = ""
                             }
-                            console.log(client.smoothEntity.bodyRotation)
+                            //console.log(client.smoothEntity.bodyRotation)
                             this.instance.message(new Notification(""+directionvertical+""+ directionHorizontal+"", 'showStartArtButton', client.rawEntity.bodyRotation, 0), client)
                         //}
                         

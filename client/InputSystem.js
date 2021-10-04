@@ -19,8 +19,7 @@ class InputSystem {
         
         let isJoined = false;
 
-        const joinButton = renderer.stage.children[1].joinButton
-        const UIBuilder = this.UIBuilder
+        
 
         const footstep = Sound.from('audio/footstep.mp3');
         footstep.speed = 2
@@ -41,9 +40,13 @@ class InputSystem {
                 }, 1300)
             }
         }
-        
+        const UIBuilder = this.UIBuilder
+        const joinButton = renderer.stage.children[1].joinButton
+        //console.log(joinButton)
         
         joinButton.on("click", function () {
+
+            //console.log('firing')
             
             if(isJoined == false) {
 
@@ -54,7 +57,7 @@ class InputSystem {
                     let avatar = renderer.UIBuilder.getAvatar();
 
                     client.addCommand(new JoinCommand(""+name+"", ""+avatar+"", ""+color+""))
-                    
+                    //console.log('firing')
                     isJoined = true
                     
 
@@ -62,6 +65,8 @@ class InputSystem {
                 
             }
         });
+
+
 
 
         window.addEventListener('resize', () => {

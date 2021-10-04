@@ -197,7 +197,7 @@ class UIBuilder extends PIXI.Container {
         this.miniMapOn = false
 
         this.joinModalOn = true
-        this.introScreenOn = false
+        this.introScreenOn = true
 
         this.quoteStageOn = true
 
@@ -1979,7 +1979,7 @@ class UIBuilder extends PIXI.Container {
                     joinModalWidgetGroup.removeChild(inputBox)
                     avatarBox.alpha = 1
 
-                    userInterface.setName()
+                    
                     
                     
                     const nameStyles = new PIXI.TextStyle({ 
@@ -1997,6 +1997,7 @@ class UIBuilder extends PIXI.Container {
 
                         const nameText = new PIXI.Text(""+personName.toUpperCase()+"", nameStyles);
                         nameText.updateText();
+                        userInterface.setName()
 
                         const radius = 68;
                         const maxRopePoints = 100;
@@ -2093,184 +2094,198 @@ class UIBuilder extends PIXI.Container {
 
         if(this.introScreenOn == true) {
 
-            //Intro Screen
-            this.introScreen = new PUXI.Stage({
-                width:window.innerWidth,
-                height: window.innerHeight,
-                x: 0,
-                y: 0
-            })  
-            
-            this.introScreenWrapper = new PUXI.Widget({
-            }).setLayoutOptions(
-                new PUXI.FastLayoutOptions({
-                    width: 0.999999, 
-                    height: 0.999999,
-                    x: 0.5,
-                    y: 0.5,
-                    anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-                }),
-            ).setBackground(darkGreen)
-            this.introScreen.addChild(this.introScreenWrapper)
-            
-            this.introScreenTextWrapper = new PUXI.WidgetGroup({
-            }).setLayoutOptions(
-                new PUXI.FastLayoutOptions({
-                    x: 0.5,
-                    y: 0.5,
-                    anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-                }),
-            )
-            this.introScreen.addChild(this.introScreenTextWrapper)
+                this.joinModal.visible = false
+                this.mainMenuStage.visible = false
+                this.statusStage.visible = false
 
-            this.introText = new PUXI.TextWidget('')
-            this.introText.setLayoutOptions(new PUXI.FastLayoutOptions({
-                x: 0.5,
-                y: 0.5,
-                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-            }))
+                //Intro Screen
+                let joinModal = this.joinModal
+                let mainMenu = this.mainMenuStage
+                let statusStage = this.statusStage
 
-            const introText = this.introText
-            const introScreenWrapper = this.introScreenWrapper
-            const introScreen = this.introScreen
-
-            const introTextTagged = new TaggedText("", {
-                "default": {
-                    fontFamily: 'Trade Gothic Next',
-                    fill: green, 
-                    fontWeight: 900,
-                    fontSize: "64px", 
-                    letterSpacing: 2,
-                },
-                "online": {
-                    fontFamily: 'Trade Gothic Next',
-                    fontWeight: 900,
-                    fontSize: "64px", 
-                    letterSpacing: 2,
-                    lineJoin: "round",
-                    stroke: green, 
-                    strokeThickness: 2,
-                    fill: 'transparent'
-                }, 
-                "disclaimer": {
-                    fontFamily: 'Trade Gothic Next',
-                    fontWeight: 300,
-                    fontSize: "16px", 
-                    lineHeight: 24,
-                    wordWrap: true,
-                    wordWrapWidth: 700,
-                    align: "center",
-                    fill: white,
-                    letterSpacing: 0
-                },
-                "bold": {
-                    fontWeight: 700
-                }
+                this.introScreen = new PUXI.Stage({
+                    width:window.innerWidth,
+                    height: window.innerHeight,
+                    x: 0,
+                    y: 0
+                })  
                 
-            })
-            this.introText.contentContainer.addChild(introTextTagged)
-            this.introScreenTextWrapper.addChild(this.introText)
-        
-            
-            this.glitchOn = false
+                this.introScreenWrapper = new PUXI.Widget({
+                }).setLayoutOptions(
+                    new PUXI.FastLayoutOptions({
+                        width: 0.999999, 
+                        height: 0.999999,
+                        x: 0.5,
+                        y: 0.5,
+                        anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+                    }),
+                ).setBackground(darkGreen)
+                this.introScreen.addChild(this.introScreenWrapper)
+                
+                this.introScreenTextWrapper = new PUXI.WidgetGroup({
+                }).setLayoutOptions(
+                    new PUXI.FastLayoutOptions({
+                        x: 0.5,
+                        y: 0.5,
+                        anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+                    }),
+                )
+                this.introScreen.addChild(this.introScreenTextWrapper)
 
-            this.introGlitch = new GlitchFilter({
-                slices: 0,
-                offset: 0,
-                direction: 0,
-                seed: 0.5,
-            })
+                this.introText = new PUXI.TextWidget('')
+                this.introText.setLayoutOptions(new PUXI.FastLayoutOptions({
+                    x: 0.5,
+                    y: 0.5,
+                    anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+                }))
 
-            this.introCRTFilter = new CRTFilter({
-                vignetting: 0.5,
-                vignettingAlpha: 0.5,
-                vignettingBlur: 0.5,
-                padding: 0,
-                animating: true,
-                verticalLine: true,
-                lineContrast: 0.05,
-                noise: 0.01,
-                noiseSize: 1.0,
-                padding: 4,
-            })
+                const introText = this.introText
+                const introScreenWrapper = this.introScreenWrapper
+                const introScreen = this.introScreen
 
-            this.introScreen.resize(window.innerWidth, window.innerHeight)
-            this.filters = [this.introCRTFilter]
-            
-            
-
-            const disclaimerText = '<disclaimer><bold>LIVE CHAT DISCLAIMER</bold>\n\nThis Live Chat service is operated between the hours of 9 a.m. and 5 p.m., and is intended for scheduling inquiries only. Psychological assessment, diagnosis, treatment and counselling services are not provided via this Live Chat service; please do not include any personal, sensitive, clinical or confidential information in the Live Chat. You expressly acknowledge that a patient-doctor relationship will not be established by use of this service. With any online service, there is some level of risk when communicating information over the Internet and we cannot assume any responsibility for any information that you may enter during your chat session. If you require emergency medical attention please call 911 or visit the Emergency department at your local hospital. CITC expressly disclaims any liability for any injury, loss or damage incurred by use of or reliance on the information provided via this Live Chat service. By using this Live Chat you accept these terms and conditions.</disclaimer>'
-
-            this.addChild(this.introScreen)
-
-            ease.add(this.introText, {alpha: 1}, { duration: 250, ease: 'easeOutExpo', wait: 1000})
-
-            setTimeout(function(){
-                introTextTagged.text = "B"
-                introScreen.resize(window.innerWidth, window.innerHeight)
-                keys1.play()
-            }, 2000)
-            setTimeout(function(){
-                introTextTagged.text = "BI"
-                introScreen.resize(window.innerWidth, window.innerHeight)
-                keys2.play()
-            }, 2200)
-            setTimeout(function(){
-                introTextTagged.text = "BIA"
-                introScreen.resize(window.innerWidth, window.innerHeight)
-                keys1.play()
-            }, 2600)
-            setTimeout(function(){
-                introTextTagged.text = "BIAS"
-                introScreen.resize(window.innerWidth, window.innerHeight)
-                keys2.play()
-            }, 2800)
-            setTimeout(function(){
-                userInterface.toggleGlitch(true)
-            }, 3500)
-
-            setTimeout(function(){
-                userInterface.toggleGlitch(false)
-                introTextTagged.text = "BIAS <online>ONLINE</online>"
-                introScreen.resize(window.innerWidth, window.innerHeight)
-            }, 5000)
-            setTimeout(function(){
-                userInterface.toggleGlitch(true)
-            }, 7000)
-            setTimeout(function(){
-                userInterface.toggleGlitch(false)
-            }, 8000)
-            setTimeout(function(){
-                ease.add(introText, {alpha: 0 }, { duration: 500, ease: 'easeOutExpo'})
-            }, 9000)
-            setTimeout(function(){
-                introTextTagged.text = disclaimerText
-                introTextTagged.setStyleForTag("default", {
-                    fontFamily: "Trade Gothic Next",
-                    fontSize: "16px",
-                    wordWrap: true,
-                    lineHeight: 24,
-                    align: "center",
-                    wordWrapWidth: 700,
+                const introTextTagged = new TaggedText("", {
+                    "default": {
+                        fontFamily: 'Trade Gothic Next',
+                        fill: green, 
+                        fontWeight: 900,
+                        fontSize: "64px", 
+                        letterSpacing: 2,
+                    },
+                    "online": {
+                        fontFamily: 'Trade Gothic Next',
+                        fontWeight: 900,
+                        fontSize: "64px", 
+                        letterSpacing: 2,
+                        lineJoin: "round",
+                        stroke: green, 
+                        strokeThickness: 2,
+                        fill: 'transparent'
+                    }, 
+                    "disclaimer": {
+                        fontFamily: 'Trade Gothic Next',
+                        fontWeight: 300,
+                        fontSize: "16px", 
+                        lineHeight: 24,
+                        wordWrap: true,
+                        wordWrapWidth: 700,
+                        align: "center",
+                        fill: white,
+                        letterSpacing: 0
+                    },
+                    "bold": {
+                        fontWeight: 700
+                    }
+                    
                 })
-                introTextTagged.update()
-            }, 9500)
-            setTimeout(function(){
-                introScreen.resize(window.innerWidth, window.innerHeight)
-            }, 9750)
-            setTimeout(function(){
-                ease.add(introText, {alpha: 1 }, { duration: 500, ease: 'easeOutExpo'})
-            }, 10000)
-            setTimeout(function(){
-                ease.add(introText, {alpha: 0 }, { duration: 500, ease: 'easeOutExpo'})
-            }, 12000)
-            setTimeout(function(){
-                ease.add(introScreenWrapper, {alpha: 0 }, { duration: 500, ease: 'easeOutExpo'})
-                introScreen.visible = false
-            }, 13000)
-            setTimeout(function(){
-                userInterface.removeChild(introScreen)
-            }, 13500)
+                this.introText.contentContainer.addChild(introTextTagged)
+                this.introScreenTextWrapper.addChild(this.introText)
+            
+                
+                this.glitchOn = false
+
+                this.introGlitch = new GlitchFilter({
+                    slices: 0,
+                    offset: 0,
+                    direction: 0,
+                    seed: 0.5,
+                })
+
+                this.introCRTFilter = new CRTFilter({
+                    vignetting: 0.5,
+                    vignettingAlpha: 0.5,
+                    vignettingBlur: 0.5,
+                    padding: 0,
+                    animating: true,
+                    verticalLine: true,
+                    lineContrast: 0.05,
+                    noise: 0.01,
+                    noiseSize: 1.0,
+                    padding: 4,
+                })
+
+                this.introScreen.resize(window.innerWidth, window.innerHeight)
+                this.introScreen.filters = [this.introCRTFilter]
+                
+                
+
+                const disclaimerText = '<disclaimer><bold>LIVE CHAT DISCLAIMER</bold>\n\nThis Live Chat service is operated between the hours of 9 a.m. and 5 p.m., and is intended for scheduling inquiries only. Psychological assessment, diagnosis, treatment and counselling services are not provided via this Live Chat service; please do not include any personal, sensitive, clinical or confidential information in the Live Chat. You expressly acknowledge that a patient-doctor relationship will not be established by use of this service. With any online service, there is some level of risk when communicating information over the Internet and we cannot assume any responsibility for any information that you may enter during your chat session. If you require emergency medical attention please call 911 or visit the Emergency department at your local hospital. CITC expressly disclaims any liability for any injury, loss or damage incurred by use of or reliance on the information provided via this Live Chat service. By using this Live Chat you accept these terms and conditions.</disclaimer>'
+
+                this.addChild(this.introScreen)
+
+                ease.add(this.introText, {alpha: 1}, { duration: 250, ease: 'easeOutExpo', wait: 1000})
+
+                setTimeout(function(){
+                    introTextTagged.text = "B"
+                    introScreen.resize(window.innerWidth, window.innerHeight)
+                    keys1.play()
+                }, 2000)
+                setTimeout(function(){
+                    introTextTagged.text = "BI"
+                    introScreen.resize(window.innerWidth, window.innerHeight)
+                    keys2.play()
+                }, 2200)
+                setTimeout(function(){
+                    introTextTagged.text = "BIA"
+                    introScreen.resize(window.innerWidth, window.innerHeight)
+                    keys1.play()
+                }, 2600)
+                setTimeout(function(){
+                    introTextTagged.text = "BIAS"
+                    introScreen.resize(window.innerWidth, window.innerHeight)
+                    keys2.play()
+                }, 2800)
+                setTimeout(function(){
+                    userInterface.toggleGlitch(true)
+                }, 3500)
+
+                setTimeout(function(){
+                    userInterface.toggleGlitch(false)
+                    introTextTagged.text = "BIAS <online>ONLINE</online>"
+                    introScreen.resize(window.innerWidth, window.innerHeight)
+                }, 5000)
+                setTimeout(function(){
+                    userInterface.toggleGlitch(true)
+                }, 7000)
+                setTimeout(function(){
+                    userInterface.toggleGlitch(false)
+                }, 8000)
+                setTimeout(function(){
+                    ease.add(introText, {alpha: 0 }, { duration: 500, ease: 'easeOutExpo'})
+                }, 9000)
+                setTimeout(function(){
+                    introTextTagged.text = disclaimerText
+                    introTextTagged.setStyleForTag("default", {
+                        fontFamily: "Trade Gothic Next",
+                        fontSize: "16px",
+                        wordWrap: true,
+                        lineHeight: 24,
+                        align: "center",
+                        wordWrapWidth: 700,
+                    })
+                    introTextTagged.update()
+                }, 9500)
+                setTimeout(function(){
+                    introScreen.resize(window.innerWidth, window.innerHeight)
+                }, 9750)
+                setTimeout(function(){
+                    ease.add(introText, {alpha: 1 }, { duration: 500, ease: 'easeOutExpo'})
+                }, 10000)
+                setTimeout(function(){
+                    ease.add(introText, {alpha: 0 }, { duration: 500, ease: 'easeOutExpo'})
+                }, 12000)
+                setTimeout(function(){
+                    ease.add(introScreenWrapper, {alpha: 0 }, { duration: 500, ease: 'easeOutExpo'})
+                    introScreen.visible = false
+                    joinModal.visible = true
+                    mainMenu.visible = true
+                    statusStage.visible = true 
+                }, 13000)
+                setTimeout(function(){
+                    userInterface.removeChild(introScreen)
+                    
+                    //this.main.visible = true
+                }, 13500)
+            
         }
 
 
@@ -2726,18 +2741,22 @@ class UIBuilder extends PIXI.Container {
 
 
     getAvatar() {
-        console.log(this.avatarImageWrapper.children[0].rotation)
+        //console.log(this.avatarImageWrapper.children[0]._texture.textureCacheIds[0])
         let avatar = [
-            this.avatarImageWrapper.children[0]._texture.textureCacheIds,
+            this.avatarImageWrapper.children[0]._texture.textureCacheIds[0],
+            this.avatarImageWrapper.children[0]._texture.textureCacheIds[1],
             this.avatarImageWrapper.children[0].rotation,
-            this.avatarImageWrapper.children[1]._texture.textureCacheIds,
+            this.avatarImageWrapper.children[1]._texture.textureCacheIds[0],
+            this.avatarImageWrapper.children[1]._texture.textureCacheIds[1],
             this.avatarImageWrapper.children[1].rotation,
-            this.avatarImageWrapper.children[2]._texture.textureCacheIds,
+            this.avatarImageWrapper.children[2]._texture.textureCacheIds[0],
+            this.avatarImageWrapper.children[2]._texture.textureCacheIds[1],
             this.avatarImageWrapper.children[2].rotation,
-            this.avatarImageWrapper.children[3]._texture.textureCacheIds,
+            this.avatarImageWrapper.children[3]._texture.textureCacheIds[0],
+            this.avatarImageWrapper.children[3]._texture.textureCacheIds[1],
             this.avatarImageWrapper.children[3].rotation,
         ]
-        console.log(avatar)
+        //console.log(avatar)
         return avatar
     }
 
@@ -3364,7 +3383,7 @@ class UIBuilder extends PIXI.Container {
     }
 
     personJoined(name) {
-        var joinText = "<whitedot>+</whitedot> "+ name +" joined"
+        var joinText = "<greendot>+</greendot> "+ name +" joined"
         var textBox = this.statusLayout.contentContainer.children[1];
         var currentText = textBox.text
         textBox.text = joinText + "\n" + currentText
@@ -3437,15 +3456,27 @@ class UIBuilder extends PIXI.Container {
             this.statusLayout.contentContainer.addChild(connectedText);
 
         } else {
+
+            let disconnectText
             sound.muteAll()
+            if(this.joinModal.visible == true) {
+                this.joinModal.visible = false
+                disconnectText = 'Unable to connect to bias online. The server may need a restart'
+            } else {
+                disconnectText = 'Disconnected'
+            }
 
+            
 
-            this.statusLayout.contentContainer.removeChildAt(1);
-            var connectedText = new TaggedText("<dot>●</dot> Disconnected", {
+            if(this.statusLayout.contentContainer.children.length > 1) {
+                this.statusLayout.contentContainer.removeChildAt(1);
+            }
+            
+            var connectedText = new TaggedText("<dot>●</dot> "+disconnectText+"", {
                 "default": {
                     fontFamily: "Monaco",
                     fontSize: "10px",
-                    fill: this.black,
+                    fill: this.white,
                     align: "left"
                 },
                 "dot": {
@@ -3453,15 +3484,28 @@ class UIBuilder extends PIXI.Container {
                     fill: this.red
                 }
             });
-            this.statusLayout.contentContainer.addChild(connectedText);
+
+            if(this.statusStage.visible == true) {
+                this.statusLayout.contentContainer.addChild(connectedText);
+            }
+
             this.textBox.visible = false
-            this.statusStage.visible = false
-            this.scoreStage.visible = false
-            this.emojiStage.visible = false
-            this.miniMapStage.visible = false
             this.mainMenuStage.visible = false
             this.viewArtButton.visible = false
-            this.notificationStage.visible = false
+            this.emojiStage.visible = false
+
+            if(this.scoreStageOn) {
+                this.scoreStage.visible = false
+            }
+            
+            if(this.miniMapOn) {
+                this.miniMapStage.visible = false
+            }
+           
+            if(this.notificationStageOn) {
+                this.notificationStage.visible = false
+            }
+            
         
         }
         
@@ -3930,11 +3974,13 @@ class UIBuilder extends PIXI.Container {
 
             
             if(this.introScreen.visible) {
-                this.filters = [this.introCRTFilter, this.introGlitch]
+                this.introScreen.filters = [this.introCRTFilter, this.introGlitch]
             } else {
                 this.filters = []
             }
 
+        } else {
+            this.introScreen.visible = false
         }
     
     }
