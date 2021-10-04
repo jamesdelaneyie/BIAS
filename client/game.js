@@ -19,7 +19,11 @@ import AudioStreamMeter from 'audio-stream-meter'
 import { GlitchFilter } from '@pixi/filter-glitch'
 
 
+
 const create = () => {
+
+
+
     
     const client = new nengi.Client(nengiConfig, 100)
 
@@ -29,7 +33,8 @@ const create = () => {
         myPeerId: null,
         obstacles: new Map(),
         boxes: new Map(),
-        floors: new Map()
+        floors: new Map(),
+        flowers: new Map()
     }
 
     const renderer = new PIXIRenderer(state)
@@ -63,18 +68,7 @@ const create = () => {
     portalProximity.volume = 0
     portalProximity.loop = true
     portalProximity.play()
-/*
 
-    var inviteLocation = window.location.href
-    var location = new URL(inviteLocation);
-    var x = location.searchParams.get("x");
-    var y = location.searchParams.get("y")
-    //var handshake = {inviteX:x, inviteY:y}
-    
-    
-    //console.log(handshake)
-*/
-    
 
     clientHookAPI(
         client,
@@ -112,6 +106,8 @@ const create = () => {
         window.localStorage.setItem('name', state.name);
         window.localStorage.setItem('avatar', state.myAvatar);
         window.localStorage.setItem('color', state.color);
+
+
         
         renderer.UIBuilder.joinInstance(state.name, state.myRawId)
         renderer.UIBuilder.joinSession();
@@ -231,6 +227,7 @@ const create = () => {
         
 
     })
+    
 
     const trails = []
     let stepCounter = 0
@@ -241,7 +238,7 @@ const create = () => {
         let trail = new PIXI.Graphics()
         let color = PIXI.utils.string2hex(message.color)
 
-        trail.beginFill(color, 0.2)
+        trail.beginFill(color, 0.1)
         trail.drawCircle(message.x, message.y, 3)
         trail.endFill()
 
@@ -360,16 +357,17 @@ const create = () => {
 
 
 
-
-
-   
-
     client.on('message::Notification', message => {
 
         //console.log(message)
 
         if(message.type == "mapInfo") {
             renderer.UIBuilder.buildMiniMap(message.text)
+        }
+
+        if(message.type == "flower") {
+            //console.log('flower')
+            //renderer.addFlower(message.text)
         }
         
         if(message.type == "showQuote") {
@@ -518,19 +516,17 @@ const create = () => {
     })
 
 
-    /*if(handshake.name) {
-        client.connect('ws://localhost:8079', handshake)
-    } else {
-        
-    }*/
     const handshake = window.localStorage;
+
+    let invite = window.location.href
+    invite = new URL(invite);
+    var inviteX = invite.searchParams.get("x");
+    var inviteY = invite.searchParams.get("y")
+    handshake.x = inviteX
+    handshake.y = inviteY
+    
+    //client.connect('ws://localhost:8079', handshake)
     client.connect('ws://192.248.155.99:8079', handshake)
-
-    
-    //client.connect('wss://bias.jamesdelaney.ie/test')
-
-
-    
 
 
     const update = (delta, tick, now) => {
@@ -538,10 +534,8 @@ const create = () => {
         if(trails.length > 200) {
             let trailToRemove = trails.shift()
             renderer.background.removeChild(trailToRemove)
-        }
-
             
-       
+        }
 
         client.readNetworkAndEmit()
         handleInput(input, state, client, renderer, delta)

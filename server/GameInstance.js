@@ -1,8 +1,11 @@
 import nengi from 'nengi'
 import nengiConfig from '../common/nengiConfig.js'
 import p2 from 'p2'
-import PlayerCharacter from '../common/entity/PlayerCharacter.js'
+
+
+
 import Identity from '../common/message/Identity.js'
+
 import WeaponFired from '../common/message/WeaponFired.js'
 import CollisionSystem from '../common/CollisionSystem.js'
 import followPath from './followPath.js'
@@ -10,14 +13,20 @@ import damagePlayer from './damagePlayer.js'
 import instanceHookAPI from './instanceHookAPI.js'
 import applyCommand from '../common/applyCommand.js'
 
-import setupObstacles from './setupObstacles.js'
+
 import setupFloors from './setupFloors.js'
 import setupBoxes from './setupBoxes.js'
-import setupPortals from './setupPortals.js'
+import addFlower from './addFlower.js'
+
 
 import setupWalls from './setupWalls.js'
 import setupObjectWalls from './setupObjectWalls.js'
 
+import setupPortals from './setupPortals.js'
+import setupObstacles from './setupObstacles.js'
+
+import PlayerCharacter from '../common/entity/PlayerCharacter.js'
+import Flower from '../common/entity/Flower.js'
 import Box from '../common/entity/Box.js'
 import Obstacle from '../common/entity/Obstacle.js'
 
@@ -31,6 +40,9 @@ import lagCompensatedHitscanCheck from './lagCompensatedHitscanCheck'
 
 import fs from 'fs'
 import SAT from 'sat'
+
+import { GoogleSpreadsheet } from 'google-spreadsheet'
+
 
 var swearjar = require('swearjar');
 var SpellChecker = require('spellchecker')
@@ -65,6 +77,18 @@ class GameInstance {
 
 
 
+        // Initialize the sheet - doc ID is the long id in the sheets URL
+        const doc = new GoogleSpreadsheet('1M4TNR1k7f2OLdN_cUd1-k2Hyb_zTWWzl7gs37sLd1OE');
+        const creds = require('../bias-online-keys.json');
+        
+
+       
+
+
+
+
+
+
 
 
 
@@ -72,6 +96,7 @@ class GameInstance {
         this.portals = new Map()
         this.obstacles = new Map()
         this.boxes = new Map()
+        this.flowers = new Map()
 
         this.world = new p2.World({gravity: [0, 0]});
 
@@ -89,13 +114,13 @@ class GameInstance {
             wallColor: "#00FF00",
             objects: [{
                 name: "token",
-                type: "robot",
+                type: "soccer-ball",
                 x: 950,
                 y: 950,
-                width: 35, 
-                height: 35, 
+                width: 25, 
+                height: 25, 
                 color: "#0000ff",
-                mass: 1
+                mass: 0.001
             }],
             holes: [{
                 offset: 500,
@@ -253,7 +278,7 @@ class GameInstance {
             width: 80,
             height: 30,
             mass: 0,
-            color: "quote8",
+            color: "quote7",
         })
         this.instance.addEntity(information)
         this.world.addBody(information.body)
@@ -267,11 +292,25 @@ class GameInstance {
             width: 30,
             height: 80,
             mass: 0,
-            color: "quote9",
+            color: "quote8",
         })
         this.instance.addEntity(information2)
         this.world.addBody(information2.body)
         this.boxes.set(information2.nid, information2)
+
+        let information3 = new Box({
+            name: "token",
+            type: "info2",
+            x: 730,
+            y: 70,
+            width: 80,
+            height: 30,
+            mass: 0,
+            color: "quote9",
+        })
+        this.instance.addEntity(information3)
+        this.world.addBody(information3.body)
+        this.boxes.set(information3.nid, information3)
 
         this.room3 = {
             x: 1391,
@@ -308,10 +347,10 @@ class GameInstance {
 
        const libbyVideoPreview = new Obstacle({ 
             name: "libbyVideoPreview",
-            x: 290, 
-            y: 300, 
-            width: 860,
-            height: 480, 
+            x: 310, 
+            y: 310, 
+            width: 820,
+            height: 460, 
             color: "#FFE401"
         })
         this.instance.addEntity(libbyVideoPreview)
@@ -322,6 +361,52 @@ class GameInstance {
 
                
        
+
+
+
+
+
+
+
+
+        this.room5 = {
+            x: 440,
+            y: 1500,
+            width: 1020,
+            height: 960,
+            floorColor: "#f0f8ff",
+            gridColor: "#545454",
+            gridGap: 60,
+            wallThickness: 10,
+            wallColor: "#FFE401",
+            objects: [{
+                name: "token",
+                type: "soccer-ball",
+                x: 950,
+                y: 950,
+                width: 25, 
+                height: 25, 
+                color: "#0000ff",
+                mass: 0.001
+            }],
+            holes: [{
+                offset: 600,
+                width: 180,
+            },{
+                offset: 300,
+                width: 490,
+            },{
+                offset:0,
+                width:0,
+            },{
+                offset: 500,
+                width: 0,
+            }]
+        }
+        setupFloors(this.instance, this.room5)
+        setupObjectWalls(this.instance, this.world, this.room5, this.boxes)
+        setupWalls(this.instance, this.room5, this.obstacles, 'wall')
+        setupBoxes(this.instance, this.world, this.room5, this.boxes)
 
         /*setInterval(function(){
             let likePump = new Box({
@@ -353,8 +438,6 @@ class GameInstance {
             client.channel = channel
             
             client.positions = []
-
-            client.invite = {x:data.fromClient.inviteX, y:data.fromClient.inviteY}
            
             client.view = {
                 x: 0,
@@ -369,8 +452,8 @@ class GameInstance {
             
 
             if(data.fromClient.name) {
-                let command = {name: data.fromClient.name, avatar: data.fromClient.avatar, color: data.fromClient.color}
-                this.joinSession(command, client)  
+                let command = {name: data.fromClient.name, avatar: data.fromClient.avatar, color: data.fromClient.color, x: data.fromClient.x, y: data.fromClient.y}
+                this.joinSession(command, client, doc, creds, true)  
             }
 
 
@@ -394,7 +477,7 @@ class GameInstance {
 
         this.instance.on('command::JoinCommand', ({ command, client }) => {
 
-            this.joinSession(command, client)
+            this.joinSession(command, client, doc, creds, false)
             
         })
         
@@ -541,6 +624,12 @@ class GameInstance {
             const rawEntity = client.rawEntity
             const smoothEntity = client.smoothEntity
 
+            
+            const flowerCommand = {x: command.x, y: command.y, color:  '70ED96'}
+
+            this.addFlower(flowerCommand, client)
+            //addFlower(this.instance, flowerCommand, this.flowers)
+
             if (fire(rawEntity)) {
                 let endX = command.x
                 let endY = command.y
@@ -572,8 +661,47 @@ class GameInstance {
         })
     }
 
-    joinSession(command, client) {
+    addFlower(command, client) {
 
+
+            const flower = new Flower({ x: command.x, y: command.y, color: ""+command.color+"" })
+
+            this.instance.addEntity(flower)
+           // 
+           //this.instance.addEntity(rawEntity)
+          // console.log(client)
+            client.channel.addEntity(flower)
+
+            this.instance.messageAll(new Notification('', 'flower', 20, 20))
+
+            //client.channel.addEntity(flower)
+            
+            
+    }
+
+    async addIdentity(doc, creds, command) {
+
+        await doc.useServiceAccountAuth(creds);
+                
+        await doc.loadInfo(); 
+
+        const sheet = doc.sheetsByIndex[0]; 
+        sheet.headerValues = ['name', 'avatar', 'color']
+        console.log(command)
+        await sheet.addRow({ 
+            name: ''+command.name+'', 
+            avatar: ''+command.avatar+'', 
+            color: ''+command.color+'' 
+        });
+
+        
+    }
+
+    joinSession(command, client, doc, creds, login) {
+
+            if(!login) {
+                this.addIdentity(doc, creds, command)
+            }
 
             const rawEntity = new PlayerCharacter({ self: true, avatar: ""+command.avatar+"", color: ""+command.color+"" })
             const smoothEntity = new PlayerCharacter({ self: false, avatar: ""+command.avatar+"", color: ""+command.color+"" })
@@ -584,29 +712,32 @@ class GameInstance {
             smoothEntity.client = client
             client.smoothEntity = smoothEntity
 
-            /*const rawEntity = client.rawEntity
-            const smoothEntity = client.smoothEntity*/
             const peerID = client.peerID;
 
+           let spawnX = 1304
+           let spawnY = 328
 
-           //let room2SpawnX = this.room6.x + (this.room6.width/2)
-           //let room2SpawnY = this.room6.y + (this.room6.height/2) + 50
-           let room2SpawnX = this.room.x + 900
-           let room2SpawnY = this.room.y + 120
+            if(command.x) {
+                rawEntity.x = Number(command.x)
+            } else {
+                rawEntity.x = spawnX
+            }
+            if(command.y) {
+                rawEntity.y = Number(command.y)
+            } else {
+                rawEntity.y = spawnY
+            }
             
-            
-                rawEntity.x = room2SpawnX
-                rawEntity.y = room2SpawnY
-                smoothEntity.x = room2SpawnX
-                smoothEntity.y = room2SpawnY
-
-                /*if(client.invite.x > 0) {
-                    rawEntity.x = client.invite.x
-                    rawEntity.y = client.invite.y
-                    smoothEntity.x = client.invite.x
-                    smoothEntity.y = client.invite.y
-                }*/
-          
+            if(command.x) {
+                smoothEntity.x = Number(command.x)
+            } else {
+                smoothEntity.x = spawnX
+            }
+            if(command.y) {
+                smoothEntity.y = Number(command.y)
+            } else {
+                smoothEntity.y = spawnY
+            }
 
 
             this.world.addBody(rawEntity.body);
@@ -630,8 +761,6 @@ class GameInstance {
 
             smoothEntity.isAlive = true;
             rawEntity.isAlive = true;
-
-            //console.log('raw id: ' + rawEntity.nid)
             
             
             this.instance.message(new Identity(rawEntity.nid, smoothEntity.nid, ""+peerID+"", ""+ command.avatar +"",""+ command.name +"", ""+ command.color +""), client)
@@ -639,6 +768,8 @@ class GameInstance {
 
             this.totalUsers++
             this.activeUsers.push({name: command.name})
+
+            
     }
 
     update(delta, tick, now) {
@@ -691,31 +822,35 @@ class GameInstance {
 
                        // console.log('collided')
 
-                        if(obstacle.touching == false) {
-                            let direction 
+                        //if(obstacle.touching == false) {
+                            let directionvertical, directionHorizontal
                             console.log(obstacle.name)
-                            if(client.rawEntity.x > obstacle.x) {
-                                direction = "left"
+                            if(client.rawEntity.x < obstacle.x) {
+                                directionHorizontal = "left"
+                            } else if (client.rawEntity.x > obstacle.x + obstacle.width) {
+                                directionHorizontal = "right"
                             } else {
-                                direction = "right"
+                                directionHorizontal = ""
                             }
-                            if(client.rawEntity.y > obstacle.y) {
-                                direction += " top"
+                            if(client.rawEntity.y < obstacle.y) {
+                                directionvertical = "top"
+                            } else if (client.rawEntity.y > obstacle.y + obstacle.height) {
+                                directionvertical = "bottom"
                             } else {
-                                direction += " bottom"
+                                directionvertical = ""
                             }
                             console.log(client.smoothEntity.bodyRotation)
-                            this.instance.message(new Notification(""+direction+"", 'showStartArtButton', client.rawEntity.bodyRotation, 0), client)
-                        }
+                            this.instance.message(new Notification(""+directionvertical+""+ directionHorizontal+"", 'showStartArtButton', client.rawEntity.bodyRotation, 0), client)
+                        //}
                         
-                        obstacle.touching = true
+                        //obstacle.touching = true
                         touching = true
 
                         break
 
                    } else {
                         //
-                        obstacle.touching = false
+                        //obstacle.touching = false
                    }
           
                }
@@ -729,6 +864,9 @@ class GameInstance {
 
 
        })
+
+
+
 
         for (const [key, value] of Object.entries(this.instance.clients.array)) {
 
@@ -744,21 +882,21 @@ class GameInstance {
                     
                     if(collided == true) {
 
-                        if(box.touching == false) {
+                        //if(box.touching == false) {
                             if(box.type == "info2") {
                                 this.instance.message(new Notification(''+box.color+'', 'showQuote'), value) 
                             } else {
                                 this.instance.message(new Notification(''+box.type+'', 'scoreIncrease'), value)
                             }
-                        }
+                        //}
 
-                        box.touching = true
+                        //box.touching = true
                         touching = true
 
                         break
 
                     } else {
-                        box.touching = false
+                        //box.touching = false
                     }
             
                 }

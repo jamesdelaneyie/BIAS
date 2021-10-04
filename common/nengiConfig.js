@@ -18,6 +18,7 @@ import Obstacle from './entity/Obstacle.js'
 import Box from './entity/Box.js'
 import Floor from './entity/Floor.js'
 import Portal from './entity/Portal.js'
+import Flower from './entity/Flower.js'
 
 const config = {
     UPDATE_RATE: 20, 
@@ -37,7 +38,8 @@ const config = {
             ['PlayerCharacter', PlayerCharacter],
             ['Obstacle', Obstacle],
             ['Box', Box],
-            ['Portal', Portal]
+            ['Portal', Portal],
+            ['Flower', Flower]
         ],
         localMessages: [
             ['Walking', Walking],

@@ -29,6 +29,7 @@ class InputSystem {
         const viewArtButton = renderer.stage.children[1].viewArtButton
         viewArtButton.on('pointerdown', function(){
             client.addCommand(new ToggleCommand(true, "headphones"))
+            viewArtButton.alpha = 0
         })
 
         document.addEventListener( "pointerdown", closeArtButton );
@@ -37,7 +38,7 @@ class InputSystem {
             if(element.id == 'back-to-bias'){
                 setTimeout(()=>{
                     client.addCommand(new ToggleCommand(false, "headphones"))
-                }, 1700)
+                }, 1300)
             }
         }
         
@@ -233,13 +234,15 @@ class InputSystem {
                 this.frameState.mouseMoving = true
             })
 
-            document.addEventListener('mousedown', event => {
+            document.addEventListener('pointerdown', event => {
                 this.currentState.mouseDown = true
                 this.frameState.mouseDown = true
+                this.currentState.mx = event.clientX
+                this.currentState.my = event.clientY
             })
 
 
-            document.addEventListener('mouseup', event => {
+            document.addEventListener('pointerup', event => {
                 this.currentState.mouseDown = false
                 this.currentState.mouseMoving = false
                 this.frameState.mouseMoving = false
@@ -393,9 +396,9 @@ class InputSystem {
             if(this.isMobile.any || window.innerWidth <= 500) {
                 this.leftController.position.set(45, window.innerHeight - this.leftController.height*1.6);
                 this.leftController.alpha = 0
-                renderer.stage.addChild(this.leftController);
+                renderer.UIBuilder.addChild(this.leftController);
             } else {
-                renderer.stage.removeChild(this.leftController);
+                renderer.UIBuilder.removeChild(this.leftController);
             }
     
     }
@@ -404,9 +407,9 @@ class InputSystem {
 
         if(this.isMobile.any || window.innerWidth <= 500) {
             this.leftController.position.set(45, window.innerHeight - this.leftController.height*1.6);
-            renderer.stage.addChild(this.leftController);
+            renderer.UIBuilder.addChild(this.leftController);
         } else {
-            renderer.stage.removeChild(this.leftController);
+            renderer.UIBuilder.removeChild(this.leftController);
         }
 
     }

@@ -3,6 +3,7 @@ import obstacleHooks from './obstacleHooks.js'
 import playerHooks from './playerHooks.js'
 import boxHooks from './boxHooks.js'
 import portalHooks from './portalHooks.js'
+import flowerHooks from './flowerHooks.js'
 
 
 export default (state, renderer) => {
@@ -11,6 +12,7 @@ export default (state, renderer) => {
         'Obstacle': obstacleHooks(state, renderer),
         'Portal': portalHooks(state, renderer),
         'Box': boxHooks(state, renderer),
-        'Floor': floorHooks(state, renderer)
+        'Floor': floorHooks(state, renderer),
+        'Flower': flowerHooks(state, renderer)
     }
 }

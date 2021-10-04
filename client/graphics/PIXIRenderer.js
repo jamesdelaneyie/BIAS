@@ -23,7 +23,6 @@ class PIXIRenderer {
             height: window.innerHeight, 
             view: this.canvas,
             antialias: true,
-            transparent: false,
             resolution: resolution
         })
 
@@ -60,7 +59,7 @@ class PIXIRenderer {
         this.stage.addChild(this.UIBuilder)
 
         const fpsCounter = new PixiFps();
-        this.stage.addChild(fpsCounter)
+        //this.stage.addChild(fpsCounter)
 
 
 

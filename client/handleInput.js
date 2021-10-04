@@ -13,6 +13,7 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
     const input = inputSystem.frameState
     inputSystem.releaseKeys()
 
+
     const { myRawEntity, obstacles, boxes } = state
 
 
@@ -32,7 +33,11 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
         if(isMobile(window.navigator).any === true) {
             rotationAmount = input.rotation
         }
+        if(input.mouseDown) {
+            rotationAmount = rotation
+        }
 
+        
         
 
         if(input.message != "") {
@@ -50,7 +55,7 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
         // apply moveCommand  to our local entity
         applyCommand(myRawEntity, moveCommand, obstacles, boxes)
 
-        if (input.mouseDown) {
+        //if (input.mouseDown) {
             const coolEmoji = renderer.stage.children[1].coolEmoji.contentContainer;
             coolEmoji.on("pointerdown", function () {
                 client.addCommand(new SpeakCommand("😎", "emojiBlast", myRawEntity.x, myRawEntity.y))
@@ -71,7 +76,7 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
             whateverEmoji.on("pointerdown", function () {
                 client.addCommand(new SpeakCommand("🙄", "emojiBlast", myRawEntity.x, myRawEntity.y))
             });*/
-        }
+        //}
 
         const sendMessage = renderer.stage.children[1].textBox.children[0].children[0].children[3]
         sendMessage.on("pointerdown", function () {
@@ -106,6 +111,8 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
         }
         client.addCustomPrediction(client.tick, prediction, ['x', 'y'])
 
+        
+
         // also apply the result of the prediction to the graphical entity
         const graphics = client.graphicalEntities.get(prediction.nid)
         if(graphics) {
@@ -119,6 +126,15 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
 
         /* shooting */
         if (input.mouseDown) {
+
+            const urlParams = new URLSearchParams(window.location.search);
+
+            urlParams.set('x', parseInt(myRawEntity.x));
+            urlParams.set('y', parseInt(myRawEntity.y));
+
+            let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + urlParams.toString();
+            window.history.replaceState({path: newurl}, '', newurl);
+
             if (fire(myRawEntity)) {
                 // send shot to the server
                 client.addCommand(new FireCommand(worldCoord.x, worldCoord.y))
