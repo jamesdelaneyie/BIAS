@@ -296,8 +296,6 @@ class PlayerGraphics extends PIXI.Container {
         
 
 
-        
-        
 
         
         const nameTextCurved = new PIXI.Text(""+this.name+"", textStyle);
@@ -312,28 +310,19 @@ class PlayerGraphics extends PIXI.Container {
 
         const points = [];
         for ( let i = maxRopePoints - ropePoints; i > ropePoints; i-- ) {
-        const x = radius * Math.cos( step * i );
-        const y = radius * Math.sin( step * i );
-        points.push( new PIXI.Point( x, -y ) );
+            const x = radius * Math.cos( step * i );
+            const y = radius * Math.sin( step * i );
+            points.push( new PIXI.Point( x, -y ) );
         }
 
-        const container = new PIXI.Container();
-        container.height = 50
-        container.width = 50
-        container.alpha = 0
-        const rope = new PIXI.SimpleRope( nameTextCurved.texture, points );
-        container.addChild( rope );
-        nameText.contentContainer.addChild(container)
-
-      
-                
-
+        this.nameHolder = new PIXI.Container();
+        this.nameHolder.height = 50
+        this.nameHolder.width = 50
         
-
-        // Pointers normalize touch and mouse
-        this.on('pointerdown', this.onPointerDown);
-        this.wrapper.on('pointerover', this.onPointerOver);
-        this.wrapper.on('pointerout', this.onPointerOut);
+        const rope = new PIXI.SimpleRope( nameTextCurved.texture, points );
+        this.nameHolder.addChild( rope );
+        this.playerBody.addChild(this.nameHolder)
+        this.nameHolder.visible = false
 
 
 
@@ -350,7 +339,16 @@ class PlayerGraphics extends PIXI.Container {
             this.nose.visible = 0
             this.avatarContainer.visible = 0
             this.auraContainer.visible = 0
+            this.nameHolder.visible = 0
         }
+
+
+        // Pointers normalize touch and mouse
+        this.on('pointerdown', this.onPointerDown);
+        this.on('pointerover', this.onPointerOver);
+        this.on('pointerout', this.onPointerOut);
+    
+
         
     }
 
@@ -372,11 +370,11 @@ class PlayerGraphics extends PIXI.Container {
 
 
     onPointerOver(){
-       //this.info.visible = true
+        this.nameHolder.visible = true
     }
 
     onPointerOut(){
-        //this.info.visible = false
+        this.nameHolder.visible = false
     }
 
     setName(name){

@@ -366,11 +366,6 @@ const create = () => {
         if(message.type == "login") {
             renderer.UIBuilder.introScreenOn = false
         }
-
-        if(message.type == "flower") {
-            //console.log('flower')
-            //renderer.addFlower(message.text)
-        }
         
         if(message.type == "showQuote") {
             if(!renderer.UIBuilder.showingQuote) {
@@ -395,7 +390,6 @@ const create = () => {
         }
 
         if(message.type == "hideArt") {
-            //console.log(lastMessage, message.text)
             if((lastMessage != null) && (lastMessage != ""+message.text+"")) {
                 renderer.UIBuilder.hideArt(message.text)
             }

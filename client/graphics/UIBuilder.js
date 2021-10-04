@@ -6,6 +6,7 @@ import { ease } from 'pixi-ease'
 import { Sound, filters, sound } from '@pixi/sound'
 import { CRTFilter } from '@pixi/filter-crt'
 import { GlitchFilter } from '@pixi/filter-glitch'
+import { join } from 'path';
 
 class UIBuilder extends PIXI.Container {
     constructor(renderer, client) {
@@ -194,10 +195,10 @@ class UIBuilder extends PIXI.Container {
         this.chatStageOn = true
         this.emojiStageOn = true
         this.worldStageOn = true
-        this.miniMapOn = false
+        this.miniMapOn = true
 
         this.joinModalOn = true
-        this.introScreenOn = true
+        this.introScreenOn = false
 
         this.quoteStageOn = true
 
@@ -1594,11 +1595,11 @@ class UIBuilder extends PIXI.Container {
 
             
             this.joinModalWidgetGroup.contentContainer.alpha = 0
-            this.joinModalWidgetGroup.contentContainer.y = 50
+            //this.joinModalWidgetGroup.contentContainer.y = 50
 
 
 
-            ease.add(this.joinModalWidgetGroup.contentContainer, this.fadeInStyles, this.fadeInSettingsDelay)
+            
             
 
 
@@ -1608,32 +1609,43 @@ class UIBuilder extends PIXI.Container {
             this.joinTitleWrapper = new PUXI.Widget({
             }).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
-                    width: 0,
+                    width: 0.99999,
                     height: 0,
                     x: 0.5,
-                    y: 0.35,
+                    y: 0.25,
                     anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
                 }),
-            ).setBackground(white)
-
-            this.joinTitleStyles = new PIXI.TextStyle({ 
-                fontFamily: 'Trade Gothic Next',
-                fill: black, 
-                fontSize: 108,
-                fontWeight: 900, 
-            })
-
-            this.joinTitle = new PUXI.TextWidget(
-                'What’s your name?', 
-                this.joinTitleStyles
             )
-            
-            this.joinTitle.contentContainer.children[0].anchor.set(0.5, 0.5);
-            this.joinTitle.contentContainer.children[0].x = 0
-            this.joinTitle.contentContainer.children[0].y = 0
+
+
+            this.joinTitle = new PUXI.TextWidget('').setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 0.9999,
+                    //height: 0.9999,
+                    x: 0.5,
+                    y: 0.5,
+                    anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+                }))
             this.joinTitleWrapper.addChild(this.joinTitle)
             
-
+            
+            const joinTitleTagged = new TaggedText("What’s your name?", {
+                "default": {
+                    fontFamily: "Trade Gothic Next",
+                    fill: black, 
+                    fontWeight: 900,
+                    fontSize: "108px", 
+                    wordWrap: true,
+                    align: "center",
+                    wordWrapWidth: window.innerWidth 
+            }})
+            joinTitleTagged.alpha = 0
+            
+            setTimeout(function(){
+                joinTitleTagged.alpha = 1
+                joinTitleTagged.update()   
+            }, 500)
+            this.joinTitleWrapper.contentContainer.addChild(joinTitleTagged)
 
 
 
@@ -1659,6 +1671,7 @@ class UIBuilder extends PIXI.Container {
                 fill: black, 
                 fontSize: 52
             })
+           
             //The Text Input
             this.nameFieldInput = new PUXI.TextInput({
                 multiLine: false,
@@ -1740,7 +1753,7 @@ class UIBuilder extends PIXI.Container {
                     width: 100,
                     height: 100,
                     x: 0.5,
-                    y: 0.5,
+                    y: 0.525,
                     anchor: new PIXI.Point(0.5,0.5)
                 }),
             )
@@ -1756,9 +1769,7 @@ class UIBuilder extends PIXI.Container {
                     anchor: new PIXI.Point(0,0)
                 }),
             )
-            //this.avatarBox.contentContainer.children[0].anchor.set(0.5, 0.5)
 
-            //this.avatar = null
             var avatarCounter = 1
             let avatarBox = this.avatarBox
 
@@ -1767,7 +1778,7 @@ class UIBuilder extends PIXI.Container {
             this.color = color
 
             this.avatarImageWrapper = new PIXI.Container()
-            let avatarImageWrapper = this.avatarImageWrapper
+            const avatarImageWrapper = this.avatarImageWrapper
 
         
                 setInterval(function(){
@@ -1805,25 +1816,31 @@ class UIBuilder extends PIXI.Container {
                         avatarForeground.roundPixels = true
 
                         
-                        avatarBackground.width = 100
-                        avatarBackground.height = 100
+                        avatarBackground.width = 97
+                        avatarBackground.height = 97
                         avatarBackground.anchor.set(0.5,0.5)
                         avatarBackground.rotation = angle1
+                        //avatarMiddleground.alpha = 0
 
-                        avatarMiddleground.width = 100
-                        avatarMiddleground.height = 100
+                        avatarMiddleground.width = 97
+                        avatarMiddleground.height = 97
                         avatarMiddleground.anchor.set(0.5,0.5)
                         avatarMiddleground.rotation = angle2
+                        //avatarMiddleground.alpha = 0
 
-                        avatarMiddleground2.width = 100
-                        avatarMiddleground2.height = 100
+                        avatarMiddleground2.width = 97
+                        avatarMiddleground2.height = 97
                         avatarMiddleground2.anchor.set(0.5,0.5)
                         avatarMiddleground2.rotation = angle3
+                        //avatarMiddleground2.cacheAsBitmap = true
+                        //avatarMiddleground2.alpha = 0
 
-                        avatarForeground.width = 100
-                        avatarForeground.height = 100
+                        avatarForeground.width = 97
+                        avatarForeground.height = 97
                         avatarForeground.anchor.set(0.5,0.5)
                         avatarForeground.rotation = angle4
+                        //avatarForeground.alpha = 0
+                        //avatarMiddleground2.cacheAsBitmap = true
                     
 
 
@@ -1831,41 +1848,33 @@ class UIBuilder extends PIXI.Container {
                         let colorNow = PIXI.utils.string2hex(color);
                         userInterface.updateColor(color)
 
-                        let nose = new PIXI.Graphics()
+                        let nose = new Graphics()
+                        nose.lineStyle(0)
                         nose.moveTo(0, -48*3)
-                        nose.beginFill(colorNow)
+                        nose.beginFill(colorNow, 1.0, true)
                         nose.moveTo(0, -48*3)
                         nose.lineTo(85*3, 0)
                         nose.lineTo(0, 48*3)
                         nose.scale.set(0.333)
-                        nose.cacheAsBitmap = true
+                        //nose.cacheAsBitmap = true
                         nose.angle = 0
                         nose.endFill()
 
-                        let body = new PIXI.Graphics()
-                        body.beginFill(colorNow)
+                        let body = new Graphics()
+                        body.lineStyle(0)
+                        body.beginFill(colorNow, 1.0, true)
                         body.drawCircle(0, 0, 48*3)
                         body.scale.set(0.3333)
-                        body.cacheAsBitmap = true
+                        //body.cacheAsBitmap = true
                         body.endFill()
 
-                        
-
-                        const avatarMask = new PIXI.Graphics()
-                        avatarMask.beginFill(white)
-                        avatarMask.drawCircle(0, 0, 48*2)
-                        avatarMask.endFill()
-                        avatarMask.scale.set(0.5)
-                        avatarBackground.cacheAsBitmap = true
-                        avatarBox.contentContainer.addChild(avatarMask)
+                    
 
 
                         avatarImageWrapper.addChild(avatarBackground)
                         avatarImageWrapper.addChild(avatarMiddleground)
                         avatarImageWrapper.addChild(avatarMiddleground2)
                         avatarImageWrapper.addChild(avatarForeground)
-
-                        avatarImageWrapper.mask = avatarMask
 
                         
                         avatarBox.contentContainer.addChildAt(body, 0)
@@ -1917,7 +1926,7 @@ class UIBuilder extends PIXI.Container {
                     y: 0.727,
                     anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
                 }),
-            ).setBackground(black).setBackgroundAlpha(1);
+            )
 
             this.joinButton = new PUXI.Button({
                 text: ''
@@ -1930,6 +1939,7 @@ class UIBuilder extends PIXI.Container {
             }))
             .setBackground(red)
             .setBackgroundAlpha(1)
+
             this.joinButtonWrapper.addChild(this.joinButton)
             this.joinButton.on("hover", function (over) {
                 if(over == true) {
@@ -1941,25 +1951,35 @@ class UIBuilder extends PIXI.Container {
 
             
 
-        const buttonStyles = new PIXI.TextStyle({ 
-                fontFamily: 'Trade Gothic Next',
-                fill: white, 
-                fontWeight: 700,
-                fontSize: 64, 
-                letterSpacing: 2
-            })
-            this.joinText = new PUXI.TextWidget('CONTINUE', buttonStyles)
+
+
+            this.joinText = new PUXI.TextWidget('')
             this.joinText.setLayoutOptions(new PUXI.FastLayoutOptions({
                 x: 0.5,
                 y: 0.5,
                 anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
             }))
-            this.joinText.tint = black
             this.joinButtonWrapper.addChild(this.joinText)
-
             this.joinButtonWrapper.contentContainer.interactive = true;
             this.joinButtonWrapper.contentContainer.buttonMode = true;
             this.joinButtonWrapper.contentContainer.cursor = "pointer";
+
+            const joinTextTagged = new TaggedText("CONTINUE", {
+                "default": {
+                    fontFamily: "Trade Gothic Next",
+                    fill: black, 
+                    fontWeight: 900,
+                    fontSize: "64px", 
+                    letterSpacing: 0
+            }})
+            joinTextTagged.alpha = 0
+            
+            setTimeout(function(){
+                joinTextTagged.alpha = 1
+                joinTextTagged.update()   
+            }, 500)
+            this.joinText.contentContainer.addChild(joinTextTagged)
+
 
             const joinButtonClick = new PUXI.ClickManager(this.joinButton, true, false, false)
             
@@ -1971,16 +1991,14 @@ class UIBuilder extends PIXI.Container {
             const joinModalWidgetGroup = this.joinModalWidgetGroup
 
             const avatarWrapper = this.avatarWrapper
-            
+
             joinButtonClick.onClick = function(){
 
                 if(userInterface.getText() != "") {
-                    joinTitleWrapper.contentContainer.children[0].children[0].children[0].text = 'Select your avatar'
+                    joinTitleTagged.text = 'Select your avatar'
                     joinModalWidgetGroup.removeChild(inputBox)
                     avatarBox.alpha = 1
 
-                    
-                    
                     
                     const nameStyles = new PIXI.TextStyle({ 
                         fontFamily: 'Trade Gothic Next',
@@ -1999,6 +2017,8 @@ class UIBuilder extends PIXI.Container {
                         nameText.updateText();
                         userInterface.setName()
 
+                        //console.log(personName)
+
                         const radius = 68;
                         const maxRopePoints = 100;
                         const step = Math.PI / maxRopePoints;
@@ -2008,15 +2028,15 @@ class UIBuilder extends PIXI.Container {
 
                         const points = [];
                         for ( let i = maxRopePoints - ropePoints; i > ropePoints; i-- ) {
-                        const x = radius * Math.cos( step * i );
-                        const y = radius * Math.sin( step * i );
-                        points.push( new PIXI.Point( x, -y ) );
+                            const x = radius * Math.cos( step * i );
+                            const y = radius * Math.sin( step * i );
+                            points.push( new PIXI.Point( x, -y ) );
                         }
 
                         const container = new PIXI.Container();
                         container.height = 50
                         container.width = 50
-                        container.alpha = 0
+                        //container.alpha = 0
                         const rope = new PIXI.SimpleRope( nameText.texture, points );
                         container.addChild( rope );
                         //nameText.contentContainer.addChild(container)
@@ -2025,7 +2045,9 @@ class UIBuilder extends PIXI.Container {
                         container.x = 50
                         container.y = 52
 
-                        avatarWrapper.contentContainer.addChildAt(container)
+                        //console.log(avatarWrapper)
+
+                        avatarWrapper.contentContainer.addChild(container)
 
                         /*const rope = new PIXI.SimpleRope( nameText.texture, points );
                         container.addChild( rope );
@@ -2079,7 +2101,7 @@ class UIBuilder extends PIXI.Container {
         
 
 
-        
+            ease.add(this.joinModalWidgetGroup.contentContainer, this.fadeInStyles, this.fadeInSettingsDelay)
 
             this.joinModalWidgetGroup.addChild(this.joinTitleWrapper)
             this.joinModalWidgetGroup.addChild(this.inputBox)
@@ -2276,14 +2298,9 @@ class UIBuilder extends PIXI.Container {
                 setTimeout(function(){
                     ease.add(introScreenWrapper, {alpha: 0 }, { duration: 500, ease: 'easeOutExpo'})
                     introScreen.visible = false
-                    joinModal.visible = true
-                    mainMenu.visible = true
-                    statusStage.visible = true 
                 }, 13000)
                 setTimeout(function(){
                     userInterface.removeChild(introScreen)
-                    
-                    //this.main.visible = true
                 }, 13500)
             
         }
@@ -2588,7 +2605,10 @@ class UIBuilder extends PIXI.Container {
             const rotation = Math.atan2(dy, dx)
 
             this.avatarBox.contentContainer.rotation = rotation + 0.18
-            this.avatarWrapper.contentContainer.children[0].rotation = rotation - 1.571
+            if(this.avatarWrapper.contentContainer.children.length > 1) {
+                this.avatarWrapper.contentContainer.children[1].rotation = rotation - 1.571
+            }
+            
 
         })
 
@@ -2741,7 +2761,7 @@ class UIBuilder extends PIXI.Container {
 
 
     getAvatar() {
-        //console.log(this.avatarImageWrapper.children[0]._texture.textureCacheIds[0])
+        console.log(this.avatarImageWrapper.children[0])
         let avatar = [
             this.avatarImageWrapper.children[0]._texture.textureCacheIds[0],
             this.avatarImageWrapper.children[0]._texture.textureCacheIds[1],
@@ -2941,6 +2961,9 @@ class UIBuilder extends PIXI.Container {
 
     joinSession(){
         this.removeChild(this.joinModal)
+        //this.joinModal.visible = true
+        this.mainMenuStage.visible = true
+        this.statusStage.visible = true 
     }
 
 
@@ -3497,6 +3520,10 @@ class UIBuilder extends PIXI.Container {
             if(this.scoreStageOn) {
                 this.scoreStage.visible = false
             }
+
+            if(this.introScreenOn) {
+                this.introScreen.visible = false
+            }
             
             if(this.miniMapOn) {
                 this.miniMapStage.visible = false
@@ -3980,7 +4007,7 @@ class UIBuilder extends PIXI.Container {
             }
 
         } else {
-            this.introScreen.visible = false
+            //this.introScreen.visible = false
         }
     
     }

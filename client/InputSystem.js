@@ -47,6 +47,7 @@ class InputSystem {
         joinButton.on("click", function () {
 
             //console.log('firing')
+            console.log(isJoined, UIBuilder.nameGiven)
             
             if(isJoined == false) {
 

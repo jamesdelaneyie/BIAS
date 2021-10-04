@@ -448,7 +448,7 @@ class GameInstance {
                 halfHeight: 1800
             }
 
-            let theWorldDesign = JSON.stringify([this.room, this.room2, this.roomEntrance, this.room3])
+            let theWorldDesign = JSON.stringify([this.room, this.room2, this.roomEntrance, this.room3, this.room5])
 
             this.instance.message(new Notification(theWorldDesign, 'mapInfo', 0, 0), client)
             
@@ -722,29 +722,29 @@ class GameInstance {
            let spawnX = 1304
            let spawnY = 328
 
-            if(command.x) {
+            if(!isNaN(command.x)) {
                 rawEntity.x = Number(command.x)
             } else {
                 rawEntity.x = spawnX
             }
-            if(command.y) {
+            if(!isNaN(command.y)) {
                 rawEntity.y = Number(command.y)
             } else {
                 rawEntity.y = spawnY
             }
             
-            if(command.x) {
+            if(!isNaN(command.x)) {
                 smoothEntity.x = Number(command.x)
             } else {
                 smoothEntity.x = spawnX
             }
-            if(command.y) {
+            if(!isNaN(command.y)) {
                 smoothEntity.y = Number(command.y)
             } else {
                 smoothEntity.y = spawnY
             }
 
-            //console.log(spawnX, spawnY)
+            console.log(command.x, command.y)
 
 
             this.world.addBody(rawEntity.body);
