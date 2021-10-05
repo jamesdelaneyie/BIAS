@@ -2,8 +2,6 @@ import nengi from 'nengi'
 import nengiConfig from '../common/nengiConfig.js'
 import p2 from 'p2'
 
-
-
 import Identity from '../common/message/Identity.js'
 
 import WeaponFired from '../common/message/WeaponFired.js'
@@ -76,20 +74,10 @@ class GameInstance {
         });
 
 
-
         // Initialize the sheet - doc ID is the long id in the sheets URL
         const doc = new GoogleSpreadsheet('1M4TNR1k7f2OLdN_cUd1-k2Hyb_zTWWzl7gs37sLd1OE');
         const creds = require('../bias-online-keys.json');
         
-
-       
-
-
-
-
-
-
-
 
 
 
@@ -99,8 +87,6 @@ class GameInstance {
         this.flowers = new Map()
 
         this.world = new p2.World({gravity: [0, 0]});
-
-
 
         this.room = {
             x: 60,
@@ -877,7 +863,6 @@ class GameInstance {
 
 
 
-
         for (const [key, value] of Object.entries(this.instance.clients.array)) {
 
             let touching = false
@@ -916,9 +901,6 @@ class GameInstance {
         }
 
 
-            
-        
-        
         //Portals
         this.instance.clients.forEach(client => {
 

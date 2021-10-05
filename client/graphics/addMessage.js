@@ -4,8 +4,6 @@ import { ease } from 'pixi-ease'
 
 const addMessage = (layer, message) => {
 
-
-
             const style = new PIXI.TextStyle({
                 fontFamily: 'Trade Gothic Next',
                 fill: "black",
@@ -23,8 +21,8 @@ const addMessage = (layer, message) => {
 
             text = new PIXI.Text(message.text, style);
             text.x = message.x - 50 
-            text.y = message.y - (50 + text.height)
-            
+            text.y = message.y - (50 + text.height) + 25
+            let starterY = text.y + 20
 
             text.alpha = 0;
             text.isMessage = true;
@@ -35,6 +33,7 @@ const addMessage = (layer, message) => {
             textBox.lineStyle(1,0x00000)
             textBox.drawRoundedRect(message.x - 70, message.y - (68 + text.height), (text.width)+40, (text.height)+25, 20)
             textBox.cacheAsBitmap = true;
+            textBox.y = 10
             
             textBox.endFill()
             textBox.alpha = 0
@@ -43,30 +42,13 @@ const addMessage = (layer, message) => {
             layer.addChild(text)
 
 
+            ease.add(text, {alpha: 1, y: text.y - 30}, { duration: 250, ease: 'easeOutExpo'})
+            ease.add(textBox, {alpha: 1, y: 0}, { duration: 250, ease: 'easeOutExpo'})
 
-        var id = setInterval(frame, 10);
-        function frame() {
-            if (text.alpha > 1) {
-                clearInterval(id);
-            } else {
-                text.y = text.y - 0.5
-                textBox.alpha = textBox.alpha + 0.1
-                text.alpha = text.alpha + 0.1
-            }
-        }
-    
-    
-        setTimeout(() => {
-            var id = setInterval(frame, 10);
-            function frame() {
-                if (text.alpha < 0) {
-                    clearInterval(id);
-                } else {
-                    text.alpha = text.alpha - 0.1;
-                    textBox.alpha = textBox.alpha - 0.1
-                }
-                //console.log(text.alpha)
-            }
+            setTimeout(() => {
+                ease.add(text, {alpha: 0, y: text.y + 10}, { duration: 250, ease: 'easeOutExpo'})
+                ease.add(textBox, {alpha: 0, y: 10}, { duration: 250, ease: 'easeOutExpo'})
+            }, 2000)
             setTimeout(() => {
                 layer.removeChild(text)
                 layer.removeChild(textBox)
@@ -80,9 +62,7 @@ const addMessage = (layer, message) => {
                     texture: true,
                     baseTexture: true
                 })
-                
-            }, 600)
-        }, 2500)
+            }, 2250)
 
 
 }

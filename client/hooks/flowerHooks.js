@@ -6,7 +6,12 @@ export default ({ flowers }, renderer) => {
 
             const graphics = new FlowerGraphics(data)
             renderer.entities.set(data.nid, graphics)
-            renderer.backbackground.addChild(graphics)
+
+            if(data.y > 1300) {
+                renderer.middleground.addChild(graphics)
+            } else {
+                renderer.backbackground.addChild(graphics)
+            }
 
             return graphics
         },

@@ -11,12 +11,7 @@ class PIXIRenderer {
         this.entities = new Map()
         this.collection = []
 
-        let resolution
-        if(window.innerWidth < 500) {
-            resolution = 1
-        } else {
-            resolution = window.devicePixelRatio
-        }
+        let resolution = window.devicePixelRatio
 
         this.renderer = PIXI.autoDetectRenderer({
             width: window.innerWidth, 

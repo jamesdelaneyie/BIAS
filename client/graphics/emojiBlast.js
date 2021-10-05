@@ -20,8 +20,6 @@ const emojiBlast = (layer, message) => {
         
         const emoji = new PIXI.Text(message.text);
 
-
-
         emoji.x = message.x - 15
         emoji.y = message.y - 40
         emoji.style.fontSize = getRand(15, 40)

@@ -11,7 +11,8 @@ import shouldIgnore from './shouldIgnore.js'
 import addMessage from './graphics/addMessage.js'
 import emojiBlast from './graphics/emojiBlast.js'
 
-
+//Creating an Object — Memory Leak // Destruction
+//
 
 import * as PIXI from 'pixi.js'
 import { Sound, filters } from '@pixi/sound'
@@ -490,10 +491,7 @@ const create = () => {
     })
 
     client.on('connected', res => { 
-        
         renderer.UIBuilder.updateConnection(res, true);
-       
-        
     })
 
     client.on('error', res => { 

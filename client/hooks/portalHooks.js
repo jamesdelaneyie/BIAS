@@ -14,7 +14,6 @@ export default ({ portals }, renderer) => {
 
             renderer.middleground.addChild(graphicsBottom)
             renderer.foreground.addChild(graphicsTop)
-            
 
             return graphicsBottom
         },
