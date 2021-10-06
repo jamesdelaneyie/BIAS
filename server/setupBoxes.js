@@ -3,8 +3,7 @@ import p2 from 'p2'
 
 // setup a few boxes
 export default (instance, world, room, boxes) => {
-
-    const circleMaterial = new p2.Material();
+    
     const wallMaterial = new p2.Material();
 
     const roomX = room.x
@@ -30,13 +29,6 @@ export default (instance, world, room, boxes) => {
             boxes.set(objectProps.nid, objectProps)
         });
     }
-    
-    var touch = new p2.ContactMaterial(circleMaterial, wallMaterial, {
-        friction: 1,
-        restitution: 0.5
-    });
-
-    //world.addContactMaterial(touch);
 
     return boxes
 }

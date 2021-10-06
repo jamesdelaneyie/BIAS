@@ -75,14 +75,29 @@ class Box {
             });
             this.boxShape.material = state.material;
             
-            this.body = new p2.Body({
-                mass: state.mass,
-                position: [state.x + state.width/2, state.y + state.height/2],
-            });
+           
+
+            if(this.name == "merryGoRound") {
+                this.body = new p2.Body({
+                    mass: state.mass,
+                    position: [state.x + state.width/2, state.y + state.height/2],
+                    angle: 0.785398
+                });
+            } else {
+                this.body = new p2.Body({
+                    mass: state.mass,
+                    position: [state.x + state.width/2, state.y + state.height/2],
+                });
+            }
     
             
             this.body.addShape(this.boxShape)
-            this.collider = CollisionSystem.createRectangleColliderBox(0, 0, state.width, state.height)
+            if(this.name == "merryGoRound") {
+                this.collider = CollisionSystem.createRectangleColliderBox(0, 0, 1, 1)
+            } else {
+                this.collider = CollisionSystem.createRectangleColliderBox(0, 0, state.width, state.height)
+            }
+            
         }
 
         

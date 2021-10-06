@@ -137,7 +137,7 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
 
             if (fire(myRawEntity)) {
                 // send shot to the server
-                client.addCommand(new FireCommand(worldCoord.x, worldCoord.y))
+                client.addCommand(new FireCommand(worldCoord.x, worldCoord.y, myRawEntity.color))
                 // draw a predicted shot locally
                 handleShot(myRawEntity.x, myRawEntity.y, worldCoord.x, worldCoord.y, state.obstacles, renderer)
             }

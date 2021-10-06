@@ -13,7 +13,7 @@ class FlowerGraphics extends PIXI.Container {
         this.color = state.color    
         this.color = PIXI.utils.string2hex(this.color);
 
-
+        //console.log(this.color)
         /* Circle Stamp
         let flower = new Graphics()
         flower.lineStyle(0)
@@ -56,6 +56,12 @@ class FlowerGraphics extends PIXI.Container {
             leaf.alpha = 0
             ease.add(leaf, {alpha: 1, scale: 1}, { duration: 1000, ease: 'easeOutExpo' })
             this.addChild(leaf);
+
+
+            var flowerDot = new PIXI.Graphics();
+            //flowerDot.alpha = 0
+            //ease.add(flowerDot, {alpha: 1, scale: 1}, { duration: 1000, ease: 'easeOutExpo' })
+            this.addChild(flowerDot);
 
             var GRID_SIZE = 5;
             var CELLS_X = 200/GRID_SIZE;
@@ -109,6 +115,9 @@ class FlowerGraphics extends PIXI.Container {
             }
 
 
+            let flowerColor = this.color
+            console.log(flowerColor)
+
 
             this.prev = 0;
 
@@ -121,22 +130,27 @@ class FlowerGraphics extends PIXI.Container {
             }
 
             window.uTime = 0;
+
             this.wanderers = [];
             this.newWanderers = [];
 
             Wanderer.prototype.init = function(p) {
 
                 this.color = randColor();
-                if(p) { this.head = p;}
-                else this.head = getRandomTarget();
+
+                if(p) { 
+                    this.head = p
+                } else {
+                    this.head = getRandomTarget();
+                    console.log(this.head)
+                }
+
                 this.head.time = window.uTime;
             };
 
             Wanderer.prototype.update = function() {
 
-                    //console.log(this.head)
                     var candidates = neighbors(this.head);
-                    let wanderers = this.wanderers
 
                     var newCandidates = [];
                     for(var i =0 ;i<candidates.length;i++) {
@@ -146,17 +160,27 @@ class FlowerGraphics extends PIXI.Container {
                             newCandidates.push(candidates[i]);
                         }
                     }
+
                     this.prev = this.head;
                     this.head = newCandidates[Math.random()*newCandidates.length>>0];
                     var otherHead = newCandidates[Math.random()*newCandidates.length>>0];
 
                     if(!this.head) { 
                         this.toDispose = true;
+                        flowerDot.beginFill(flowerColor, 1.0, true)
+                        flowerDot.drawCircle(this.prev.x, this.prev.y, 3)
+                        flowerDot.endFill()
                     }
                     else {
 
-                        leaf.lineStyle(MIN_LINE_THICKNESS+Math.pow(MAX_LINE_THICKNESS,1-window.uTime/40),
-                            rgbToHex(this.color,1));//(1-(window.uTime%30+0.2*Math.random())/30)));
+                        leaf.lineStyle( MIN_LINE_THICKNESS + Math.pow(MAX_LINE_THICKNESS,1-window.uTime/40), rgbToHex(this.color,1) );
+                        //console.log(Math.pow(MAX_LINE_THICKNESS,window.uTime/40))
+
+                        if(this.head.time % 30 == 0) {
+                            flowerDot.beginFill(flowerColor, 1.0, true)
+                            flowerDot.drawCircle(this.prev.x, this.prev.y, 3)
+                            flowerDot.endFill()
+                        }
 
                         if(Math.random()<0.25) {
                             var w = new Wanderer(otherHead);
@@ -174,13 +198,13 @@ class FlowerGraphics extends PIXI.Container {
             };
 
             function getRandomTarget() {
-                return grid[10][10];
+                return grid[19][19];
             }
 
             var candidates;
 
-        
-            this.wanderers.push(new Wanderer(grid[CELLS_X/2>>0][CELLS_Y/2>>0]));
+            let starter = grid[CELLS_X/2>>0][CELLS_Y/2>>0]
+            this.wanderers.push(new Wanderer(starter));
             this.wanderers.push(new Wanderer());
 
 

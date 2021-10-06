@@ -29,7 +29,7 @@ const config = {
     ID_PROPERTY_NAME: 'nid',
     TYPE_PROPERTY_NAME: 'ntype', 
 
-    USE_HISTORIAN: false,
+    USE_HISTORIAN: true,
     HISTORIAN_TICKS: 40,
 
     protocols: {

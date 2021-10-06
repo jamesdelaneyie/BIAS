@@ -11,9 +11,13 @@ const lagCompensatedHitscanCheck = (instance, x1, y1, x2, y2, timeAgo) => {
     }
 
     const compensatedEntityPositions = instance.historian.getLagCompensatedArea(timeAgo, area)
+
+
     compensatedEntityPositions.forEach(entityProxy => {
         // look up the real entity
         const realEntity = instance.entities.get(entityProxy.nid)
+        const smoothEntity = instance.entities.get(entityProxy.nid+1)
+        //console.log(realEntity)
 
         if (realEntity && realEntity.collidable) {
             const tempX = realEntity.x
@@ -31,6 +35,7 @@ const lagCompensatedHitscanCheck = (instance, x1, y1, x2, y2, timeAgo) => {
 
             if (hit) {
                 hits.push(realEntity)
+                hits.push(smoothEntity)
             }
         }
     })

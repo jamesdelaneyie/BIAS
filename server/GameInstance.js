@@ -8,6 +8,7 @@ import WeaponFired from '../common/message/WeaponFired.js'
 import CollisionSystem from '../common/CollisionSystem.js'
 import followPath from './followPath.js'
 import damagePlayer from './damagePlayer.js'
+import tagPlayer from './tagPlayer.js'
 import instanceHookAPI from './instanceHookAPI.js'
 import applyCommand from '../common/applyCommand.js'
 
@@ -395,18 +396,38 @@ class GameInstance {
         setupBoxes(this.instance, this.world, this.room5, this.boxes)
 
 
-        let merryGoRound = new Obstacle({ 
+
+
+        let wallMaterial = new p2.Material()
+        let merryGoRoundObject = new Box({ 
             name: 'merryGoRound',
             x: this.room5.x + this.room5.width/2 - 150, 
-            y: this.room5.y + this.room5.height/2 - 150 + 30, 
+            y: this.room5.y + this.room5.height/2 - 150, 
+            width: 300, 
+            height: 300, 
+            mass: 0,
+            color: "#000000",
+            material: wallMaterial 
+        })
+        this.instance.addEntity(merryGoRoundObject)
+        this.world.addBody(merryGoRoundObject.body)
+        this.boxes.set(merryGoRoundObject.nid, merryGoRoundObject)
+
+        let merryGoRound = new Obstacle({ 
+            name: 'merryGoRound',
+            x: this.room5.x + this.room5.width/2, 
+            y: this.room5.y + this.room5.height/2, 
             width: 300, 
             height: 300, 
             border: 5,
             color: "#000000",
-            angle: 45
+            angle: 0
         })
         this.instance.addEntity(merryGoRound)
         this.obstacles.set(merryGoRound.nid, merryGoRound)
+
+        
+        
 
 
         const thisInstance = this.instance
@@ -417,8 +438,8 @@ class GameInstance {
             let likePump = new Box({
                 name: "token",
                 type: "thumbs-up",
-                x: 1150,
-                y: 1550,
+                x: 550,
+                y: 2350,
                 width: 20,
                 height: 20,
                 mass: 0.001,
@@ -427,7 +448,7 @@ class GameInstance {
             thisInstance.addEntity(likePump)
             thisWorld.addBody(likePump.body)
             thisBoxes.set(likePump.nid, likePump)
-        }, 10000)
+        }, 500)
 
 
 
@@ -641,10 +662,13 @@ class GameInstance {
             const smoothEntity = client.smoothEntity
 
             
-            const flowerCommand = {x: command.x, y: command.y, color:  '70ED96'}
+            const flowerCommand = {x: command.x, y: command.y, color: command.color }
 
-            this.addFlower(flowerCommand, client)
+            
+
+
             //addFlower(this.instance, flowerCommand, this.flowers)
+            let sticker = false 
 
             if (fire(rawEntity)) {
                 let endX = command.x
@@ -660,17 +684,31 @@ class GameInstance {
                     if (hitObstacle) {
                         endX = hitObstacle.x
                         endY = hitObstacle.y
+
+                        if(obstacle.name == "merryGoRound") {
+                            obstacle.sticker = parseInt(Math.random() * 100)
+                            sticker = true
+                            //console.log(obstacle)
+                        }
                     }
                 })
 
                 const timeAgo = client.latency + 100
                 const hits = lagCompensatedHitscanCheck(this.instance, rawEntity.x, rawEntity.y, endX, endY, timeAgo)
+               
 
                 hits.forEach(victim => {
+                    
                     if (victim.nid !== rawEntity.nid && victim.nid !== smoothEntity.nid) {
                         damagePlayer(victim, 25)
+                        victim.sticker = parseInt(Math.random() * 100)
+                        sticker = true
                     }
                 })
+
+                if(sticker == false) {
+                    this.addFlower(flowerCommand, client)
+                }
 
                 this.instance.addLocalMessage(new WeaponFired(smoothEntity.nid, smoothEntity.x, smoothEntity.y, command.x, command.y))
             }
@@ -824,13 +862,20 @@ class GameInstance {
 
         this.obstacles.forEach(obstacle => {
             if(obstacle.name == "merryGoRound") {
-                
-                obstacle.angle = obstacle.angle + 0.05
-                //obstacle.collider.polygon.rotate(0.785398)
-                //obstacle.collider.polygon.setAngle(45)
-                /*        this.angleTimer += 0.001
-                obstacle.collider.polygon.rotate(this.angleMovement)
-                obstacle.collider.polygon.setAngle(this.angleTimer)*/
+                let newAngle = obstacle.angle + 0.03
+                obstacle.angle = newAngle
+                obstacle.collider.polygon.rotate(0.03)
+            }
+        })
+
+        this.boxes.forEach(box => {
+            
+            if(box.name == "merryGoRound") {
+                //console.log(box)
+                box.body.angle += 0.03
+                box.rotation = box.body.angle
+                box.body.updateAABB() 
+               
             }
         })
 

@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { SmoothGraphics as Graphics } from '@pixi/graphics-smooth';
+import { ease } from 'pixi-ease'
 
 
 class ObstacleGraphics extends PIXI.Container {
@@ -13,12 +14,8 @@ class ObstacleGraphics extends PIXI.Container {
         this.width = state.width
         this.height = state.height
         this.color = state.color
-        this.angle = state.angle
-        
-        var pi = Math.PI;
-        this.angle = state.angle * (180/pi)
+        this.rotation = state.angle
 
-        
         this.wrapper = new PIXI.Container()
 
         if(this.name == "libbyVideoPreview") {
@@ -52,10 +49,9 @@ class ObstacleGraphics extends PIXI.Container {
             this.body.lineStyle(0)
             this.body.beginFill(PIXI.utils.string2hex(state.color), 1.0, true)
             if(state.name == "merryGoRound") {
-                this.body.drawRect(0, 0, state.width, state.height)
-                //this.body.pivot.set(0.5)
-                //this.body.x 
-                //console.log('log')
+                this.body.pivot.set(0.5)
+                this.body.drawRect(-state.width/2, -state.height/2, state.width, state.height)
+                console.log('log')
             } else {
                 this.body.drawRect(0, 0, state.width, state.height)
             }
@@ -68,13 +64,55 @@ class ObstacleGraphics extends PIXI.Container {
         
         this.addChild(this.wrapper)
 
+        this.interactive = true
+        this.buttonMode = true
+
+
+
         this.count = 0.01
         
+    }
+
+    addSticker(value){
+        if(value > 1) {
+            let choice = Math.floor(Math.random() * (4 - 1) + 1)
+            if(choice == 1) {
+                this.smileyStamp = new PIXI.Sprite.from('images/face-sticker-calm.svg');
+            } else if (choice == 2) {
+                this.smileyStamp = new PIXI.Sprite.from('images/face-sticker-sad.svg');
+            } else if (choice == 3) {
+                this.smileyStamp = new PIXI.Sprite.from('images/face-sticker.svg');
+            }
+            let size = Math.floor(Math.random() * (6 - 2) + 1)
+            this.smileyStamp.width = size*10;
+            this.smileyStamp.height = size*10;
+            this.smileyStamp.x = Math.floor(Math.random() * (300) - 150)
+            this.smileyStamp.y = Math.floor(Math.random() * (300)  - 150)
+            let angle = Math.floor(Math.random() * (360 - 1) + 1)
+            this.smileyStamp.scale.set(3)
+            this.smileyStamp.angle = angle 
+            this.smileyStamp.anchor.set(0.5, 0.5)
+            this.smileyStamp.alpha = 0
+            this.addChild(this.smileyStamp)
+            ease.add(this.smileyStamp, {alpha: 1, scale: 0.5}, { duration: 150, ease: 'easeOutExpo' })
+
+        }
     }
 
    
 
     update(delta) {
+
+        let rotation = this.angle
+        let pi = Math.PI
+        rotation = rotation * (180/pi)
+        //console.log(rotation)
+        if(this.name == "merryGoRound") {
+            this.angle = rotation + 45//-0.785398
+        } else {
+            this.angle = rotation
+        }
+       
         
         if(this.name == "libbyVideoPreview") {
             

@@ -237,25 +237,6 @@ class PlayerGraphics extends PIXI.Container {
             avatarForeground.anchor.set(0.5, 0.5)
             avatarForeground.angle = angle4        
 
-            avatarBackground.x = 0
-            avatarBackground.y = 0
-
-            avatarMiddleground.x = 0
-            avatarMiddleground.y = 0
-
-            avatarMiddleground2.x = 0
-            avatarMiddleground2.y = 0
-
-            avatarForeground.x = 0
-            avatarForeground.y = 0
-
-           /* avatarBackground.cacheAsBitmap = true
-            avatarMiddleground.cacheAsBitmap = true
-            avatarMiddleground2.cacheAsBitmap = true
-            avatarForeground.cacheAsBitmap = true*/
-            
-
-
             avatarContainer.addChild(avatarBackground)
             avatarContainer.addChild(avatarMiddleground)
             avatarContainer.addChild(avatarMiddleground2)
@@ -264,13 +245,6 @@ class PlayerGraphics extends PIXI.Container {
             avatarContainer.addChild(headphoneGraphics)
 
             playerBody.addChild(avatarContainer)
-            
-            
-            
-            //headphoneGraphics.angle = 90
-
-            
-
 
             
             ease.add(playerBody, {alpha: 1}, { duration: 250, ease: 'easeOutExpo'})
@@ -350,6 +324,42 @@ class PlayerGraphics extends PIXI.Container {
     
 
         
+    }
+
+    addSticker(value){
+        
+        if(value > 1) {
+            if(this.self == false) {
+                
+            } else {
+                let choice = Math.floor(Math.random() * (4 - 1) + 1)
+                if(choice == 1) {
+                    this.smileyStamp = new PIXI.Sprite.from('images/face-sticker-calm.svg');
+                } else if (choice == 2) {
+                    this.smileyStamp = new PIXI.Sprite.from('images/face-sticker-sad.svg');
+                } else if (choice == 3) {
+                    this.smileyStamp = new PIXI.Sprite.from('images/face-sticker.svg');
+                }
+
+                let size = Math.floor(Math.random() * (6 - 2) + 1)
+                this.smileyStamp.width = size*10;
+                this.smileyStamp.height = size*10;
+
+                var ranNum = Math.ceil(Math.random() * 10) * (Math.round(Math.random()) ? 1 : -1)
+                this.smileyStamp.x = ranNum
+
+                var ranNum = Math.ceil(Math.random() * 10) * (Math.round(Math.random()) ? 1 : -1)
+                this.smileyStamp.y = ranNum
+
+                let angle = Math.floor(Math.random() * (360 - 1) + 1)
+                this.smileyStamp.scale.set(3)
+                this.smileyStamp.angle = angle 
+                this.smileyStamp.anchor.set(0.5, 0.5)
+                this.smileyStamp.alpha = 0
+                this.playerBody.addChild(this.smileyStamp)
+                ease.add(this.smileyStamp, {alpha: 1, scale: 0.5}, { duration: 150, ease: 'easeOutExpo' })
+            }
+        }
     }
 
     putOnHeadphones(boolean) {

@@ -23,7 +23,7 @@ class PIXIRenderer {
 
         PIXI.settings.ROUND_PIXELS = true
         PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR
-
+        PIXI.utils.skipHello();
         
 
         this.stage = new PIXI.Container()

@@ -47,6 +47,9 @@ export default (state, renderer ) => {
             },
             bodyRotation({ graphics, value }) {
                 graphics.setRotation(value)
+            },
+            sticker({ graphics, value }) {
+                graphics.addSticker(value)
             }
         }
     }

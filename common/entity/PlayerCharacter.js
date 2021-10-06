@@ -91,7 +91,8 @@ PlayerCharacter.protocol = {
     self: nengi.Boolean,
     hitpoints: nengi.UInt8,
     headphones: nengi.Boolean,
-    typing: nengi.Boolean
+    typing: nengi.Boolean,
+    sticker: nengi.UInt16
 }
 
 export default PlayerCharacter
