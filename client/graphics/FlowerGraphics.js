@@ -28,17 +28,26 @@ class FlowerGraphics extends PIXI.Container {
         this.flower = false
 
         if(state.y > 1300) {
-
-            this.smileyStamp = new PIXI.Sprite.from('images/face-sticker.svg');
-            this.smileyStamp.width = 52;
-            this.smileyStamp.height = 52;
+            let choice = Math.floor(Math.random() * (4 - 1) + 1)
+            if(choice == 1) {
+                this.smileyStamp = new PIXI.Sprite.from('images/face-sticker-calm.svg');
+            } else if (choice == 2) {
+                this.smileyStamp = new PIXI.Sprite.from('images/face-sticker-sad.svg');
+            } else if (choice == 3) {
+                this.smileyStamp = new PIXI.Sprite.from('images/face-sticker.svg');
+            }
+            let size = Math.floor(Math.random() * (6 - 2) + 1)
+            this.smileyStamp.width = size*10;
+            this.smileyStamp.height = size*10;
             this.smileyStamp.x = 0
             this.smileyStamp.y = 0
             let angle = Math.floor(Math.random() * (360 - 1) + 1)
-            this.smileyStamp.scale.set(0.5)
+            this.smileyStamp.scale.set(3)
             this.smileyStamp.angle = angle 
-            this.smileyStamp.anchor.set(0.5, 0.8)
+            this.smileyStamp.anchor.set(0.5, 0.5)
+            this.smileyStamp.alpha = 0
             this.addChild(this.smileyStamp)
+            ease.add(this.smileyStamp, {alpha: 1, scale: 0.5}, { duration: 150, ease: 'easeOutExpo' })
 
         } else {
 

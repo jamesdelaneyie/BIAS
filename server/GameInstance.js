@@ -379,8 +379,8 @@ class GameInstance {
                 offset: 600,
                 width: 180,
             },{
-                offset: 300,
-                width: 490,
+                offset: 0,
+                width: 0,
             },{
                 offset:0,
                 width:0,
@@ -394,24 +394,47 @@ class GameInstance {
         setupWalls(this.instance, this.room5, this.obstacles, 'wall')
         setupBoxes(this.instance, this.world, this.room5, this.boxes)
 
-        /*setInterval(function(){
+
+        let merryGoRound = new Obstacle({ 
+            name: 'merryGoRound',
+            x: this.room5.x + this.room5.width/2 - 150, 
+            y: this.room5.y + this.room5.height/2 - 150 + 30, 
+            width: 300, 
+            height: 300, 
+            border: 5,
+            color: "#000000",
+            angle: 45
+        })
+        this.instance.addEntity(merryGoRound)
+        this.obstacles.set(merryGoRound.nid, merryGoRound)
+
+
+        const thisInstance = this.instance
+        const thisWorld = this.world
+        const thisBoxes = this.boxes
+
+        setInterval(function(){
             let likePump = new Box({
                 name: "token",
-                type: "soccer-ball",
-                x: 900,
-                y: 900,
-                width: 25,
-                height: 25,
+                type: "thumbs-up",
+                x: 1150,
+                y: 1550,
+                width: 20,
+                height: 20,
                 mass: 0.001,
                 color: "0000ff",
             })
-            theInstance.addEntity(likePump)
-            theWorld.addBody(likePump.body)
-            theBoxes.set(likePump.nid, likePump)
-        }, 3000)*/
+            thisInstance.addEntity(likePump)
+            thisWorld.addBody(likePump.body)
+            thisBoxes.set(likePump.nid, likePump)
+        }, 10000)
 
 
 
+
+
+        this.angleTimer = 0
+        this.angleMovement = 0.001
 
         this.people = []
 
@@ -799,7 +822,17 @@ class GameInstance {
         //this.instance.messageAll(new Notification(""+this.totalUsers+"", 'worldInfoTotalUsers'))
         //this.instance.messageAll(new Notification(""+this.activeUsers.length+"", 'worldInfoActiveUsers'))
 
-
+        this.obstacles.forEach(obstacle => {
+            if(obstacle.name == "merryGoRound") {
+                
+                obstacle.angle = obstacle.angle + 0.05
+                //obstacle.collider.polygon.rotate(0.785398)
+                //obstacle.collider.polygon.setAngle(45)
+                /*        this.angleTimer += 0.001
+                obstacle.collider.polygon.rotate(this.angleMovement)
+                obstacle.collider.polygon.setAngle(this.angleTimer)*/
+            }
+        })
 
         //Start Art
         this.instance.clients.forEach(client => {

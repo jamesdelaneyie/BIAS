@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js'
+import { SmoothGraphics as Graphics } from '@pixi/graphics-smooth';
 
 
 class ObstacleGraphics extends PIXI.Container {
@@ -14,6 +15,8 @@ class ObstacleGraphics extends PIXI.Container {
         this.color = state.color
         this.angle = state.angle
         
+        var pi = Math.PI;
+        this.angle = state.angle * (180/pi)
 
         
         this.wrapper = new PIXI.Container()
@@ -45,9 +48,18 @@ class ObstacleGraphics extends PIXI.Container {
 
         } else {
 
-            this.body = new PIXI.Graphics()
-            this.body.beginFill(PIXI.utils.string2hex(state.color))
-            this.body.drawRect(0, 0, state.width, state.height)
+            this.body = new Graphics()
+            this.body.lineStyle(0)
+            this.body.beginFill(PIXI.utils.string2hex(state.color), 1.0, true)
+            if(state.name == "merryGoRound") {
+                this.body.drawRect(0, 0, state.width, state.height)
+                //this.body.pivot.set(0.5)
+                //this.body.x 
+                //console.log('log')
+            } else {
+                this.body.drawRect(0, 0, state.width, state.height)
+            }
+            
             this.body.endFill()
             this.wrapper.addChild(this.body)
             
@@ -69,7 +81,7 @@ class ObstacleGraphics extends PIXI.Container {
             this.displacementFilter.scale.x = 20 * Math.sin(this.count)//1
             this.displacementFilter.scale.y = 20 * Math.sin(this.count*1.5)
             this.count = this.count + 0.01
-            //this.wrapper.filters =  [this.displacementFilter]
+            this.wrapper.filters =  [this.displacementFilter]
         }
     }
 }

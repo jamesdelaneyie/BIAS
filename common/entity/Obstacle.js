@@ -14,6 +14,9 @@ class Obstacle {
         this.angle = state.angle
 
         this.collider = CollisionSystem.createRectangleCollider(state.x, state.y, state.width, state.height)
+        if(this.name == "merryGoRound") {
+            this.collider.polygon.rotate(0.785398)
+        }
           
     }
 }
@@ -25,7 +28,7 @@ Obstacle.protocol = {
     width: nengi.UInt16,
     height: nengi.UInt16,
     color: nengi.String,
-    angle: nengi.UInt16
+    angle: { type: nengi.RotationFloat32, interp: true }
 }
 
 export default Obstacle
