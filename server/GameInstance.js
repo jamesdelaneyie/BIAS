@@ -110,8 +110,8 @@ class GameInstance {
                 mass: 0.001
             }],
             holes: [{
-                offset: 500,
-                width: 0,
+                offset: 300,
+                width: 800,
             },{
                 offset: 230,
                 width: 490,
