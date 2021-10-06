@@ -448,7 +448,7 @@ class GameInstance {
             thisInstance.addEntity(likePump)
             thisWorld.addBody(likePump.body)
             thisBoxes.set(likePump.nid, likePump)
-        }, 500)
+        }, 20000)
 
 
 
