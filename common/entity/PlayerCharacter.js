@@ -31,9 +31,7 @@ class PlayerCharacter {
         this.circleShape.material = this.material;
 
         var vertices = [[0,-25], [55, 0], [0, 25]];
-        //var vertices = [[0,-2], [4, 0], [0, 2]];
         var convexShape = new p2.Convex({ vertices: vertices });
-        //body.addShape(convexShape);
 
 
         this.body = new p2.Body({
@@ -44,11 +42,6 @@ class PlayerCharacter {
         this.body.addShape(this.circleShape)
         this.body.addShape(convexShape)
         
-
-      
-
-        // weapon cooldown!
-        // example of a plain data-only component
         this.weapon = {
             onCooldown: false,
             cooldown: 0.5,

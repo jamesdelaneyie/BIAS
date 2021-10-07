@@ -3,6 +3,8 @@ import * as PIXI from 'pixi.js'
 import UIBuilder from './UIBuilder.js'
 import PixiFps from "pixi-fps";
 import { AsciiFilter } from '@pixi/filter-ascii'
+import * as particles from 'pixi-particles'
+import * as particleSettings from "./emitter.json";
 
 class PIXIRenderer {
 
@@ -42,6 +44,7 @@ class PIXIRenderer {
         this.cameraWrapper.addChild(this.background)
         this.cameraWrapper.addChild(this.middleground)
         this.cameraWrapper.addChild(this.foreground)
+        
 
         this.noise = new PIXI.filters.NoiseFilter(0.01, 0.2893);
         this.stage.filters = [this.noise]
@@ -56,15 +59,23 @@ class PIXIRenderer {
         const fpsCounter = new PixiFps();
         //this.stage.addChild(fpsCounter)
 
+        this.particleContainer = new PIXI.ParticleContainer()
+        this.foreground.addChild(this.particleContainer)
+
+        console.log(particleSettings.default)
+
+        this.emitter = new particles.Emitter(this.particleContainer, new PIXI.Texture.from("images/particle.png"), particleSettings.default);
+        this.emitter.autoUpdate = true; // If you keep it false, you have to update your particles yourself.
+        this.emitter.updateSpawnPos(800, 1300);
+        this.emitter.emit = true;
 
 
 
 
 
-
-
-
-
+        // Start the update
+        //update();
+/*
 
         
         //FISHIES
@@ -114,7 +125,7 @@ class PIXIRenderer {
             //this.fishes.push(fish);
         }
 
-
+*/
         
         this.ascaiiFilter = new AsciiFilter()
         
@@ -166,17 +177,19 @@ class PIXIRenderer {
         this.entities.forEach(entity => {
             entity.update(delta)
         })
-        this.renderer.render(this.stage)
+       
         this.UIBuilder.update(delta)
 
+        this.emitter.update(delta)
 
         this.displacementSprite.y = delta*500
         this.displacementSprite.x = delta*500
-
+        this.renderer.render(this.stage)
+        
 
         //this.backbackground.filters =  [this.ascaiiFilter, this.displacementFilter]
 
-
+/*
         for (let i = 0; i < this.fishes.length; i++) {
             const fish = this.fishes[i];
 
@@ -203,7 +216,7 @@ class PIXIRenderer {
             {
                 fish.y -= this.bounds.height;
             }
-        }
+        }*/
     }
 }
 

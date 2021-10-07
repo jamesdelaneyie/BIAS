@@ -138,6 +138,8 @@ CollisionSystem.moveWithCollisions = (entity, obstacles, boxes) => {
                 entity.x -= response.overlapV.x
                 entity.y -= response.overlapV.y
             }
+        } else if(obstacle.name == "soccerButton") {
+            
         } else {
             if (SAT.testCirclePolygon(entity.collider.circle, obstacle.collider.polygon, response)) {
                 entity.x -= response.overlapV.x

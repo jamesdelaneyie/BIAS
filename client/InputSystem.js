@@ -3,6 +3,7 @@ import isMobile from 'ismobilejs'
 import JoinCommand from '../common/command/JoinCommand.js'
 import ToggleCommand from '../common/command/ToggleCommand.js'
 import { Sound } from '@pixi/sound'
+import MoveCommand from '../common/command/MoveCommand';
 
 
 class InputSystem {
@@ -29,6 +30,7 @@ class InputSystem {
         viewArtButton.on('pointerdown', function(){
             client.addCommand(new ToggleCommand(true, "headphones"))
             viewArtButton.alpha = 0
+            client.addCommand(new ToggleCommand(true, "lockPlayer"))
         })
 
         document.addEventListener( "pointerdown", closeArtButton );
@@ -36,7 +38,9 @@ class InputSystem {
             var element = event.target;
             if(element.id == 'back-to-bias'){
                 setTimeout(()=>{
+                    
                     client.addCommand(new ToggleCommand(false, "headphones"))
+                    
                 }, 1300)
             }
         }

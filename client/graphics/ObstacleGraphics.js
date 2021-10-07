@@ -51,7 +51,6 @@ class ObstacleGraphics extends PIXI.Container {
             if(state.name == "merryGoRound") {
                 this.body.pivot.set(0.5)
                 this.body.drawRect(-state.width/2, -state.height/2, state.width, state.height)
-                console.log('log')
             } else {
                 this.body.drawRect(0, 0, state.width, state.height)
             }
@@ -116,8 +115,8 @@ class ObstacleGraphics extends PIXI.Container {
         
         if(this.name == "libbyVideoPreview") {
             
-            this.displacementFilter.scale.x = 20 * Math.sin(this.count)//1
-            this.displacementFilter.scale.y = 20 * Math.sin(this.count*1.5)
+            this.displacementFilter.scale.x = 90 * Math.sin(this.count)//1
+            this.displacementFilter.scale.y = 90 * Math.sin(this.count*1.5)
             this.count = this.count + 0.01
             this.wrapper.filters =  [this.displacementFilter]
         }

@@ -102,16 +102,34 @@ class GameInstance {
             objects: [{
                 name: "token",
                 type: "soccer-ball",
-                x: 950,
-                y: 950,
+                x: 60,
+                y: 60,
+                width: 25, 
+                height: 25, 
+                color: "#0000ff",
+                mass: 0.001
+            },{
+                name: "token",
+                type: "soccer-ball",
+                x: 60,
+                y: 90,
+                width: 25, 
+                height: 25, 
+                color: "#0000ff",
+                mass: 0.001
+            },{
+                name: "token",
+                type: "soccer-ball",
+                x: 60,
+                y: 120,
                 width: 25, 
                 height: 25, 
                 color: "#0000ff",
                 mass: 0.001
             }],
             holes: [{
-                offset: 300,
-                width: 800,
+                offset: 0,
+                width: 0,
             },{
                 offset: 230,
                 width: 490,
@@ -119,8 +137,8 @@ class GameInstance {
                 offset: 1010,
                 width: 180,
             },{
-                offset: 500,
-                width: 0,
+                offset: 300,
+                width: 400,
             }]
         }
         setupFloors(this.instance, this.room)
@@ -343,7 +361,18 @@ class GameInstance {
         this.instance.addEntity(libbyVideoPreview)
         this.obstacles.set(libbyVideoPreview.nid, libbyVideoPreview)
 
-
+        let soccerButton = new Obstacle({ 
+            name: 'soccerButton',
+            x: 0, 
+            y: 550, 
+            width: 40, 
+            height: 40, 
+            border: 0,
+            color: "#ffff00",
+            angle: 0
+        })
+        this.instance.addEntity(soccerButton)
+        this.obstacles.set(soccerButton.nid, soccerButton)
 
 
                
@@ -412,7 +441,7 @@ class GameInstance {
         this.instance.addEntity(merryGoRoundObject)
         this.world.addBody(merryGoRoundObject.body)
         this.boxes.set(merryGoRoundObject.nid, merryGoRoundObject)
-
+        
         let merryGoRound = new Obstacle({ 
             name: 'merryGoRound',
             x: this.room5.x + this.room5.width/2, 
@@ -420,7 +449,7 @@ class GameInstance {
             width: 300, 
             height: 300, 
             border: 5,
-            color: "#000000",
+            color: "artStarter",
             angle: 0
         })
         this.instance.addEntity(merryGoRound)
@@ -449,6 +478,38 @@ class GameInstance {
             thisWorld.addBody(likePump.body)
             thisBoxes.set(likePump.nid, likePump)
         }, 20000)
+
+
+        let likePumpChecker = new Box({
+            name: "token",
+            type: "thumbs-up",
+            x: 550,
+            y: 2350,
+            width: 20,
+            height: 20,
+            mass: 0.001,
+            color: "0000ff",
+        })
+        thisInstance.addEntity(likePumpChecker)
+        thisWorld.addBody(likePumpChecker.body)
+        thisBoxes.set(likePumpChecker.nid, likePumpChecker)
+
+        let likePumpCheckerTwo = new Box({
+            name: "token",
+            type: "thumbs-up",
+            x: 550,
+            y: 2350,
+            width: 20,
+            height: 20,
+            mass: 0.001,
+            color: "0000ff",
+        })
+        thisInstance.addEntity(likePumpCheckerTwo)
+        thisWorld.addBody(likePumpCheckerTwo.body)
+        thisBoxes.set(likePumpCheckerTwo.nid, likePumpCheckerTwo)
+
+        var constraint1 = new p2.DistanceConstraint(likePumpChecker.body, likePumpCheckerTwo.body);
+        this.world.addConstraint(constraint1);
 
 
 
@@ -528,9 +589,45 @@ class GameInstance {
                 client.rawEntity.headphones = true
                 client.smoothEntity.headphones = true
             } else if (command.type == "headphones" && command.boolean == false) {
-                client.rawEntity.headphones = false
-                client.smoothEntity.headphones = false
+
+                
+                for (let obstacle of this.obstacles.values()) {
+                    if(obstacle.name == "merryGoRound") {
+                        let collided = false
+                        
+                        collided = SAT.testCirclePolygon(client.rawEntity.collider.circle, obstacle.collider.polygon) 
+                        
+                        if(collided == true) {
+
+                            const response = new SAT.Response()
+
+
+                            if (SAT.testCirclePolygon(client.rawEntity.collider.circle, obstacle.collider.polygon, response)) {
+                                client.rawEntity.x -= response.overlapV.x * 4
+                                client.rawEntity.y -= response.overlapV.y * 4
+                            }
+                            
+ 
+                        }
+
+                    }
+                    
+                   
+                }
+
+                setTimeout(function(){
+                    client.rawEntity.headphones = false
+                    client.smoothEntity.headphones = false
+                }, 1000)
+
+                
+              
+
+                
+
             }
+
+           
 
 
 
@@ -589,9 +686,9 @@ class GameInstance {
                 delta: rawEntity.delta,
                 rotation: rawEntity.rotation
             })
+            
 
-            //this.instance.message(new Notification("", "playerPosition", rawEntity.x), client)
-
+            
         })
 
 
@@ -606,6 +703,10 @@ class GameInstance {
 
                 //set the message
                 const message = command.text
+
+                if(command.text == "") {
+                    return
+                }
 
                 //remove duplicate characters over 2
                 let messageTrimmed = message.replace(/(.)\1{2,}/g, '$1$1')
@@ -695,6 +796,30 @@ class GameInstance {
 
                 const timeAgo = client.latency + 100
                 const hits = lagCompensatedHitscanCheck(this.instance, rawEntity.x, rawEntity.y, endX, endY, timeAgo)
+
+
+                for (let box of this.boxes.values()) {
+
+                    if(box.type == "soccer-ball") {
+
+                        if(Math.abs(rawEntity.x - box.body.position[0]) <= 120 && Math.abs(rawEntity.y - box.body.position[1]) <= 120) {
+
+                                rawEntity.justFired = true
+
+                                console.log('tester')
+                            
+                                let XForce = command.x/30000
+                                let yForce = command.y/30000
+                                
+                                XForce = 0.05 
+                                yForce = -0.05
+
+                                box.body.applyImpulse([XForce,yForce],[command.x, command.y])
+
+                        }
+                     }
+                    
+                }
                
 
                 hits.forEach(victim => {
@@ -834,13 +959,16 @@ class GameInstance {
         this.instance.clients.forEach(client => {
 
             if(client.rawEntity) {
-                client.view.x = client.rawEntity.x
-                client.view.y = client.rawEntity.y
-                
-                client.rawEntity.body.position[0] = client.rawEntity.x
-                client.rawEntity.body.position[1] = client.rawEntity.y
-
-                client.rawEntity.body.angle = client.rawEntity.rotation
+                if(!client.rawEntity.headphones) {
+                    client.view.x = client.rawEntity.x
+                    client.view.y = client.rawEntity.y
+                    
+                    client.rawEntity.body.position[0] = client.rawEntity.x
+                    client.rawEntity.body.position[1] = client.rawEntity.y
+    
+                    client.rawEntity.body.angle = client.rawEntity.rotation
+                }
+               
             }
             
             const smoothEntity = client.smoothEntity
@@ -850,6 +978,138 @@ class GameInstance {
             }
 
         })
+
+
+        //Start Art
+        this.instance.clients.forEach(client => {
+
+            let touching = false
+
+            for (let obstacle of this.obstacles.values()) {
+
+               if(client.rawEntity && obstacle.name == 'artStarter' || client.rawEntity && obstacle.color == 'artStarter') {
+
+                   let collided = false
+
+                   collided = SAT.testCirclePolygon(client.rawEntity.collider.circle, obstacle.collider.polygon) 
+                   
+                   if(collided == true) {
+
+                       // console.log('collided')
+
+                        //if(obstacle.touching == false) {
+                            let directionvertical, directionHorizontal
+                            //console.log(obstacle.name)
+                            if(client.rawEntity.x < obstacle.x) {
+                                directionHorizontal = "left"
+                            } else if (client.rawEntity.x > obstacle.x + obstacle.width) {
+                                directionHorizontal = "right"
+                            } else {
+                                directionHorizontal = ""
+                            }
+                            if(client.rawEntity.y < obstacle.y) {
+                                directionvertical = "top"
+                            } else if (client.rawEntity.y > obstacle.y + obstacle.height) {
+                                directionvertical = "bottom"
+                            } else {
+                                directionvertical = ""
+                            }
+
+                            this.boxes.forEach(box => {
+            
+                                if(box.name == "merryGoRound") {
+
+                                    //console.log('firing')
+                                    
+                                    client.rawEntity.headphones = true
+                                    client.smoothEntity.headphones = true
+
+                                    let rand1 = Math.floor(Math.random() * 3);
+                                    //console.log(rand1)
+
+                                    let xPosition
+                                    let yPosition
+
+                                    if(client.name == "John") {
+                                        xPosition = obstacle.collider.polygon.pos.x
+                                        xPosition = xPosition + obstacle.collider.polygon.points[2].x
+                                        
+    
+                                        yPosition = obstacle.collider.polygon.pos.y
+                                        yPosition = yPosition + obstacle.collider.polygon.points[2].y
+                                    } else {
+                                        xPosition = obstacle.collider.polygon.pos.x
+                                        xPosition = xPosition + obstacle.collider.polygon.points[0].x
+                                        
+    
+                                        yPosition = obstacle.collider.polygon.pos.y
+                                        yPosition = yPosition + obstacle.collider.polygon.points[0].y
+                                    }
+                                    
+                                    
+
+                                     /*let xPosition = (obstacle.collider.polygon.points[0].x + obstacle.collider.polygon.points[2].x) / 2;
+                                    let yPosition = (obstacle.collider.polygon.points[0].y + obstacle.collider.polygon.points[2].y) / 2;
+
+                                    xPosition = xPosition + obstacle.collider.polygon.pos.x
+                                    yPosition = yPosition + obstacle.collider.polygon.pos.y*/
+
+                                   
+                                    
+
+
+                                    client.rawEntity.x = xPosition
+                                    client.rawEntity.y = yPosition
+                                    
+                                    client.smoothEntity.x = xPosition
+                                    client.smoothEntity.y = yPosition
+
+                                    const dx = 950 -  client.rawEntity.x
+                                    const dy = 1980 -  client.rawEntity.y
+                                    const rotation = Math.atan2(dy, dx)
+                                    client.rawEntity.rotation = rotation
+                                    //client.smoothEntity.rotation = rotation
+
+
+                                    console.log(""+directionvertical+" "+ directionHorizontal+"")
+
+
+
+
+                                }
+                            })
+
+                            
+
+                            //console.log(client.smoothEntity.bodyRotation)
+                            //console.log('tester')
+                            this.instance.message(new Notification(""+directionvertical+" "+ directionHorizontal+"", 'showStartArtButton', client.rawEntity.bodyRotation, 20), client)
+                        //}
+                        
+                        //obstacle.touching = true
+                        touching = true
+
+                        break
+
+                   } else {
+                        //
+                        //obstacle.touching = false
+                   }
+          
+               }
+
+
+           }
+
+           if(touching == false) {
+            this.instance.message(new Notification("uo!", 'hideStartArtButton'), client)
+          }
+
+
+       })
+
+
+
 
         const theInstance = this.instance
         
@@ -878,66 +1138,6 @@ class GameInstance {
                
             }
         })
-
-        //Start Art
-        this.instance.clients.forEach(client => {
-
-            let touching = false
-
-            for (let obstacle of this.obstacles.values()) {
-
-               if(client.rawEntity && obstacle.name == 'artStarter') {
-
-                   let collided = false
-
-                   collided = SAT.testCirclePolygon(client.rawEntity.collider.circle, obstacle.collider.polygon) 
-                   
-                   if(collided == true) {
-
-                       // console.log('collided')
-
-                        //if(obstacle.touching == false) {
-                            let directionvertical, directionHorizontal
-                            //console.log(obstacle.name)
-                            if(client.rawEntity.x < obstacle.x) {
-                                directionHorizontal = "left"
-                            } else if (client.rawEntity.x > obstacle.x + obstacle.width) {
-                                directionHorizontal = "right"
-                            } else {
-                                directionHorizontal = ""
-                            }
-                            if(client.rawEntity.y < obstacle.y) {
-                                directionvertical = "top"
-                            } else if (client.rawEntity.y > obstacle.y + obstacle.height) {
-                                directionvertical = "bottom"
-                            } else {
-                                directionvertical = ""
-                            }
-                            //console.log(client.smoothEntity.bodyRotation)
-                            this.instance.message(new Notification(""+directionvertical+""+ directionHorizontal+"", 'showStartArtButton', client.rawEntity.bodyRotation, 0), client)
-                        //}
-                        
-                        //obstacle.touching = true
-                        touching = true
-
-                        break
-
-                   } else {
-                        //
-                        //obstacle.touching = false
-                   }
-          
-               }
-
-
-           }
-
-           if(touching == false) {
-            this.instance.message(new Notification("uo!", 'hideStartArtButton'), client)
-          }
-
-
-       })
 
 
 
@@ -978,6 +1178,41 @@ class GameInstance {
 
         }
 
+        
+
+        //Floor Triggers
+        this.instance.clients.forEach(client => {
+            if(client.rawEntity) {
+            //CollisionSystem.checkCirclePolygon
+            for (let obstacle of this.obstacles.values()) {
+                let collided = false
+                collided = SAT.testCirclePolygon(client.rawEntity.collider.circle, obstacle.collider.polygon)
+                if(collided) {
+                    if(obstacle.inUse == false && obstacle.name == "soccerButton") {
+                        //this.instance.message(new Notification(''+obstacle.name+'', 'floorTrigger'), client)
+                        obstacle.inUse = true
+
+                        let soccerBall = new Box({
+                            name: "token",
+                            type: "soccer-ball",
+                            x: 0,
+                            y: 550,
+                            width: 25,
+                            height: 25,
+                            mass: 0.001,
+                            color: "#0000ff"
+                        })
+                        this.instance.addEntity(soccerBall)
+                        this.world.addBody(soccerBall.body)
+                        this.boxes.set(soccerBall.nid, soccerBall)
+                    }
+                } else {
+                    obstacle.inUse = false
+                }
+            }
+            }
+
+        })
 
         //Portals
         this.instance.clients.forEach(client => {
@@ -1043,7 +1278,7 @@ class GameInstance {
         })
 
 
-        //Play Boxes
+        //Boxes Thru Portals
         for (let box of this.boxes.values()) {
 
             for (let portal of this.portals.values()) {

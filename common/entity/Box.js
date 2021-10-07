@@ -125,7 +125,7 @@ Box.protocol = {
     x: { type: nengi.Number, interp: true },
     y: { type: nengi.Number, interp: true },
     rotation: { type: nengi.RotationFloat32, interp: true },
-    mass: { type: nengi.Number, interp: true },
+    mass: nengi.Number,
     color: nengi.String,
     radius: nengi.UInt16,
     width: nengi.UInt16,

@@ -3,9 +3,9 @@ import { update as updateWeapon } from './weapon.js'
 
 export default (entity, command, obstacles, boxes) => {
     
-        if (!entity.isAlive) {
+        /*if (!entity.isAlive) {
             return
-        }
+        }*/
     
         //console.log(entity)
         entity.bodyRotation = command.rotation

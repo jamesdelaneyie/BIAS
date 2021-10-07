@@ -46,6 +46,7 @@
     "pixi-ease": "^3.0.7",
     "pixi-filters": "^4.0.0",
     "pixi-fps": "^2.0.1",
+    "pixi-particles": "^4.3.1",
     "pixi-shim": "^2.2.0",
     "pixi-tagged-text": "^2.3.0",
     "pixi-virtual-joystick": "^0.4.0",

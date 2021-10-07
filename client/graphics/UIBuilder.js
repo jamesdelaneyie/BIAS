@@ -2784,9 +2784,20 @@ class UIBuilder extends PIXI.Container {
         this.color = color
     }
 
-    showStartArtButton(direction, angle){
+    showStartArtButton(direction, angle, center){
        
-
+       if(center == 20) {
+        this.viewArtButton.visible = true
+        this.viewArtButtonWrapper.setLayoutOptions(
+        new PUXI.FastLayoutOptions({
+            width: 80,
+            height: 30,
+            x: 0.5,
+            y: 0.6,
+            anchor: new PIXI.Point(0.5, 0.5)
+        }))
+            
+       } else {
         if(angle > -1.5708 && angle < -0.7853) {
             angle = 'top right'
         } else if (angle > -0.7853 && angle < 0) {
@@ -2854,6 +2865,10 @@ class UIBuilder extends PIXI.Container {
                 anchor: new PIXI.Point(0.5, 0.5)
             }))
         }
+
+       }
+
+        
 
 
         this.viewArtButton.resize(window.innerWidth, window.innerHeight)

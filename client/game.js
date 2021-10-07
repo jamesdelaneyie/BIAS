@@ -206,7 +206,6 @@ const create = () => {
        
     })
 
-    var emitter
 
 
     client.on('message::WeaponFired', message => {
@@ -358,6 +357,12 @@ const create = () => {
 
         //console.log(message)
 
+        if(message.type == "floorTrigger") {
+            console.log(message.text)
+            //renderer.UIBuilder.buildMiniMap(message.text)
+        }
+
+
         if(message.type == "mapInfo") {
             renderer.UIBuilder.buildMiniMap(message.text)
         }
@@ -371,10 +376,11 @@ const create = () => {
                 renderer.UIBuilder.showQuote(message.text)
             }
         }
-
+        
         if(message.type == "showStartArtButton") {
-            renderer.UIBuilder.showStartArtButton(message.text, message.x)
+            renderer.UIBuilder.showStartArtButton(message.text, message.x, message.y)
         }
+
         if(message.type == "hideStartArtButton") {
             renderer.UIBuilder.hideStartArtButton()
         }
@@ -517,8 +523,8 @@ const create = () => {
     handshake.x = inviteX
     handshake.y = inviteY
     
-    //client.connect('ws://localhost:8079', handshake)
-    client.connect('ws://192.248.155.99:8079', handshake)
+    client.connect('ws://localhost:8079', handshake)
+    //client.connect('ws://192.248.155.99:8079', handshake)
 
 
     const update = (delta, tick, now) => {

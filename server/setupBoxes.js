@@ -3,7 +3,7 @@ import p2 from 'p2'
 
 // setup a few boxes
 export default (instance, world, room, boxes) => {
-    
+
     const wallMaterial = new p2.Material();
 
     const roomX = room.x
@@ -12,7 +12,6 @@ export default (instance, world, room, boxes) => {
     const objects = room.objects
     if(objects) {
         objects.forEach(object => {
-            //.log(object.name)
             let objectProps = new Box({
                 name: object.name,
                 type: object.type,
