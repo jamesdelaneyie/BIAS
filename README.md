@@ -1,4 +1,4 @@
-![screenshot-bias](https://user-images.githubusercontent.com/5830894/130322063-39100c13-a738-43aa-a607-aa78ac564081.png)
+![screenshot-bias](https://github.com/jamesdelaneyie/BIAS/raw/science-gallery/public/images/screenshot-1.png)
 
 # B.I.A.S. 
 
