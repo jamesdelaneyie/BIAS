@@ -2480,7 +2480,12 @@ class UIBuilder extends PIXI.Container {
             this.viewArtButtonWrapper.contentContainer.buttonMode = true
 
             this.viewArtButtonWrapper.contentContainer.on('pointerdown', function(){
-                userInterface.showArt(1)
+                function randomIntFromInterval(min, max) { // min and max included 
+                    return Math.floor(Math.random() * (max - min + 1) + min)
+                  }
+                  
+                  const rndInt = randomIntFromInterval(1, 2)
+                userInterface.showArt(rndInt)
             })
 
             this.viewArtButtonWrapper.on('pointerdown', function(){

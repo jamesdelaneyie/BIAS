@@ -70,7 +70,22 @@ class PIXIRenderer {
         this.emitter.emit = true;
 
 
+        let lobbyFloor = new PIXI.Sprite.from('/images/lobbyFloor.svg')
+        lobbyFloor.x = 1700
+        lobbyFloor.y = 800
+        this.backbackground.addChild(lobbyFloor)
+        lobbyFloor.width = 1000
+        lobbyFloor.height = 1000
 
+        let scienceGalleryLogo = new PIXI.Sprite.from('/images/sg-black-white.svg')
+        scienceGalleryLogo.x = 2100
+        scienceGalleryLogo.y = 1200
+        scienceGalleryLogo.width = 175
+        scienceGalleryLogo.height = 85
+        this.middleground.addChild(scienceGalleryLogo)
+
+      
+      
 
 
         // Start the update

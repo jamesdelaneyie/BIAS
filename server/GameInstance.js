@@ -386,10 +386,10 @@ class GameInstance {
 
 
         this.room5 = {
-            x: 440,
-            y: 1500,
-            width: 1020,
-            height: 960,
+            x: 700,
+            y: 1800,
+            width: 1220,
+            height: 1060,
             floorColor: "#f0f8ff",
             gridColor: "#545454",
             gridGap: 60,
@@ -409,8 +409,8 @@ class GameInstance {
                 offset: 600,
                 width: 180,
             },{
-                offset: 0,
-                width: 0,
+                offset:250,
+                width:180,
             },{
                 offset:0,
                 width:0,
@@ -467,7 +467,7 @@ class GameInstance {
             let likePump = new Box({
                 name: "token",
                 type: "thumbs-up",
-                x: 550,
+                x: 750,
                 y: 2350,
                 width: 20,
                 height: 20,
@@ -480,7 +480,7 @@ class GameInstance {
         }, 20000)
 
 
-        let likePumpChecker = new Box({
+        /*let likePumpChecker = new Box({
             name: "token",
             type: "thumbs-up",
             x: 550,
@@ -509,9 +509,97 @@ class GameInstance {
         thisBoxes.set(likePumpCheckerTwo.nid, likePumpCheckerTwo)
 
         var constraint1 = new p2.DistanceConstraint(likePumpChecker.body, likePumpCheckerTwo.body);
-        this.world.addConstraint(constraint1);
+        this.world.addConstraint(constraint1);*/
 
 
+
+
+
+
+
+
+
+
+
+        this.room6 = {
+            x: 2900,
+            y: 1800,
+            width: 1420,
+            height: 1200,
+            floorColor: "#fcd8fe",
+            gridColor: "#7d2d84",
+            gridGap: 90,
+            wallThickness: 10,
+            wallColor: "#7d2d84",
+            objects: [{
+                name: "token",
+                type: "soccer-ball",
+                x: 950,
+                y: 950,
+                width: 25, 
+                height: 25, 
+                color: "#0000ff",
+                mass: 0.001
+            }],
+            holes: [{
+                offset: 0,
+                width: 0,
+            },{
+                offset: 0,
+                width: 0,
+            },{
+                offset:0,
+                width:0,
+            },{
+                offset: 350,
+                width: 180,
+            }]
+        }
+        setupFloors(this.instance, this.room6)
+        setupObjectWalls(this.instance, this.world, this.room6, this.boxes)
+        setupWalls(this.instance, this.room6, this.obstacles, 'wall')
+        setupBoxes(this.instance, this.world, this.room6, this.boxes)
+
+
+
+        this.room7 = {
+            x: 3100,
+            y: 100,
+            width: 1220,
+            height: 900,
+            floorColor: "#fcd8fe",
+            gridColor: "#7d2d84",
+            gridGap: 90,
+            wallThickness: 10,
+            wallColor: "#7d2d84",
+            objects: [{
+                name: "token",
+                type: "soccer-ball",
+                x: 950,
+                y: 950,
+                width: 25, 
+                height: 25, 
+                color: "#0000ff",
+                mass: 0.001
+            }],
+            holes: [{
+                offset: 0,
+                width: 0,
+            },{
+                offset: 0,
+                width: 0,
+            },{
+                offset:0,
+                width:0,
+            },{
+                offset: 350,
+                width: 180,
+            }]
+        }
+        setupFloors(this.instance, this.room7)
+        setupObjectWalls(this.instance, this.world, this.room7, this.boxes)
+        setupWalls(this.instance, this.room7, this.obstacles, 'wall')
+        setupBoxes(this.instance, this.world, this.room7, this.boxes)
 
 
 
@@ -535,11 +623,11 @@ class GameInstance {
             client.view = {
                 x: 0,
                 y: 0,
-                halfWidth: 2000,
-                halfHeight: 1800
+                halfWidth: 2500,
+                halfHeight: 2300
             }
 
-            let theWorldDesign = JSON.stringify([this.room, this.room2, this.roomEntrance, this.room3, this.room5])
+            let theWorldDesign = JSON.stringify([this.room, this.room2, this.roomEntrance, this.room3, this.room5, this.room6, this.room7])
 
             this.instance.message(new Notification(theWorldDesign, 'mapInfo', 0, 0), client)
             
@@ -675,7 +763,7 @@ class GameInstance {
 
 
             if(command.forward == true || command.backward == true || command.left == true || command.right == true) {
-                //this.instance.addLocalMessage(new Walking(client.smoothEntity.nid, client.color, client.smoothEntity.rotation, rawEntity.x, rawEntity.y))
+                this.instance.addLocalMessage(new Walking(client.smoothEntity.nid, client.color, client.smoothEntity.rotation, rawEntity.x, rawEntity.y))
             }
 
             applyCommand(rawEntity, command, this.obstacles, this.boxes)
@@ -806,7 +894,7 @@ class GameInstance {
 
                                 rawEntity.justFired = true
 
-                                console.log('tester')
+                                //console.log('tester')
                             
                                 let XForce = command.x/30000
                                 let yForce = command.y/30000
@@ -891,8 +979,8 @@ class GameInstance {
 
             const peerID = client.peerID;
 
-           let spawnX = 1304
-           let spawnY = 328
+           let spawnX = 2253
+           let spawnY = 1269
 
             if(!isNaN(command.x)) {
                 rawEntity.x = Number(command.x)
@@ -1015,6 +1103,10 @@ class GameInstance {
                                 directionvertical = ""
                             }
 
+                            if(client.rawEntity.y > 1300) {
+
+                           
+
                             this.boxes.forEach(box => {
             
                                 if(box.name == "merryGoRound") {
@@ -1078,6 +1170,8 @@ class GameInstance {
 
                                 }
                             })
+
+                        }
 
                             
 
