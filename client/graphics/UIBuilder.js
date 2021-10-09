@@ -3181,7 +3181,7 @@ class UIBuilder extends PIXI.Container {
                 document.body.appendChild(overlay);
 
             } else {
-                var overlay = document.createElement('div');
+                /*var overlay = document.createElement('div');
                 overlay.style = "position:fixed;height:100vh;width:100%;background-color:rgba(0,0,0,0.6);top:0;left:0;"
                 overlay.id = "overlay"
                 var close = document.createElement('div');
@@ -3196,12 +3196,7 @@ class UIBuilder extends PIXI.Container {
                 const videoWrapperWrapper = document.createElement('div')
                 videoWrapperWrapper.style = "position:absolute;top:50%;left:50%;transform:translateX(-50%) translateY(-50%);width:100%;"
                 videoWrapper.style = "position:relative;padding-bottom:56.25%;height:0;z-index:5;max-width:95%;margin:0 auto"
-        
-<<<<<<< HEAD
-                video.src = "/video/CLASSES.mp4"
-=======
-                iframe.src = "/video/CLASSES.mp4"
->>>>>>> b29aac144a8202b6879bb812188f8e31fdf04683
+
                 video.width = window.innerWidth
                 video.height = window.innerHeight
                 video.controls = true
@@ -3219,7 +3214,7 @@ class UIBuilder extends PIXI.Container {
         
                 })
         
-                document.body.appendChild(overlay);
+                document.body.appendChild(overlay);*/
 
             }
             
