@@ -3142,41 +3142,83 @@ class UIBuilder extends PIXI.Container {
         const userInterface = this
 
         setTimeout(function(){
-            var overlay = document.createElement('div');
-            overlay.style = "position:fixed;height:100vh;width:100%;background-color:rgba(0,0,0,0.6);top:0;left:0;"
-            overlay.id = "overlay"
-            var close = document.createElement('div');
-            close.id = "back-to-bias"
-            var backTo = document.createTextNode('← return')
-            close.style = "cursor:pointer;position:absolute;top:0;width:100%;left:2.5%;top:2.5%;font-size:14px;color:#4DFA66;width:100%;z-index:4"
-            close.appendChild(backTo)
-            document.body.appendChild(close);
-            video = document.createElement('video');
-            
-            const videoWrapper = document.createElement('div')
-            const videoWrapperWrapper = document.createElement('div')
-            videoWrapperWrapper.style = "position:absolute;top:50%;left:50%;transform:translateX(-50%) translateY(-50%);width:100%;"
-            videoWrapper.style = "position:relative;padding-bottom:56.25%;height:0;z-index:5;max-width:95%;margin:0 auto"
-    
-            video.src = "/video/CLASSES.mp4"
-            video.width = window.innerWidth
-            video.height = window.innerHeight
-            video.controls = true
-            video.style = "position:absolute;top:0%;left:0%;width:100%;height:100%;"
-            videoWrapper.appendChild(video)
-            videoWrapperWrapper.appendChild(videoWrapper)
-    
-            overlay.appendChild(close)
-            overlay.appendChild(videoWrapperWrapper)
 
-            close.addEventListener('pointerdown', (event) => {
+            if(art == 1) {
+                var overlay = document.createElement('div');
+                overlay.style = "position:fixed;height:100vh;width:100%;background-color:rgba(0,0,0,0.6);top:0;left:0;"
+                overlay.id = "overlay"
+                var close = document.createElement('div');
+                close.id = "back-to-bias"
+                var backTo = document.createTextNode('← return')
+                close.style = "cursor:pointer;position:absolute;top:0;width:100%;left:2.5%;top:2.5%;font-size:14px;color:#4DFA66;width:100%;z-index:4"
+                close.appendChild(backTo)
+                document.body.appendChild(close);
+                video = document.createElement('video');
+                
+                const videoWrapper = document.createElement('div')
+                const videoWrapperWrapper = document.createElement('div')
+                videoWrapperWrapper.style = "position:absolute;top:50%;left:50%;transform:translateX(-50%) translateY(-50%);width:100%;"
+                videoWrapper.style = "position:relative;padding-bottom:56.25%;height:0;z-index:5;max-width:95%;margin:0 auto"
+        
+                video.src = "/video/CLASSES.mp4"
+                video.width = window.innerWidth
+                video.height = window.innerHeight
+                video.controls = true
+                video.style = "position:absolute;top:0%;left:0%;width:100%;height:100%;"
+                videoWrapper.appendChild(video)
+                videoWrapperWrapper.appendChild(videoWrapper)
+        
+                overlay.appendChild(close)
+                overlay.appendChild(videoWrapperWrapper)
+
+                close.addEventListener('pointerdown', (event) => {
+                
+                    overlay.classList.remove("show") 
+                    userInterface.hideArt()
+        
+                })
+        
+                document.body.appendChild(overlay);
+
+            } else {
+                var overlay = document.createElement('div');
+                overlay.style = "position:fixed;height:100vh;width:100%;background-color:rgba(0,0,0,0.6);top:0;left:0;"
+                overlay.id = "overlay"
+                var close = document.createElement('div');
+                close.id = "back-to-bias"
+                var backTo = document.createTextNode('← return')
+                close.style = "cursor:pointer;position:absolute;top:0;width:100%;left:2.5%;top:2.5%;font-size:14px;color:#4DFA66;width:100%;z-index:4"
+                close.appendChild(backTo)
+                document.body.appendChild(close);
+                iframe = document.createElement('iframe');
+                
+                const videoWrapper = document.createElement('div')
+                const videoWrapperWrapper = document.createElement('div')
+                videoWrapperWrapper.style = "position:absolute;top:50%;left:50%;transform:translateX(-50%) translateY(-50%);width:100%;"
+                videoWrapper.style = "position:relative;padding-bottom:56.25%;height:0;z-index:5;max-width:95%;margin:0 auto"
+        
+                video.src = "/video/CLASSES.mp4"
+                video.width = window.innerWidth
+                video.height = window.innerHeight
+                video.controls = true
+                video.style = "position:absolute;top:0%;left:0%;width:100%;height:100%;"
+                videoWrapper.appendChild(video)
+                videoWrapperWrapper.appendChild(videoWrapper)
+        
+                overlay.appendChild(close)
+                overlay.appendChild(videoWrapperWrapper)
+
+                close.addEventListener('pointerdown', (event) => {
+                
+                    overlay.classList.remove("show") 
+                    userInterface.hideArt()
+        
+                })
+        
+                document.body.appendChild(overlay);
+
+            }
             
-                overlay.classList.remove("show") 
-                userInterface.hideArt()
-    
-            })
-    
-            document.body.appendChild(overlay);
         }, 1000)
         setTimeout(function(){
             overlay.classList.add("show") 
