@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js'
-import {GlowFilter} from '@pixi/filter-glow';
+import {DropShadowFilter} from '@pixi/filter-drop-shadow';
 
 
 class FloorGraphics extends PIXI.Container {
@@ -10,60 +10,51 @@ class FloorGraphics extends PIXI.Container {
         this.y = state.y
         this.width = state.width
         this.height = state.height
-        this.color = state.color
+        this.floorColor = state.floorColor        
+        this.gridColor = state.gridColor
+        this.gridGap = state.gridGap
 
-        this.container = new PIXI.Container();
         let abyss = new PIXI.Graphics()
-        
-        let abyssColor = PIXI.utils.string2hex(this.color);
-        abyss.beginFill(abyssColor)
-        abyss.drawRect(state.x, state.y, state.width, state.height)
+        let abyssColor = PIXI.utils.string2hex(this.floorColor);
+        abyss.beginFill(abyssColor, 0.9)
+        abyss.drawRect(0, 0, state.width, state.height)
         abyss.endFill()
-
-        this.container.addChild(abyss)
-        this.addChild(this.container)
-/*
-        let gridGap = 45
-        let gap = 2
-
-        const floorGrid = new PIXI.Container();
-
+        this.addChild(abyss)
         
-        for (var i = 0; i < 9; i++) {           
+        let gridColor = PIXI.utils.string2hex(this.gridColor);
+       
+        const gridBackground = new PIXI.Container();
+        const gridNumberOfLinesHorizontal = state.width / this.gridGap
+
+        for (var i = 0; i < gridNumberOfLinesHorizontal; i++) {           
             let line = new PIXI.Graphics()
-            line.lineStyle(gap, 0xFFFFFF)
-            line.moveTo(i * gridGap, 0)
-            line.lineTo(i * gridGap, this.width)
-            line.alpha = 1
-            floorGrid.addChild(line)
+            line.lineStyle(1, gridColor, 0.2)
+            line.moveTo(i * this.gridGap, 0)
+            line.lineTo(i * this.gridGap, state.height)
+            gridBackground.addChild(line)
         }
 
-        //Vertical Lines
-        for (var i = 0; i < 9; i++) {           
+        const numberOfLinesVertical = state.height / this.gridGap
+            
+        for (var i = 0; i < numberOfLinesVertical; i++) { 
             let line = new PIXI.Graphics()
-            line.lineStyle(gap, 0xFFFFFF)
-            line.moveTo(0, i * gridGap)
-            line.lineTo(this.height, i * gridGap)
-            line.alpha = 1
-            floorGrid.addChild(line)
+            line.lineStyle(1, gridColor, 0.2)
+            line.moveTo(0, i * this.gridGap)
+            line.lineTo(state.width, i * this.gridGap)
+            gridBackground.addChild(line)
         }
 
-        this.addChild(floorGrid)
+    
+        let dropShadowFilter = new DropShadowFilter()
+        dropShadowFilter.color = 0xFFFFFF
+        dropShadowFilter.alpha = 1
+        dropShadowFilter.blur = 3
+        dropShadowFilter.quality = 10
+        dropShadowFilter.distance = 0
+        //gridBackground.filters = [dropShadowFilter]
 
-        //Grid Dots
-        /*for (var i = 1; i < 21; i++) { 
-            for (var j = 1; j < 21; j++) {                 
-                //let line = new PIXI.Graphics();
+        this.addChild(gridBackground)
 
-                let tile = new PIXI.Graphics()
-                tile.beginFill(0x000000)
-                tile.drawRect(i * gridGap - 37, j * gridGap - 38, 25, 25)
-                tile.alpha = 0.05
-                tile.endFill()
-                this.addChild(tile)
-
-            }
-        }*/
 
     }
     update(delta) {

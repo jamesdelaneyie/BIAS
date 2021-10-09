@@ -1,8 +1,10 @@
 import { Joystick } from './graphics/Joystick';
-import * as PIXI from 'pixi.js'
 import isMobile from 'ismobilejs'
-import UIBuilder from './graphics/UIBuilder.js'
 import JoinCommand from '../common/command/JoinCommand.js'
+import ToggleCommand from '../common/command/ToggleCommand.js'
+import { Sound } from '@pixi/sound'
+import MoveCommand from '../common/command/MoveCommand';
+
 
 class InputSystem {
 
@@ -12,19 +14,75 @@ class InputSystem {
 
         this.UIBuilder = renderer.UIBuilder
 
+        /* document.addEventListener('contextmenu', event =>
+            event.preventDefault()
+        )*/
+        
         let isJoined = false;
+
+        
+
+        const footstep = Sound.from('audio/footstep.mp3');
+        footstep.speed = 2
+        footstep.volume = 0.005
+
+        const viewArtButton = renderer.stage.children[1].viewArtButton
+        viewArtButton.on('pointerdown', function(){
+            client.addCommand(new ToggleCommand(true, "headphones"))
+            viewArtButton.alpha = 0
+            client.addCommand(new ToggleCommand(true, "lockPlayer"))
+        })
+
+        document.addEventListener( "pointerdown", closeArtButton );
+        function closeArtButton(event){
+            var element = event.target;
+            if(element.id == 'back-to-bias'){
+                setTimeout(()=>{
+                    
+                    client.addCommand(new ToggleCommand(false, "headphones"))
+                    
+                }, 1300)
+            }
+        }
+        const UIBuilder = this.UIBuilder
         const joinButton = renderer.stage.children[1].joinButton
+        //console.log(joinButton)
+        
         joinButton.on("click", function () {
+
+            //console.log('firing')
+            console.log(isJoined, UIBuilder.nameGiven)
             
             if(isJoined == false) {
-                let name = renderer.UIBuilder.getText();
-                let playerColor = Math.floor(Math.random()*16777215).toString(16);
-                client.addCommand(new JoinCommand(""+name+"", playerColor))
-                renderer.UIBuilder.clearText();
-                renderer.UIBuilder.joinSession();
-                isJoined = true
+
+                if(UIBuilder.nameGiven == true) {
+
+                    let name = renderer.UIBuilder.getText();
+                    let color = renderer.UIBuilder.getColor()
+                    let avatar = renderer.UIBuilder.getAvatar();
+
+                    client.addCommand(new JoinCommand(""+name+"", ""+avatar+"", ""+color+""))
+                    //console.log('firing')
+                    isJoined = true
+                    
+
+                }
+                
             }
         });
+
+
+
+
+        window.addEventListener('resize', () => {
+            
+            this.placeJoySticks()
+        
+        })
+
+        
+            
+        
 
         this.currentState = {
             w: false,
@@ -32,14 +90,13 @@ class InputSystem {
             a: false,
             d: false,
             r: false,
-            spacebar: false,
             f: 0,
             rotation: 0,
             mx: 0,
             my: 0,
             mouseDown: false,
-            message: "",
-            viewArt: false
+            mouseMoving: false,
+            message: false
             
         }
 
@@ -55,57 +112,62 @@ class InputSystem {
             spacebar: false,
             spacebarRelease: false,
             mouseDown: false,
-            message: "",
-            viewArt: false,
-            spacebar: false
+            mouseMoving: false,
+            message: false
         }
 
         
 
         this.isMobile = isMobile();
 
-        // disable right click
-        /*document.addEventListener('contextmenu', event =>
-            event.preventDefault()
-        )*/
-
-        let iframe = "";
-
-        //this.currentState.message = this.UIBuilder.getText();
-
-        /*document.body.addEventListener("mousedown", function(e) {
-            console.log(e.target.nodeName, e.target.id)
-            if (e.target.nodeName === "DIV"){
-              document.getElementById("iframe").remove()
-              e.target.remove()
-            }
-          }, false)*/
-
 
         //if(isMobile == false) {
+
+            
 
             document.addEventListener('keydown', event => {
                 //console.log('keydown', event)
                 // w or up arrow
+
+
+                if(!renderer.stage.children[1].mockInput._isFocused) {
+                    
+                
+
+
                 if (event.keyCode === 87 || event.keyCode === 38) {
                     this.currentState.w = true
                     this.frameState.w = true
+                    if(!footstep.isPlaying) {
+                        footstep.play()
+                    }
                 }
                 // a or left arrow
                 if (event.keyCode === 65 || event.keyCode === 37) {
                     this.currentState.a = true
                     this.frameState.a = true
+                    if(!footstep.isPlaying) {
+                        footstep.play()
+                    }
                 }
                 // s or down arrow
                 if (event.keyCode === 83 || event.keyCode === 40) {
                     this.currentState.s = true
                     this.frameState.s = true
+                    if(!footstep.isPlaying) {
+                        footstep.play()
+                    }
                 }
                 // d or right arrow
                 if (event.keyCode === 68 || event.keyCode === 39) {
                     this.currentState.d = true
                     this.frameState.d = true
+                    if(!footstep.isPlaying) {
+                        footstep.play()
+                    }
                 }
+
+            }
 
                 // r
                 if (event.keyCode === 82) {
@@ -118,55 +180,13 @@ class InputSystem {
                     this.currentState.spacebar = true
                     this.frameState.spacebar = true
                 }
+            
+                this.currentState.message = this.UIBuilder.getMessageText();
+                this.frameState.message = this.UIBuilder.getMessageText();
 
-                if (event.keyCode === 13) {
-                    this.currentState.message = this.UIBuilder.getMessageText();
-                    this.UIBuilder.clearMessageText();
-                } 
+                
 
-                if (event.keyCode === 9) {
-                    //console.log(this.UIBuilder)
-                    //this.frameState.message = this.UIBuilder.getText();
-                    //this.currentState.message = this.UIBuilder.getText();//this.frameState.message;
-                    //this.UIBuilder.clearText();
-                }
-
-                //Right Bracket
-                if(event.keyCode === 221) {
-                    this.currentState.viewArt = true
-                    this.frameState.viewArt = true
-                    iframe = document.createElement('iframe');
-                    //iframe.src = "https://www.youtube.com/embed/daixJKnzc4o?autoplay=1&modestbranding=1&showinfo=0&rel=0&fs=0&color=white&controls=0"
-                    iframe.src = "https://stealingurfeelin.gs/"
-                    iframe.style = "position:absolute;top:50%;left:50%;transform:translateX(-50%)translateY(-50%);border:0;width:1120px;height:630px"
-                    iframe.allow = "camera"
-                    iframe.id = "iframe"
-                    iframe.allowfullscreen = "allowfullscreen"
-                    //document.body.appendChild(iframe);
-
-                    var close = document.createElement('div');
-                    close.style = "position:absolute;50px;top:50px;right:50px;background-color:red;width:20px;height:20px"
-                    //document.body.appendChild(close);
-                }
-
-                    //shift
-                if (event.keyCode === 16) {
-                    //iframe = document.createElement('iframe');
-                    //"https://stealingurfeelin.gs/"
-                    //iframe.allow = "camera"
-                    //                    
-
-                    //iframe.src = "http://vylevylevyle.com/drk_webvr_test/"
-                    
-                    //document.body.appendChild(iframe);
-
-                   // var close = document.createElement('div');
-                    //close.style = "position:absolute;50px;top:50px;right:50px;background-color:red;width:20px;height:20px"
-                    //document.body.appendChild(close);
-                    
-                    
-                    
-                } 
+            
 
             })
 
@@ -174,15 +194,19 @@ class InputSystem {
                 //console.log('keyup', event)
                 if (event.keyCode === 87 || event.keyCode === 38) {
                     this.currentState.w = false
+                    footstep.stop()
                 }
                 if (event.keyCode === 65 || event.keyCode === 37) {
                     this.currentState.a = false
+                    footstep.stop()
                 }
                 if (event.keyCode === 83 || event.keyCode === 40) {
                     this.currentState.s = false
+                    footstep.stop()
                 }
                 if (event.keyCode === 68 || event.keyCode === 39) {
                     this.currentState.d = false
+                    footstep.stop()
                 }
 
                 if (event.keyCode === 82) {
@@ -200,16 +224,12 @@ class InputSystem {
                     this.currentState.spacebar = false
                 }
 
-                //enter
-                if (event.keyCode === 13) {
-                    this.frameState.message = ""
-                    this.currentState.message = ""
-                }
+                 //enter
+                 if (event.keyCode === 13) {
+                     this.frameState.message = ""
+                     this.currentState.message = ""
+                 }
 
-                //Right Bracket
-                if(event.keyCode === 221) {
-                    this.currentState.viewArt = false
-                }
 
 
             })
@@ -220,25 +240,29 @@ class InputSystem {
                 if (this.onmousemove) {
                     this.onmousemove(event)
                 }
+                this.currentState.mouseMoving = true
+                this.frameState.mouseMoving = true
             })
 
-            document.addEventListener('mousedown', event => {
+            document.addEventListener('pointerdown', event => {
                 this.currentState.mouseDown = true
                 this.frameState.mouseDown = true
+                this.currentState.mx = event.clientX
+                this.currentState.my = event.clientY
             })
 
 
-            document.addEventListener('mouseup', event => {
+            document.addEventListener('pointerup', event => {
                 this.currentState.mouseDown = false
+                this.currentState.mouseMoving = false
+                this.frameState.mouseMoving = false
             })
 
-            if(this.isMobile) {
-                var joypadSize = 1
-            } else {
+            if(this.isMobile.any || window.innerWidth <= 500) {
                 var joypadSize = 0.5
+            } else {
+                var joypadSize = 0.2
             }
-
-            //console.log(this.isMobile.any)
 
 
             this.leftController = new Joystick({
@@ -254,9 +278,7 @@ class InputSystem {
                 },
                 
                 onChange: (data) => {
-                            
-                    //console.log(data.power);
-            
+                                        
                     this.currentState.mouseDown = false
                     this.frameState.mouseDown = false
                     
@@ -271,6 +293,8 @@ class InputSystem {
                         this.frameState.s = false
                         this.currentState.d = false
                         this.frameState.d = false
+                        this.currentState.rotation = -1.5708
+                        this.frameState.rotation = -1.5708
                     }
             
                     if(dd == 'top_right') {
@@ -282,6 +306,8 @@ class InputSystem {
                         this.frameState.s = false
                         this.currentState.d = true
                         this.frameState.d = true
+                        this.currentState.rotation = -0.785398
+                        this.frameState.rotation = -0.785398
                     }
             
                     if(dd == 'right') {
@@ -293,6 +319,8 @@ class InputSystem {
                         this.frameState.s = false
                         this.currentState.d = true
                         this.frameState.d = true
+                        this.currentState.rotation = 0
+                        this.frameState.rotation = 0
             
                     }
             
@@ -305,6 +333,9 @@ class InputSystem {
                         this.frameState.s = true
                         this.currentState.d = true
                         this.frameState.d = true
+                        this.currentState.rotation = 0.785398
+                        this.frameState.rotation = 0.785398
+   
                     }
                     
                     if (dd == 'bottom') {
@@ -316,6 +347,8 @@ class InputSystem {
                         this.frameState.s = true
                         this.currentState.d = false
                         this.frameState.d = false
+                        this.currentState.rotation = 1.5708
+                        this.frameState.rotation = 1.5708
                     }
             
                     if (dd == 'bottom_left') {
@@ -327,6 +360,8 @@ class InputSystem {
                         this.frameState.s = true
                         this.currentState.d = false
                         this.frameState.d = false
+                        this.currentState.rotation = 2.35619
+                        this.frameState.rotation = 2.35619
             
                     }
             
@@ -339,9 +374,11 @@ class InputSystem {
                         this.frameState.s = false
                         this.currentState.d = false
                         this.frameState.d = false
+                        this.currentState.rotation = 3.141592
+                        this.frameState.rotation = 3.141592
                     }
             
-                    if (dd == 'left_top') {
+                    if (dd == 'top_left') {
                         this.currentState.w = true
                         this.frameState.w = true
                         this.currentState.a = true
@@ -350,6 +387,8 @@ class InputSystem {
                         this.frameState.s = false
                         this.currentState.d = false
                         this.frameState.d = false
+                        this.currentState.rotation = 3.92699
+                        this.frameState.rotation = 3.92699
                     }
             
             
@@ -362,44 +401,27 @@ class InputSystem {
                 }
             });
            
-            if(this.isMobile.any || window.innerWidth < 600) {
-                this.leftController.position.set(this.leftController.width, window.innerHeight - this.leftController.height);
-                renderer.stage.addChild(this.leftController);
+            
+             
+            if(this.isMobile.any || window.innerWidth <= 500) {
+                this.leftController.position.set(45, window.innerHeight - this.leftController.height*1.6);
+                this.leftController.alpha = 0
+                renderer.UIBuilder.addChild(this.leftController);
+            } else {
+                renderer.UIBuilder.removeChild(this.leftController);
             }
+    
+    }
 
-            this.rightController = new Joystick({
-            
-                outerScale: { x: joypadSize, y: joypadSize },
-                innerScale: { x: joypadSize, y: joypadSize },
-            
-                onStart: (data) => {
-                    this.currentState.mouseDown = false
-                    this.frameState.mouseDown = false
-                },
-                
-                onChange: (data) => {
+    placeJoySticks(){
 
-                    let angle = data.angle * (pi/180);
+        if(this.isMobile.any || window.innerWidth <= 500) {
+            this.leftController.position.set(45, window.innerHeight - this.leftController.height*1.6);
+            renderer.UIBuilder.addChild(this.leftController);
+        } else {
+            renderer.UIBuilder.removeChild(this.leftController);
+        }
 
-                    this.currentState.mouseDown = false
-                    this.frameState.mouseDown = false
-                    this.currentState.rotation = (angle)
-                    this.frameState.rotation = (angle)
-                                
-                },
-                onEnd: () => {
-                    this.currentState.mouseDown = false
-                }
-            });
-            if(this.isMobile.any || window.innerWidth < 600) {
-                this.rightController.position.set(window.innerWidth - this.rightController.width, window.innerHeight - this.rightController.height);
-                renderer.stage.addChild(this.rightController);
-            }
-           
-            
-
-
-        //}
     }
 
     isMobile(){
@@ -422,8 +444,8 @@ class InputSystem {
         this.frameState.spacebarRelease = false;
         this.frameState.rotation = this.currentState.rotation
         this.frameState.mouseDown = this.currentState.mouseDown
+        this.frameState.mouseMoving = this.currentState.mouseMoving
         this.frameState.message = this.currentState.message
-        this.frameState.viewArt = this.currentState.viewArt
     }
 }
 

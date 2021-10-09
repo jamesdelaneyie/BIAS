@@ -2,15 +2,14 @@ import CollisionSystem from './CollisionSystem.js'
 import { update as updateWeapon } from './weapon.js'
 
 export default (entity, command, obstacles, boxes) => {
-    if (!entity.isAlive) {
-        return
-    }
     
-        // rotation (not important to movement, purely aesthetic)
+        /*if (!entity.isAlive) {
+            return
+        }*/
+    
         //console.log(entity)
-        entity.rotation = command.rotation
+        entity.bodyRotation = command.rotation
 
-        // movement logic
         let unitX = 0
         let unitY = 0
     

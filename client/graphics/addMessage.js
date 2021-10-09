@@ -1,66 +1,39 @@
 import * as PIXI from 'pixi.js'
+import { SmoothGraphics as Graphics } from '@pixi/graphics-smooth';
+import { ease } from 'pixi-ease'
 
 const addMessage = (layer, message) => {
 
-    var visible = false;
-    layer.children.some(function(child) {
-        if(child.isMessage == true) {
-            visible = true;
-            return
-        }
-    });
+            const style = new PIXI.TextStyle({
+                fontFamily: 'Trade Gothic Next',
+                fill: "black",
+                fontSize: 18,
+                fontWeight: 400,
+                lineJoin: "round",
+                whiteSpace: "normal",
+                wordWrap: true,
+                wordWrapWidth: 250,
+                leading: 1
+            });
 
-    if(!visible) {
-
-        const style = new PIXI.TextStyle({
-            fontFamily: 'Trade Gothic',
-            fill: "black",
-            fontSize: 18,
-            fontWeight: 300,
-            lineJoin: "round",
-            whiteSpace: "normal",
-            wordWrap: true,
-            wordWrapWidth: 250,
-            leading: 1
-        });
-
-        let text = ""
-        let textBox = ""
-
-        message.text = message.text.toUpperCase()
-
-        
-        if(message.type == 'talk') {
-            text = new PIXI.Text("❤️", style);
-            text.x = message.x - Math.floor(Math.random() * 120) + 40
-            text.y = message.y - Math.floor(Math.random() * 120) + 20
-            text.alpha = 1;
-            text.isMessage = false;
-            layer.addChild(text)
-        } else {
+            let text = ""
+            let textBox = ""
 
             text = new PIXI.Text(message.text, style);
-            if(message.type == 'notification') {
-                text.x = window.innerWidth - 220;
-                text.y = 28
-            } else {
-                text.x = message.x - 50 
-                text.y = message.y - (50 + text.height)
-            }
-            
+            text.x = message.x - 50 
+            text.y = message.y - (50 + text.height) + 25
+            let starterY = text.y + 20
 
             text.alpha = 0;
             text.isMessage = true;
 
 
-            textBox = new PIXI.Graphics()
-            textBox.beginFill(0xFFFFFF)
-            if(message.type == 'notification') {
-                textBox.drawRoundedRect(window.innerWidth - 240, 10, text.width+40, text.height+25, 20)
-            } else {
-                textBox.drawRoundedRect(message.x - 70, message.y - (68 + text.height), text.width+40, text.height+25, 20)
-
-            }
+            textBox = new Graphics()
+            textBox.beginFill(0xFFFFFF, 1.0, true)
+            textBox.lineStyle(1,0x00000)
+            textBox.drawRoundedRect(message.x - 70, message.y - (68 + text.height), (text.width)+40, (text.height)+25, 20)
+            textBox.cacheAsBitmap = true;
+            textBox.y = 10
             
             textBox.endFill()
             textBox.alpha = 0
@@ -68,35 +41,14 @@ const addMessage = (layer, message) => {
             layer.addChild(textBox);
             layer.addChild(text)
 
-        }
 
+            ease.add(text, {alpha: 1, y: text.y - 30}, { duration: 250, ease: 'easeOutExpo'})
+            ease.add(textBox, {alpha: 1, y: 0}, { duration: 250, ease: 'easeOutExpo'})
 
-        var id = setInterval(frame, 10);
-        function frame() {
-            if (text.alpha > 1) {
-                clearInterval(id);
-            } else {
-                text.y = text.y - 0.5
-                textBox.alpha = textBox.alpha + 0.1
-                text.alpha = text.alpha + 0.1
-            }
-        }
-
-
-        //console.log(delta)
-    
-    
-        setTimeout(() => {
-            var id = setInterval(frame, 10);
-            function frame() {
-                if (text.alpha < 0) {
-                    clearInterval(id);
-                } else {
-                    text.alpha = text.alpha - 0.1;
-                    textBox.alpha = textBox.alpha - 0.1
-                }
-                //console.log(text.alpha)
-            }
+            setTimeout(() => {
+                ease.add(text, {alpha: 0, y: text.y + 10}, { duration: 250, ease: 'easeOutExpo'})
+                ease.add(textBox, {alpha: 0, y: 10}, { duration: 250, ease: 'easeOutExpo'})
+            }, 2000)
             setTimeout(() => {
                 layer.removeChild(text)
                 layer.removeChild(textBox)
@@ -110,13 +62,9 @@ const addMessage = (layer, message) => {
                     texture: true,
                     baseTexture: true
                 })
-                
-            }, 600)
-        }, 2000)
+            }, 2250)
 
-        
 
-    }
 }
 
 export default addMessage

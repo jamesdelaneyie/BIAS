@@ -34,6 +34,33 @@ class CollisionSystem {
     }
 }
 
+
+
+
+
+CollisionSystem.createPolygonCollider = (x, y, points) => {
+
+    return {
+        baseType: 'sat-polygon',
+        polygon: new SAT.Polygon(new SAT.Vector(x, y), points), //.translate(-10, -10)
+
+        get x() {
+            return this.polygon.pos.x
+        },
+        set x(value) {
+            this.polygon.pos.x = value
+            this.polygon._recalc()
+        },
+
+        get y() {
+            return this.polygon.pos.y
+        },
+        set y(value) {
+            this.polygon.pos.y = value
+        }
+    }
+}
+
 CollisionSystem.createCircleCollider = (x, y, radius) => {
     return {
         baseType: 'sat-circle',
@@ -58,7 +85,7 @@ CollisionSystem.createCircleCollider = (x, y, radius) => {
 CollisionSystem.createRectangleCollider = (x, y, width, height) => {
     return {
         baseType: 'sat-polygon',
-        polygon: new SAT.Box(new SAT.Vector(x - 25, y - 25), width, height).toPolygon(),
+        polygon: new SAT.Box(new SAT.Vector(x, y), width, height).toPolygon(),
 
         get x() {
             return this.polygon.pos.x
@@ -77,24 +104,25 @@ CollisionSystem.createRectangleCollider = (x, y, width, height) => {
     }
 }
 
+
 CollisionSystem.createRectangleColliderBox = (x, y, width, height) => {
     return {
         baseType: 'sat-polygon',
         polygon: new SAT.Box(new SAT.Vector(x, y), width, height).toPolygon(),
 
         get x() {
-            return this.polygon.pos.x + 12.5
+            return this.polygon.pos.x + (width/2)
         },
         set x(value) {
-            this.polygon.pos.x = value - 12.5
+            this.polygon.pos.x = value - (width/2)
             this.polygon._recalc()
         },
 
         get y() {
-            return this.polygon.pos.y + 12.5
+            return this.polygon.pos.y + (height/2)
         },
         set y(value) {
-            this.polygon.pos.y = value - 12.5
+            this.polygon.pos.y = value - (height/2)
         }
     }
 }
@@ -105,9 +133,19 @@ CollisionSystem.createRectangleColliderBox = (x, y, width, height) => {
 CollisionSystem.moveWithCollisions = (entity, obstacles, boxes) => {
 
     obstacles.forEach(obstacle => {
-        if (SAT.testCirclePolygon(entity.collider.circle, obstacle.collider.polygon, response)) {
-            entity.x -= response.overlapV.x
-            entity.y -= response.overlapV.y
+        if(obstacle.name == "circleBuilding") {
+            if (SAT.testCircleCircle(entity.collider.circle, obstacle.collider.circle, response)) {
+                entity.x -= response.overlapV.x
+                entity.y -= response.overlapV.y
+            }
+        } else if(obstacle.name == "soccerButton") {
+            
+        } else {
+            if (SAT.testCirclePolygon(entity.collider.circle, obstacle.collider.polygon, response)) {
+                entity.x -= response.overlapV.x
+                entity.y -= response.overlapV.y
+            }
+            
         }
         response.clear()
     })
@@ -141,6 +179,10 @@ CollisionSystem.checkLineCircle = (x1, y1, x2, y2, circleCollider) => {
 // if pierce is true returns an array of [{ x, y}, etc] of all intersections
 CollisionSystem.checkLinePolygon = (x1, y1, x2, y2, polygonCollider, pierce = false) => {
     const intersections = []
+
+    //console.log(polygonCollider)
+
+
     for (let i = 0; i < polygonCollider.points.length; i++) {
         const nextIndex = (i + 1 >= polygonCollider.points.length) ? 0 : i + 1
 

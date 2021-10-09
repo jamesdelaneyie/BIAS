@@ -2,16 +2,23 @@ import nengi from 'nengi'
 import PlayerCharacter from './entity/PlayerCharacter.js'
 import Identity from './message/Identity.js'
 import WeaponFired from './message/WeaponFired.js'
+
+import Walking from './message/Walking.js'
+import Hitting from './message/Hitting.js'
 import Notification from './message/Notification.js'
+
 import MoveCommand from './command/MoveCommand.js'
 import FireCommand from './command/FireCommand.js'
 import SpeakCommand from './command/SpeakCommand.js'
-import RespawnCommand from './command/RespawnCommand.js'
 import JoinCommand from './command/JoinCommand.js'
+import LeaveCommand from './command/LeaveCommand.js'
+import ToggleCommand from './command/ToggleCommand.js'
+
 import Obstacle from './entity/Obstacle.js'
 import Box from './entity/Box.js'
 import Floor from './entity/Floor.js'
 import Portal from './entity/Portal.js'
+import Flower from './entity/Flower.js'
 
 const config = {
     UPDATE_RATE: 20, 
@@ -31,9 +38,13 @@ const config = {
             ['PlayerCharacter', PlayerCharacter],
             ['Obstacle', Obstacle],
             ['Box', Box],
-            ['Portal', Portal]
+            ['Portal', Portal],
+            ['Flower', Flower]
         ],
-        localMessages: [],
+        localMessages: [
+            ['Walking', Walking],
+            ['Hitting', Hitting]
+        ],
         messages: [
             ['Identity', Identity],
             ['WeaponFired', WeaponFired],
@@ -43,8 +54,9 @@ const config = {
             ['MoveCommand', MoveCommand],
             ['FireCommand', FireCommand],
             ['SpeakCommand', SpeakCommand],
-            ['RespawnCommand', RespawnCommand],
-            ['JoinCommand', JoinCommand]
+            ['JoinCommand', JoinCommand],
+            ['LeaveCommand', LeaveCommand],
+            ['ToggleCommand', ToggleCommand]
         ],
         basics: []
     }

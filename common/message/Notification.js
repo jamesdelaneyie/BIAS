@@ -12,7 +12,7 @@ class Notification {
 Notification.protocol = {
     text: nengi.String,
     type: nengi.String,
-    x: nengi.Int32,
+    x: nengi.RotationFloat32,
     y: nengi.Int32
 }
 

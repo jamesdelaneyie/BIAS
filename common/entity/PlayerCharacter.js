@@ -11,7 +11,7 @@ class PlayerCharacter {
         this.rotation = 0
         this.hitpoints = 100
         this.isAlive = false
-        this.speed = 400
+        this.speed = 300
         this.size = 30
         this.mass = 20
         this.material = new p2.Material();
@@ -19,27 +19,36 @@ class PlayerCharacter {
         this.color = state.color
         this.name = state.name
         this.self = state.self;
+        this.avatar = state.avatar
+        this.headphones = false
+        this.typing = false
+        this.bodyRotation = 0
 
         this.circleShape = new p2.Circle({
             radius: this.size
         });
 
         this.circleShape.material = this.material;
+
+        var vertices = [[0,-25], [55, 0], [0, 25]];
+        var convexShape = new p2.Convex({ vertices: vertices });
+
+
         this.body = new p2.Body({
             mass: 10,
             position: [0, 0]
         });
+        this.body.name = "player"
         this.body.addShape(this.circleShape)
-
-        // weapon cooldown!
-        // example of a plain data-only component
+        this.body.addShape(convexShape)
+        
         this.weapon = {
             onCooldown: false,
             cooldown: 0.5,
             acc: 0
         }
 
-        this.collider = CollisionSystem.createCircleCollider(0, 0, 25)
+        this.collider = CollisionSystem.createCircleCollider(25, 25, 25)
         
     }
 
@@ -66,12 +75,17 @@ PlayerCharacter.protocol = {
     footDown: nengi.Boolean,
     power: { type: nengi.Float32, interp: true },
     rotation: { type: nengi.RotationFloat32, interp: true },
+    bodyRotation: { type: nengi.RotationFloat32, interp: true },
     delta: nengi.Number,
     isAlive: nengi.Boolean,
     color: nengi.String,
+    avatar: nengi.String,
     name: nengi.String,
     self: nengi.Boolean,
-    hitpoints: nengi.UInt8
+    hitpoints: nengi.UInt8,
+    headphones: nengi.Boolean,
+    typing: nengi.Boolean,
+    sticker: nengi.UInt16
 }
 
 export default PlayerCharacter

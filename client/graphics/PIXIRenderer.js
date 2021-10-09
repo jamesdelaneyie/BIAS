@@ -1,99 +1,157 @@
 
 import * as PIXI from 'pixi.js'
 import UIBuilder from './UIBuilder.js'
-
-import { CRTFilter } from '@pixi/filter-crt'
-import { EmoteSelector } from 'pixi-emote-selector'
-
-
-var FontFaceObserver = require('fontfaceobserver');
+import PixiFps from "pixi-fps";
+import { AsciiFilter } from '@pixi/filter-ascii'
+import * as particles from 'pixi-particles'
+import * as particleSettings from "./emitter.json";
 
 class PIXIRenderer {
 
-    constructor() {
+    constructor(client) {
         this.canvas = document.getElementById('main-canvas')
         this.entities = new Map()
         this.collection = []
+
+        let resolution = window.devicePixelRatio
 
         this.renderer = PIXI.autoDetectRenderer({
             width: window.innerWidth, 
             height: window.innerHeight, 
             view: this.canvas,
-            autoDensity: true,
             antialias: true,
-            transparent: false,
-            resolution: 2
+            resolution: resolution
         })
 
+        PIXI.settings.ROUND_PIXELS = true
+        PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR
+        PIXI.utils.skipHello();
         
 
         this.stage = new PIXI.Container()
         this.camera = new PIXI.Container()
 
         this.background = new PIXI.Container()
+        this.backbackground = new PIXI.Container()
         this.middleground = new PIXI.Container()
         this.foreground = new PIXI.Container()
-        
-        var font = new FontFaceObserver('Trade Gothic');
-        this.UIBuilder = new UIBuilder();    
-        
-        font.load().then(function () {
-            //this.UIBuilder = new UIBuilder();    
-        });
+
+        this.UIBuilder = new UIBuilder(this.renderer, client);    
+
+        this.cameraWrapper = new PIXI.Container()
+
+        this.cameraWrapper.addChild(this.backbackground)
+        this.cameraWrapper.addChild(this.background)
+        this.cameraWrapper.addChild(this.middleground)
+        this.cameraWrapper.addChild(this.foreground)
         
 
-        this.camera.addChild(this.background)
-        this.camera.addChild(this.middleground)
-        this.camera.addChild(this.foreground)
-        
-        this.camera.x = 500
-        this.camera.y = 250
+        this.noise = new PIXI.filters.NoiseFilter(0.01, 0.2893);
+        this.stage.filters = [this.noise]
+
+        this.camera.x = 6000
+        this.camera.y = 6000
+        this.camera.addChild(this.cameraWrapper)
 
         this.stage.addChild(this.camera)
         this.stage.addChild(this.UIBuilder)
-    
-        //ADD VIDEO
-        this.videoTexture = PIXI.Texture.from('/video/video.mp4');
-        this.videoTexture.baseTexture.resource.muted = true
-        this.videoTexture.baseTexture.resource.autoPlay = false
+
+        const fpsCounter = new PixiFps();
+        //this.stage.addChild(fpsCounter)
+
+        this.particleContainer = new PIXI.ParticleContainer()
+        this.foreground.addChild(this.particleContainer)
+
+        console.log(particleSettings.default)
+
+        this.emitter = new particles.Emitter(this.particleContainer, new PIXI.Texture.from("images/particle.png"), particleSettings.default);
+        this.emitter.autoUpdate = true; // If you keep it false, you have to update your particles yourself.
+        this.emitter.updateSpawnPos(800, 1300);
+        this.emitter.emit = true;
+
+
+        let lobbyFloor = new PIXI.Sprite.from('/images/lobbyFloor.svg')
+        lobbyFloor.x = 1700
+        lobbyFloor.y = 800
+        this.backbackground.addChild(lobbyFloor)
+        lobbyFloor.width = 1000
+        lobbyFloor.height = 1000
+
+        let scienceGalleryLogo = new PIXI.Sprite.from('/images/sg-black-white.svg')
+        scienceGalleryLogo.x = 2100
+        scienceGalleryLogo.y = 1200
+        scienceGalleryLogo.width = 175
+        scienceGalleryLogo.height = 85
+        this.middleground.addChild(scienceGalleryLogo)
+
+      
+      
+
+
+        // Start the update
+        //update();
+/*
+
         
-        const videoSprite = new PIXI.Sprite(this.videoTexture);
+        //FISHIES
+        this.fishCountOne = 7;
+        this.fishCountTwo = 2;
+        this.fishes = [];
+        this.bounds = new PIXI.Rectangle(
+            0,
+            0,
+            window.innerWidth + 500,
+            window.innerHeight + 500,
+        );
+
+        for (let i = 0; i < this.fishCountOne; i++){
+            const fish = new PIXI.Sprite.from('images/fish.svg');
+
+            fish.anchor.set(0.5);
+
+            fish.direction = Math.random() * Math.PI * 2;
+            fish.speed = 2 + (Math.random() * 2);
+            fish.turnSpeed = Math.random() - 0.8;
+
+            fish.x = Math.random() * 1000;
+            fish.y = Math.random() * 1000;
+
+            fish.scale.set(0.3 + (Math.random() * 0.8));
+            //this.backbackground.addChild(fish);
+            fish.alpha = 0.5
+            //this.fishes.push(fish)
+        }
+
+        for (let i = 0; i < this.fishCountTwo; i++){
+            const fish = new PIXI.Sprite.from('images/fish-white.svg');
+
+            fish.anchor.set(0.5);
+
+            fish.direction = Math.random() * Math.PI * 2;
+            fish.speed = 2 + (Math.random() * 2);
+            fish.turnSpeed = Math.random() - 0.8;
+
+            fish.x = Math.random() * 1000;
+            fish.y = Math.random() * 1000;
+            fish.alpha = 0.2
+
+            fish.scale.set(2.3 + (Math.random() * 0.8));
+            //this.backbackground.addChild(fish);
+            //this.fishes.push(fish);
+        }
+
+*/
         
-        videoSprite.width = 620;
-        videoSprite.height = 348;
-        videoSprite.x = -500;
-        videoSprite.y = -400;
-        videoSprite.rotation = -0.1
+        this.ascaiiFilter = new AsciiFilter()
+        
+        this.displacementSprite = PIXI.Sprite.from('images/displacement-3.png');
+	    this.displacementSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
 
-        this.foreground.addChild(videoSprite);
+        this.displacementFilter = new PIXI.filters.DisplacementFilter(this.displacementSprite)
+        this.displacementFilter.padding = 50
+        
+        
 
-
-
-
-
-
-
-        const style = new PIXI.TextStyle({
-            fill: "white",
-            fontFamily: "Monaco, monospace",
-            fontSize: 19,
-            fontWeight: 400,
-            lineHeight: 25,
-            whiteSpace: "breakword",
-            wordWrap: true,
-            wordWrapWidth: 350,
-            leading: 1
-        });
-        const explainerText = new PIXI.Text('Libbys Room ☝ \n\n Welcome to BIAS Online!\n * Arrows Keys/WASD to Move\n * Tap person to talk\n\n  Play nicely :)', style);
-        explainerText.x = 1600
-        explainerText.y = 50
-        this.foreground.addChild(explainerText)
-
-
-        const libbyRoomText = new PIXI.Text('Libby\'$ Room \n\n Touch Box to Start Video', style);
-        libbyRoomText.x = -400
-        libbyRoomText.y = 50
-        this.foreground.addChild(libbyRoomText)
 
         
         window.addEventListener('resize', () => {
@@ -105,6 +163,7 @@ class PIXIRenderer {
     
     resize() {
         this.renderer.resize(window.innerWidth, window.innerHeight)
+        this.UIBuilder.resize(window.innerWidth, window.innerHeight)
     }
  
     centerCamera(entity) {
@@ -133,8 +192,46 @@ class PIXIRenderer {
         this.entities.forEach(entity => {
             entity.update(delta)
         })
+       
+        this.UIBuilder.update(delta)
+
+        this.emitter.update(delta)
+
+        this.displacementSprite.y = delta*500
+        this.displacementSprite.x = delta*500
         this.renderer.render(this.stage)
-        this.UIBuilder.update()
+        
+
+        //this.backbackground.filters =  [this.ascaiiFilter, this.displacementFilter]
+
+/*
+        for (let i = 0; i < this.fishes.length; i++) {
+            const fish = this.fishes[i];
+
+            fish.direction += fish.turnSpeed * 0.01;
+
+            fish.x += Math.sin(fish.direction) * fish.speed;
+            fish.y += Math.cos(fish.direction) * fish.speed;
+
+            fish.rotation = -fish.direction - (Math.PI / 2);
+
+            if (fish.x < this.bounds.x)
+            {
+                fish.x += this.bounds.width;
+            }
+            if (fish.x > this.bounds.x + this.bounds.width)
+            {
+                fish.x -= this.bounds.width;
+            }
+            if (fish.y < this.bounds.y)
+            {
+                fish.y += this.bounds.height;
+            }
+            if (fish.y > this.bounds.y + this.bounds.height)
+            {
+                fish.y -= this.bounds.height;
+            }
+        }*/
     }
 }
 

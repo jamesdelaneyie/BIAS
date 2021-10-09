@@ -1,6 +1,5 @@
 import Portal from '../common/entity/Portal.js'
 
-// setup a few obstacles
 export default (instance, room, portals) => {
 
     const roomX = room.x
@@ -11,6 +10,7 @@ export default (instance, room, portals) => {
     if(portals) {
         portalList.forEach(portal => {
             let portalProps = new Portal({
+                name: portal.name,
                 x: portal.x + roomX + roomBorder,
                 y: portal.y + roomY,
                 width: portal.width,

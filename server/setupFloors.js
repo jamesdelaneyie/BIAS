@@ -2,30 +2,15 @@ import Floor from '../common/entity/Floor.js'
 
 export default (instance, room) => {
 
-    const floors = new Map()
-
-    let roomX = room.x
-    let roomY = room.y 
-    let roomWidth = room.width
-    let roomHeight = room.height
-    let roomColor = room.backgroundColor
-
-    if(!roomX == 0) {
-        roomX = roomX/2
-    }
-    if(!roomY == 0) {
-        roomY = roomY/2
-    }
-
     const floor = new Floor({ 
-        x: roomX, 
-        y: roomY, 
-        width: roomWidth, 
-        height: roomHeight, 
-        color: roomColor
+        x: room.x, 
+        y: room.y, 
+        width: room.width, 
+        height: room.height, 
+        floorColor: room.floorColor,
+        gridGap: room.gridGap,
+        gridColor: room.gridColor
     })
     instance.addEntity(floor)
-    floors.set(floor.nid, floor)
 
-    return floors
 }
