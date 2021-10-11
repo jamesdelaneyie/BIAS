@@ -5,6 +5,8 @@ import PixiFps from "pixi-fps";
 import { AsciiFilter } from '@pixi/filter-ascii'
 import * as particles from 'pixi-particles'
 import * as particleSettings from "./emitter.json";
+import { WebfontLoaderPlugin } from "pixi-webfont-loader";
+import { ease } from 'pixi-ease'
 
 class PIXIRenderer {
 
@@ -15,6 +17,10 @@ class PIXIRenderer {
 
         let resolution = window.devicePixelRatio
 
+        PIXI.utils.skipHello();
+        PIXI.settings.ROUND_PIXELS = true
+        PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR
+
         this.renderer = PIXI.autoDetectRenderer({
             width: window.innerWidth, 
             height: window.innerHeight, 
@@ -23,9 +29,8 @@ class PIXIRenderer {
             resolution: resolution
         })
 
-        PIXI.settings.ROUND_PIXELS = true
-        PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR
-        PIXI.utils.skipHello();
+        
+       
         
 
         this.stage = new PIXI.Container()
@@ -36,7 +41,120 @@ class PIXIRenderer {
         this.middleground = new PIXI.Container()
         this.foreground = new PIXI.Container()
 
-        this.UIBuilder = new UIBuilder(this.renderer, client);    
+       // let Loader = new PIXI.Loader()
+
+
+        
+
+        PIXI.Loader.registerPlugin(WebfontLoaderPlugin);
+
+        PIXI.Loader.shared.add({ name: "css", url: "/css/styles-v0.0.1.css" });
+	    PIXI.Loader.shared.add({ name: "light", url: "/fonts/TradeGothicNextLTPro-Lt.woff2" });
+        PIXI.Loader.shared.add({ name: "regular", url: "/fonts/TradeGothicNextLTPro-Rg.woff2" });
+        PIXI.Loader.shared.add({ name: "bold", url: "/fonts/TradeGothicNextLTPro-Bd.woff2" });
+        PIXI.Loader.shared.add({ name: "heavy", url: "/fonts/TradeGothicNextLTPro-Hv.woff2" });
+        PIXI.Loader.shared.add({ name: "italic", url: "/fonts/TradeGothicNextLTPro-It.woff2" });
+
+        PIXI.Loader.shared.add({ name: "avatarBackground1", url: "images/avatars/avatar-background-1.svg" });
+        PIXI.Loader.shared.add({ name: "avatarBackground2", url: "images/avatars/avatar-background-2.svg" });
+        PIXI.Loader.shared.add({ name: "avatarBackground3", url: "images/avatars/avatar-background-3.svg" });
+        PIXI.Loader.shared.add({ name: "avatarBackground4", url: "images/avatars/avatar-background-4.svg" });
+        PIXI.Loader.shared.add({ name: "avatarBackground5", url: "images/avatars/avatar-background-5.svg" });
+        PIXI.Loader.shared.add({ name: "avatarBackground6", url: "images/avatars/avatar-background-6.svg" });
+        
+        PIXI.Loader.shared.add({ name: "avatarMiddleground1", url: "images/avatars/avatar-middleground-1.svg" });
+        PIXI.Loader.shared.add({ name: "avatarMiddleground2", url: "images/avatars/avatar-middleground-2.svg" });
+        PIXI.Loader.shared.add({ name: "avatarMiddleground3", url: "images/avatars/avatar-middleground-3.svg" });
+        PIXI.Loader.shared.add({ name: "avatarMiddleground4", url: "images/avatars/avatar-middleground-4.svg" });
+        PIXI.Loader.shared.add({ name: "avatarMiddleground5", url: "images/avatars/avatar-middleground-5.svg" });
+        PIXI.Loader.shared.add({ name: "avatarMiddleground6", url: "images/avatars/avatar-middleground-6.svg" });
+        
+        PIXI.Loader.shared.add({ name: "avatarForeground1", url: "images/avatars/avatar-frontground-1.svg" });
+        PIXI.Loader.shared.add({ name: "avatarForeground2", url: "images/avatars/avatar-frontground-2.svg" });
+        PIXI.Loader.shared.add({ name: "avatarForeground3", url: "images/avatars/avatar-frontground-3.svg" });
+        PIXI.Loader.shared.add({ name: "avatarForeground4", url: "images/avatars/avatar-frontground-4.svg" });
+        PIXI.Loader.shared.add({ name: "avatarForeground5", url: "images/avatars/avatar-frontground-5.svg" });
+        PIXI.Loader.shared.add({ name: "avatarForeground6", url: "images/avatars/avatar-frontground-6.svg" });
+
+        //UI ICONS
+        PIXI.Loader.shared.add({ name: "scienceGalleryLogoWhite", url: "images/sg-white.svg" })
+        PIXI.Loader.shared.add({ name: "menuIcon", url: "images/menu-icon.svg" })
+        PIXI.Loader.shared.add({ name: "menuIconClose", url: "images/menu-icon-close.svg" })
+
+        PIXI.Loader.shared.add({ name: "loadingIcon", url: "images/loading-icon.svg" })
+
+        //'images/sg-white.svg'
+        //'images/menu-icon.svg'
+        //'images/menu-icon-close.svg')
+        //'images/menu-icon.svg'
+        //'images/sound-on-icon.svg'
+        //'images/sound-off-icon.svg'
+        //'images/sound-on-icon.svg'
+        //'images/share-icon.svg'
+        //'images/twitter-icon.svg'
+        //'images/facebook-icon.svg'
+
+       // PIXI.Loader.shared.add({ name: "Loading File", url: "100MiB.bin" });
+        
+
+        this.loadingText = new PIXI.Text("Loading 0%", {
+            fontFamily : 'Arial',
+            fontSize: 21,
+            fill : "white"
+        });
+        this.loadingText.anchor.set(0.5, 0.5);
+        this.loadingText.position.set(window.innerWidth/2,window.innerHeight/2)
+        let loadingTextyPos = this.loadingText.y
+        this.stage.addChild(this.loadingText)
+
+        this.loadingBar = new PIXI.Graphics()
+        this.loadingBar.lineStyle(0)
+        this.loadingBar.beginFill(0x00FF00, 1.0, true)
+        this.loadingBar.drawRect(0,0,1,10)
+        this.loadingBar.endFill()
+        this.loadingBar.x = window.innerWidth/2 - 100
+        this.loadingBar.y = window.innerHeight/2 + 25
+        let loadingBaryPos = this.loadingBar.y
+      
+        this.stage.addChild(this.loadingBar)
+
+        PIXI.Loader.shared.onProgress.add(() => {
+            this.loadingText.text = "Loading " + PIXI.Loader.shared.progress.toFixed(0) + "%";
+            this.loadingBar.width = PIXI.Loader.shared.progress.toFixed(0)*2
+        });
+
+        const Stage = this.stage
+
+        PIXI.Loader.shared.onComplete.once(() => {
+            this.loadingText.text = "100% Complete";
+            this.UIBuilder = new UIBuilder(this.renderer, client)
+            this.UIBuilder.alpha = 0
+            this.stage.addChild(this.UIBuilder) 
+
+            setTimeout(()=>{
+                //this.loadingText.text = "Welcome";
+            }, 1000)
+
+            //tint: 0x00ff00
+            //ease.add(this.loadingText, {alpha: 0, y: loadingTextyPos + 5}, { duration: 250, ease: 'easeOutExpo', wait: 1000})
+
+            ease.add(this.loadingText, {alpha: 0, y: loadingTextyPos + 5}, { duration: 250, ease: 'easeOutExpo', wait: 1000})
+            ease.add(this.loadingBar, {alpha: 0, y: loadingBaryPos - 5}, { duration: 250, ease: 'easeOutExpo', wait: 1000})
+
+            ease.add(this.UIBuilder, {alpha: 1 }, { duration: 0, ease: 'easeOutExpo', wait: 500})
+
+            setTimeout(function(){
+                Stage.removeChild(this.loadingText)
+                Stage.removeChild(this.loadingBar)
+            }, 1500)
+
+            
+            
+        })
+
+        PIXI.Loader.shared.load();
+
+        
 
         this.cameraWrapper = new PIXI.Container()
 
@@ -47,22 +165,34 @@ class PIXIRenderer {
         
 
         this.noise = new PIXI.filters.NoiseFilter(0.01, 0.2893);
-        this.stage.filters = [this.noise]
+        //this.stage.filters = [this.noise]
 
-        this.camera.x = 6000
-        this.camera.y = 6000
+        this.camera.x = 2063
+        this.camera.y = 1658
         this.camera.addChild(this.cameraWrapper)
 
         this.stage.addChild(this.camera)
-        this.stage.addChild(this.UIBuilder)
+        
 
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         const fpsCounter = new PixiFps();
         //this.stage.addChild(fpsCounter)
 
         this.particleContainer = new PIXI.ParticleContainer()
         this.foreground.addChild(this.particleContainer)
 
-        console.log(particleSettings.default)
+        //console.log(particleSettings.default)
 
         this.emitter = new particles.Emitter(this.particleContainer, new PIXI.Texture.from("images/particle.png"), particleSettings.default);
         this.emitter.autoUpdate = true; // If you keep it false, you have to update your particles yourself.
@@ -70,19 +200,19 @@ class PIXIRenderer {
         this.emitter.emit = true;
 
 
-        let lobbyFloor = new PIXI.Sprite.from('/images/lobbyFloor.svg')
+        /*let lobbyFloor = new PIXI.Sprite.from('/images/lobbyFloor.svg')
         lobbyFloor.x = 1700
         lobbyFloor.y = 800
         this.backbackground.addChild(lobbyFloor)
         lobbyFloor.width = 1000
-        lobbyFloor.height = 1000
+        lobbyFloor.height = 1000*/
 
-        let scienceGalleryLogo = new PIXI.Sprite.from('/images/sg-black-white.svg')
+        let scienceGalleryLogo = new PIXI.Sprite.from('/images/sg-white.svg')
         scienceGalleryLogo.x = 2100
         scienceGalleryLogo.y = 1200
         scienceGalleryLogo.width = 175
         scienceGalleryLogo.height = 85
-        this.middleground.addChild(scienceGalleryLogo)
+        //this.middleground.addChild(scienceGalleryLogo)
 
       
       
@@ -163,7 +293,27 @@ class PIXIRenderer {
     
     resize() {
         this.renderer.resize(window.innerWidth, window.innerHeight)
-        this.UIBuilder.resize(window.innerWidth, window.innerHeight)
+
+        if(this.loadingText.visible == true) {
+            this.loadingText.position.set(window.innerWidth/2,window.innerHeight/2);
+            this.loadingBar.x = window.innerWidth/2 - 100
+            this.loadingBar.y = window.innerHeight/2 + 25
+        }
+
+        const userInterface = this.UIBuilder
+        clearTimeout(resizeTimer);
+        var resizeTimer = setTimeout(function() {
+      
+            if(userInterface) {
+                console.log('resize')
+                userInterface.resize(window.innerWidth, window.innerHeight)
+            }
+                  
+        }, 250);
+      
+
+        
+        
     }
  
     centerCamera(entity) {
@@ -193,7 +343,10 @@ class PIXIRenderer {
             entity.update(delta)
         })
        
-        this.UIBuilder.update(delta)
+       
+        if(this.UIBuilder) {
+            this.UIBuilder.update(delta)
+        }
 
         this.emitter.update(delta)
 

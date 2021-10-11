@@ -131,8 +131,8 @@ class PlayerGraphics extends PIXI.Container {
         
         this.info = new PUXI.Stage(20,100)
         const textStyle = new PIXI.TextStyle({
-            fontFamily: 'Trade Gothic Next',
-            fill: "#000000", 
+            fontFamily: 'Arial',
+            fill: "#FFFFFF", 
             fontWeight: 900,
             fontSize: "16px"
         });
@@ -140,7 +140,7 @@ class PlayerGraphics extends PIXI.Container {
         
         const nameText = new PUXI.TextWidget('', textStyle)
         nameText.tint = 0xffffff
-
+        
         this.info.addChild(nameText)
 
             const typingGraphic = new Graphics()
@@ -205,7 +205,7 @@ class PlayerGraphics extends PIXI.Container {
 
         loader.load(function(loader, resources) {
 
-            avatarBackground = new PIXI.Sprite.from(''+avatarBackground+'');
+            /*avatarBackground = new PIXI.Sprite.from(''+avatarBackground+'');
             avatarMiddleground = new PIXI.Sprite.from(''+avatarMiddleground+'');
             avatarMiddleground2 = new PIXI.Sprite.from(''+avatarMiddleground2+'');
             avatarForeground = new PIXI.Sprite.from(''+avatarForeground+'');
@@ -240,7 +240,7 @@ class PlayerGraphics extends PIXI.Container {
             avatarContainer.addChild(avatarBackground)
             avatarContainer.addChild(avatarMiddleground)
             avatarContainer.addChild(avatarMiddleground2)
-            avatarContainer.addChild(avatarForeground)
+            avatarContainer.addChild(avatarForeground)*/
 
             avatarContainer.addChild(headphoneGraphics)
 
@@ -290,7 +290,7 @@ class PlayerGraphics extends PIXI.Container {
         }
 
         this.nameHolder = new PIXI.Container();
-        this.nameHolder.height = 50
+        this.nameHolder.height = 30
         this.nameHolder.width = 50
         
         const rope = new PIXI.SimpleRope( nameTextCurved.texture, points );

@@ -14,7 +14,7 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
     inputSystem.releaseKeys()
 
 
-    const { myRawEntity, obstacles, boxes } = state
+    const { myRawEntity, obstacles, boxes, artworks } = state
 
 
     if (myRawEntity) {
@@ -54,14 +54,14 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
             client.addCommand(moveCommand)
 
             // apply moveCommand  to our local entity
-            applyCommand(myRawEntity, moveCommand, obstacles, boxes)
+            applyCommand(myRawEntity, moveCommand, obstacles, boxes, artworks)
 
             //if (input.mouseDown) {
-                const coolEmoji = renderer.stage.children[1].coolEmoji.contentContainer;
+                /*const coolEmoji = renderer.stage.children[1].coolEmoji.contentContainer;
                 coolEmoji.on("pointerdown", function () {
                     client.addCommand(new SpeakCommand("😎", "emojiBlast", myRawEntity.x, myRawEntity.y))
                 });
-            /*const heartEmoji = renderer.stage.children[1].heartEmoji.contentContainer;
+            const heartEmoji = renderer.stage.children[1].heartEmoji.contentContainer;
                 heartEmoji.on("pointerdown", function () {
                     client.addCommand(new SpeakCommand("❤️", "emojiBlast", myRawEntity.x, myRawEntity.y))
                 });
@@ -76,7 +76,7 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
                 const whateverEmoji = renderer.stage.children[1].whateverEmoji.contentContainer;
                 whateverEmoji.on("pointerdown", function () {
                     client.addCommand(new SpeakCommand("🙄", "emojiBlast", myRawEntity.x, myRawEntity.y))
-                });*/
+                });
             //}
 
             const sendMessage = renderer.stage.children[1].textBox.children[0].children[0].children[3]
@@ -99,7 +99,7 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
                     renderer.stage.children[1].mockInput.blur();
                     renderer.stage.children[1].mockInput.text = ""
                 }
-            })
+            })*/
 
 
 
@@ -159,7 +159,7 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
     
     
             const moveCommand = new MoveCommand(false, false, false, false, rotationAmount, delta)
-            applyCommand(myRawEntity, moveCommand, obstacles, boxes)
+            applyCommand(myRawEntity, moveCommand, obstacles, boxes, artworks)
     
             const prediction = {
                 nid: myRawEntity.nid,

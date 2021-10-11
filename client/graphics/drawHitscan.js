@@ -9,7 +9,7 @@ const drawHitscan = (layer, x, y, targetX, targetY, color) => {
     graphics.drawCircle(targetX,targetY,25);
     graphics.endFill()
     graphics.alpha = 0.2
-    layer.addChild(graphics)
+    /*layer.addChild(graphics)
 
     setTimeout(() => {
         layer.removeChild(graphics)
@@ -18,7 +18,7 @@ const drawHitscan = (layer, x, y, targetX, targetY, color) => {
             texture: true,
             baseTexture: true
         })
-    }, 120)
+    }, 120)*/
 
 
 

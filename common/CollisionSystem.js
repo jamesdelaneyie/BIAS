@@ -130,7 +130,7 @@ CollisionSystem.createRectangleColliderBox = (x, y, width, height) => {
 
 
 
-CollisionSystem.moveWithCollisions = (entity, obstacles, boxes) => {
+CollisionSystem.moveWithCollisions = (entity, obstacles, boxes, artworks) => {
 
     obstacles.forEach(obstacle => {
         if(obstacle.name == "circleBuilding") {
@@ -158,12 +158,35 @@ CollisionSystem.moveWithCollisions = (entity, obstacles, boxes) => {
         response.clear()
     })
 
+
+    artworks.forEach(artwork => {
+        if(artwork.collider.polygon) {
+            if (SAT.testCirclePolygon(entity.collider.circle, artwork.collider.polygon, response)) {
+                entity.x -= response.overlapV.x
+                entity.y -= response.overlapV.y
+            }
+            response.clear()
+        } else {
+            if (SAT.testCircleCircle(entity.collider.circle, artwork.collider.circle, response)) {
+                entity.x -= response.overlapV.x
+                entity.y -= response.overlapV.y
+            }
+            response.clear()
+        }
+        
+    })
+
     
 }
 
 
 CollisionSystem.checkCirclePolygon = (circleCollider, polygonCollider, response) => {
-    return SAT.testCirclePolygon(circleCollider, polygonCollider, response)
+    if(polygonCollider) {
+        return SAT.testCirclePolygon(circleCollider, polygonCollider, response)
+    } else {
+
+    }
+    
 }
 
 CollisionSystem.checkLineCircle = (x1, y1, x2, y2, circleCollider) => {

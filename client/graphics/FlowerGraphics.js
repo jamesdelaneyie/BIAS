@@ -435,7 +435,7 @@ class FlowerGraphics extends PIXI.Container {
             ease.add(this, {scaleX: 1, scaleY: 1}, { duration: 350, ease: 'easeOutBack', wait: 50 })
 
             this.addChild(lineContainer)
-            console.log('tester')
+            //console.log('tester')
 
         }
        

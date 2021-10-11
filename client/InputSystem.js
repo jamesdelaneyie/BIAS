@@ -26,14 +26,15 @@ class InputSystem {
         footstep.speed = 2
         footstep.volume = 0.005
 
-        const viewArtButton = renderer.stage.children[1].viewArtButton
-        viewArtButton.on('pointerdown', function(){
-            client.addCommand(new ToggleCommand(true, "headphones"))
-            viewArtButton.alpha = 0
-            client.addCommand(new ToggleCommand(true, "lockPlayer"))
-        })
-
-        document.addEventListener( "pointerdown", closeArtButton );
+        /*if(viewArtButton) {
+            viewArtButton.on('pointerdown', function(){
+                client.addCommand(new ToggleCommand(true, "headphones"))
+                viewArtButton.alpha = 0
+                client.addCommand(new ToggleCommand(true, "lockPlayer"))
+            })
+        }*/
+        /*const viewArtButton = this.UIBuilder.viewArtButton
+        document.addEventListener("pointerdown", closeArtButton );
         function closeArtButton(event){
             var element = event.target;
             if(element.id == 'back-to-bias'){
@@ -43,33 +44,53 @@ class InputSystem {
                     
                 }, 1300)
             }
-        }
-        const UIBuilder = this.UIBuilder
-        const joinButton = renderer.stage.children[1].joinButton
-        //console.log(joinButton)
+        }*/
+
+        //if(this.UIBuilder) {
+
         
-        joinButton.on("click", function () {
+        /*
+        
+       
+       
 
-            //console.log('firing')
-            console.log(isJoined, UIBuilder.nameGiven)
-            
-            if(isJoined == false) {
+        */
 
-                if(UIBuilder.nameGiven == true) {
+       
+        //console.log(renderer)
+        setInterval(()=>{
+            //console.log(renderer)
 
-                    let name = renderer.UIBuilder.getText();
-                    let color = renderer.UIBuilder.getColor()
-                    let avatar = renderer.UIBuilder.getAvatar();
+            if(renderer.UIBuilder) {
 
-                    client.addCommand(new JoinCommand(""+name+"", ""+avatar+"", ""+color+""))
-                    //console.log('firing')
-                    isJoined = true
-                    
 
-                }
+ renderer.UIBuilder.joinButton.on("click", function () {
+    
+               
                 
+                if(isJoined == false) {
+    
+                    if(renderer.UIBuilder.nameGiven == true) {
+    
+                        let name = renderer.UIBuilder.getText();
+                        let color = renderer.UIBuilder.getColor()
+                        let avatar = ""//renderer.UIBuilder.getAvatar();
+                        renderer.UIBuilder.joinSession()
+
+                        client.addCommand(new JoinCommand(""+name+"", ""+avatar+"", ""+color+""))
+                        //console.log('firing')
+                        isJoined = true
+                        
+    
+                    }
+                    
+                }
+            });
             }
-        });
+        }, 200)
+
+        
+    //}
 
 
 
@@ -119,18 +140,22 @@ class InputSystem {
         
 
         this.isMobile = isMobile();
-
-
+/*
+        const chatBox = renderer.UIBuilder.mockInput
         //if(isMobile == false) {
+        if(chatBox) {
+            //console.log('tester')
+        } else {
+            //console.log('checker')
+        }*/
 
             
 
             document.addEventListener('keydown', event => {
-                //console.log('keydown', event)
-                // w or up arrow
+               
 
-
-                if(!renderer.stage.children[1].mockInput._isFocused) {
+                
+                //if(!renderer.stage.children[1].mockInput._isFocused) {
                     
                 
 
@@ -167,7 +192,7 @@ class InputSystem {
                     }
                 }
 
-            }
+            //}
 
                 // r
                 if (event.keyCode === 82) {
@@ -181,8 +206,8 @@ class InputSystem {
                     this.frameState.spacebar = true
                 }
             
-                this.currentState.message = this.UIBuilder.getMessageText();
-                this.frameState.message = this.UIBuilder.getMessageText();
+                //this.currentState.message = this.UIBuilder.getMessageText();
+                //this.frameState.message = this.UIBuilder.getMessageText();
 
                 
 
@@ -406,9 +431,9 @@ class InputSystem {
             if(this.isMobile.any || window.innerWidth <= 500) {
                 this.leftController.position.set(45, window.innerHeight - this.leftController.height*1.6);
                 this.leftController.alpha = 0
-                renderer.UIBuilder.addChild(this.leftController);
+                //renderer.UIBuilder.addChild(this.leftController);
             } else {
-                renderer.UIBuilder.removeChild(this.leftController);
+                //renderer.UIBuilder.removeChild(this.leftController);
             }
     
     }
@@ -417,9 +442,9 @@ class InputSystem {
 
         if(this.isMobile.any || window.innerWidth <= 500) {
             this.leftController.position.set(45, window.innerHeight - this.leftController.height*1.6);
-            renderer.UIBuilder.addChild(this.leftController);
+            //renderer.UIBuilder.addChild(this.leftController);
         } else {
-            renderer.UIBuilder.removeChild(this.leftController);
+            ///renderer.UIBuilder.removeChild(this.leftController);
         }
 
     }

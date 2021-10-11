@@ -29,6 +29,7 @@ const create = () => {
         myPeerId: null,
         obstacles: new Map(),
         boxes: new Map(),
+        artworks: new Map(),
         floors: new Map(),
         flowers: new Map()
     }
@@ -105,12 +106,10 @@ const create = () => {
 
 
         
-        renderer.UIBuilder.joinInstance(state.name, state.myRawId)
-        renderer.UIBuilder.joinSession();
-
-        renderer.UIBuilder.clearText();
+        //renderer.UIBuilder.joinInstance(state.name, state.myRawId)
+        
        
-        input.leftController.alpha = 1
+        //input.leftController.alpha = 1
 
       
         /*const myPeer = new Peer(""+state.name+"",{
@@ -272,12 +271,12 @@ const create = () => {
                     trail.y = 10
                 }
             } 
-            renderer.background.addChild(trail)
+            //renderer.background.addChild(trail)
         }
         
         if(state.mySmoothEntity) {
             if (message.id === state.mySmoothEntity.nid) {
-                renderer.UIBuilder.setOwnPlayerPositionMiniMap(state.myRawEntity.x, state.myRawEntity.y)
+                //renderer.UIBuilder.setOwnPlayerPositionMiniMap(state.myRawEntity.x, state.myRawEntity.y)
                 return
             }
         }
@@ -364,11 +363,20 @@ const create = () => {
 
 
         if(message.type == "mapInfo") {
-            renderer.UIBuilder.buildMiniMap(message.text)
+            //renderer.UIBuilder.buildMiniMap(message.text)
         }
 
         if(message.type == "login") {
-            renderer.UIBuilder.introScreenOn = false
+
+            setInterval(function(){
+                if(renderer.UIBuilder) {
+                    renderer.UIBuilder.joinSession();
+                }
+                //renderer.UIBuilder.joinSession();
+            }, 500)
+            
+            //renderer.UIBuilder.clearText();
+            //renderer.UIBuilder.introScreenOn = false
         }
         
         if(message.type == "showQuote") {
@@ -378,11 +386,15 @@ const create = () => {
         }
         
         if(message.type == "showStartArtButton") {
-            renderer.UIBuilder.showStartArtButton(message.text, message.x, message.y)
+            if(renderer.UIBuilder) {
+                renderer.UIBuilder.showStartArtButton(message.text, message.type, message.x, message.y)
+            }
         }
 
         if(message.type == "hideStartArtButton") {
-            renderer.UIBuilder.hideStartArtButton()
+            if(renderer.UIBuilder) {
+                renderer.UIBuilder.hideStartArtButton()
+            }
         }
 
     
@@ -402,7 +414,7 @@ const create = () => {
         }
 
         if(message.type == "worldInfoTime") {
-            renderer.UIBuilder.updateWorldTime(message.text)
+            //renderer.UIBuilder.updateWorldTime(message.text)
         }
 
         if(message.type == "worldInfoTotalUsers") {
@@ -493,11 +505,11 @@ const create = () => {
 
 
     client.on('predictionErrorFrame', predictionErrorFrame => {
-        reconcilePlayer(predictionErrorFrame, client, state.myRawEntity, state.obstacles, state.boxes)
+        reconcilePlayer(predictionErrorFrame, client, state.myRawEntity, state.obstacles, state.boxes, state.artworks)
     })
 
     client.on('connected', res => { 
-        renderer.UIBuilder.updateConnection(res, true);
+        //renderer.UIBuilder.updateConnection(res, true);
     })
 
     client.on('error', res => { 
@@ -508,9 +520,9 @@ const create = () => {
     })
 
     client.on('disconnected', () => { 
-
-        renderer.UIBuilder.updateConnection(null, false);
-
+        if(renderer.UIBuilder) {
+            renderer.UIBuilder.updateConnection(null, false);
+        }
     })
 
 
@@ -523,8 +535,8 @@ const create = () => {
     handshake.x = inviteX
     handshake.y = inviteY
     
-    client.connect('ws://localhost:8079', handshake)
-    //client.connect('ws://192.248.155.99:8079', handshake)
+    //client.connect('ws://localhost:8079', handshake)
+    client.connect('ws://192.248.155.99:8079', handshake)
 
 
     const update = (delta, tick, now) => {

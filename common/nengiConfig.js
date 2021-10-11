@@ -19,6 +19,7 @@ import Box from './entity/Box.js'
 import Floor from './entity/Floor.js'
 import Portal from './entity/Portal.js'
 import Flower from './entity/Flower.js'
+import Art from './entity/Art.js'
 
 const config = {
     UPDATE_RATE: 20, 
@@ -38,6 +39,7 @@ const config = {
             ['PlayerCharacter', PlayerCharacter],
             ['Obstacle', Obstacle],
             ['Box', Box],
+            ['Art', Art],
             ['Portal', Portal],
             ['Flower', Flower]
         ],
