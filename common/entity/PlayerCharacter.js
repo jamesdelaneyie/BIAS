@@ -11,7 +11,7 @@ class PlayerCharacter {
         this.rotation = 0
         this.hitpoints = 100
         this.isAlive = false
-        this.speed = 300
+        this.speed = 235
         this.size = 30
         this.mass = 20
         this.material = new p2.Material();
@@ -21,6 +21,7 @@ class PlayerCharacter {
         this.self = state.self;
         this.avatar = state.avatar
         this.headphones = false
+        this.sleeping = false
         this.typing = false
         this.bodyRotation = 0
 
@@ -84,6 +85,7 @@ PlayerCharacter.protocol = {
     self: nengi.Boolean,
     hitpoints: nengi.UInt8,
     headphones: nengi.Boolean,
+    sleeping: nengi.Boolean,
     typing: nengi.Boolean,
     sticker: nengi.UInt16
 }

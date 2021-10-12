@@ -14,6 +14,9 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
     inputSystem.releaseKeys()
 
 
+    
+
+
     const { myRawEntity, obstacles, boxes, artworks } = state
 
 

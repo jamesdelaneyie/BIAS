@@ -184,6 +184,8 @@ class GameInstance {
         })
 
         this.instance.on('disconnect', client => {
+
+            this.totalUsers--
             
             if(client.rawEntity) {
                 this.instance.messageAll(new Notification(''+ client.rawEntity.name +'', 'personLeft', 20, 20))
@@ -211,7 +213,24 @@ class GameInstance {
 
         this.instance.on('command::ToggleCommand', ({ command, client }) => {
 
-            //console.log(client)
+            if(command.type == "sleeping" && command.boolean == true) {
+
+                if(client.smoothEntity) {
+                    client.smoothEntity.sleeping = true
+                    client.rawEntity.sleeping = true
+                }
+
+
+            } else if(command.type == "sleeping" && command.boolean == false)  {
+
+               
+                if(client.smoothEntity) {
+                    client.smoothEntity.sleeping = false
+                    client.rawEntity.sleeping = false
+                }
+                //console.log('awake')
+
+            }
 
             if(command.type == "headphones" && command.boolean == true) {
 
@@ -290,17 +309,20 @@ class GameInstance {
         })
 
         this.messageDebounceTimer = 0
+        this.timeDebounceTimer = 0
+
 
         this.instance.on('command::MoveCommand', ({ command, client, tick }) => {
             const rawEntity = client.rawEntity
 
+            client.sleepTimer = 0
 
             if(command.forward == true || command.backward == true || command.left == true || command.right == true) {
                 this.messageDebounceTimer++
 
                 if(this.messageDebounceTimer > 20) {
                     this.instance.addLocalMessage(new Walking(client.smoothEntity.nid, client.color, client.smoothEntity.rotation, rawEntity.x, rawEntity.y))
-                    console.log(client.smoothEntity.nid+' walked')
+                    //console.log(client.smoothEntity.nid+' walked')
                     this.messageDebounceTimer = 0
                 }
             }
@@ -321,6 +343,8 @@ class GameInstance {
 
 
         this.instance.on('command::SpeakCommand', ({ command, client, tick }) => {
+
+            client.sleepTimer = 0
 
             if(command.type == "emojiBlast") {
 
@@ -440,7 +464,7 @@ class GameInstance {
                 }
             })
             let givenName = newName.substring(1);
-            console.log("name:"+givenName)
+            //console.log("name:"+givenName)
             givenName = swearjar.censor(givenName);
 
             const rawEntity = new PlayerCharacter({ self: true, avatar: ""+command.avatar+"", color: ""+command.color+"" })
@@ -451,6 +475,8 @@ class GameInstance {
             
             smoothEntity.client = client
             client.smoothEntity = smoothEntity
+
+            client.sleepTimer = 1
 
             const peerID = client.peerID;
 
@@ -514,13 +540,13 @@ class GameInstance {
 
             
     }
-
     update(delta, tick, now) {
         this.instance.emitCommands()
 
         this.instance.clients.forEach(client => {
 
             if(client.rawEntity) {
+                
                 if(!client.rawEntity.headphones) {
                     client.view.x = client.rawEntity.x
                     client.view.y = client.rawEntity.y
@@ -529,7 +555,17 @@ class GameInstance {
                     client.rawEntity.body.position[1] = client.rawEntity.y
     
                     client.rawEntity.body.angle = client.rawEntity.rotation
+                    client.sleepTimer++
+
+                } else {
+
                 }
+
+                if(client.sleepTimer > 60) {
+                    //client.rawEntity.sleeping = true
+                    client.smoothEntity.sleeping = true
+                }
+                
                
             }
             
@@ -538,6 +574,8 @@ class GameInstance {
                 const maximumMovementPerFrameInPixels = 410 * delta
                 followPath(smoothEntity, client.positions, maximumMovementPerFrameInPixels)
             }
+
+            //console.log(client.sleepTimer)
 
         })
 
@@ -627,10 +665,17 @@ class GameInstance {
             
             
         })
+        
 
-
-
-        this.instance.messageAll(new Notification(""+(this.world.time.toFixed())+"", 'worldInfoTime'))
+        
+        this.timeDebounceTimer++
+        if(this.timeDebounceTimer > 20) {
+            this.instance.messageAll(new Notification(""+(this.world.time.toFixed())+"", 'worldInfoTime'))
+            this.instance.messageAll(new Notification(""+this.totalUsers+"", 'worldInfoTotalUsers'))
+            this.instance.messageAll(new Notification(""+this.activeUsers.length+"", 'worldInfoActiveUsers'))
+            this.timeDebounceTimer = 0
+        }
+        
 
         this.instance.update()
     }

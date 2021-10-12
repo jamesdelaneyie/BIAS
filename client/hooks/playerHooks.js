@@ -42,6 +42,10 @@ export default (state, renderer ) => {
             headphones({ graphics, value }) {
                 graphics.putOnHeadphones(value)
             },
+            sleeping({ graphics, value }) {
+                console.log('sleeping')
+                graphics.toggleSleeping(value)
+            },
             typing({ graphics, value }) {
                 graphics.isTyping(value)
             },

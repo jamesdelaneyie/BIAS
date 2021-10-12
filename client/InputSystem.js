@@ -26,21 +26,20 @@ class InputSystem {
         footstep.speed = 2
         footstep.volume = 0.005
 
-        /*if(viewArtButton) {
-            
-        }*/
-        /*const viewArtButton = this.UIBuilder.viewArtButton
-        document.addEventListener("pointerdown", closeArtButton );
-        function closeArtButton(event){
-            var element = event.target;
-            if(element.id == 'back-to-bias'){
-                setTimeout(()=>{
-                    
-                    client.addCommand(new ToggleCommand(false, "headphones"))
-                    
-                }, 1300)
-            }
-        }*/
+        
+      
+
+      
+
+        window.onblur = function() {
+            //console.log('leave')
+            client.addCommand(new ToggleCommand(true, "sleeping"))
+        }
+        window.onfocus = function() {
+            //console.log('comeback')
+            client.addCommand(new ToggleCommand(false, "sleeping"))
+        }
+
 
         let listenersOn = false
         
@@ -460,9 +459,14 @@ class InputSystem {
 
         if(this.isMobile.any || window.innerWidth <= 500) {
             this.leftController.position.set(45, window.innerHeight - this.leftController.height + 15);
-            renderer.UIBuilder.addChild(this.leftController);
+            if(renderer.UIBuilder) {
+                renderer.UIBuilder.addChild(this.leftController);
+            }
+            
         } else {
-            renderer.UIBuilder.removeChild(this.leftController);
+            if(renderer.UIBuilder) {
+                renderer.UIBuilder.removeChild(this.leftController);
+            }
         }
 
     }

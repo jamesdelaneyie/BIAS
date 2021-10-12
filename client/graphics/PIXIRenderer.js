@@ -77,6 +77,7 @@ class PIXIRenderer {
         PIXI.Loader.shared.add({ name: "avatarForeground6", url: "images/avatars/avatar-frontground-6.svg" });
 
         //UI ICONS
+        PIXI.Loader.shared.add({ name: "sg-logo-white-raster", url: "images/sg-logo-raster.png" })
         PIXI.Loader.shared.add({ name: "scienceGalleryLogoWhite", url: "images/sg-white.svg" })
         PIXI.Loader.shared.add({ name: "menuIcon", url: "images/menu-icon.svg" })
         PIXI.Loader.shared.add({ name: "menuIconClose", url: "images/menu-icon-close.svg" })
@@ -132,12 +133,7 @@ class PIXIRenderer {
             this.UIBuilder.alpha = 0
             this.stage.addChild(this.UIBuilder) 
 
-            setTimeout(()=>{
-                //this.loadingText.text = "Welcome";
-            }, 1000)
-
-            //tint: 0x00ff00
-            //ease.add(this.loadingText, {alpha: 0, y: loadingTextyPos + 5}, { duration: 250, ease: 'easeOutExpo', wait: 1000})
+           
 
             ease.add(this.loadingText, {alpha: 0, y: loadingTextyPos + 5}, { duration: 250, ease: 'easeOutExpo', wait: 250})
             ease.add(this.loadingBar, {alpha: 0, y: loadingBaryPos - 5}, { duration: 250, ease: 'easeOutExpo', wait: 250})

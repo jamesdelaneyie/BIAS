@@ -93,6 +93,17 @@ const create = () => {
         window.localStorage.setItem('color', state.color);
 
 
+       
+       /* let connected = false
+        let removeLoader = setInterval(() => {
+            if(renderer.UIBuilder) {
+                if(connected == false) {
+                    renderer.UIBuilder.updateConnection(null, true);
+                    clearInterval(removeLoader)
+                }
+            }
+        }, 10);*/
+
             
         input.leftController.alpha = 1
 
@@ -152,7 +163,7 @@ const create = () => {
             angle = 'top'
         }
 
-        if(stepCounter % 5 == 0) {
+        //if(stepCounter % 5 == 0) {
             if(stepCounter % 10 == 0) {
                 if(angle == "top" || angle == "bottom") {
                     trail.x = -10
@@ -166,7 +177,7 @@ const create = () => {
                 }
             } 
             renderer.background.addChild(trail)
-        }
+        //}
         
         if(state.mySmoothEntity) {
             if (message.id === state.mySmoothEntity.nid) {
@@ -303,19 +314,25 @@ const create = () => {
         }
 
         if(message.type == "worldInfoTotalUsers") {
-            renderer.UIBuilder.updateTotalUsers(message.text)
+            if(renderer.UIBuilder) {
+                renderer.UIBuilder.updateTotalUsers(message.text)
+            }
         }
 
         if(message.type == "worldInfoActiveUsers") {
-            renderer.UIBuilder.updateActiveUsers(message.text)
+            if(renderer.UIBuilder) {
+                renderer.UIBuilder.updateActiveUsers(message.text)
+            }
         }
 
         if(message.type == "personJoined") {
-            //renderer.UIBuilder.personJoined(message.text)
+            if(renderer.UIBuilder) {
+                renderer.UIBuilder.personJoined(message.text)
+            }
         }
 
         if(message.type == "personLeft") {
-            //renderer.UIBuilder.personLeft(message.text)
+            renderer.UIBuilder.personLeft(message.text)
         }
 
         if(message.type == "emojiBlast") {
@@ -393,8 +410,22 @@ const create = () => {
         reconcilePlayer(predictionErrorFrame, client, state.myRawEntity, state.obstacles, state.boxes, state.artworks)
     })
 
+    let connected = false
+
     client.on('connected', res => { 
-        //renderer.UIBuilder.updateConnection(res, true);
+        connected = true
+        let placed = false
+        let placeStick = setInterval(function(){
+            let userInterface = renderer.UIBuilder
+            if(userInterface) {
+                if(placed == false) {
+                    renderer.UIBuilder.updateConnection(null, true);
+                    placed == true
+                    clearInterval(placeStick)
+                }
+            }
+        }, 200 )
+        
     })
 
     client.on('error', res => { 
@@ -419,17 +450,26 @@ const create = () => {
     var inviteY = invite.searchParams.get("y")
     handshake.x = inviteX
     handshake.y = inviteY
-    
-    //client.connect('ws://localhost:8079', handshake)
-    client.connect('ws://192.248.155.99:8079', handshake)
 
+    client.connect('ws://localhost:8079', handshake)
+    
+    //client.connect('ws://192.248.155.99:8079', handshake)
+
+    let connectionCounter = 0
 
     const update = (delta, tick, now) => {
 
         if(trails.length > 1000) {
             let trailToRemove = trails.shift()
             renderer.background.removeChild(trailToRemove)
-            
+        }
+
+        if(connected == false) {
+            connectionCounter++
+        }
+
+        if(connectionCounter > 50) {
+            renderer.UIBuilder.updateConnection(null, false);
         }
 
         client.readNetworkAndEmit()

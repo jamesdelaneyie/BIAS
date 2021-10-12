@@ -17,6 +17,8 @@ class UIBuilder extends PIXI.Container {
 
         this.client = client
         this.artNumber = null
+        this.wasConnected = false 
+        this.joined = false
 
         const resources = PIXI.Loader.shared.resources
 
@@ -179,15 +181,17 @@ class UIBuilder extends PIXI.Container {
         this.joinModalOn = true
         this.transitionScreenOn = true
         this.miniMapOn = true
-
         this.statusStageOn = true
+        this.worldInfoOn = true
+
+
         this.scoreStageOn = false
         this.chatStageOn = false
         this.emojiStageOn = false
 
-        //this.worldStageOn = true
+
        
-        this.worldInfoOn = true
+       
 
         
         this.introScreenOn = false
@@ -683,7 +687,7 @@ class UIBuilder extends PIXI.Container {
 
             this.statusStage = new PUXI.Stage({
                 width: 250,
-                height: 100
+                height: 46
             });
             
 
@@ -691,40 +695,61 @@ class UIBuilder extends PIXI.Container {
             }).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
                     width: 250,
-                    height: 100,
+                    height: 36,
                     x: 10,
                     y: 0.985,
                     anchor: new PIXI.Point(0, 1)
                 }),
-            )
+            )//.setBackground(0xFFFFFF).setBackgroundAlpha(0.1)
 
 
             this.statusLayout = new PUXI.Widget({}).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
-                    height: 0,
+                    height: 36,
                     width: 250,
-                    x: 5,
-                    y: 0.8,
-                    anchor: new PIXI.Point(0, 1)
+                    x: 0,
+                    y: 0,
+                    anchor: new PIXI.Point(0, 0)
                 }),
-            )
+            )//.setBackground(0xFF0000).setBackgroundAlpha(0.5)
+
             this.statusWrapper.addChild(this.statusLayout)
             this.statusStage.addChild(this.statusWrapper)
 
-            const scienceGalleryLogo = PIXI.Sprite.from('images/sg-logo-raster.png');
+
+            const scienceGalleryLogo = PIXI.Sprite.from(resources['sg-logo-white-raster'].texture);
+            
             scienceGalleryLogo.width = 68
             scienceGalleryLogo.height = 35 
-            scienceGalleryLogo.x = 10
-            scienceGalleryLogo.y = window.innerHeight - 48
             scienceGalleryLogo.interactive = true
             scienceGalleryLogo.buttonMode = true
             scienceGalleryLogo.on("pointerdown", function () {
                window.open('https://dublin.sciencegallery.com/')
             })
-            //this.statusWrapper.contentContainer.addChild(scienceGalleryLogo)
+            this.statusLayout.contentContainer.addChild(scienceGalleryLogo)
+
+            const updateStyles = new PIXI.TextStyle({ 
+                fontFamily: 'Trade Gothic Next',
+                fill: white, 
+                fontSize: 12
+            })
+            this.updateText = new PUXI.TextWidget(
+                'Update Text', 
+                updateStyles
+            ).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    x: 100,
+                    y: -40,
+                })
+            )
+            this.updateText.tint = 0xFFFFFF
+            this.updateText.contentContainer.y = -20
+            this.updateText.contentContainer.alpha = 0
+            
+            this.statusLayout.addChild(this.updateText)
         
             this.addChild(this.statusStage)
-
+           
             this.statusStage.resize(window.innerWidth, window.innerHeight)
             this.statusStage.stage.hitArea = new PIXI.Rectangle(0, 0, 0, 0);
 
@@ -961,6 +986,7 @@ class UIBuilder extends PIXI.Container {
                 fontSize: 24
             })
             
+            
             //The Text Input
             this.mockInput = new PUXI.TextInput({
                 multiLine: false,
@@ -1167,8 +1193,8 @@ class UIBuilder extends PIXI.Container {
 
         if(this.worldInfoOn == true) {
 
-            let width = 76
-            let height = 21
+            let width = 78
+            let height = 23
 
             this.worldInfo = new PUXI.Stage({
                 width: width,
@@ -1179,9 +1205,9 @@ class UIBuilder extends PIXI.Container {
                 new PUXI.FastLayoutOptions({
                     width: width, 
                     height: height,
-                    x: 0.5,
+                    x: 0.99,
                     y: 0.01,
-                    anchor: new PIXI.Point(0.5, 0)
+                    anchor: new PIXI.Point(1, 0)
                 })
             )
             
@@ -1211,32 +1237,36 @@ class UIBuilder extends PIXI.Container {
                     textBaseline: "alphabetical"
                 }
             })
-            this.currentTime.x = 2
+            this.currentTime.x = 4
             this.worldInfoWrapper.contentContainer.addChild(this.currentTime);
     
     
     
-            /*this.numberOfPeople = new PIXI.Text("Active Users:", {fill: black, fontSize: 10, fontFamily: 'Trade Gothic Next'});
-            this.numberOfPeople.x = 10
-            this.numberOfPeople.y = 26
+            this.numberOfPeople = new PIXI.Text("Current:", {fill: white, fontSize: 10, fontFamily: 'Monaco'});
+            this.numberOfPeople.x = 5
+            this.numberOfPeople.y = 30
+            this.numberOfPeople.alpha = 0.5
             this.worldInfoWrapper.contentContainer.addChild(this.numberOfPeople);
             
-            this.numberOfPeopleCounter = new PIXI.Text("0", {fill: black, fontSize: 10, fontFamily: 'Trade Gothic Next'});
-            this.numberOfPeopleCounter.x = 130
-            this.numberOfPeopleCounter.y = 26
+            this.numberOfPeopleCounter = new PIXI.Text("0", {fill: white, fontSize: 10, fontFamily: 'Monaco', letterSpacing: 2});
+            this.numberOfPeopleCounter.x = 58
+            this.numberOfPeopleCounter.y = 30
+            this.numberOfPeopleCounter.alpha = 0.6
             this.worldInfoWrapper.contentContainer.addChild(this.numberOfPeopleCounter);
     
     
     
-            this.totalNumberOfPeople = new PIXI.Text("Total Users:", {fill: black, fontSize: 10, fontFamily: 'Trade Gothic Next'});
-            this.totalNumberOfPeople.x = 10
-            this.totalNumberOfPeople.y = 42
+            this.totalNumberOfPeople = new PIXI.Text("Total:", {fill: white, fontSize: 10, fontFamily: 'Monaco'});
+            this.totalNumberOfPeople.x = 5
+            this.totalNumberOfPeople.y = 47
+            this.totalNumberOfPeople.alpha = 0.5
             this.worldInfoWrapper.contentContainer.addChild(this.totalNumberOfPeople);
             
-            this.totalNumberOfPeopleCounter = new PIXI.Text("0", {fill: black, fontSize: 10, fontFamily: 'Trade Gothic Next'});
-            this.totalNumberOfPeopleCounter.x = 130
-            this.totalNumberOfPeopleCounter.y = 43
-            this.worldInfoWrapper.contentContainer.addChild(this.totalNumberOfPeopleCounter);*/
+            this.totalNumberOfPeopleCounter = new PIXI.Text("0", {fill: white, fontSize: 10, fontFamily: 'Monaco', letterSpacing: 2});
+            this.totalNumberOfPeopleCounter.x = 50
+            this.totalNumberOfPeopleCounter.y = 47
+            this.totalNumberOfPeopleCounter.alpha = 0.6
+            this.worldInfoWrapper.contentContainer.addChild(this.totalNumberOfPeopleCounter);
     
     
     
@@ -1689,7 +1719,7 @@ class UIBuilder extends PIXI.Container {
                 new PUXI.FastLayoutOptions({
                     width: this.miniMapWidth,
                     height: this.miniMapHeight,
-                    x: 0.987,
+                    x: 0.985,
                     y: 0.985,
                     anchor: new PIXI.Point(1,1)
                 })
@@ -1766,6 +1796,16 @@ class UIBuilder extends PIXI.Container {
                     miniMapBackground.drawRoundedRect(0, 0, miniMapWidth, miniMapHeight, 10)
                     miniMapBackground.endFill()
 
+                    miniMapWrapper.setLayoutOptions(
+                        new PUXI.FastLayoutOptions({
+                            width: this.miniMapWidth,
+                            height: this.miniMapHeight,
+                            x: 0.987,
+                            y: 0.985,
+                            anchor: new PIXI.Point(1,1)
+                        })
+                    )
+
                     miniMapStage.resize(window.innerWidth, window.innerHeight)
                     const miniMapBounds = miniMapBackground.getBounds()
                     miniMapStage.stage.hitArea = new PIXI.Rectangle(
@@ -1776,7 +1816,7 @@ class UIBuilder extends PIXI.Container {
                     )
 
                 } else {
-                    console.log('open')
+                    //console.log('open')
                     miniMapOpen = true
                     miniMap.visible = true
                     miniMapWidth = 210
@@ -1790,15 +1830,14 @@ class UIBuilder extends PIXI.Container {
                     miniMapBackground.endFill()
     
                     miniMapPlayerPosition.visible = true
-                    
                     miniMapBackground.visible = true
 
                     miniMapWrapper.setLayoutOptions(
                         new PUXI.FastLayoutOptions({
                             width: this.miniMapWidth,
                             height: this.miniMapHeight,
-                            x: 0.987,
-                            y: 0.985,
+                            x: 0.99,
+                            y: 0.99,
                             anchor: new PIXI.Point(1,1)
                         })
                     )
@@ -2318,9 +2357,9 @@ class UIBuilder extends PIXI.Container {
 
         if(this.introScreenOn == true) {
 
-                this.joinModal.visible = false
-                this.mainMenuStage.visible = false
-                this.statusStage.visible = false
+                //this.joinModal.visible = false
+                //this.mainMenuStage.visible = false
+                //this.statusStage.visible = false
 
                 //Intro Screen
                 let joinModal = this.joinModal
@@ -2811,6 +2850,7 @@ class UIBuilder extends PIXI.Container {
                 x: 0,
                 y: 0
             }).visible = 0
+            this.joinModal.visible = false
         } else {
         
             this.ageGate = new PUXI.Stage({
@@ -2957,6 +2997,7 @@ class UIBuilder extends PIXI.Container {
             }
             denyAgeButtonClick.onPress = function(){
             //confirmAgeButton.setBackground(0x00FF00)
+                
             }
             denyAgeButtonClick.onClick = function(){
                 window.location.href = "https://dublin.sciencegallery.com"
@@ -2993,6 +3034,8 @@ class UIBuilder extends PIXI.Container {
             }
             confirmAgeButtonClick.onPress = function(){
                 userInterface.confirmAge()
+                userInterface.joinModal.visible = true
+                //userInterface.joined = true
             }
 
             this.loadingIcon = PIXI.Sprite.from(resources['loadingIcon'].texture);
@@ -3034,7 +3077,80 @@ class UIBuilder extends PIXI.Container {
         
 
         
+        //connection Screen
+        this.connectionScreen = new PUXI.Stage({
+            width:window.innerWidth,
+            height: window.innerHeight
+        })  
+        this.connectionScreen.visible = false
+
+        this.connectionScreenWrapper = new PUXI.Widget({
+        }).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 0.999999, 
+                height: 0.999999,
+                x: 0.5,
+                y: 0.5,
+                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+            }),
+        ).setBackground(0x000000).setBackgroundAlpha(0.9)
+        this.connectionScreen.addChild(this.connectionScreenWrapper)
+
+        this.connectionScreenTextWrapper = new PUXI.WidgetGroup({
+        }).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 500,
+                x: 0.5,
+                y: 0.5,
+                anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+            }),
+        )
+        this.connectionScreen.addChild(this.connectionScreenTextWrapper)
+
+        this.connectionText = new PUXI.TextWidget('').setLayoutOptions(new PUXI.FastLayoutOptions({
+            x: 0.5,
+            y: 0.5,
+            width: 500, 
+            anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+        }))
+
+        this.connectionTextTagged = new TaggedText("Connecting to <bold>BIAS ONLINE</bold>", {
+            "default": {
+                fontFamily: 'Trade Gothic Next',
+                fill: white, 
+                fontWeight: 300,
+                fontSize: "18px", 
+                align: "center",
+                lineHeight: 40,
+                wordWrap: true, 
+                wordWrapWidth: 500
+            },
+            "bold": {
+                fontWeight: 700,
+                letterSpacing: 1
+            }
+            
+        })
+        const connectedTextTagged = this.connectionTextTagged
+        let connectionCounter = 0;
         
+        let connectionTimer = setInterval(function(){
+            connectionCounter++
+            let counterText = ""
+            for(var x=0;x<connectionCounter;x++) {
+                counterText += "."
+            }
+            connectedTextTagged.text = "Connecting to <bold>BIAS ONLINE</bold>"+counterText
+            if(connectionCounter == 5) {
+                connectedTextTagged.text = "Unable to connect to <bold>BIAS ONLINE</bold>\nPlease Try Again Later"
+                clearInterval(connectionTimer)
+            }
+        }, 500)
+        this.connectionText.contentContainer.addChild(this.connectionTextTagged)
+        this.connectionScreenTextWrapper.addChild(this.connectionText)
+        this.connectionScreen.resize(window.innerWidth, window.innerHeight)
+        this.addChild(this.connectionScreen)
+        this.connectionTextTagged.x = this.connectionTextTagged.width
         
        
 
@@ -3080,11 +3196,12 @@ class UIBuilder extends PIXI.Container {
             this.transitionScreen.resize(window.innerWidth, window.innerHeight)
         }
         
+        
 
         //Non-Interactive Stages
         if(this.introScreenOn == true) {
-            this.statusStage.resize(window.innerWidth, window.innerHeight)
-            this.statusStage.stage.hitArea = new PIXI.Rectangle(0,0,0,0);
+            //this.statusStage.resize(window.innerWidth, window.innerHeight)
+            ///this.statusStage.stage.hitArea = new PIXI.Rectangle(0,0,0,0);
         }
         if(this.scoreStageOn == true) {
             this.scoreStage.resize(window.innerWidth, window.innerHeight)
@@ -3098,6 +3215,16 @@ class UIBuilder extends PIXI.Container {
                 miniMapBounds.y,
                 miniMapBounds.width,
                 miniMapBounds.height
+            )
+        }
+        if(this.worldInfoOn == true) {
+            this.worldInfo.resize(window.innerWidth, window.innerHeight)
+            const worldBounds = this.worldInfoBackground.getBounds()
+            this.worldInfo.stage.hitArea = new PIXI.Rectangle(
+                worldBounds.x,
+                worldBounds.y,
+                worldBounds.width,
+                worldBounds.height
             )
         }
 
@@ -3159,11 +3286,10 @@ class UIBuilder extends PIXI.Container {
 
     }
 
+
     confirmAge(){
          window.localStorage.setItem('over18', true);
          this.removeChild(this.ageGate)
-         this.joinModal.visible = true
-         //window.localStorage.set("over18", true)
      }
 
 
@@ -3535,12 +3661,23 @@ class UIBuilder extends PIXI.Container {
     }
 
     updateTotalUsers(number) {
-       this.totalNumberOfPeopleCounter.text = number
+        if(number < 9) {
+            this.numberOfPeopleCounter.text = "0"+number
+        } else {
+            this.numberOfPeopleCounter.text = number
+        }
+       
     }
 
-
     updateActiveUsers(number) {
-        this.numberOfPeopleCounter.text = number
+        if(number < 9) {
+            this.totalNumberOfPeopleCounter.text = "00"+number
+        } else if(number < 99) {
+            this.totalNumberOfPeopleCounter.text = "0"+number
+        } else {
+            this.totalNumberOfPeopleCounter.text = number
+        }
+       
     }
 
     hideArt(){
@@ -3579,6 +3716,7 @@ class UIBuilder extends PIXI.Container {
         }, 700) 
         setTimeout(()=> {
             this.children[allKids].visible = true
+            this.connectionScreen.visible = false
             transitionScreen.visible = false
             this.viewArtButton.alpha = 1
             sound.toggleMuteAll()
@@ -4078,98 +4216,26 @@ class UIBuilder extends PIXI.Container {
     }
 
     personJoined(name) {
-        /*var joinText = "<greendot>+</greendot> "+ name +" joined"
-        var textBox = this.statusLayout.contentContainer.children[1];
-        var currentText = textBox.text
-        textBox.text = joinText + "\n" + currentText
-        if(textBox.y > -180) {
-            textBox.y = textBox.y - 18
-        }*/
+        this.updateText.text = ""+ name +" joined"
+        ease.add(this.updateText.contentContainer, {alpha: 0.6}, {duration:100})
+        ease.add(this.updateText.contentContainer, {alpha: 0 }, {duration: 250, wait: 3000})
     }
 
-    joinInstance(name, id) {
-        var joinText = "<greendot>●</greendot> Joined <p>(ID: "+ id +")</p>"
-        var textBox = this.statusLayout.contentContainer.children[1];
-        var currentText = textBox.text
-        textBox.text = joinText + "\n" + currentText
-        if(textBox.y > -180) {
-            textBox.y = textBox.y - 18
-        }
-    }
+
 
     updateConnection(value, boolean){
-
+        //
         if(boolean == true) {
-            var updateText = new TaggedText("<bluedot>●</bluedot> Connected <y>["+value.text+"]</y>", {
-                "default": {
-                    fontFamily: "Trade Gothic Next",
-                    fontSize: "11px",
-                    fill: this.white,
-                    align: "left"
-                },
-                "bluedot": {
-                    fontFamily: "Monaco",
-                    fontSize: "15px",
-                    fill: this.blue
-                },
-                "greendot": {
-                    fontFamily: "Monaco",
-                    fontSize: "15px",
-                    fill: this.green
-                },
-                "whitedot": {
-                    fontFamily: "Monaco",
-                    fontSize: "15px",
-                    fill: this.white
-                },
-                "reddot": {
-                    fontFamily: "Monaco",
-                    fontSize: "15px",
-                    fill: this.red
-                },
-                "b": {
-                    fontWeight: 700
-                },
-                "y": {
-                    fill: this.yellow
-                },
-                "p": {
-                    fill: this.pink
-                },
-                "hi": {
-                    fill: this.white,
-                    fontWeight: 700,
-                    textDecoration: "underline"
-                }
-            });
-            this.statusLayout.contentContainer.addChild(updateText);
-
+            this.wasConnected = true
+            this.connectionScreen.visible = false
         } else {
-
-            let disconnectText = 'Unable to connect to bias online. The server may need a restart'
+            if(this.wasConnected == true) {
+                this.connectionTextTagged.text = "Disconnected from <bold>BIAS ONLINE</bold>\nPlease Refresh the Page"
+            } else {
+                this.connectionTextTagged.text = "Unable to connect to <bold>BIAS ONLINE</bold>\nPlease Try Again Later"
+            }
+            this.connectionScreen.visible = true
             sound.muteAll()
-
-        
-            if(this.statusLayout.contentContainer.children.length > 1) {
-                this.statusLayout.contentContainer.removeChildAt(1);
-            }
-            
-            var updateText = new TaggedText("<dot>●</dot> "+disconnectText+"", {
-                "default": {
-                    fontFamily: "Monaco",
-                    fontSize: "10px",
-                    fill: this.white,
-                    align: "left"
-                },
-                "dot": {
-                    fontSize: "15px",
-                    fill: this.red
-                }
-            });
-
-            if(this.statusStage.visible == true) {
-                this.statusLayout.contentContainer.addChild(updateText);
-            }
 
             if(this.chatStageOn) {
                 this.textBox.visible = false
@@ -4180,11 +4246,9 @@ class UIBuilder extends PIXI.Container {
             if(this.emojiStageOn) {
                 this.emojiStage.visible = false
             }
-
-          
+            
             this.mainMenuStage.visible = false
             this.viewArtButton.visible = false
-           
 
             if(this.scoreStageOn) {
                 this.scoreStage.visible = false
@@ -4197,13 +4261,13 @@ class UIBuilder extends PIXI.Container {
             if(this.miniMapOn) {
                 this.miniMapStage.visible = false
             }
-           
+            
             if(this.notificationStageOn) {
                 this.notificationStage.visible = false
             }
-            
-        
         }
+       
+        
         
     }
     
@@ -4299,7 +4363,7 @@ class UIBuilder extends PIXI.Container {
             }
 
 
-            this.statusStage.visible = false
+            //this.statusStage.visible = false
 
             this.scrollWrapper.setPadding(15, 2, 15, 2)
             this.scrollContent.setPadding(3, 2, 3, 2)
@@ -4826,6 +4890,8 @@ class UIBuilder extends PIXI.Container {
     update(delta){
 
         this.count++
+
+    
 
         if(this.ageGate.visible == true) {
             let loadingCurrent = this.loadingIcon.rotation

@@ -36,7 +36,9 @@ class PlayerGraphics extends PIXI.Container {
         this.avatar = ''+state.avatar+''
 
         this.headphones = state.headphones
-        this.typing = state.headphones
+        this.typing = state.isTyping
+        this.sleeping = state.sleeping
+        //this.headphones = state.headphones
  
         this.auraContainer = new PIXI.Container();   
 
@@ -145,62 +147,84 @@ class PlayerGraphics extends PIXI.Container {
         
         this.info.addChild(nameText)
 
-            const typingGraphic = new Graphics()
-            typingGraphic.lineStyle(0)
-            typingGraphic.beginFill(0xFFFFFF, 1.0, true)
-            typingGraphic.drawRoundedRect(0, 0, 28, 16, 3)
-            typingGraphic.endFill()
-            typingGraphic.x = -50
-            typingGraphic.y = -50
 
-            const typingGraphicTwo = new Graphics()
-            typingGraphicTwo.beginFill(0xFFFFFF, 1.0, true)
-            typingGraphicTwo.drawCircle(0, 0, 3)
-            typingGraphicTwo.x = -24
-            typingGraphicTwo.y = -35
+        this.sleepingGraphic = new PIXI.Container()
+        let firstZ = new PIXI.Text("Z", {fontSize: "10px", fill: 0xFFFFFF, fontWeight: 700})
+        let secondZ = new PIXI.Text("Z", {fontSize: "14px", fill: 0xFFFFFF, fontWeight: 400})
+        let thirdZ = new PIXI.Text("Z", {fontSize: "18px", fill: 0xFFFFFF, fontWeight: 300})
+        
+        firstZ.x = 5
+        firstZ.y = -20
 
-            const typingGraphicThree = new Graphics()
-            typingGraphicThree.beginFill(0xFFFFFF, 1.0, true)
-            typingGraphicThree.drawCircle(0, 0, 1.5)
-            typingGraphicThree.x = -20
-            typingGraphicThree.y = -30
+        secondZ.x = 12
+        secondZ.y = -26
 
-            this.typingDot1 = new Graphics()
-            this.typingDot1.lineStyle(0)
-            this.typingDot1.beginFill(0x000000, 1.0, true)
-            this.typingDot1.drawCircle(0, 0, 2)
-            this.typingDot1.endFill()
+        thirdZ.x = 22
+        thirdZ.y = -34
+
+        this.sleepingGraphic.addChild(firstZ)
+        this.sleepingGraphic.addChild(secondZ)
+        this.sleepingGraphic.addChild(thirdZ)
+        //this.sleepingGraphic.visible = false
+        
 
 
-            this.typingDot2 = new Graphics()
-            this.typingDot2.lineStyle(0)
-            this.typingDot2.beginFill(0x000000, 1.0, true)
-            this.typingDot2.drawCircle(0, 0, 2)
-            this.typingDot2.endFill()
+        const typingGraphic = new Graphics()
+        typingGraphic.lineStyle(0)
+        typingGraphic.beginFill(0xFFFFFF, 1.0, true)
+        typingGraphic.drawRoundedRect(0, 0, 28, 16, 3)
+        typingGraphic.endFill()
+        typingGraphic.x = -50
+        typingGraphic.y = -50
 
-            this.typingDot3 = new Graphics()
-            this.typingDot3.lineStyle(0)
-            this.typingDot3.beginFill(0x000000, 1.0, true)
-            this.typingDot3.drawCircle(0, 0, 2)
-            this.typingDot3.endFill()
+        const typingGraphicTwo = new Graphics()
+        typingGraphicTwo.beginFill(0xFFFFFF, 1.0, true)
+        typingGraphicTwo.drawCircle(0, 0, 3)
+        typingGraphicTwo.x = -24
+        typingGraphicTwo.y = -35
 
-            typingIcon.addChild(typingGraphicThree)
-            typingIcon.addChild(typingGraphicTwo)
-            typingIcon.addChild(typingGraphic)
-            typingIcon.addChild(this.typingDot1)
-            typingIcon.addChild(this.typingDot2)
-            typingIcon.addChild(this.typingDot3)
+        const typingGraphicThree = new Graphics()
+        typingGraphicThree.beginFill(0xFFFFFF, 1.0, true)
+        typingGraphicThree.drawCircle(0, 0, 1.5)
+        typingGraphicThree.x = -20
+        typingGraphicThree.y = -30
 
-            this.typingDot1.x = -43
-            this.typingDot1.y = -42
+        this.typingDot1 = new Graphics()
+        this.typingDot1.lineStyle(0)
+        this.typingDot1.beginFill(0x000000, 1.0, true)
+        this.typingDot1.drawCircle(0, 0, 2)
+        this.typingDot1.endFill()
 
-            this.typingDot2.x = -36
-            this.typingDot2.y = -42
 
-            this.typingDot3.x = -29
-            this.typingDot3.y = -42
+        this.typingDot2 = new Graphics()
+        this.typingDot2.lineStyle(0)
+        this.typingDot2.beginFill(0x000000, 1.0, true)
+        this.typingDot2.drawCircle(0, 0, 2)
+        this.typingDot2.endFill()
 
-            nameText.contentContainer.addChild(typingIcon)
+        this.typingDot3 = new Graphics()
+        this.typingDot3.lineStyle(0)
+        this.typingDot3.beginFill(0x000000, 1.0, true)
+        this.typingDot3.drawCircle(0, 0, 2)
+        this.typingDot3.endFill()
+
+        typingIcon.addChild(typingGraphicThree)
+        typingIcon.addChild(typingGraphicTwo)
+        typingIcon.addChild(typingGraphic)
+        typingIcon.addChild(this.typingDot1)
+        typingIcon.addChild(this.typingDot2)
+        typingIcon.addChild(this.typingDot3)
+
+        this.typingDot1.x = -43
+        this.typingDot1.y = -42
+
+        this.typingDot2.x = -36
+        this.typingDot2.y = -42
+
+        this.typingDot3.x = -29
+        this.typingDot3.y = -42
+
+        nameText.contentContainer.addChild(typingIcon)
         
         
 
@@ -301,9 +325,10 @@ class PlayerGraphics extends PIXI.Container {
         this.nameHolder.visible = false
 
 
-
+        
         this.wrapper.addChild(this.info)
         this.wrapper.addChild(this.playerBody)
+        this.wrapper.addChild(this.sleepingGraphic)
 
         this.addChild(this.wrapper)
 
@@ -316,6 +341,7 @@ class PlayerGraphics extends PIXI.Container {
             this.avatarContainer.visible = 0
             this.auraContainer.visible = 0
             this.nameHolder.visible = 0
+            this.sleepingGraphic.visible = 0
         }
 
 
@@ -369,6 +395,15 @@ class PlayerGraphics extends PIXI.Container {
             this.headphones = true
         } else {
             this.headphones = false
+        }
+    }
+
+    toggleSleeping(boolean) {
+        console.log(boolean)
+        if(boolean) {
+            this.sleeping = true
+        } else {
+            this.sleeping = false
         }
     }
 
@@ -501,6 +536,13 @@ class PlayerGraphics extends PIXI.Container {
         } else {
             this.headphoneGraphics.visible = true
         }
+
+        if(this.sleeping == false) {
+            this.sleepingGraphic.visible = false
+         } else {
+            console.log('show')
+            this.sleepingGraphic.visible = true 
+         }
 
         if(this.typing == false) {
             this.typingIcon.visible = false
