@@ -245,6 +245,7 @@ class UIBuilder extends PIXI.Container {
                     workLink.visible = true
                     resetLink.visible = true
                     helpLink.visible = true
+                    feedbackLink.visible = true
                     //menuOpen.play()
                 } else if(menuIcon.name == 'menu-icon-close') {
                     menuIcon.texture = menuIconGraphic.texture
@@ -256,6 +257,7 @@ class UIBuilder extends PIXI.Container {
                     workLink.visible = false
                     resetLink.visible = false
                     helpLink.visible = false
+                    feedbackLink.visible = false
                     //menuClose.play()
                 }
             });
@@ -479,6 +481,33 @@ class UIBuilder extends PIXI.Container {
             })
             
             this.mainMenuStage.addChild(helpLink)
+
+
+
+            const feedbackLinkText = 'Feedback';
+            const feedbackLinkUnderlineText = '<underline>Feedback</underline>';
+            
+            const feedbackLink = new TaggedText(feedbackLinkText, navLinkTextStyles, {
+                drawWhitespace: true,
+            });
+            feedbackLink.visible = false
+            feedbackLink.x = 55
+            feedbackLink.y = 158
+            feedbackLink.interactive = true
+            feedbackLink.buttonMode = true
+            
+            feedbackLink.on("pointerover", function () {
+                feedbackLink.setText(feedbackLinkUnderlineText)
+                //menuHover.play()
+            })
+            feedbackLink.on("pointerdown", function () {
+                userInterface.showQuote("8")
+            })
+            feedbackLink.on("pointerout", function () {
+                feedbackLink.setText(feedbackLinkText)
+            })
+            
+            this.mainMenuStage.addChild(feedbackLink)
 
             
 
@@ -1380,6 +1409,13 @@ class UIBuilder extends PIXI.Container {
                     paragraph: "<gap>\n</gap><p><bold>Desktop</bold>: Use the WASD keys to move up, down, left and right. Your mouse cursor controls which way your character is looking.\n\n<bold>Mobile</bold>: Use the joystick in the bottom left corner of the screen to move your character.\n\n</p>",
                     style:"",
                     type: "face"
+                },{
+                    title:"FEEDBACK",
+                    subtitle:"",
+                    credit:"",
+                    paragraph: "<gap>\n</gap><p>Please give us your <link>feedback</link>!\n\n</p>",
+                    style:"",
+                    type: "face"
                 },
                 {
                     title:"<gap>\n</gap><boldtitle>CLASSES</boldtitle>",
@@ -1670,7 +1706,7 @@ class UIBuilder extends PIXI.Container {
             let miniMap = this.miniMap
 
             this.miniMapBackground = new Graphics()
-            this.miniMapBackground.lineStyle(2, white)
+            this.miniMapBackground.lineStyle(2, white, 0.3)
             this.miniMapBackground.beginFill(black, 1, true)
             this.miniMapBackground.drawRoundedRect(0, 0, this.miniMapWidth, this.miniMapHeight, 10)
             this.miniMapBackground.endFill()
@@ -1748,7 +1784,7 @@ class UIBuilder extends PIXI.Container {
                     mapIcon.x = 5
 
                     miniMapBackground.clear()
-                    miniMapBackground.lineStyle(1, white)
+                    miniMapBackground.lineStyle(1, white, 0.3)
                     miniMapBackground.beginFill(black, 1, true)
                     miniMapBackground.drawRoundedRect(0, 0, miniMapWidth, miniMapHeight, 10)
                     miniMapBackground.endFill()
@@ -3856,6 +3892,14 @@ class UIBuilder extends PIXI.Container {
                                     window.open('https://instagram.com/noahlevenson', '_blank').focus();
                                 })
                             }
+                            if(element._text == "feedback") {
+                                // console.log('link!')
+                                    element.interactive = true
+                                    element.buttonMode = true
+                                    element.on('pointerdown', function(){
+                                        window.open('https://docs.google.com/spreadsheets/d/1dL6Ww7MfUqFtbeY8mQCkxf2ZoZ5QOWG6jDVeoiAZGKo/edit#gid=0', '_blank').focus();
+                                    })
+                                }
 
 
 

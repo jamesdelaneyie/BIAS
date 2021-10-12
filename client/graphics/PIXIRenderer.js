@@ -106,8 +106,7 @@ class PIXIRenderer {
         this.loadingText.anchor.set(0.5, 0.5);
         this.loadingText.position.set(window.innerWidth/2,window.innerHeight/2)
         let loadingTextyPos = this.loadingText.y
-        this.stage.addChild(this.loadingText)
-
+        
         this.loadingBar = new PIXI.Graphics()
         this.loadingBar.lineStyle(0)
         this.loadingBar.beginFill(0x00FF00, 1.0, true)
@@ -117,7 +116,8 @@ class PIXIRenderer {
         this.loadingBar.y = window.innerHeight/2 + 25
         let loadingBaryPos = this.loadingBar.y
       
-        this.stage.addChild(this.loadingBar)
+       
+
 
         PIXI.Loader.shared.onProgress.add(() => {
             this.loadingText.text = "Loading " + PIXI.Loader.shared.progress.toFixed(0) + "%";
@@ -139,15 +139,15 @@ class PIXIRenderer {
             //tint: 0x00ff00
             //ease.add(this.loadingText, {alpha: 0, y: loadingTextyPos + 5}, { duration: 250, ease: 'easeOutExpo', wait: 1000})
 
-            ease.add(this.loadingText, {alpha: 0, y: loadingTextyPos + 5}, { duration: 250, ease: 'easeOutExpo', wait: 1000})
-            ease.add(this.loadingBar, {alpha: 0, y: loadingBaryPos - 5}, { duration: 250, ease: 'easeOutExpo', wait: 1000})
+            ease.add(this.loadingText, {alpha: 0, y: loadingTextyPos + 5}, { duration: 250, ease: 'easeOutExpo', wait: 250})
+            ease.add(this.loadingBar, {alpha: 0, y: loadingBaryPos - 5}, { duration: 250, ease: 'easeOutExpo', wait: 250})
 
-            ease.add(this.UIBuilder, {alpha: 1 }, { duration: 0, ease: 'easeOutExpo', wait: 500})
+            ease.add(this.UIBuilder, {alpha: 1 }, { duration: 0, ease: 'easeOutExpo', wait: 250})
 
             setTimeout(function(){
                 Stage.removeChild(this.loadingText)
                 Stage.removeChild(this.loadingBar)
-            }, 1500)
+            }, 500)
 
             
             
@@ -176,7 +176,8 @@ class PIXIRenderer {
         
 
         
-        
+        this.stage.addChild(this.loadingBar)
+        this.stage.addChild(this.loadingText)
         
         
         

@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { SmoothGraphics as Graphics } from '@pixi/graphics-smooth';
+import TaggedText from 'pixi-tagged-text';
 
 
 class ArtGraphics extends PIXI.Container {
@@ -44,11 +45,26 @@ class ArtGraphics extends PIXI.Container {
         this.body.scale.set(0.5)
         this.addChild(this.body)
 
-        this.text = new PIXI.Text(state.name, {fontSize: 18})
+        this.text = new TaggedText(state.name, {
+            "default": {
+                fontSize: "14px",
+                align: "left",
+                wordWrap: true,
+                wordWrapWidth: 180,
+                align: "center",
+                textDecoration: "underline"
+            }, 
+            "bold": {
+                fontWeight: 700
+            }
+        }, {drawWhitespace: true})
+        this.text.x = -90
+        this.text.y = -15
         if(this.type == "triangle") {
-            this.text.y = -60
+            this.text.y = -70
+           
             let height = this.text.height
-            this.text.height = height*1.2
+            this.text.height = height*1.25
         }
         this.text.anchor.set(0.5, 0.5)
         this.addChild(this.text)

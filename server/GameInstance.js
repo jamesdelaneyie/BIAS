@@ -72,7 +72,7 @@ class GameInstance {
 
        
         let libbyArtworkObject = {
-            name: "CLASSES\nLibby Heaney",
+            name: "<bold>CLASSES</bold>\nLibby Heaney",
             type: "rectangle",
             x: 2000,
             y: 1200,
@@ -87,7 +87,7 @@ class GameInstance {
         this.artworks.set(libbyArtwork.nid, libbyArtwork)
 
         let noahArtworkObject = {
-            name: "STEAL UR\nFEELINGS\nNoah Levenson",
+            name: "<bold>STEAL UR FEELINGS</bold>\nNoah Levenson",
             type: "triangle",
             x: 2600,
             y: 1200,
@@ -103,7 +103,7 @@ class GameInstance {
 
 
         let johannArtworkObject = {
-            name: "Dark Matters\nJohann Diedrick",
+            name: "<bold>DARK MATTERS</bold>\nJohann Diedrick",
             type: "circle",
             x: 2600,
             y: 1600,
@@ -119,7 +119,7 @@ class GameInstance {
 
 
         let mushonArtworkObject = {
-            name: "Normalizi.ng\nMushon Zer-Aviv",
+            name: "<bold>NORMALIZI.NG</bold>\nMushon Zer-Aviv",
             type: "rectangle",
             x: 2100,
             y: 1600,
