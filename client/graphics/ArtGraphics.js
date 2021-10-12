@@ -24,12 +24,16 @@ class ArtGraphics extends PIXI.Container {
         
         if(this.type == "circle") {
             this.body.drawCircle(0, 0, state.width)
+            
         } else if (this.type == "triangle") {
 
-            this.body.moveTo(400 -state.width, -state.height);
-            this.body.lineTo(200 -state.width, 400 - state.height); 
-            this.body.lineTo(0 -state.width,  - state.height);
-            this.body.lineTo(200 -state.width,  - state.height);
+           
+
+            this.body.moveTo(state.width, -state.width);
+            this.body.lineTo(0, state.width); 
+            this.body.lineTo(-state.width, -state.width);
+            this.body.lineTo(0, -state.width);
+
             
         } else {
             this.body.drawRect((-state.width/2)*2, (-state.height/2)*2, state.width*2, state.height*2)
@@ -42,8 +46,9 @@ class ArtGraphics extends PIXI.Container {
 
         this.text = new PIXI.Text(state.name, {fontSize: 18})
         if(this.type == "triangle") {
-            this.text.y = -30
-            this.text.width = 100
+            this.text.y = -60
+            let height = this.text.height
+            this.text.height = height*1.2
         }
         this.text.anchor.set(0.5, 0.5)
         this.addChild(this.text)

@@ -3136,8 +3136,10 @@ class UIBuilder extends PIXI.Container {
         if(this.miniMapOn == true) {
             if(this.miniMap.getChildByName(""+id+"")) {
                 const thePlayer = this.miniMap.getChildByName(""+id+"")
-                thePlayer.x = (x / 25) + 10
-                thePlayer.y = (y / 25) + 10
+                //if(x > -400 && x < 5000 && y > -250 && y < 3500) {
+                    thePlayer.x = (x / 25) + 10
+                    thePlayer.y = (y / 25) + 10
+                //}
             } else {
                 const newPerson = new Graphics()
                 newPerson.name = ""+id+""
@@ -3153,8 +3155,11 @@ class UIBuilder extends PIXI.Container {
     setOwnPlayerPositionMiniMap(x, y) {
         if(this.miniMapOn == true) {
             this.miniMapPlayerPosition.alpha = 1
-            this.miniMapPlayerPosition.x = (x / 25) + 10
-            this.miniMapPlayerPosition.y = (y / 25) + 10
+            if(x > 0 && x < 5000 && y > 0 && y < 3500) {
+                this.miniMapPlayerPosition.x = (x / 25) + 10
+                this.miniMapPlayerPosition.y = (y / 25) + 10
+            }
+            
         }
     }
 

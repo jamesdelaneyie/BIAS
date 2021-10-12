@@ -91,8 +91,8 @@ class GameInstance {
             type: "triangle",
             x: 2600,
             y: 1200,
-            width: 200,
-            height: 150,
+            width: 250,
+            height: 200,
             mass: 0,
             color: "#ffffff",
         }
@@ -121,7 +121,7 @@ class GameInstance {
         let mushonArtworkObject = {
             name: "Normalizi.ng\nMushon Zer-Aviv",
             type: "rectangle",
-            x: 2000,
+            x: 2100,
             y: 1600,
             width: 180,
             height: 180,
@@ -289,12 +289,20 @@ class GameInstance {
 
         })
 
+        this.messageDebounceTimer = 0
+
         this.instance.on('command::MoveCommand', ({ command, client, tick }) => {
             const rawEntity = client.rawEntity
 
 
             if(command.forward == true || command.backward == true || command.left == true || command.right == true) {
-                this.instance.addLocalMessage(new Walking(client.smoothEntity.nid, client.color, client.smoothEntity.rotation, rawEntity.x, rawEntity.y))
+                this.messageDebounceTimer++
+
+                if(this.messageDebounceTimer > 20) {
+                    this.instance.addLocalMessage(new Walking(client.smoothEntity.nid, client.color, client.smoothEntity.rotation, rawEntity.x, rawEntity.y))
+                    console.log(client.smoothEntity.nid+' walked')
+                    this.messageDebounceTimer = 0
+                }
             }
 
             applyCommand(rawEntity, command, this.obstacles, this.boxes, this.artworks)

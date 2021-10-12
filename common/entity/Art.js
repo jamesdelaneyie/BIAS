@@ -28,7 +28,9 @@ class Art {
             });
         } else if(this.type == "triangle") {
             
-            const points = [[0,90],[-100,-55],[100,-55]]
+            let offset = this.width/2
+            let offsetH = this.height/2
+            const points = [[0,offsetH],[-offset,-offsetH],[offset,-offsetH]]
 
             points.forEach(point => {
                 vectors.push(new SAT.Vector( point[0], point[1] ))
