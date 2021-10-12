@@ -70,18 +70,7 @@ class UIBuilder extends PIXI.Container {
 
 
     
-        const scienceGalleryLogo = PIXI.Sprite.from('images/sg-logo-raster.png');
-        scienceGalleryLogo.width = 68
-        scienceGalleryLogo.height = 35 
-        //scienceGalleryLogo.scale.set(0.2)
-        scienceGalleryLogo.x = 10
-        scienceGalleryLogo.y = window.innerHeight - 48
-        scienceGalleryLogo.interactive = true
-        scienceGalleryLogo.buttonMode = true
-        scienceGalleryLogo.on("pointerdown", function () {
-           window.open('https://dublin.sciencegallery.com/')
-        })
-        this.addChild(scienceGalleryLogo)
+        
 
        
       
@@ -189,15 +178,16 @@ class UIBuilder extends PIXI.Container {
         this.viewArtButtonOn = true
         this.joinModalOn = true
         this.transitionScreenOn = true
-
+        this.miniMapOn = true
 
         this.statusStageOn = true
         this.scoreStageOn = false
         this.chatStageOn = false
         this.emojiStageOn = false
-        this.worldStageOn = true
-        this.miniMapOn = false
-        this.worldInfoOn = false
+
+        //this.worldStageOn = true
+       
+        this.worldInfoOn = true
 
         
         this.introScreenOn = false
@@ -254,6 +244,7 @@ class UIBuilder extends PIXI.Container {
                     artistsLink.visible = true
                     workLink.visible = true
                     resetLink.visible = true
+                    helpLink.visible = true
                     //menuOpen.play()
                 } else if(menuIcon.name == 'menu-icon-close') {
                     menuIcon.texture = menuIconGraphic.texture
@@ -264,6 +255,7 @@ class UIBuilder extends PIXI.Container {
                     artistsLink.visible = false
                     workLink.visible = false
                     resetLink.visible = false
+                    helpLink.visible = false
                     //menuClose.play()
                 }
             });
@@ -460,6 +452,33 @@ class UIBuilder extends PIXI.Container {
             })
             
             this.mainMenuStage.addChild(resetLink)
+
+
+
+            const helpLinkText = 'Help';
+            const helpLinkUnderlineText = '<underline>Help</underline>';
+            
+            const helpLink = new TaggedText(helpLinkText, navLinkTextStyles, {
+                drawWhitespace: true,
+            });
+            helpLink.visible = false
+            helpLink.x = 55
+            helpLink.y = 138
+            helpLink.interactive = true
+            helpLink.buttonMode = true
+            
+            helpLink.on("pointerover", function () {
+                helpLink.setText(helpLinkUnderlineText)
+                //menuHover.play()
+            })
+            helpLink.on("pointerdown", function () {
+                userInterface.showQuote("7")
+            })
+            helpLink.on("pointerout", function () {
+                helpLink.setText(helpLinkText)
+            })
+            
+            this.mainMenuStage.addChild(helpLink)
 
             
 
@@ -663,15 +682,17 @@ class UIBuilder extends PIXI.Container {
             this.statusWrapper.addChild(this.statusLayout)
             this.statusStage.addChild(this.statusWrapper)
 
-
-            const mask = new PIXI.Graphics();
-            mask.beginFill(white)
-            mask.drawRect(0, 0, 120, 100);
-            mask.y = -80
-            mask.alpha = 0
-            this.statusLayout.contentContainer.addChild(mask)
-            this.statusLayout.mask = mask
-
+            const scienceGalleryLogo = PIXI.Sprite.from('images/sg-logo-raster.png');
+            scienceGalleryLogo.width = 68
+            scienceGalleryLogo.height = 35 
+            scienceGalleryLogo.x = 10
+            scienceGalleryLogo.y = window.innerHeight - 48
+            scienceGalleryLogo.interactive = true
+            scienceGalleryLogo.buttonMode = true
+            scienceGalleryLogo.on("pointerdown", function () {
+               window.open('https://dublin.sciencegallery.com/')
+            })
+            //this.statusWrapper.contentContainer.addChild(scienceGalleryLogo)
         
             this.addChild(this.statusStage)
 
@@ -1353,10 +1374,10 @@ class UIBuilder extends PIXI.Container {
                     style:"",
                     type: "face"
                 },{
-                    title:"STEALING UR FEELINGS",
-                    subtitle:"Can the internet read you?",
-                    credit:"Noah Levenson | USA | 2019",
-                    paragraph: "Meet the new A.I. that knows you better than you know yourself. STEALING UR FEELINGS is an interactive film that learns your deepest, darkest secrets - <i>just by looking at your face</i>. That's the good news. The bad news? Your favourite apps are doing exactly the same thing.\n\n<small><bold>BIO</bold>\nNoah Levenson leads research engineering as 'Hacker in Residence' at Consumer Reports Digital Lab. He is a 2019 Rockefeller Foundation Bellagio fellow. His computer science work has been profiled by Scientific American, MIT, Engadget, CBC News, and Fast Company, among others. He lives in New York City, where he was born.\n\n<link>noahlevenson.com</link> // @noahlevenson</small>",
+                    title:"HELP",
+                    subtitle:"",
+                    credit:"",
+                    paragraph: "<gap>\n</gap><p><bold>Desktop</bold>: Use the WASD keys to move up, down, left and right. Your mouse cursor controls which way your character is looking.\n\n<bold>Mobile</bold>: Use the joystick in the bottom left corner of the screen to move your character.\n\n</p>",
                     style:"",
                     type: "face"
                 },
@@ -1609,15 +1630,21 @@ class UIBuilder extends PIXI.Container {
 
         if(this.miniMapOn == true) {
 
-            this.miniMapWidth = 210
-            this.miniMapHeight = 150
+            if(window.innerWidth <= 500) {
+                this.miniMapWidth = 30
+            } else {
+                this.miniMapWidth = 20
+            }
+            
+            this.miniMapHeight = 25
+            let miniMapWidth = this.miniMapWidth
+            let miniMapHeight = this.miniMapHeight
             
             this.miniMapStage = new PUXI.Stage({
                 width: this.miniMapWidth,
-                height: this.miniMapHeight,
-                x: 10,
-                y: 10
+                height: this.miniMapHeight
             })
+            let miniMapStage = this.miniMapStage
 
             this.miniMapStage.visible = true
 
@@ -1626,42 +1653,148 @@ class UIBuilder extends PIXI.Container {
                 new PUXI.FastLayoutOptions({
                     width: this.miniMapWidth,
                     height: this.miniMapHeight,
-                    x: 0.99,
-                    y: 0.9,
+                    x: 0.987,
+                    y: 0.985,
                     anchor: new PIXI.Point(1,1)
                 })
-            ).setPadding(10)
+            )
+            let miniMapWrapper = this.miniMapWrapper
             
             this.miniMapStage.addChild(this.miniMapWrapper)
-            
+
 
             this.miniMap = new PIXI.Container()
             this.miniMap.width = this.miniMapWidth
             this.miniMap.height = this.miniMapHeight
-            //this.miniMap.pivot.x = 0
-            
+            this.miniMap.visible = false
+            let miniMap = this.miniMap
 
-            this.miniMapBackground = new PIXI.Graphics()
-            this.miniMapBackground.beginFill(black, 0.5)
+            this.miniMapBackground = new Graphics()
+            this.miniMapBackground.lineStyle(2, white)
+            this.miniMapBackground.beginFill(black, 1, true)
             this.miniMapBackground.drawRoundedRect(0, 0, this.miniMapWidth, this.miniMapHeight, 10)
             this.miniMapBackground.endFill()
-
-
-            this.miniMapPlayerPosition = new PIXI.Graphics()
-            this.miniMapPlayerPosition.lineStyle(1, black)
-            this.miniMapPlayerPosition.beginFill(yellow, 1)
-            this.miniMapPlayerPosition.drawCircle(0, 0, 2)
-            this.miniMapPlayerPosition.endFill()
-            this.miniMapPlayerPosition.alpha = 0
+            this.miniMapBackground.visible = false
+            let miniMapBackground = this.miniMapBackground
             
+
+            this.miniMapPlayerPosition = new Graphics()
+            this.miniMapPlayerPosition.lineStyle(1, yellow, 0.5)
+            this.miniMapPlayerPosition.beginFill(yellow, 0, true)
+            this.miniMapPlayerPosition.drawRect(-(window.innerWidth/25)/2, -(window.innerHeight/25)/2, window.innerWidth/25, window.innerHeight/25)
+            this.miniMapPlayerPosition.endFill()
+            this.miniMapPlayerPosition.beginFill(yellow, 1, true)
+            this.miniMapPlayerPosition.drawCircle(0, 0, 1)
+            this.miniMapPlayerPosition.endFill()
+            this.miniMapPlayerPosition.pivot.set(0.5, 0.5)
+            this.miniMapPlayerPosition.visible = false
+            this.miniMapPlayerPosition.alpha = 0
+            let miniMapPlayerPosition = this.miniMapPlayerPosition
 
             this.miniMapWrapper.contentContainer.addChild(this.miniMapBackground)
             this.miniMapWrapper.contentContainer.addChild(this.miniMap)
             this.miniMapWrapper.contentContainer.addChild(this.miniMapPlayerPosition)
 
+
+
+            this.mapIcon = PIXI.Sprite.from(resources['mapIcon'].texture);
+            this.mapIcon.x = 5
+            this.mapIcon.y = 5
+            this.mapIcon.alpha = 1
+
+            this.mapIcon.interactive = true
+            this.mapIcon.buttonMode = true
+
+            this.miniMapOpen = false
+            let miniMapOpen = this.miniMapOpen
+            let mapIcon = this.mapIcon 
+
+            this.mapIcon.on('pointerdown', function(){
+                if(miniMapOpen) {
+
+                    miniMap.visible = false
+
+                    if(window.innerWidth <= 500) {
+                        mapIcon.x = 0
+                    }
+
+                    miniMapHeight = 25
+                   
+                    miniMapBackground.visible = false
+                    miniMapPlayerPosition.visible = false
+                    miniMapOpen = false
+
+                    miniMapBackground.clear()
+                    miniMapBackground.lineStyle(0)
+                    miniMapBackground.beginFill(white, 0, true)
+                    miniMapBackground.drawRoundedRect(0, 0, miniMapWidth, miniMapHeight, 10)
+                    miniMapBackground.endFill()
+
+                    miniMapStage.resize(window.innerWidth, window.innerHeight)
+                    const miniMapBounds = miniMapBackground.getBounds()
+                    miniMapStage.stage.hitArea = new PIXI.Rectangle(
+                        miniMapBounds.x,
+                        miniMapBounds.y,
+                        miniMapBounds.width,
+                        miniMapBounds.height
+                    )
+
+                } else {
+                    console.log('open')
+                    miniMapOpen = true
+                    miniMap.visible = true
+                    miniMapWidth = 210
+                    miniMapHeight = 150
+                    mapIcon.x = 5
+
+                    miniMapBackground.clear()
+                    miniMapBackground.lineStyle(1, white)
+                    miniMapBackground.beginFill(black, 1, true)
+                    miniMapBackground.drawRoundedRect(0, 0, miniMapWidth, miniMapHeight, 10)
+                    miniMapBackground.endFill()
+    
+                    miniMapPlayerPosition.visible = true
+                    
+                    miniMapBackground.visible = true
+
+                    miniMapWrapper.setLayoutOptions(
+                        new PUXI.FastLayoutOptions({
+                            width: this.miniMapWidth,
+                            height: this.miniMapHeight,
+                            x: 0.987,
+                            y: 0.985,
+                            anchor: new PIXI.Point(1,1)
+                        })
+                    )
+                    
+    
+                    miniMapStage.resize(window.innerWidth, window.innerHeight)
+                    const miniMapBounds = miniMapBackground.getBounds()
+                    miniMapStage.stage.hitArea = new PIXI.Rectangle(
+                        miniMapBounds.x,
+                        miniMapBounds.y,
+                        miniMapBounds.width,
+                        miniMapBounds.height
+                    )
+
+                }
+               
+            })
+
+            this.miniMapWrapper.contentContainer.addChild(this.mapIcon)
+
+
+
             this.addChild(this.miniMapStage)
             this.miniMapStage.resize(window.innerWidth, window.innerHeight)
-            this.miniMapStage.stage.hitArea = new PIXI.Rectangle(0, 0, 0, 0)
+            const miniMapBounds = this.miniMapBackground.getBounds()
+            this.miniMapStage.stage.hitArea = new PIXI.Rectangle(
+                miniMapBounds.x,
+                miniMapBounds.y,
+                miniMapBounds.width,
+                miniMapBounds.height
+            )
+
 
 
         }
@@ -2113,7 +2246,7 @@ class UIBuilder extends PIXI.Container {
 
                         container.x = 50
                         container.y = 52
-                        container.rotation = -1.571
+                        container.rotation = 0//1.571
 
                         avatarWrapper.contentContainer.addChild(container)
 
@@ -2520,28 +2653,31 @@ class UIBuilder extends PIXI.Container {
                 this.setBackground(0xFFFFFF)
             })
 
-            this.buttonOutline = new PIXI.Graphics()
-            this.buttonOutline.lineStyle(2, white)
-            this.buttonOutline.beginFill(black, 0.8)
-            this.buttonOutline.drawRoundedRect(0,0,160,60,10)
+            this.buttonOutline = new Graphics()
+            this.buttonOutline.lineStyle(0)
+            this.buttonOutline.beginFill(black, 1.0, true)
+            this.buttonOutline.drawRoundedRect(0, 0, 160, 60, 0)
             this.buttonOutline.cacheAsBitmap = true
             this.buttonOutline.scale.set(0.5)
 
-            const buttonText = new TaggedText("   View ", {
+            const buttonText = new TaggedText("   VIEW ", {
                 "default": {
                     fontFamily: "Trade Gothic Next",
                     fontSize: "15px",
                     fill: white,
+                    letterSpacing: 2
                 }
             })
-            buttonText.x = 12
+            buttonText.x = 8
             buttonText.y = 5
+            
             this.viewArtButtonWrapper.contentContainer.addChild(this.buttonOutline)
             this.viewArtButtonWrapper.contentContainer.addChild(buttonText)
             this.viewArtButtonWrapper.contentContainer.interactive = true
             this.viewArtButtonWrapper.contentContainer.buttonMode = true
-            this.viewArtButtonWrapper.alpha = 0
-            setTimeout(()=> { this.viewArtButtonWrapper.alpha = 1}, 1000)
+
+
+
             this.viewArtButton.addChild(this.viewArtButtonWrapper)
             this.addChild(this.viewArtButton)
 
@@ -2604,12 +2740,13 @@ class UIBuilder extends PIXI.Container {
                     fontWeight: 300,
                     fontSize: "32px", 
                     align: "center",
+                    lineHeight: 40,
                     wordWrap: true, 
                     wordWrapWidth: 500
                 },
                 "bold": {
-                    fontWeight: 900,
-                    letterSpacing: 4
+                    fontWeight: 700,
+                    letterSpacing: 2
                 }
                 
             })
@@ -2872,14 +3009,13 @@ class UIBuilder extends PIXI.Container {
             const dy = event.clientY - window.innerHeight/2
             const rotation = Math.atan2(dy, dx)
 
-            if(this.joinModalOn) {
+            if(this.joinModal.visible == true) {
 
                 this.avatarBox.contentContainer.rotation = rotation + 0.18
-                
-
-                if(this.avatarWrapper.contentContainer.children.length > 1) {
-                    this.avatarWrapper.contentContainer.children[1].rotation = rotation 
+                if(this.avatarWrapper.contentContainer.children > 1) {
+                    this.avatarWrapper.contentContainer.children[1].rotation = rotation - 1.57 
                 }
+
             }
                 
 
@@ -2920,7 +3056,13 @@ class UIBuilder extends PIXI.Container {
         }
         if(this.miniMapOn == true) {
             this.miniMapStage.resize(window.innerWidth, window.innerHeight)
-            this.miniMapStage.stage.hitArea = new PIXI.Rectangle(0, 0, 0, 0)
+            const miniMapBounds = this.miniMapBackground.getBounds()
+            this.miniMapStage.stage.hitArea = new PIXI.Rectangle(
+                miniMapBounds.x,
+                miniMapBounds.y,
+                miniMapBounds.width,
+                miniMapBounds.height
+            )
         }
 
         if(this.statusStageOn == true) {
@@ -2997,11 +3139,11 @@ class UIBuilder extends PIXI.Container {
                 thePlayer.x = (x / 25) + 10
                 thePlayer.y = (y / 25) + 10
             } else {
-                const newPerson = new PIXI.Graphics()
+                const newPerson = new Graphics()
                 newPerson.name = ""+id+""
-                newPerson.lineStyle(1, this.black)
-                newPerson.beginFill(0x00FFFF, 1)
-                newPerson.drawCircle(0, 0, 2)
+                newPerson.lineStyle(0)
+                newPerson.beginFill(0x00FFFF, 1, true)
+                newPerson.drawCircle(0, 0, 1)
                 newPerson.endFill()
                 this.miniMap.addChild(newPerson)
             }
@@ -3016,31 +3158,44 @@ class UIBuilder extends PIXI.Container {
         }
     }
 
-    buildMiniMap(room){
-        //console.log(JSON.parse(room))
-        if(this.miniMapOn == true && room.width) {
+    buildMiniMap(design){
+        
+        if(this.miniMapOn == true) {
        
-            let worldDesign = JSON.parse(room)
-
-            worldDesign.forEach(room => {
-                let miniRoom = new PIXI.Graphics()
+            let worldDesign = JSON.parse(design)
             
-                let miniRoomWidth = room.width / 25
-                let miniRoomHeight = room.height / 25
-
-                miniRoom.x = (room.x / 50) + 5
-                miniRoom.y = (room.y / 50) + 5
+            worldDesign.art.forEach(artwork => {
+                let artShape = new Graphics()
 
 
-                //console.log(miniRoom.x, miniRoom.y, miniRoomWidth, miniRoomHeight)
+                let artWidth = artwork.width / 25
+                let artHeight = artwork.height / 25
+                artShape.x = (artwork.x / 50) + 5
+                artShape.y = (artwork.y / 50) + 5
+
+                let color = PIXI.utils.string2hex("#FFFFFF")
+                artShape.lineStyle(0)
+                artShape.beginFill(color, 1.0, true)
                 
-                const roomColor = PIXI.utils.string2hex(room.floorColor)
 
-                miniRoom.beginFill(roomColor)
-                miniRoom.drawRect(miniRoom.x, miniRoom.y, miniRoomWidth, miniRoomHeight)
-                miniRoom.endFill()
+                if(artwork.type == "circle") {
+                    artShape.drawCircle(artShape.x + artWidth/2, artShape.y +artHeight/2, artWidth/2)
+                } else if (artwork.type == "triangle") {
 
-                this.miniMap.addChild(miniRoom)
+                    artShape.moveTo((400/50) -(artWidth/25) + 57.5, -(artHeight/25) + 30);
+                    artShape.lineTo((200/50) -(artWidth/50) + 57.5, (400/50) - (artHeight/50) + 30); 
+                    artShape.lineTo(0 -(artWidth/50) + 57.5, - (artHeight/50) + 30);
+                    artShape.lineTo((200/50) -(artWidth/50) + 57.5,  - (artHeight/50) + 30);
+                    
+                } else {
+                    artShape.drawRect(artShape.x, artShape.y, artWidth, artHeight)
+                }
+                
+               
+                
+                artShape.endFill()
+                this.miniMap.addChild(artShape)
+
             });
 
         }
@@ -3091,26 +3246,8 @@ class UIBuilder extends PIXI.Container {
         }
 
         this.artNumber = artNumber
-            console.log(directionVertical, directionHorizontal)
-
-
-        /*if(angle > -1.5708 && angle < -0.7853) {
-            angle = 'top right'
-        } else if (angle > -0.7853 && angle < 0) {
-            angle = 'right'
-        } else if (angle > 0 && angle < 0.7853) {
-            angle = 'bottom right'
-        } else if (angle > 0.7853 && angle < 1.5708) {
-            angle = 'bottom'
-        } else if (angle > 1.5708 && angle < 2.3561) {
-            angle = 'bottom left'
-        } else if (angle > 2.3561 && angle < 3.1415) {
-            angle = 'left'
-        } else if (angle > 3.1415 && angle < 3.92699) {
-            angle = 'top left'
-        } else {
-            angle = 'top'
-        }*/
+        
+        
 
         if(directionHorizontal == 1)  {
             this.viewArtButton.visible = true
@@ -3118,7 +3255,7 @@ class UIBuilder extends PIXI.Container {
             new PUXI.FastLayoutOptions({
                 width: 80,
                 height: 30,
-                x: 0.6,
+                x: window.innerWidth/2 + 100,
                 y: 0.5,
                 anchor: new PIXI.Point(0.5, 0.5)
             }))
@@ -3130,14 +3267,12 @@ class UIBuilder extends PIXI.Container {
             new PUXI.FastLayoutOptions({
                 width: 80,
                 height: 30,
-                x: 0.4,
+                x: window.innerWidth/2 - 100,
                 y: 0.5,
                 anchor: new PIXI.Point(0.5, 0.5)
             }))
         }
 
-
-        
         if(directionVertical == 2)  {
             this.viewArtButton.visible = true
             this.viewArtButtonWrapper.setLayoutOptions(
@@ -3145,7 +3280,7 @@ class UIBuilder extends PIXI.Container {
                 width: 80,
                 height: 30,
                 x: 0.5,
-                y: 0.4,
+                y: window.innerHeight/2 - 70,
                 anchor: new PIXI.Point(0.5, 0.5)
             }))
         }
@@ -3159,10 +3294,14 @@ class UIBuilder extends PIXI.Container {
                 width: 80,
                 height: 30,
                 x: 0.5,
-                y: 0.6,
+                y: window.innerHeight/2 + 70,
                 anchor: new PIXI.Point(0.5, 0.5)
             }))
         }
+
+
+        
+       
 
        
 
@@ -3351,7 +3490,7 @@ class UIBuilder extends PIXI.Container {
 
     updateWorldTime(time) {
        var currentWorldTime = new Date(time * 1000).toISOString().substr(11, 8)
-       //this.currentTime.text = currentWorldTime
+       this.currentTime.text = currentWorldTime
     }
 
     updateTotalUsers(number) {
@@ -3369,6 +3508,7 @@ class UIBuilder extends PIXI.Container {
        // this.statusStage.visible = true
         
        // this.emojiStage.visible = true
+       this.transitionTextTagged.text = ""
         
         this.viewArtButton.visible = false
 
@@ -3438,6 +3578,17 @@ class UIBuilder extends PIXI.Container {
         
 
         sound.toggleMuteAll()
+        if(art == 1) {
+            this.transitionTextTagged.text = "<bold>CLASSES</bold>\nLibby Heaney"
+        } else if (art == 2) {
+            this.transitionTextTagged.text = "<bold>STEAL UR FEELINGS</bold>\nNoah Levenson"
+        } else if (art == 3) {
+            this.transitionTextTagged.text = "<bold>DARK MATTERS</bold>\nJohann Diedrick"
+        } else {
+            this.transitionTextTagged.text = "<bold>NORMALIZI.NG</bold>\nMushon Zer-Aviv"
+        }
+
+        //this.transitionTextTagged.text = 
 
         this.transitionScreen.visible = true
         ease.add(this.transitionScreenWrapper, {alpha: 1}, { duration: 1000, ease: 'easeOutExpo'})
@@ -3495,7 +3646,7 @@ class UIBuilder extends PIXI.Container {
                 var close = document.createElement('div');
                 close.id = "back-to-bias"
                 var backTo = document.createTextNode('← return')
-                close.style = "cursor:pointer;position:absolute;top:0;width:100%;left:1.5%;top:1.5%;font-size:14px;text-transform:uppercase;color:#4DFA66;width:100%;letter-spacing:2px;z-index:4"
+                close.style = "cursor:pointer;position:absolute;top:0;width:100%;left:2.5%;top:1.5%;font-size:14px;text-transform:uppercase;color:#4DFA66;width:100%;letter-spacing:2px;z-index:4"
                 close.appendChild(backTo)
                 document.body.appendChild(close);
                 var iframe = document.createElement('iframe');
@@ -3504,6 +3655,15 @@ class UIBuilder extends PIXI.Container {
                 const videoWrapperWrapper = document.createElement('div')
                 videoWrapperWrapper.style = "position:absolute;top:50%;left:50%;transform:translateX(-50%) translateY(-50%);width:100%;"
                 videoWrapper.style = "position:relative;padding-bottom:56.25%;height:0;z-index:5;max-width:95%;margin:0 auto"
+
+                var loading = document.createTextNode("Loading...")
+                var loadingDiv = document.createElement('div')
+                loadingDiv.style = "position:absolute;top:52.5%;left:50%;transform:translateX(-50%)translateY(-50%);color:white"
+                loadingDiv.appendChild(loading)
+                videoWrapper.appendChild(loadingDiv)
+
+               
+
 
                 iframe.width = window.innerWidth
                 iframe.height = window.innerHeight
@@ -3523,6 +3683,18 @@ class UIBuilder extends PIXI.Container {
                 overlay.appendChild(close)
                 overlay.appendChild(videoWrapperWrapper)
 
+                var openNewWindow = document.createTextNode("Open in new tab →")
+                var openNewWindowDiv = document.createElement('div')
+                openNewWindowDiv.style = "position:relative;width:100%;text-align:right;color:white;right:2.5%;top:10px;opacity:0.5;text-transform:uppercase;letter-spacing:0.05em;font-size:14px;cursor:pointer"
+                openNewWindowDiv.appendChild(openNewWindow)
+                videoWrapperWrapper.appendChild(openNewWindowDiv)
+
+                openNewWindowDiv.addEventListener('pointerdown', (event) => {
+                
+                    window.open(iframe.src, '_blank').focus();
+        
+                })
+
                 close.addEventListener('pointerdown', (event) => {
                 
                     overlay.classList.remove("show") 
@@ -3539,10 +3711,12 @@ class UIBuilder extends PIXI.Container {
             overlay.classList.add("show") 
         }, 1100)
         
-
-        setTimeout(function(){
-            video.play()
-        }, 1500)
+        if(art == 1) {
+            setTimeout(function(){
+                video.play()
+            }, 1500)
+        }
+       
 
     }
 
@@ -3729,14 +3903,14 @@ class UIBuilder extends PIXI.Container {
 
 
     personLeft(name) {
-        var joinText = "<reddot>—</reddot> "+ name +" left"
+        /*var joinText = "<reddot>—</reddot> "+ name +" left"
         var textBox = this.statusLayout.contentContainer.children[1];
         var currentText = textBox.text
         textBox.text = joinText + "\n" + currentText
         //console.log(textBox.y)
         if(textBox.y > -180) {
             textBox.y = textBox.y - 18
-        }
+        }*/
     }
 
     increaseScore(token) {
@@ -3855,13 +4029,13 @@ class UIBuilder extends PIXI.Container {
     }
 
     personJoined(name) {
-        var joinText = "<greendot>+</greendot> "+ name +" joined"
+        /*var joinText = "<greendot>+</greendot> "+ name +" joined"
         var textBox = this.statusLayout.contentContainer.children[1];
         var currentText = textBox.text
         textBox.text = joinText + "\n" + currentText
         if(textBox.y > -180) {
             textBox.y = textBox.y - 18
-        }
+        }*/
     }
 
     joinInstance(name, id) {
@@ -3869,15 +4043,9 @@ class UIBuilder extends PIXI.Container {
         var textBox = this.statusLayout.contentContainer.children[1];
         var currentText = textBox.text
         textBox.text = joinText + "\n" + currentText
-        //console.log(textBox.y)
         if(textBox.y > -180) {
             textBox.y = textBox.y - 18
         }
-        const backgroundMusic = this.audio.from('audio/countdown-tom.mp3');
-        backgroundMusic.speed = 1
-        backgroundMusic.volume = 0.005
-        backgroundMusic.loop = true;
-        //backgroundMusic.play()
     }
 
     updateConnection(value, boolean){

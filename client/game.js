@@ -106,10 +106,10 @@ const create = () => {
 
 
         
-        //renderer.UIBuilder.joinInstance(state.name, state.myRawId)
+        //enderer.UIBuilder.joinInstance(state.name, state.myRawId)
         
        
-        //input.leftController.alpha = 1
+        input.leftController.alpha = 1
 
       
         /*const myPeer = new Peer(""+state.name+"",{
@@ -276,7 +276,7 @@ const create = () => {
         
         if(state.mySmoothEntity) {
             if (message.id === state.mySmoothEntity.nid) {
-                //renderer.UIBuilder.setOwnPlayerPositionMiniMap(state.myRawEntity.x, state.myRawEntity.y)
+                renderer.UIBuilder.setOwnPlayerPositionMiniMap(state.myRawEntity.x, state.myRawEntity.y)
                 return
             }
         }
@@ -304,7 +304,7 @@ const create = () => {
                 var volume = 300 - c
                 var number = Math.min(Math.max(parseInt(volume), 1), 100);
                 var remoteVolume = number/100
-                window.remoteAudio.volume = remoteVolume
+                //window.remoteAudio.volume = remoteVolume
                 
             }
 
@@ -357,13 +357,26 @@ const create = () => {
         //console.log(message)
 
         if(message.type == "floorTrigger") {
-            console.log(message.text)
+            //console.log(message.text)
             //renderer.UIBuilder.buildMiniMap(message.text)
         }
 
 
         if(message.type == "mapInfo") {
-            //renderer.UIBuilder.buildMiniMap(message.text)
+
+            let placed = false
+            let map = message.text;
+            let placeStick = setInterval(function(){
+                let userInterface = renderer.UIBuilder
+                if(userInterface) {
+                    if(placed == false) {
+                        userInterface.buildMiniMap(map)
+                        placed == true
+                        clearInterval(placeStick)
+                    }
+                }
+            }, 200 )
+
         }
 
         if(message.type == "login") {
@@ -372,11 +385,8 @@ const create = () => {
                 if(renderer.UIBuilder) {
                     renderer.UIBuilder.joinSession();
                 }
-                //renderer.UIBuilder.joinSession();
             }, 500)
             
-            //renderer.UIBuilder.clearText();
-            //renderer.UIBuilder.introScreenOn = false
         }
         
         if(message.type == "showQuote") {
@@ -414,7 +424,9 @@ const create = () => {
         }
 
         if(message.type == "worldInfoTime") {
-            //renderer.UIBuilder.updateWorldTime(message.text)
+            if(renderer.UIBuilder) {
+                renderer.UIBuilder.updateWorldTime(message.text)
+            }
         }
 
         if(message.type == "worldInfoTotalUsers") {
@@ -426,11 +438,11 @@ const create = () => {
         }
 
         if(message.type == "personJoined") {
-            renderer.UIBuilder.personJoined(message.text)
+            //renderer.UIBuilder.personJoined(message.text)
         }
 
         if(message.type == "personLeft") {
-            renderer.UIBuilder.personLeft(message.text)
+            //renderer.UIBuilder.personLeft(message.text)
         }
 
         if(message.type == "emojiBlast") {

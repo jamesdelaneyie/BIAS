@@ -82,6 +82,7 @@ class PIXIRenderer {
         PIXI.Loader.shared.add({ name: "menuIconClose", url: "images/menu-icon-close.svg" })
 
         PIXI.Loader.shared.add({ name: "loadingIcon", url: "images/loading-icon.svg" })
+        PIXI.Loader.shared.add({ name: "mapIcon", url: "images/map-icon.svg" })
 
         //'images/sg-white.svg'
         //'images/menu-icon.svg'

@@ -27,11 +27,7 @@ class InputSystem {
         footstep.volume = 0.005
 
         /*if(viewArtButton) {
-            viewArtButton.on('pointerdown', function(){
-                client.addCommand(new ToggleCommand(true, "headphones"))
-                viewArtButton.alpha = 0
-                client.addCommand(new ToggleCommand(true, "lockPlayer"))
-            })
+            
         }*/
         /*const viewArtButton = this.UIBuilder.viewArtButton
         document.addEventListener("pointerdown", closeArtButton );
@@ -46,51 +42,57 @@ class InputSystem {
             }
         }*/
 
-        //if(this.UIBuilder) {
-
+        let listenersOn = false
         
-        /*
-        
-       
-       
+        let placeButton = setInterval(function(){
+            let userInterface = renderer.UIBuilder
+            if(userInterface) {
+                if(listenersOn == false) {
 
-        */
-
-       
-        //console.log(renderer)
-        setInterval(()=>{
-            //console.log(renderer)
-
-            if(renderer.UIBuilder) {
-
-
- renderer.UIBuilder.joinButton.on("click", function () {
+                    renderer.UIBuilder.joinButton.on("click", function () {
     
-               
-                
-                if(isJoined == false) {
+                        if(isJoined == false) {
+            
+                            if(renderer.UIBuilder.nameGiven == true) {
+            
+                                let name = renderer.UIBuilder.getText();
+                                let color = renderer.UIBuilder.getColor()
+                                let avatar = ""//renderer.UIBuilder.getAvatar();
+                                renderer.UIBuilder.joinSession()
     
-                    if(renderer.UIBuilder.nameGiven == true) {
-    
-                        let name = renderer.UIBuilder.getText();
-                        let color = renderer.UIBuilder.getColor()
-                        let avatar = ""//renderer.UIBuilder.getAvatar();
-                        renderer.UIBuilder.joinSession()
-
-                        client.addCommand(new JoinCommand(""+name+"", ""+avatar+"", ""+color+""))
-                        //console.log('firing')
-                        isJoined = true
+                                client.addCommand(new JoinCommand(""+name+"", ""+avatar+"", ""+color+""))
+                                isJoined = true
+                                listenersOn = true
+                                clearInterval(placeButton)
+                                
+            
+                            }
+                            
+                        }
                         
-    
+                    });
+
+                    renderer.UIBuilder.viewArtButton.on('pointerdown', function(){
+                        client.addCommand(new ToggleCommand(true, "headphones"))
+                    })
+
+                    document.addEventListener( "pointerdown", closeArtButton );
+                    function closeArtButton(event){
+                        var element = event.target;
+                        if(element.id == 'back-to-bias'){
+                            client.addCommand(new ToggleCommand(false, "headphones"))
+                        }
                     }
                     
+                    listenersOn == true
+                    clearInterval(placeButton)
                 }
-            });
             }
-        }, 200)
+        }, 200 )
+
 
         
-    //}
+
 
 
 
@@ -307,7 +309,11 @@ class InputSystem {
                     this.currentState.mouseDown = false
                     this.frameState.mouseDown = false
                     
-                    var dd = data.direction;
+                    var dd = data.direction
+
+                    var angle = data.angle
+                    var pi = Math.PI
+                    angle = (angle * (pi/180) * -1)
             
                     if(dd == 'top') {
                         this.currentState.w = true
@@ -318,8 +324,8 @@ class InputSystem {
                         this.frameState.s = false
                         this.currentState.d = false
                         this.frameState.d = false
-                        this.currentState.rotation = -1.5708
-                        this.frameState.rotation = -1.5708
+                        this.currentState.rotation = angle
+                        this.frameState.rotation = angle
                     }
             
                     if(dd == 'top_right') {
@@ -331,8 +337,8 @@ class InputSystem {
                         this.frameState.s = false
                         this.currentState.d = true
                         this.frameState.d = true
-                        this.currentState.rotation = -0.785398
-                        this.frameState.rotation = -0.785398
+                        this.currentState.rotation = angle
+                        this.frameState.rotation = angle
                     }
             
                     if(dd == 'right') {
@@ -344,8 +350,8 @@ class InputSystem {
                         this.frameState.s = false
                         this.currentState.d = true
                         this.frameState.d = true
-                        this.currentState.rotation = 0
-                        this.frameState.rotation = 0
+                        this.currentState.rotation = angle
+                        this.frameState.rotation = angle
             
                     }
             
@@ -358,8 +364,8 @@ class InputSystem {
                         this.frameState.s = true
                         this.currentState.d = true
                         this.frameState.d = true
-                        this.currentState.rotation = 0.785398
-                        this.frameState.rotation = 0.785398
+                        this.currentState.rotation = angle
+                        this.frameState.rotation = angle
    
                     }
                     
@@ -372,8 +378,8 @@ class InputSystem {
                         this.frameState.s = true
                         this.currentState.d = false
                         this.frameState.d = false
-                        this.currentState.rotation = 1.5708
-                        this.frameState.rotation = 1.5708
+                        this.currentState.rotation = angle
+                        this.frameState.rotation = angle
                     }
             
                     if (dd == 'bottom_left') {
@@ -385,8 +391,8 @@ class InputSystem {
                         this.frameState.s = true
                         this.currentState.d = false
                         this.frameState.d = false
-                        this.currentState.rotation = 2.35619
-                        this.frameState.rotation = 2.35619
+                        this.currentState.rotation = angle
+                        this.frameState.rotation = angle
             
                     }
             
@@ -399,8 +405,8 @@ class InputSystem {
                         this.frameState.s = false
                         this.currentState.d = false
                         this.frameState.d = false
-                        this.currentState.rotation = 3.141592
-                        this.frameState.rotation = 3.141592
+                        this.currentState.rotation = angle
+                        this.frameState.rotation = angle
                     }
             
                     if (dd == 'top_left') {
@@ -412,8 +418,8 @@ class InputSystem {
                         this.frameState.s = false
                         this.currentState.d = false
                         this.frameState.d = false
-                        this.currentState.rotation = 3.92699
-                        this.frameState.rotation = 3.92699
+                        this.currentState.rotation = angle
+                        this.frameState.rotation = angle
                     }
             
             
@@ -425,26 +431,38 @@ class InputSystem {
                     this.currentState.d = false
                 }
             });
-           
+
             
+            let placed = false
+            let mobile = this.isMobile.any
+            let leftController = this.leftController
+            let placeStick = setInterval(function(){
+                let userInterface = renderer.UIBuilder
+                if(userInterface) {
+                    if(placed == false) {
+                        if(mobile || window.innerWidth <= 500) {
+                            renderer.UIBuilder.addChild(leftController);
+                            placed == true
+                            clearInterval(placeStick)
+                        }
+                    }
+                }
+            }, 200 )
              
             if(this.isMobile.any || window.innerWidth <= 500) {
-                this.leftController.position.set(45, window.innerHeight - this.leftController.height*1.6);
+                this.leftController.position.set(45, window.innerHeight - this.leftController.height + 15);
                 this.leftController.alpha = 0
-                //renderer.UIBuilder.addChild(this.leftController);
-            } else {
-                //renderer.UIBuilder.removeChild(this.leftController);
-            }
+            } 
     
     }
 
     placeJoySticks(){
 
         if(this.isMobile.any || window.innerWidth <= 500) {
-            this.leftController.position.set(45, window.innerHeight - this.leftController.height*1.6);
-            //renderer.UIBuilder.addChild(this.leftController);
+            this.leftController.position.set(45, window.innerHeight - this.leftController.height + 15);
+            renderer.UIBuilder.addChild(this.leftController);
         } else {
-            ///renderer.UIBuilder.removeChild(this.leftController);
+            renderer.UIBuilder.removeChild(this.leftController);
         }
 
     }

@@ -92,20 +92,22 @@ class PlayerGraphics extends PIXI.Container {
 
         this.headphoneGraphics = new PIXI.Container()
         const headphoneGraphics = this.headphoneGraphics
+        let headphonesColor = PIXI.utils.string2hex("#1f1f1f");
 
         const headband = new PIXI.Graphics()
-        headband.beginFill(0x000000)
+       
+        headband.beginFill(headphonesColor)
         headband.drawRect(-5, -30, 10, 63)
         headband.endFill()
         headband.pivot.set(0.5)
 
         const leftPhone = new PIXI.Graphics()
-        leftPhone.beginFill()
+        leftPhone.beginFill(headphonesColor)
         leftPhone.drawRoundedRect(-10, -32, 20, 10, 5)
         leftPhone.endFill()
 
         const rightPhone = new PIXI.Graphics()
-        rightPhone.beginFill()
+        rightPhone.beginFill(headphonesColor)
         rightPhone.drawRoundedRect(-10, 23, 20, 10, 5)
         rightPhone.endFill()
 

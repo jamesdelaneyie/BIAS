@@ -21,6 +21,7 @@ class ArtGraphics extends PIXI.Container {
         this.body = new Graphics()
         this.body.beginFill(this.color, 1.0, true)
         this.body.lineStyle(0)
+        
         if(this.type == "circle") {
             this.body.drawCircle(0, 0, state.width)
         } else if (this.type == "triangle") {

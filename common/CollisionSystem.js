@@ -132,49 +132,55 @@ CollisionSystem.createRectangleColliderBox = (x, y, width, height) => {
 
 CollisionSystem.moveWithCollisions = (entity, obstacles, boxes, artworks) => {
 
-    obstacles.forEach(obstacle => {
-        if(obstacle.name == "circleBuilding") {
-            if (SAT.testCircleCircle(entity.collider.circle, obstacle.collider.circle, response)) {
-                entity.x -= response.overlapV.x
-                entity.y -= response.overlapV.y
+    if(obstacles) {
+        obstacles.forEach(obstacle => {
+            if(obstacle.name == "circleBuilding") {
+                if (SAT.testCircleCircle(entity.collider.circle, obstacle.collider.circle, response)) {
+                    entity.x -= response.overlapV.x
+                    entity.y -= response.overlapV.y
+                }
+            } else if(obstacle.name == "soccerButton") {
+                
+            } else {
+                if (SAT.testCirclePolygon(entity.collider.circle, obstacle.collider.polygon, response)) {
+                    entity.x -= response.overlapV.x
+                    entity.y -= response.overlapV.y
+                }
+                
             }
-        } else if(obstacle.name == "soccerButton") {
-            
-        } else {
-            if (SAT.testCirclePolygon(entity.collider.circle, obstacle.collider.polygon, response)) {
-                entity.x -= response.overlapV.x
-                entity.y -= response.overlapV.y
-            }
-            
-        }
-        response.clear()
-    })
+            response.clear()
+        })
+    }
     
-    boxes.forEach(box => {
-        if (SAT.testCirclePolygon(entity.collider.circle, box.collider.polygon, response)) {
-            entity.x -= response.overlapV.x
-            entity.y -= response.overlapV.y
-        }
-        response.clear()
-    })
-
-
-    artworks.forEach(artwork => {
-        if(artwork.collider.polygon) {
-            if (SAT.testCirclePolygon(entity.collider.circle, artwork.collider.polygon, response)) {
+    if(boxes) {    
+        boxes.forEach(box => {
+            if (SAT.testCirclePolygon(entity.collider.circle, box.collider.polygon, response)) {
                 entity.x -= response.overlapV.x
                 entity.y -= response.overlapV.y
             }
             response.clear()
-        } else {
-            if (SAT.testCircleCircle(entity.collider.circle, artwork.collider.circle, response)) {
-                entity.x -= response.overlapV.x
-                entity.y -= response.overlapV.y
+        })
+    }
+
+    if(artworks) {
+        artworks.forEach(artwork => {
+            if(artwork.collider.polygon) {
+                if (SAT.testCirclePolygon(entity.collider.circle, artwork.collider.polygon, response)) {
+                    entity.x -= response.overlapV.x
+                    entity.y -= response.overlapV.y
+                }
+                response.clear()
+            } else {
+                if (SAT.testCircleCircle(entity.collider.circle, artwork.collider.circle, response)) {
+                    entity.x -= response.overlapV.x
+                    entity.y -= response.overlapV.y
+                }
+                response.clear()
             }
-            response.clear()
-        }
-        
-    })
+            
+        })
+    }
+
 
     
 }

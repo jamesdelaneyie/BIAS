@@ -83,10 +83,12 @@ export default (client, hooks) => {
     client.on('update', update => {
         //console.log(update)
         const entity = client.entities.get(update.nid)
-        if(entity.headphones == false) {
-            if (client.entityUpdateFilter(update)) {
-                //console.log('ignore', update)
-                return
+        if (entity) {
+            if(entity.headphones == false) {
+                if (client.entityUpdateFilter(update)) {
+                    //console.log('ignore', update)
+                    return
+                }
             }
         }
         if (entity) {

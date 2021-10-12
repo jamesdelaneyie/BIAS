@@ -37,6 +37,8 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
             if(input.mouseDown) {
                 rotationAmount = rotation
             }
+            //console.log(input.rotation)
+            //console.log(rotationAmount)
 
             
             

@@ -71,59 +71,64 @@ class GameInstance {
 
 
        
-
-        let libbyArtwork = new Art({
+        let libbyArtworkObject = {
             name: "CLASSES\nLibby Heaney",
-            type: "info2",
-            x: 1750,
-            y: 1000,
+            type: "rectangle",
+            x: 2000,
+            y: 1200,
             width: 250,
             height: 150,
             mass: 0,
             color: "#ffffff",
-        })
+        }
+        let libbyArtwork = new Art(libbyArtworkObject)
         this.instance.addEntity(libbyArtwork)
         this.world.addBody(libbyArtwork.body)
         this.artworks.set(libbyArtwork.nid, libbyArtwork)
 
-        let noahArtwork = new Art({
+        let noahArtworkObject = {
             name: "STEAL UR\nFEELINGS\nNoah Levenson",
             type: "triangle",
-            x: 2400,
-            y: 1000,
+            x: 2600,
+            y: 1200,
             width: 200,
             height: 150,
             mass: 0,
             color: "#ffffff",
-        })
+        }
+        let noahArtwork = new Art(noahArtworkObject)
         this.instance.addEntity(noahArtwork)
         this.world.addBody(noahArtwork.body)
         this.artworks.set(noahArtwork.nid, noahArtwork)
 
-        let johannArtwork = new Art({
+
+        let johannArtworkObject = {
             name: "Dark Matters\nJohann Diedrick",
             type: "circle",
-            x: 2400,
-            y: 1400,
+            x: 2600,
+            y: 1600,
             width: 200,
             height: 200,
             mass: 0,
             color: "#ffffff",
-        })
+        }
+        let johannArtwork = new Art(johannArtworkObject)
         this.instance.addEntity(johannArtwork)
         this.world.addBody(johannArtwork.body)
         this.artworks.set(johannArtwork.nid, johannArtwork)
 
-        let mushonArtwork = new Art({
+
+        let mushonArtworkObject = {
             name: "Normalizi.ng\nMushon Zer-Aviv",
-            type: "info2",
-            x: 1800,
-            y: 1400,
+            type: "rectangle",
+            x: 2000,
+            y: 1600,
             width: 180,
             height: 180,
             mass: 0,
             color: "#ffffff",
-        })
+        }
+        let mushonArtwork = new Art(mushonArtworkObject)
         this.instance.addEntity(mushonArtwork)
         this.world.addBody(mushonArtwork.body)
         this.artworks.set(mushonArtwork.nid, mushonArtwork)
@@ -148,9 +153,24 @@ class GameInstance {
                 halfHeight: 2300
             }
 
-            let theWorldDesign = JSON.stringify([this.room, this.room2, this.roomEntrance, this.room3, this.room5, this.room6, this.room7])
+            let theWorldDesign = JSON.stringify({
+                art:[
+                    libbyArtworkObject,
+                    noahArtworkObject, 
+                    johannArtworkObject, 
+                    mushonArtworkObject
+                ]
+            })
 
             this.instance.message(new Notification(theWorldDesign, 'mapInfo', 0, 0), client)
+            
+            if(data.fromClient.bot == true) {
+                let color = '#'+(Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0');
+                //let colorNow = PIXI.utils.string2hex(color);
+                let command = {name: "BOT", avatar: "", color: ""+color+"", x:2320, y: 1500}
+                this.joinSession(command, client, doc, creds, true) 
+            }
+            
             
 
             if(data.fromClient.name) {
@@ -158,7 +178,6 @@ class GameInstance {
                 let command = {name: data.fromClient.name, avatar: data.fromClient.avatar, color: data.fromClient.color, x: data.fromClient.x, y: data.fromClient.y}
                 this.joinSession(command, client, doc, creds, true)  
             }
-
 
             callback({ accepted: true, text: ""})
 
@@ -175,13 +194,16 @@ class GameInstance {
                 this.instance.removeEntity(client.rawEntity)
                 this.instance.removeEntity(client.smoothEntity)
             }
-            client.channel.destroy()
+            if(client.channel) {
+                client.channel.destroy()
+            }
+            
         })
         
 
         this.instance.on('command::JoinCommand', ({ command, client }) => {
             
-            console.log('this')
+            //console.log('this')
             this.joinSession(command, client, doc, creds, false)
             
         })
@@ -189,6 +211,53 @@ class GameInstance {
 
         this.instance.on('command::ToggleCommand', ({ command, client }) => {
 
+            //console.log(client)
+
+            if(command.type == "headphones" && command.boolean == true) {
+
+                client.headphones = true
+                client.rawEntity.headphones = true
+                client.smoothEntity.headphones = true
+
+            } else if (command.type == "headphones" && command.boolean == false) {
+
+                
+                for (let obstacle of this.obstacles.values()) {
+                    if(obstacle.name == "merryGoRound") {
+                        let collided = false
+                        
+                        collided = SAT.testCirclePolygon(client.rawEntity.collider.circle, obstacle.collider.polygon) 
+                        
+                        if(collided == true) {
+
+                            const response = new SAT.Response()
+
+
+                            if (SAT.testCirclePolygon(client.rawEntity.collider.circle, obstacle.collider.polygon, response)) {
+                                client.rawEntity.x -= response.overlapV.x * 4
+                                client.rawEntity.y -= response.overlapV.y * 4
+                            }
+                            
+ 
+                        }
+
+                    }
+                    
+                   
+                }
+
+                setTimeout(function(){
+                    client.headphones = false
+                    client.rawEntity.headphones = false
+                    client.smoothEntity.headphones = false
+                }, 200)
+
+                
+              
+
+                
+
+            }
 
 
  
@@ -334,6 +403,7 @@ class GameInstance {
             }
 
             const name = command.name
+            
 
             //remove duplicate characters over 2
             let nameTrimmed = name.replace(/(.)\1{2,}/g, '$1$1')
@@ -483,36 +553,29 @@ class GameInstance {
                    
                    if(collided == true) {
 
-                       // console.log('collided')
+                        let directionVertical, directionHorizontal
 
-                        //if(obstacle.touching == false) {
-                            let directionVertical, directionHorizontal
-                            //console.log(obstacle.name)
+                        if(client.rawEntity.x < artwork.x - artwork.width/2) {
+                            directionHorizontal = 1
+                        } else if (client.rawEntity.x > artwork.x + artwork.width/2) {
+                            directionHorizontal = 2
+                        } 
 
-                            if(client.rawEntity.x < artwork.x) {
-                                directionHorizontal = 1
-                            } else if (client.rawEntity.x > artwork.x) {
-                                directionHorizontal = 2
-                            }
+                        if(client.rawEntity.y < artwork.y - artwork.height/2) {
+                            directionVertical = 1
+                        } else if (client.rawEntity.y > (artwork.y + artwork.height/2)) {
+                            directionVertical = 2
+                        } 
 
-                            if(client.rawEntity.y < artwork.y) {
-                                directionVertical = 1
-                            } else if (client.rawEntity.y > (artwork.y + artwork.height)) {
-                                directionVertical = 2
-                            } 
-
-                            
-                            this.instance.message(new Notification(artwork.name, 'showStartArtButton', directionHorizontal, directionVertical), client)
-                        //}
                         
-                        //obstacle.touching = true
+                        this.instance.message(new Notification(artwork.name, 'showStartArtButton', directionHorizontal, directionVertical), client)
+                    
                         touching = true
 
                         break
 
                    } else {
-                        //
-                        //obstacle.touching = false
+                        
                    }
           
                }

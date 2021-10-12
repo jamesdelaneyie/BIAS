@@ -9,6 +9,9 @@ export default (entity, command, obstacles, boxes, artworks) => {
     
         //console.log(entity)
         entity.bodyRotation = command.rotation
+        //entity.rotation = command.rotation
+
+        //console.log(entity)
 
         let unitX = 0
         let unitY = 0
@@ -33,5 +36,5 @@ export default (entity, command, obstacles, boxes, artworks) => {
     CollisionSystem.moveWithCollisions(entity, obstacles, boxes, artworks)
 
     // advances the weapon-related timer(s)
-    updateWeapon(entity, command.delta)
+    //updateWeapon(entity, command.delta)
 }
