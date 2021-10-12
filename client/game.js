@@ -420,8 +420,8 @@ const create = () => {
     handshake.x = inviteX
     handshake.y = inviteY
     
-    client.connect('ws://localhost:8079', handshake)
-    //client.connect('ws://192.248.155.99:8079', handshake)
+    //client.connect('ws://localhost:8079', handshake)
+    client.connect('ws://192.248.155.99:8079', handshake)
 
 
     const update = (delta, tick, now) => {
