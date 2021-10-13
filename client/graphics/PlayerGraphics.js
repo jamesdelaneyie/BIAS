@@ -399,7 +399,7 @@ class PlayerGraphics extends PIXI.Container {
     }
 
     toggleSleeping(boolean) {
-        console.log(boolean)
+        //console.log(boolean)
         if(boolean) {
             this.sleeping = true
         } else {
@@ -540,7 +540,7 @@ class PlayerGraphics extends PIXI.Container {
         if(this.sleeping == false) {
             this.sleepingGraphic.visible = false
          } else {
-            console.log('show')
+            //console.log('show')
             this.sleepingGraphic.visible = true 
          }
 

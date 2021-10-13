@@ -195,7 +195,7 @@ class PIXIRenderer {
         this.emitter = new particles.Emitter(this.particleContainer, new PIXI.Texture.from("images/particle.png"), particleSettings.default);
         this.emitter.autoUpdate = true; // If you keep it false, you have to update your particles yourself.
         this.emitter.updateSpawnPos(800, 1300);
-        this.emitter.emit = true;
+        //this.emitter.emit = true;
 
 
         /*let lobbyFloor = new PIXI.Sprite.from('/images/lobbyFloor.svg')
@@ -329,6 +329,18 @@ class PIXIRenderer {
         this.camera.y += dy * cameraSpeed * delta
     }
 
+    toLocalCoordinates(x, y) {
+        let width = window.innerWidth/2
+        let height = window.innerHeight/2
+        let cameraX = this.camera.x*-1
+        let cameraY = this.camera.y*-1
+
+        return {
+            x: x - (cameraX ),
+            y: y - (cameraY )
+        }
+    }
+
     toWorldCoordinates(mouseX, mouseY) {
         return {
             x: -this.camera.x + mouseX,
@@ -346,7 +358,7 @@ class PIXIRenderer {
             this.UIBuilder.update(delta)
         }
 
-        this.emitter.update(delta)
+        //this.emitter.update(delta)
 
         this.displacementSprite.y = delta*500
         this.displacementSprite.x = delta*500

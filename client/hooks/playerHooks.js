@@ -43,7 +43,7 @@ export default (state, renderer ) => {
                 graphics.putOnHeadphones(value)
             },
             sleeping({ graphics, value }) {
-                console.log('sleeping')
+                //console.log('sleeping')
                 graphics.toggleSleeping(value)
             },
             typing({ graphics, value }) {

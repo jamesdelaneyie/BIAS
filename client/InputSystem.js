@@ -82,6 +82,12 @@ class InputSystem {
                             client.addCommand(new ToggleCommand(false, "headphones"))
                         }
                     }
+                    console.log(renderer.UIBuilder.leaveButton.contentContainer)
+
+                    renderer.UIBuilder.leaveButtonWrapper.contentContainer.on('pointerdown', function(){
+                        console.log('closing')
+                        client.addCommand(new ToggleCommand(false, "headphones"))
+                    });
                     
                     listenersOn == true
                     clearInterval(placeButton)

@@ -28,6 +28,7 @@ import Flower from '../common/entity/Flower.js'
 import Box from '../common/entity/Box.js'
 import Obstacle from '../common/entity/Obstacle.js'
 import Art from '../common/entity/Art.js'
+import InfoPanel from '../common/entity/InfoPanel.js'
 
 import { fire } from '../common/weapon.js'
 
@@ -40,6 +41,7 @@ import fs from 'fs'
 import SAT from 'sat'
 
 import { GoogleSpreadsheet } from 'google-spreadsheet'
+import Info from '../common/entity/InfoPanel.js'
 
 
 var swearjar = require('swearjar');
@@ -65,6 +67,7 @@ class GameInstance {
         this.boxes = new Map()
         this.artworks = new Map()
         this.flowers = new Map()
+        this.infoPanels = new Map()
 
         this.world = new p2.World({gravity: [0, 0]});
 
@@ -86,6 +89,24 @@ class GameInstance {
         this.world.addBody(libbyArtwork.body)
         this.artworks.set(libbyArtwork.nid, libbyArtwork)
 
+
+        let libbyArtworkInfo = {
+            name: "9",
+            type: "circle",
+            x: 2270,
+            y: 1300,
+            width: 30,
+            height: 30,
+            color: "#202020",
+        }
+
+        let libbyInfoPanel = new InfoPanel(libbyArtworkInfo)
+        this.instance.addEntity(libbyInfoPanel)
+        this.world.addBody(libbyInfoPanel.body)
+        this.infoPanels.set(libbyInfoPanel.nid, libbyInfoPanel)
+
+
+
         let noahArtworkObject = {
             name: "<bold>STEAL UR FEELINGS</bold>\nNoah Levenson",
             type: "triangle",
@@ -102,6 +123,40 @@ class GameInstance {
         this.artworks.set(noahArtwork.nid, noahArtwork)
 
 
+        let noahArtworkInfo = {
+            name: "10",
+            type: "circle",
+            x: 2630,
+            y: 1350,
+            width: 30,
+            height: 30,
+            color: "#202020",
+        }
+
+        let noahInfoPanel = new InfoPanel(noahArtworkInfo)
+        this.instance.addEntity(noahInfoPanel)
+        this.world.addBody(noahInfoPanel.body)
+        this.infoPanels.set(noahInfoPanel.nid, noahInfoPanel)
+
+
+
+        let johannArtworkInfo = {
+            name: "12",
+            type: "circle",
+            x: 2580,
+            y: 1600,
+            width: 30,
+            height: 30,
+            color: "#202020",
+        }
+
+        let johannInfoPanel = new InfoPanel(johannArtworkInfo)
+        this.instance.addEntity(johannInfoPanel)
+        this.world.addBody(johannInfoPanel.body)
+        this.infoPanels.set(johannInfoPanel.nid, johannInfoPanel)
+
+
+
         let johannArtworkObject = {
             name: "<bold>DARK MATTERS</bold>\nJohann Diedrick",
             type: "circle",
@@ -116,6 +171,24 @@ class GameInstance {
         this.instance.addEntity(johannArtwork)
         this.world.addBody(johannArtwork.body)
         this.artworks.set(johannArtwork.nid, johannArtwork)
+
+
+
+
+        let mushonArtworkInfo = {
+            name: "11",
+            type: "circle",
+            x: 2220,
+            y: 1550,
+            width: 30,
+            height: 30,
+            color: "#202020",
+        }
+
+        let mushonInfoPanel = new InfoPanel(mushonArtworkInfo)
+        this.instance.addEntity(mushonInfoPanel)
+        this.world.addBody(mushonInfoPanel.body)
+        this.infoPanels.set(mushonInfoPanel.nid, mushonInfoPanel)
 
 
         let mushonArtworkObject = {
@@ -327,7 +400,7 @@ class GameInstance {
                 }
             }
 
-            applyCommand(rawEntity, command, this.obstacles, this.boxes, this.artworks)
+            applyCommand(rawEntity, command, this.obstacles, this.boxes, this.artworks, this.infoPanels)
 
             client.positions.push({
                 x: rawEntity.x,
@@ -601,6 +674,8 @@ class GameInstance {
 
                         let directionVertical, directionHorizontal
 
+                      
+
                         if(client.rawEntity.x < artwork.x - artwork.width/2) {
                             directionHorizontal = 1
                         } else if (client.rawEntity.x > artwork.x + artwork.width/2) {
@@ -612,6 +687,9 @@ class GameInstance {
                         } else if (client.rawEntity.y > (artwork.y + artwork.height/2)) {
                             directionVertical = 2
                         } 
+
+                        //let centerOfArt = artwork.collider.polygon.getCentroid()
+                        //console.log(centerOfArt)
 
                         
                         this.instance.message(new Notification(artwork.name, 'showStartArtButton', directionHorizontal, directionVertical), client)
@@ -634,6 +712,39 @@ class GameInstance {
 
 
        })
+
+
+
+
+       
+
+
+    this.instance.clients.forEach(client => {
+
+        for (let infoPanel of this.infoPanels.values()) {
+
+            if(client.smoothEntity) {
+
+                let thisClient = client.rawEntity
+
+                var a = thisClient.x - infoPanel.x;
+                var b = thisClient.y - infoPanel.y
+                var c = Math.sqrt( a*a + b*b );
+
+                if(c < 60) {
+
+                    let x = infoPanel.collider.x
+                    let y = infoPanel.collider.y
+
+                    this.instance.message(new Notification(infoPanel.name, 'showQuoteButton', x, y), client)
+                    
+                }
+            }
+
+        }
+
+    })
+
         
 
         this.world.step(1/20);
@@ -645,6 +756,16 @@ class GameInstance {
             artwork.x = artwork.body.position[0]
             artwork.y = artwork.body.position[1]
             artwork.rotation = artwork.body.angle 
+            
+            
+        })
+
+
+        this.infoPanels.forEach(infoPanel => {
+            
+            infoPanel.x = infoPanel.body.position[0]
+            infoPanel.y = infoPanel.body.position[1]
+            infoPanel.rotation = infoPanel.body.angle 
             
             
         })

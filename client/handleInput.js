@@ -17,7 +17,7 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
     
 
 
-    const { myRawEntity, obstacles, boxes, artworks } = state
+    const { myRawEntity, obstacles, boxes, artworks, infoPanels } = state
 
 
     if (myRawEntity) {
@@ -59,7 +59,10 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
             client.addCommand(moveCommand)
 
             // apply moveCommand  to our local entity
-            applyCommand(myRawEntity, moveCommand, obstacles, boxes, artworks)
+            applyCommand(myRawEntity, moveCommand, obstacles, boxes, artworks, infoPanels)
+
+            
+
 
             //if (input.mouseDown) {
                 /*const coolEmoji = renderer.stage.children[1].coolEmoji.contentContainer;
@@ -164,7 +167,7 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
     
     
             const moveCommand = new MoveCommand(false, false, false, false, rotationAmount, delta)
-            applyCommand(myRawEntity, moveCommand, obstacles, boxes, artworks)
+            applyCommand(myRawEntity, moveCommand, obstacles, boxes, artworks, infoPanels)
     
             const prediction = {
                 nid: myRawEntity.nid,

@@ -687,7 +687,7 @@ class UIBuilder extends PIXI.Container {
 
             this.statusStage = new PUXI.Stage({
                 width: 250,
-                height: 46
+                height: 15
             });
             
 
@@ -695,7 +695,7 @@ class UIBuilder extends PIXI.Container {
             }).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
                     width: 250,
-                    height: 36,
+                    height: 15,
                     x: 10,
                     y: 0.985,
                     anchor: new PIXI.Point(0, 1)
@@ -705,7 +705,7 @@ class UIBuilder extends PIXI.Container {
 
             this.statusLayout = new PUXI.Widget({}).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
-                    height: 36,
+                    height: 15,
                     width: 250,
                     x: 0,
                     y: 0,
@@ -726,7 +726,7 @@ class UIBuilder extends PIXI.Container {
             scienceGalleryLogo.on("pointerdown", function () {
                window.open('https://dublin.sciencegallery.com/')
             })
-            this.statusLayout.contentContainer.addChild(scienceGalleryLogo)
+            //this.statusLayout.contentContainer.addChild(scienceGalleryLogo)
 
             const updateStyles = new PIXI.TextStyle({ 
                 fontFamily: 'Trade Gothic Next',
@@ -739,11 +739,11 @@ class UIBuilder extends PIXI.Container {
             ).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
                     x: 100,
-                    y: -40,
+                    y: 1,
                 })
             )
             this.updateText.tint = 0xFFFFFF
-            this.updateText.contentContainer.y = -20
+            //this.updateText.contentContainer.y = -20
             this.updateText.contentContainer.alpha = 0
             
             this.statusLayout.addChild(this.updateText)
@@ -1449,9 +1449,33 @@ class UIBuilder extends PIXI.Container {
                 },
                 {
                     title:"<gap>\n</gap><boldtitle>CLASSES</boldtitle>",
-                    subtitle:"<gap>\n</gap>How are biases translated into machine codes and practises?",
+                    subtitle:"How are biases translated into machine codes and practises?<gap>\n</gap>",
                     credit: "Libby Heaney | UK | 2021 \n<link>libbyheaney.co.uk</link> // <link>@libby_heaney_</link>",
-                    paragraph: '<p>CLASSES is a video essay exploring the entanglements between machine learning classification and social class(ification). The artwork takes place in a simulated model of a London council estate, where the artist lives. Machine and human voices playfully narrate aspects of her in-depth research into accented speech recognition, natural language processing* and public space surveillance, to understand how historical and cultural biases around social class are being translated into code and how this affects people’s material conditions.\n\n\n',
+                    paragraph: '<p>CLASSES is a video essay exploring the entanglements between machine learning classification and social class(ification). The artwork takes place in a simulated model of a London council estate, where the artist lives. Machine and human voices playfully narrate aspects of her in-depth research into accented speech recognition, natural language processing* and public space surveillance, to understand how historical and cultural biases around social class are being translated into code and how this affects people’s material conditions.\n\nTowards the end of the essay, the artist finds inspiration in her community gardening on the estate to propose a rewilded AI that removes rigid hierarchical categories to build stronger relations between people and the world. \n\n*GPT-J, Facebook’s FastText and GloVe word embeddings.\n\n</p>',
+                    style: "",
+                    type: "talking"  
+                },
+                {
+                    title:"<gap>\n</gap><boldtitle>STEALING UR FEELINGS</boldtitle>",
+                    subtitle:"Can the internet read you?<gap>\n</gap>",
+                    credit: "Noah Levenson | USA | 2019 // <link>noahlevenson.com</link> // <link>@noahlevenson</link>",
+                    paragraph: '<p>Meet the new A.I. that knows you better than you know yourself. STEALING UR FEELINGS is an interactive film that learns your deepest, darkest secrets - just by looking at your face.  That\'s the good news. The bad news? Your favourite apps are doing exactly the same thing.\n</p>',
+                    style: "",
+                    type: "talking"  
+                },
+                {
+                    title:"<gap>\n</gap><boldtitle>NORMALIZI.NG</boldtitle>",
+                    subtitle:"What does normal look like?<gap>\n</gap>",
+                    credit: "Mushon Zer-Aviv | Israel | 2021 // <link>mushon.com</link> // <link>@mushon</link>\n\n",
+                    paragraph: '<p>NORMALIZI.NG by Mushon Zer-Aviv is a new digital commission further developing and adapting his existing work “The Normalizing Machine”. This experimental online research in machine-learning aims to analyze and understand how we decide who looks more “normal”. By contributing to the dataset and choosing between faces you deem more normal, the machine analyzes your decisions and will add you to its algorithmic map of normality.\n\nIn the late 1800s, the French forensics pioneer Alphonse Bertillon, the father of the mugshot, developed ‘Le Portrait Parle’ (the speaking portrait), a system for standardizing, indexing and classifying the human face. His statistical system was never meant to criminalize the face, but it was later widely adopted by both the eugenics movement and the Nazis to do exactly that.\n\nThe online work automates Alphonse’s speaking portraits and visualizes how today’s systematic discrimination is aggregated, amplified and conveniently hidden behind the seemingly objective black box of artificial intelligence.\n\n\n</p>',
+                    style: "",
+                    type: "talking"  
+                },
+                {
+                    title:"<gap>\n</gap><boldtitle>DARK MATTERS</boldtitle>",
+                    subtitle:"What does bias sound like?<gap>\n</gap>",
+                    credit: "Johann Diedrick | USA | 2021 // <link>darkmatters.ml</link> // <link>@johanndiedrick</link>",
+                    paragraph: '<p>Dark Matters exposes the absence of Black speech in the datasets used to train voice interface systems in consumer AI products like Alexa and Siri. Using 3D modeling, sound and storytelling, the project challenges us to grapple with racism and inequity through speech and the spoken word, and how AI systems underserve Black communities.\n\n\n</p>',
                     style: "",
                     type: "talking"  
                 },
@@ -2720,7 +2744,12 @@ class UIBuilder extends PIXI.Container {
 
             this.viewArtButtonWrapper.contentContainer.on('pointerdown', function(){
                 let artnumber = userInterface.getArtnumber()
-                userInterface.showArt(artnumber)
+                if(artnumber > 4) {
+                    userInterface.showQuote(artnumber)
+                } else {
+                    userInterface.showArt(artnumber)
+                }
+                
                 //console.log(artnumber)
             })
 
@@ -3053,7 +3082,7 @@ class UIBuilder extends PIXI.Container {
                     element.buttonMode = true
                     element.on('pointerdown', function(){
                         loadingIcon.alpha = 1
-                        userInterface.showQuote('quote1')
+                        userInterface.showQuote("01")
                     })
                 }
                 if(element._text == "Privacy" || element._text == "Policy") {
@@ -3061,7 +3090,7 @@ class UIBuilder extends PIXI.Container {
                     element.buttonMode = true
                     element.on('pointerdown', function(){
                         loadingIcon.alpha = 1
-                        userInterface.showQuote('quote0')
+                        userInterface.showQuote("00")
                     })
                 }
             })
@@ -3398,15 +3427,49 @@ class UIBuilder extends PIXI.Container {
         return this.artNumber
     }
 
+    showQuoteButton(art, type, x, y) {
+
+        //console.log('checker')
+
+        //console.log(art)
+        this.artNumber = art
+        
+        
+        let buttonPos = renderer.toLocalCoordinates(x, y)
+        //console.log(buttonPos)
+
+        this.viewArtButton.visible = true
+        this.viewArtButtonWrapper.setLayoutOptions(
+        new PUXI.FastLayoutOptions({
+            width: 80,
+            height: 30,
+            x: buttonPos.x,
+            y: buttonPos.y,
+            anchor: new PIXI.Point(0.5, 0.5)
+        }))
+
+        this.viewArtButton.resize(window.innerWidth, window.innerHeight)
+        const viewArtBounds = this.buttonOutline.getBounds()
+        this.viewArtButton.stage.hitArea = new PIXI.Rectangle(
+            viewArtBounds.x,
+            viewArtBounds.y, 
+            viewArtBounds.width,
+            viewArtBounds.height
+        )
+
+    }
+
 
     showStartArtButton(art, direction, directionHorizontal, directionVertical){
     
+       // console.log(art)
+
         var artNumber = 0
-        if(art == "CLASSES\nLibby Heaney") {
+        if(art == "<bold>CLASSES</bold>\nLibby Heaney") {
             artNumber = 1
-        } else if (art == "STEAL UR\nFEELINGS\nNoah Levenson"){
+        } else if (art == "<bold>STEAL UR FEELINGS</bold>\nNoah Levenson"){
             artNumber = 2
-        } else if (art == "Dark Matters\nJohann Diedrick") {
+        } else if (art == "<bold>DARK MATTERS</bold>\nJohann Diedrick") {
             artNumber = 3
         } else {
             artNumber = 4
@@ -3776,7 +3839,7 @@ class UIBuilder extends PIXI.Container {
         let video
         const userInterface = this
 
-        console.log(art)
+        //console.log(art)
 
         setTimeout(function(){
 
@@ -3902,9 +3965,9 @@ class UIBuilder extends PIXI.Container {
     showQuote(quote) {
 
         if(this.quoteStageOn == true) {
-           
             
-            let quoteNumber = quote.slice(-1)
+            let quoteNumber = Number(quote)
+
             let theQuote = this.quotesToShow
             let taggedText = this.connectedText
             let userInterface = this

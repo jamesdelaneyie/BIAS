@@ -31,7 +31,8 @@ const create = () => {
         boxes: new Map(),
         artworks: new Map(),
         floors: new Map(),
-        flowers: new Map()
+        flowers: new Map(),
+        infoPanels: new Map()
     }
 
     const renderer = new PIXIRenderer(state)
@@ -93,18 +94,6 @@ const create = () => {
         window.localStorage.setItem('color', state.color);
 
 
-       
-       /* let connected = false
-        let removeLoader = setInterval(() => {
-            if(renderer.UIBuilder) {
-                if(connected == false) {
-                    renderer.UIBuilder.updateConnection(null, true);
-                    clearInterval(removeLoader)
-                }
-            }
-        }, 10);*/
-
-            
         input.leftController.alpha = 1
 
        
@@ -120,10 +109,6 @@ const create = () => {
         }
         const { x, y, tx, ty } = message
         drawHitscan(renderer.background, x, y, tx, ty, 0x000000)
-
-
-
-        
 
     })
     
@@ -276,6 +261,13 @@ const create = () => {
         if(message.type == "showQuote") {
             if(!renderer.UIBuilder.showingQuote) {
                 renderer.UIBuilder.showQuote(message.text)
+            }
+        }
+
+        if(message.type == "showQuoteButton") {
+            //console.log('checker')
+            if(renderer.UIBuilder) {
+                renderer.UIBuilder.showQuoteButton(message.text, message.type, message.x, message.y)
             }
         }
         
@@ -451,9 +443,9 @@ const create = () => {
     handshake.x = inviteX
     handshake.y = inviteY
 
-    //client.connect('ws://localhost:8079', handshake)
+    client.connect('ws://localhost:8079', handshake)
     
-    client.connect('ws://192.248.155.99:8079', handshake)
+    //client.connect('ws://192.248.155.99:8079', handshake)
 
     let connectionCounter = 0
 

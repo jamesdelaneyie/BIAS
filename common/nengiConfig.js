@@ -20,6 +20,7 @@ import Floor from './entity/Floor.js'
 import Portal from './entity/Portal.js'
 import Flower from './entity/Flower.js'
 import Art from './entity/Art.js'
+import InfoPanel from './entity/InfoPanel.js'
 
 const config = {
     UPDATE_RATE: 20, 
@@ -41,7 +42,8 @@ const config = {
             ['Box', Box],
             ['Art', Art],
             ['Portal', Portal],
-            ['Flower', Flower]
+            ['Flower', Flower],
+            ['InfoPanel', InfoPanel]
         ],
         localMessages: [
             ['Walking', Walking],
