@@ -553,8 +553,8 @@ class GameInstance {
 
             const peerID = client.peerID;
 
-            let spawnX = 2253
-            let spawnY = 1269
+            let spawnX = 2500
+            let spawnY = 1450
 
             if(!isNaN(command.x)) {
                 rawEntity.x = Number(command.x)
