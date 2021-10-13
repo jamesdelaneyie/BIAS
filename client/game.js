@@ -445,7 +445,7 @@ const create = () => {
 
     //client.connect('ws://localhost:8079', handshake)
     
-    client.connect('ws://185.92.221.225:8079', handshake)
+    client.connect('wss://bias.jamesdelaney.ie/test', handshake)
 
     let connectionCounter = 0
 
