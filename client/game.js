@@ -449,9 +449,9 @@ const create = () => {
     handshake.x = inviteX
     handshake.y = inviteY
 
-    client.connect('ws://localhost:8079', handshake)
+    //client.connect('ws://localhost:8079', handshake)
     
-    //client.connect('wss://bias.jamesdelaney.ie/test', handshake)
+    client.connect('wss://bias.jamesdelaney.ie/test', handshake)
 
     let connectionCounter = 0
 
