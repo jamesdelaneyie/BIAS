@@ -85,29 +85,29 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
                 whateverEmoji.on("pointerdown", function () {
                     client.addCommand(new SpeakCommand("🙄", "emojiBlast", myRawEntity.x, myRawEntity.y))
                 });
-            //}
+            //}*/
 
-            const sendMessage = renderer.stage.children[1].textBox.children[0].children[0].children[3]
+            const sendMessage = renderer.UIBuilder.sendIcon
             sendMessage.on("pointerdown", function () {
-                let message = renderer.stage.children[1].mockInput.value;
+                let message = renderer.UIBuilder.mockInput.value;
                 if(message != "") {
                     const speakCommand = new SpeakCommand(message, "talk", myRawEntity.x, myRawEntity.y)
                     client.addCommand(speakCommand)
                 }
-                renderer.stage.children[1].mockInput.blur();
-                renderer.stage.children[1].mockInput.text = ""
+                renderer.UIBuilder.mockInput.blur();
+                renderer.UIBuilder.mockInput.text = ""
             });
 
 
             document.addEventListener('keydown', event => {
                 if (event.key == "Enter") {
-                    let message = renderer.stage.children[1].mockInput.value;
+                    let message = renderer.UIBuilder.mockInput.value;
                     const speakCommand = new SpeakCommand(message, "talk", myRawEntity.x, myRawEntity.y)
                     client.addCommand(speakCommand)
-                    renderer.stage.children[1].mockInput.blur();
-                    renderer.stage.children[1].mockInput.text = ""
+                    renderer.UIBuilder.mockInput.blur();
+                    renderer.UIBuilder.mockInput.text = ""
                 }
-            })*/
+            })
 
 
 

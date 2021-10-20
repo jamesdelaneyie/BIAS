@@ -356,7 +356,7 @@ const create = () => {
         }
 
         if(message.type == "text") {
-            addMessage(renderer.middleground, message);
+            addMessage(renderer.foreforeground, message);
             console.log(message)
             /*if(!messageSound.isPlaying) {
                 messageSound.play()
@@ -364,7 +364,7 @@ const create = () => {
         }
 
         if(message.type == "talk") {
-            addMessage(renderer.middleground, message);
+            addMessage(renderer.foreforeground, message);
         }
         
         if(message.type == "sound") {

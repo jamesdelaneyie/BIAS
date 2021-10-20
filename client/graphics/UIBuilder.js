@@ -188,13 +188,14 @@ class UIBuilder extends PIXI.Container {
         this.worldInfoOn = true
         this.notificationStageOn = true
         this.achievementStageOn = true
-
+        this.chatStageOn = true
+        this.emojiStageOn = true
 
 
 
         this.scoreStageOn = false
-        this.chatStageOn = false
-        this.emojiStageOn = false
+        
+        
 
         this.introScreenOn = false
 
@@ -1048,20 +1049,20 @@ class UIBuilder extends PIXI.Container {
             );
     
     
-            const sendIcon = PIXI.Sprite.from('images/send-icon.svg');
-            sendIcon.width = 22.1
-            sendIcon.height = 17.6
-            sendIcon.anchor.set(0.5)
-            sendIcon.scale.set(0.8)
-            sendIcon.alpha = 0.4
+            this.sendIcon = PIXI.Sprite.from('images/send-icon.svg');
+            this.sendIcon.width = 22.1
+            this.sendIcon.height = 17.6
+            this.sendIcon.anchor.set(0.5)
+            this.sendIcon.scale.set(0.8)
+            this.sendIcon.alpha = 0.4
     
-            sendIcon.x = textBoxBounds.width - 30
-            sendIcon.y = (textBoxBounds.height/2) - 1
+            this.sendIcon.x = textBoxBounds.width - 30
+            this.sendIcon.y = (textBoxBounds.height/2) - 1
     
-            sendIcon.interactive = true;
-            sendIcon.buttonMode = true;
+            this.sendIcon.interactive = true;
+            this.sendIcon.buttonMode = true;
     
-            this.textBoxWrapper.contentContainer.addChild(sendIcon)
+            this.textBoxWrapper.contentContainer.addChild(this.sendIcon)
             
         }
 
