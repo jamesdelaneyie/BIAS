@@ -54,6 +54,17 @@ export default (state, renderer ) => {
             },
             sticker({ graphics, value }) {
                 graphics.addSticker(value)
+            },
+            floor({ graphics, value }) {
+                console.log(value)
+                if(value == false) {
+                    renderer.foreforeground.removeChild(graphics)
+                    renderer.middleground.addChild(graphics)
+                } else {
+                    renderer.middleground.removeChild(graphics)
+                    renderer.foreforeground.addChild(graphics)
+                }
+                graphics.addSticker(value)
             }
         }
     }

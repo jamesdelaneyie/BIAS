@@ -17,6 +17,7 @@ class InfoPanel {
         this.color = state.color
         this.rotation = state.rotation
         this.material = state.material
+        this.light = state.light
 
         const vectors = []
 
@@ -42,7 +43,7 @@ class InfoPanel {
         
         this.body.addShape(this.boxShape)
         if(this.type == "circle") {
-            this.collider = CollisionSystem.createCircleCollider(0, 0, state.width/2)
+            this.collider = CollisionSystem.createCircleCollider(0, 0, state.width/6)
         } else {
             this.collider = CollisionSystem.createRectangleColliderBox(0, 0, state.width, state.height)
         }
@@ -74,6 +75,7 @@ InfoPanel.protocol = {
     y: { type: nengi.Number, interp: true },
     rotation: { type: nengi.RotationFloat32, interp: true },
     color: nengi.String,
+    light: nengi.UInt16,
     width: nengi.UInt16,
     height: nengi.UInt16,
 }

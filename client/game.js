@@ -122,7 +122,7 @@ const create = () => {
         let trail = new PIXI.Graphics()
         let color = PIXI.utils.string2hex(message.color)
 
-        trail.beginFill(color, 0.3)
+        trail.beginFill(color, 0.1)
         trail.drawCircle(message.x, message.y, 3)
         trail.endFill()
 
@@ -256,6 +256,12 @@ const create = () => {
                 }
             }, 500)
             
+        }
+
+        if(message.type == "showNotification") {
+            if(renderer.UIBuilder) {
+                renderer.UIBuilder.showNotification(message.text, message.type)
+            }
         }
         
         if(message.type == "showQuote") {
@@ -443,9 +449,9 @@ const create = () => {
     handshake.x = inviteX
     handshake.y = inviteY
 
-    //client.connect('ws://localhost:8079', handshake)
+    client.connect('ws://localhost:8079', handshake)
     
-    client.connect('wss://bias.jamesdelaney.ie/test', handshake)
+    //client.connect('wss://bias.jamesdelaney.ie/test', handshake)
 
     let connectionCounter = 0
 

@@ -139,7 +139,9 @@ CollisionSystem.moveWithCollisions = (entity, obstacles, boxes, artworks, infoPa
                     entity.x -= response.overlapV.x
                     entity.y -= response.overlapV.y
                 }
-            } else if(obstacle.name == "soccerButton") {
+            } else if(obstacle.name == "stairsUp") {
+                
+            } else if(obstacle.name == "stairsDown") {
                 
             } else {
                 if (SAT.testCirclePolygon(entity.collider.circle, obstacle.collider.polygon, response)) {

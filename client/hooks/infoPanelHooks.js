@@ -11,13 +11,27 @@ export default ({ infoPanels }, renderer) => {
             const graphics = new InfoPanelGraphics(data)
 
             renderer.entities.set(data.nid, graphics)
-            renderer.middleground.addChild(graphics)
+
+            
+            if(data.name == "12") {
+                renderer.foreforeground.addChild(graphics)
+            } else {
+                renderer.middleground.addChild(graphics)
+            }
+
+
+            //renderer.middleground.addChild(graphics)
 
             return graphics
         },
         delete({ nid, graphics, entity }) {
             renderer.entities.delete(nid)
             renderer.middleground.removeChild(graphics)
+        },
+        watch: {
+            light({ graphics, value }) {
+                graphics.setBrightness(value)
+            }
         }
     }
 }

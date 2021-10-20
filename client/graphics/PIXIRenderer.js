@@ -40,6 +40,7 @@ class PIXIRenderer {
         this.backbackground = new PIXI.Container()
         this.middleground = new PIXI.Container()
         this.foreground = new PIXI.Container()
+        this.foreforeground = new PIXI.Container()
 
        // let Loader = new PIXI.Loader()
 
@@ -102,7 +103,8 @@ class PIXIRenderer {
         this.loadingText = new PIXI.Text("Loading 0%", {
             fontFamily : 'Arial',
             fontSize: 21,
-            fill : "white"
+            fill : "white",
+            align: "center"
         });
         this.loadingText.anchor.set(0.5, 0.5);
         this.loadingText.position.set(window.innerWidth/2,window.innerHeight/2)
@@ -159,6 +161,7 @@ class PIXIRenderer {
         this.cameraWrapper.addChild(this.background)
         this.cameraWrapper.addChild(this.middleground)
         this.cameraWrapper.addChild(this.foreground)
+        this.cameraWrapper.addChild(this.foreforeground)
         
 
         this.noise = new PIXI.filters.NoiseFilter(0.01, 0.2893);
@@ -192,25 +195,80 @@ class PIXIRenderer {
 
         //console.log(particleSettings.default)
 
-        this.emitter = new particles.Emitter(this.particleContainer, new PIXI.Texture.from("images/particle.png"), particleSettings.default);
-        this.emitter.autoUpdate = true; // If you keep it false, you have to update your particles yourself.
-        this.emitter.updateSpawnPos(800, 1300);
+        //this.emitter = new particles.Emitter(this.particleContainer, new PIXI.Texture.from("images/particle.png"), particleSettings.default);
+        //this.emitter.autoUpdate = true; // If you keep it false, you have to update your particles yourself.
+        //this.emitter.updateSpawnPos(800, 1300);
         //this.emitter.emit = true;
 
+        let roughLayout = new PIXI.Sprite.from('/images/world-map.svg')
+        roughLayout.x = 0
+        roughLayout.y = 0
+        this.backbackground.addChild(roughLayout)
 
-        /*let lobbyFloor = new PIXI.Sprite.from('/images/lobbyFloor.svg')
-        lobbyFloor.x = 1700
-        lobbyFloor.y = 800
+       
+
+        let lobbyFloor = new PIXI.Sprite.from('/images/lobby-background.svg')
+        lobbyFloor.x = 1481
+        lobbyFloor.y = 1180
         this.backbackground.addChild(lobbyFloor)
-        lobbyFloor.width = 1000
-        lobbyFloor.height = 1000*/
 
-        let scienceGalleryLogo = new PIXI.Sprite.from('/images/sg-white.svg')
-        scienceGalleryLogo.x = 2100
-        scienceGalleryLogo.y = 1200
-        scienceGalleryLogo.width = 175
-        scienceGalleryLogo.height = 85
-        //this.middleground.addChild(scienceGalleryLogo)
+
+
+        this.videoTexture = PIXI.Texture.from('/video/inspace-jo1.mp4');
+        this.videoTexture.baseTexture.resource.source.muted = true
+        this.videoTexture.baseTexture.resource.source.loop = true
+        this.videoTexture.baseTexture.resource.source.playsinline = true
+        this.videoTexture.baseTexture.resource.autoPlay = true
+        this.videoTexture.baseTexture.resource.volume = 0
+
+        this.displacementSprite = PIXI.Sprite.from('images/displacement-1.png')
+        this.displacementSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT
+        this.displacementFilter = new PIXI.filters.DisplacementFilter(this.displacementSprite)
+
+        this.displacementFilter.padding = 0
+
+        const video = this.videoTexture.baseTexture.resource.source
+        video.muted = true
+        video.playbackRate = 0.5;
+
+        const videoSprite = new PIXI.Sprite(this.videoTexture);
+
+        videoSprite.width = 436 //.width;
+        videoSprite.height = 532//state.height;
+        
+        videoSprite.x = 3769//&y=
+        videoSprite.y = 2433
+        videoSprite.blendMode = PIXI.BLEND_MODES.SCREEN
+        this.foreground.addChild(videoSprite);
+
+        let firstFloor = new PIXI.Sprite.from('/images/1st-floor.svg')
+        firstFloor.x = 0
+        firstFloor.y = 0
+        this.foreforeground.addChild(firstFloor)
+
+        //inspace-jo.mp4
+
+        this.chars = '01'
+        this.charsArray = this.chars.split('')
+        this.drops = []
+        this.fontSize = 10,
+        this.numberOfColumns = window.innerWidth / this.fontSize,
+        this.matrixCounter
+        this.randomChar;
+    
+
+        for (let i = 0; i < this.numberOfColumns; i++) {
+            this.drops[i] = 0;
+        }
+
+        
+
+        
+
+
+
+      
+    
 
       
       
@@ -287,6 +345,33 @@ class PIXIRenderer {
         })
     }
 
+    updateMatrix() {
+        //console.log('checker')
+
+        ///ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        //ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        //ctx.fillStyle = 'green';
+        //ctx.font = FONT_SIZE + 'px arial';
+        
+        /*for (let i = 0; i < this.drops.length; i++) {
+
+            let randomChar = this.charsArray[Math.floor( Math.random() * this.chars.length )];
+            
+            let text = new PIXI.Text(randomChar, {fontSize: 10})
+            text.x = this.fontSize * this.matrixCounter
+            text.y = this.drops[i] * this.fontSize
+            //this.foreground.addChild(text)
+            
+            if (this.drops[i] * this.fontSize > window.innerHeight && Math.random() > 0.975) {
+                this.drops[i] = 0;
+            }
+            
+            this.drops[i]++;
+        }*/
+        
+    }
+
 
     
     resize() {
@@ -313,6 +398,8 @@ class PIXIRenderer {
         
         
     }
+
+    
  
     centerCamera(entity) {
         this.camera.x = -entity.x + 0.5 * window.innerWidth
@@ -352,6 +439,8 @@ class PIXIRenderer {
         this.entities.forEach(entity => {
             entity.update(delta)
         })
+
+        this.updateMatrix()
        
        
         if(this.UIBuilder) {

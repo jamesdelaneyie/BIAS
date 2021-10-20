@@ -6,8 +6,8 @@ import ToggleCommand from '../common/command/ToggleCommand.js'
 
 const protocolMap = new nengi.ProtocolMap(nengiConfig, nengi.metaConfig)
 
-const address = 'ws://localhost:8079'
-const numberOfBots = 20
+const address = 'wss://bias.jamesdelaney.ie/test'
+const numberOfBots = 10//Math.floor(Math.random() * 40)
 const bots = new Map()
 
 function connectNewBot(id) {

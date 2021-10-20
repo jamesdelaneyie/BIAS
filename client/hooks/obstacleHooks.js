@@ -9,7 +9,13 @@ export default ({ obstacles }, renderer) => {
             const graphics = new ObstacleGraphics(data)
 
             renderer.entities.set(data.nid, graphics)
-            renderer.middleground.addChild(graphics)
+
+            if(data.name == "stairsUp") {
+                renderer.foreforeground.addChild(graphics)
+            } else {
+                renderer.middleground.addChild(graphics)
+            }
+            
 
             return graphics
         },

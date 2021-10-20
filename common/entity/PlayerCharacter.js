@@ -24,6 +24,7 @@ class PlayerCharacter {
         this.sleeping = false
         this.typing = false
         this.bodyRotation = 0
+        this.floor = state.floor
 
         this.circleShape = new p2.Circle({
             radius: this.size
@@ -84,6 +85,7 @@ PlayerCharacter.protocol = {
     name: nengi.String,
     self: nengi.Boolean,
     hitpoints: nengi.UInt8,
+    floor: nengi.UInt8,
     headphones: nengi.Boolean,
     sleeping: nengi.Boolean,
     typing: nengi.Boolean,

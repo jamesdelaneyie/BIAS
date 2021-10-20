@@ -12,6 +12,7 @@ class Obstacle {
         this.height = state.height
         this.color = state.color
         this.angle = state.angle
+        this.rotation = state.rotation
 
         this.collider = CollisionSystem.createRectangleCollider(state.x, state.y, state.width, state.height)
 
@@ -31,7 +32,8 @@ Obstacle.protocol = {
     height: nengi.UInt16,
     color: nengi.String,
     angle: { type: nengi.RotationFloat32, interp: true },
-    sticker: nengi.UInt16
+    sticker: nengi.UInt16,
+    rotation: { type: nengi.RotationFloat32, interp: true }
 }
 
 export default Obstacle

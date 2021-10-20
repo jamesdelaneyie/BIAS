@@ -18,6 +18,8 @@ class Box {
         this.radius = state.radius
         this.spin = state.spin
         this.material = state.material
+        this.offset = state.offset
+        this.speedAdjust = state.speedAdjust
        
         
         if(state.name == "token") {

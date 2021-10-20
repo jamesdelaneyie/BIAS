@@ -30,12 +30,13 @@ class Art {
             
             let offset = this.width/2
             let offsetH = this.height/2
-            const points = [[0,offsetH],[-offset,-offsetH],[offset,-offsetH]]
+            let points = [[0,offsetH],[-offset,-offsetH],[offset,-offsetH]]
 
             points.forEach(point => {
                 vectors.push(new SAT.Vector( point[0], point[1] ))
             })
-            
+            points = [[0,0],[0,0],[0,0]]
+
             this.boxShape = new p2.Convex({ 
                 vertices: points
             });

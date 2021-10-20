@@ -15,18 +15,17 @@ import applyCommand from '../common/applyCommand.js'
 
 import setupFloors from './setupFloors.js'
 import setupBoxes from './setupBoxes.js'
-
-
 import setupWalls from './setupWalls.js'
 import setupObjectWalls from './setupObjectWalls.js'
-
 import setupPortals from './setupPortals.js'
 import setupObstacles from './setupObstacles.js'
 
-import PlayerCharacter from '../common/entity/PlayerCharacter.js'
 import Flower from '../common/entity/Flower.js'
 import Box from '../common/entity/Box.js'
 import Obstacle from '../common/entity/Obstacle.js'
+
+import PlayerCharacter from '../common/entity/PlayerCharacter.js'
+
 import Art from '../common/entity/Art.js'
 import InfoPanel from '../common/entity/InfoPanel.js'
 
@@ -61,7 +60,7 @@ class GameInstance {
         const doc = new GoogleSpreadsheet('1M4TNR1k7f2OLdN_cUd1-k2Hyb_zTWWzl7gs37sLd1OE');
         const creds = require('../bias-online-keys.json');
         
-
+       
         this.portals = new Map()
         this.obstacles = new Map()
         this.boxes = new Map()
@@ -72,15 +71,127 @@ class GameInstance {
         this.world = new p2.World({gravity: [0, 0]});
 
 
+        this.room = {
+            x: 0,
+            y: 0,
+            width: 4800,
+            height: 3480,
+            floorColor: "#717a73",
+            gridColor: "#000000",
+            gridGap: 60,
+            wallThickness: 10,
+            wallColor: "#00FF00",
+            holes: [{
+                offset: 0,
+                width: 0,
+            },{
+                offset: 0,
+                width: 0,
+            },{
+                offset: 0,
+                width: 0,
+            },{
+                offset: 0,
+                width: 0,
+            }]
+        }
+
+        setupObjectWalls(this.instance, this.world, this.room, this.boxes)
+        setupWalls(this.instance, this.room, this.obstacles, 'wall')
+
+
+
+
+        for(let x=0; x < 120; x++) {
+            let box = new Box({
+                name: "",
+                type: "",
+                x: 1773 + (15 * x),
+                y: 1333 + (10 * x),
+                width: 3,
+                height: 3,
+                mass: 0.001,
+                color: "05db4c",
+            })
+            this.instance.addEntity(box)
+            this.world.addBody(box.body)
+            this.boxes.set(box.nid, box)
+        }
+
+        for(let x=0; x < 5; x++) {
+            let size = 30 + Math.floor(Math.random() * 120)
+            let box = new Box({
+                name: "blackbox",
+                type: "",
+                x: 1773 + (100 * x),
+                y: 1333 + (100 * x),
+                width: size,
+                height: size,
+                mass: 0.001,
+                color: "ffffff",
+            })
+            this.instance.addEntity(box)
+            this.world.addBody(box.body)
+            this.boxes.set(box.nid, box)
+        }
+
+
+        let stairsUp = new Obstacle({ 
+            name: 'stairsUp',
+            x: 3354,
+            y: 2185,
+            width: 100, 
+            height: 100, 
+            border: 0,
+            color: "#ffff00",
+            angle: 0
+        })
+        this.instance.addEntity(stairsUp)
+        this.obstacles.set(stairsUp.nid, stairsUp)
+
+        let stairsDown = new Obstacle({ 
+            name: 'stairsDown',
+            x: 3457,
+            y: 2086,
+            width: 100, 
+            height: 100, 
+            border: 0,
+            color: "#00ffff",
+            angle: 0
+        })
+        this.instance.addEntity(stairsDown)
+        this.obstacles.set(stairsDown.nid, stairsDown)
+
+
+
+        let welcomeInfo = {
+            name: "14",
+            type: "circle",
+            x: 2600,
+            y: 1560,
+            width: 80,
+            height: 80,
+            color: "#FB4D3D",
+        }
+
+        let welcomeInfoPanel = new InfoPanel(welcomeInfo)
+        this.instance.addEntity(welcomeInfoPanel)
+        this.world.addBody(welcomeInfoPanel.body)
+        this.infoPanels.set(welcomeInfoPanel.nid, welcomeInfoPanel)
+
+
+
+
+
 
        
         let libbyArtworkObject = {
             name: "<bold>CLASSES</bold>\nLibby Heaney",
             type: "rectangle",
-            x: 2000,
-            y: 1200,
-            width: 250,
-            height: 150,
+            x: 415,
+            y: 414,
+            width: 830,
+            height: 530,
             mass: 0,
             color: "#ffffff",
         }
@@ -93,11 +204,11 @@ class GameInstance {
         let libbyArtworkInfo = {
             name: "9",
             type: "circle",
-            x: 2270,
-            y: 1300,
-            width: 30,
-            height: 30,
-            color: "#202020",
+            x: 1212,
+            y: 950,
+            width: 80,
+            height: 80,
+            color: "#05db4c",
         }
 
         let libbyInfoPanel = new InfoPanel(libbyArtworkInfo)
@@ -110,10 +221,10 @@ class GameInstance {
         let noahArtworkObject = {
             name: "<bold>STEAL UR FEELINGS</bold>\nNoah Levenson",
             type: "triangle",
-            x: 2600,
-            y: 1200,
-            width: 250,
-            height: 200,
+            x: 777,
+            y: 2430,
+            width: 407,
+            height: 325,
             mass: 0,
             color: "#ffffff",
         }
@@ -126,11 +237,11 @@ class GameInstance {
         let noahArtworkInfo = {
             name: "10",
             type: "circle",
-            x: 2630,
-            y: 1350,
-            width: 30,
-            height: 30,
-            color: "#202020",
+            x: 1013,
+            y: 2143,
+            width: 80,
+            height: 80,
+            color: "#ffff1a",
         }
 
         let noahInfoPanel = new InfoPanel(noahArtworkInfo)
@@ -140,14 +251,17 @@ class GameInstance {
 
 
 
+
+
+
         let johannArtworkInfo = {
             name: "12",
             type: "circle",
-            x: 2580,
-            y: 1600,
-            width: 30,
-            height: 30,
-            color: "#202020",
+            x: 3670,
+            y: 2147,
+            width: 80,
+            height: 80,
+            color: "#e26d5a",
         }
 
         let johannInfoPanel = new InfoPanel(johannArtworkInfo)
@@ -155,34 +269,131 @@ class GameInstance {
         this.world.addBody(johannInfoPanel.body)
         this.infoPanels.set(johannInfoPanel.nid, johannInfoPanel)
 
+    
 
 
-        let johannArtworkObject = {
+        let johannArtworkBooth1Styles = {
             name: "<bold>DARK MATTERS</bold>\nJohann Diedrick",
             type: "circle",
-            x: 2600,
-            y: 1600,
-            width: 200,
-            height: 200,
+            x: 3288,
+            y: 2662,
+            width: 120,
+            height: 120,
             mass: 0,
             color: "#ffffff",
         }
-        let johannArtwork = new Art(johannArtworkObject)
-        this.instance.addEntity(johannArtwork)
-        this.world.addBody(johannArtwork.body)
-        this.artworks.set(johannArtwork.nid, johannArtwork)
+        let johannArtworkBooth1 = new Art(johannArtworkBooth1Styles)
+        this.instance.addEntity(johannArtworkBooth1)
+        this.world.addBody(johannArtworkBooth1.body)
+        this.artworks.set(johannArtworkBooth1.nid, johannArtworkBooth1)
 
+
+        let johannArtworkBooth2Styles = {
+            name: "<bold>DARK MATTERS</bold>\nJohann Diedrick",
+            type: "circle",
+            x: 3411,
+            y: 3086,
+            width: 120,
+            height: 120,
+            mass: 0,
+            color: "#ffffff",
+        }
+        let johannArtworkBooth2 = new Art(johannArtworkBooth2Styles)
+        this.instance.addEntity(johannArtworkBooth2)
+        this.world.addBody(johannArtworkBooth2.body)
+        this.artworks.set(johannArtworkBooth2.nid, johannArtworkBooth2)
+
+
+        let johannArtworkBooth3Styles = {
+            name: "<bold>DARK MATTERS</bold>\nJohann Diedrick",
+            type: "circle",
+            x: 3847,
+            y: 3330,
+            width: 120,
+            height: 120,
+            mass: 0,
+            color: "#ffffff",
+        }
+        let johannArtworkBooth3 = new Art(johannArtworkBooth3Styles)
+        this.instance.addEntity(johannArtworkBooth3)
+        this.world.addBody(johannArtworkBooth3.body)
+        this.artworks.set(johannArtworkBooth3.nid, johannArtworkBooth3)
+
+
+        let johannArtworkBooth4Styles = {
+            name: "<bold>DARK MATTERS</bold>\nJohann Diedrick",
+            type: "circle",
+            x: 4343,
+            y: 3204,
+            width: 120,
+            height: 120,
+            mass: 0,
+            color: "#ffffff",
+        }
+        let johannArtworkBooth4 = new Art(johannArtworkBooth4Styles)
+        this.instance.addEntity(johannArtworkBooth4)
+        this.world.addBody(johannArtworkBooth4.body)
+        this.artworks.set(johannArtworkBooth4.nid, johannArtworkBooth4)
+
+
+        let johannArtworkBooth5Styles = {
+            name: "<bold>DARK MATTERS</bold>\nJohann Diedrick",
+            type: "circle",
+            x: 4600,
+            y: 2820,
+            width: 120,
+            height: 120,
+            mass: 0,
+            color: "#ffffff",
+        }
+        let johannArtworkBooth5 = new Art(johannArtworkBooth5Styles)
+        this.instance.addEntity(johannArtworkBooth5)
+        this.world.addBody(johannArtworkBooth5.body)
+        this.artworks.set(johannArtworkBooth5.nid, johannArtworkBooth5)
+       
+
+
+        let johannArtworkBooth6Styles = {
+            name: "<bold>DARK MATTERS</bold>\nJohann Diedrick",
+            type: "circle",
+            x: 4550,
+            y: 2370,
+            width: 120,
+            height: 120,
+            mass: 0,
+            color: "#ffffff",
+        }
+        let johannArtworkBooth6 = new Art(johannArtworkBooth6Styles)
+        this.instance.addEntity(johannArtworkBooth6)
+        this.world.addBody(johannArtworkBooth6.body)
+        this.artworks.set(johannArtworkBooth6.nid, johannArtworkBooth6)
+   
+
+        let johannArtworkBooth7Styles = {
+            name: "<bold>DARK MATTERS</bold>\nJohann Diedrick",
+            type: "circle",
+            x: 4153,
+            y: 2040,
+            width: 120,
+            height: 120,
+            mass: 0,
+            color: "#ffffff",
+        }
+        let johannArtworkBooth7 = new Art(johannArtworkBooth7Styles)
+        this.instance.addEntity(johannArtworkBooth7)
+        this.world.addBody(johannArtworkBooth7.body)
+        this.artworks.set(johannArtworkBooth7.nid, johannArtworkBooth7)
 
 
 
         let mushonArtworkInfo = {
             name: "11",
             type: "circle",
-            x: 2220,
-            y: 1550,
-            width: 30,
-            height: 30,
-            color: "#202020",
+            x: 4411,
+            y: 840,
+            width: 80,
+            height: 80,
+            color: "#ff0000",
         }
 
         let mushonInfoPanel = new InfoPanel(mushonArtworkInfo)
@@ -194,10 +405,10 @@ class GameInstance {
         let mushonArtworkObject = {
             name: "<bold>NORMALIZI.NG</bold>\nMushon Zer-Aviv",
             type: "rectangle",
-            x: 2100,
-            y: 1600,
-            width: 180,
-            height: 180,
+            x: 4485,
+            y: 300,
+            width: 200,
+            height: 600,
             mass: 0,
             color: "#ffffff",
         }
@@ -206,6 +417,103 @@ class GameInstance {
         this.world.addBody(mushonArtwork.body)
         this.artworks.set(mushonArtwork.nid, mushonArtwork)
 
+
+        let mushonKiller = new Box({
+            name: "mushonKiller",
+            type: "",
+            x: 3143,
+            y: 924,
+            width: 150,
+            height: 200,
+            mass: 0,
+            color: "ff0000",
+            offset: 20000,
+            speedAdjust: 1.2
+        })
+        this.instance.addEntity(mushonKiller)
+        this.world.addBody(mushonKiller.body)
+        this.boxes.set(mushonKiller.nid, mushonKiller)
+
+        let mushonKillerTwo = new Box({
+            name: "mushonKiller",
+            type: "",
+            x: 3343,
+            y: 924,
+            width: 150,
+            height: 200,
+            mass: 0,
+            color: "ff0000",
+            offset: 0,
+            speedAdjust: 1
+        })
+        this.instance.addEntity(mushonKillerTwo)
+        this.world.addBody(mushonKillerTwo.body)
+        this.boxes.set(mushonKillerTwo.nid, mushonKillerTwo)
+
+        let mushonKillerThree = new Box({
+            name: "mushonKiller",
+            type: "",
+            x: 3543,
+            y: 924,
+            width: 150,
+            height: 200,
+            mass: 0,
+            color: "ff0000",
+            offset: 10000,
+            speedAdjust: 2
+        })
+        this.instance.addEntity(mushonKillerThree)
+        this.world.addBody(mushonKillerThree.body)
+        this.boxes.set(mushonKillerThree.nid, mushonKillerThree)
+
+        let mushonKillerFour = new Box({
+            name: "mushonKiller",
+            type: "",
+            x: 3743,
+            y: 924,
+            width: 150,
+            height: 200,
+            mass: 0,
+            color: "ff0000",
+            offset: 30000,
+            speedAdjust: 0.5
+        })
+        this.instance.addEntity(mushonKillerFour)
+        this.world.addBody(mushonKillerFour.body)
+        this.boxes.set(mushonKillerFour.nid, mushonKillerFour)
+
+
+        let mushonKillerFive = new Box({
+            name: "mushonKiller",
+            type: "",
+            x: 3943,
+            y: 924,
+            width: 150,
+            height: 200,
+            mass: 0,
+            color: "ff0000",
+            offset: 21000,
+            speedAdjust: 1
+        })
+        this.instance.addEntity(mushonKillerFive)
+        this.world.addBody(mushonKillerFive.body)
+        this.boxes.set(mushonKillerFive.nid, mushonKillerFive)
+
+        let mushonKillerSix = new Box({
+            name: "mushonKiller",
+            type: "",
+            x: 4143,
+            y: 924,
+            width: 150,
+            height: 200,
+            mass: 0,
+            color: "ff0000",
+            offset: 35000,
+            speedAdjust: 2
+        })
+        this.instance.addEntity(mushonKillerSix)
+        this.world.addBody(mushonKillerSix.body)
+        this.boxes.set(mushonKillerSix.nid, mushonKillerSix)
         
 
 
@@ -230,7 +538,13 @@ class GameInstance {
                 art:[
                     libbyArtworkObject,
                     noahArtworkObject, 
-                    johannArtworkObject, 
+                    johannArtworkBooth1Styles, 
+                    johannArtworkBooth2Styles, 
+                    johannArtworkBooth3Styles,
+                    johannArtworkBooth4Styles,  
+                    johannArtworkBooth5Styles,
+                    johannArtworkBooth6Styles,
+                    johannArtworkBooth7Styles,  
                     mushonArtworkObject
                 ]
             })
@@ -240,7 +554,10 @@ class GameInstance {
             if(data.fromClient.bot == true) {
                 let color = '#'+(Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0');
                 //let colorNow = PIXI.utils.string2hex(color);
-                let command = {name: "BOT", avatar: "", color: ""+color+"", x:2320, y: 1500}
+                let number = Math.floor(Math.random() * 200)
+                var x = Math.floor((Math.random() * 4000) + 1)
+                var y = Math.floor((Math.random() * 3000 + 1))
+                let command = {name: "Bot-" + number + "", avatar: "", color: ""+color+"", x:x, y: y}
                 this.joinSession(command, client, doc, creds, true) 
             }
             
@@ -250,6 +567,12 @@ class GameInstance {
                 this.instance.message(new Notification('', 'login', 0, 0), client)
                 let command = {name: data.fromClient.name, avatar: data.fromClient.avatar, color: data.fromClient.color, x: data.fromClient.x, y: data.fromClient.y}
                 this.joinSession(command, client, doc, creds, true)  
+
+                let theInstance = this.instance
+                let theClient = client
+                setTimeout(function(){                
+                    theInstance.message(new Notification("0", 'showNotification'), theClient)
+                }, 3500)
             }
 
             callback({ accepted: true, text: ""})
@@ -280,6 +603,11 @@ class GameInstance {
             
             //console.log('this')
             this.joinSession(command, client, doc, creds, false)
+            let theInstance = this.instance
+            let theClient = client
+            setTimeout(function(){                
+                theInstance.message(new Notification("1", 'showNotification'), theClient)
+            }, 3500)
             
         })
         
@@ -340,8 +668,10 @@ class GameInstance {
 
                 setTimeout(function(){
                     client.headphones = false
-                    client.rawEntity.headphones = false
-                    client.smoothEntity.headphones = false
+                    if(client.rawEntity) {
+                        client.rawEntity.headphones = false
+                        client.smoothEntity.headphones = false
+                    }
                 }, 200)
 
                 
@@ -553,8 +883,10 @@ class GameInstance {
 
             const peerID = client.peerID;
 
-            let spawnX = 2500
-            let spawnY = 1450
+            let spawnX = 2400
+            let spawnY = 1950
+
+            //2402&y=1947
 
             if(!isNaN(command.x)) {
                 rawEntity.x = Number(command.x)
@@ -578,7 +910,7 @@ class GameInstance {
                 smoothEntity.y = spawnY
             }
 
-            console.log(command.x, command.y)
+            //console.log(command.x, command.y)
 
 
             this.world.addBody(rawEntity.body);
@@ -608,8 +940,13 @@ class GameInstance {
             this.instance.message(new Identity(rawEntity.nid, smoothEntity.nid, ""+peerID+"", ""+ command.avatar +"",""+ givenName +"", ""+ command.color +""), client)
             this.instance.messageAll(new Notification(''+ command.name +'', 'personJoined', 20, 20))
 
+            //this.instance.addLocalMessage(new Walking(client.smoothEntity.nid, client.color, client.smoothEntity.rotation, rawEntity.x, rawEntity.y))
+
+
             this.totalUsers++
             this.activeUsers.push({name: command.name})
+
+           
 
             
     }
@@ -731,10 +1068,12 @@ class GameInstance {
                 var b = thisClient.y - infoPanel.y
                 var c = Math.sqrt( a*a + b*b );
 
-                if(c < 60) {
+                if(c < 100) {
 
                     let x = infoPanel.collider.x
                     let y = infoPanel.collider.y
+
+                    infoPanel.light = c
 
                     this.instance.message(new Notification(infoPanel.name, 'showQuoteButton', x, y), client)
                     
@@ -752,13 +1091,34 @@ class GameInstance {
         
 
         this.artworks.forEach(artwork => {
+
             
             artwork.x = artwork.body.position[0]
             artwork.y = artwork.body.position[1]
             artwork.rotation = artwork.body.angle 
             
             
+            
         })
+
+        this.artworks.forEach(artwork => {
+            
+            if(artwork.type == "triangle") {
+
+                //console.log(artwork)
+                //let newAngle = artwork.angle + 0.0
+                //console.log(artwork.angle)
+               // artwork.angle = newAngle
+                //artwork.collider.polygon.rotate(0.01)
+                //artwork.body.angle += 0.01
+                //artwork.body.updateAABB()                 
+                //artwork.rotation += 0.01
+                
+               
+            }
+        })
+
+
 
 
         this.infoPanels.forEach(infoPanel => {
@@ -770,20 +1130,82 @@ class GameInstance {
             
         })
 
-        this.boxes.forEach(box => {
+        //Floor Triggers
+        this.instance.clients.forEach(client => {
+            if(client.rawEntity) {
+                
+                for (let obstacle of this.obstacles.values()) {
+                    let collided = false
+                    collided = SAT.testCirclePolygon(client.rawEntity.collider.circle, obstacle.collider.polygon)
+                    if(collided) {
+                        if(obstacle.name == "stairsUp") {
+                            client.rawEntity.floor = 1
+                            
+                        }
+                    }
+                    if(collided) {
+                        if(obstacle.name == "stairsDown") {
+                            client.rawEntity.floor = 0
+                        }
+                    }
+
+                    
+                }
+            }
+
+        })
+
+
+        //Floor Triggers
+        this.instance.clients.forEach(client => {
+            if(client.rawEntity) {
+                
+                for (let box of this.boxes.values()) {
+                    if(box.name == "mushonKiller") {
+                        let collided = false
+                        collided = SAT.testCirclePolygon(client.rawEntity.collider.circle, box.collider.polygon)
+                        if(collided) {
+                            
+                                client.rawEntity.isAlive = false
+
+                                setTimeout(function(){
+                                    client.rawEntity.x = 3014
+                                    client.rawEntity.y = 725
+                                    client.rawEntity.isAlive = true
+                                }, 1000)
+                            
+                            }
+                        }
+                }
+            }
+
+        })
+
+        
+
+        //this.boxes.forEach
+
+        this.boxes.forEach((box, index) => {
             
             box.x = box.body.position[0]
             box.y = box.body.position[1]
-            if(box.type == "video") {
-                box.rotation = box.body.angle + 1.5708
-            } else {
-                box.rotation = box.body.angle 
-            }
+            box.rotation = box.body.angle 
+
             var plusOrMinus = Math.random() < 0.5 ? -1 : 1;
             var plusOrMinus2 = Math.random() < 0.5 ? -1 : 1;
             box.body.force[0] += 0.1 * Math.random() * plusOrMinus
             box.body.force[1] += 0.1 * Math.random() * plusOrMinus2
-            
+        
+
+            if(box.name == "mushonKiller") {
+                //box.y = box.body.position[1]
+                let position = tick + box.offset
+                let speed = 20 * box.speedAdjust
+                let movement = Math.sin(position/speed) * 350
+                //console.log(box.offset)
+                box.y = movement + 700
+            }
+             
             
         })
         

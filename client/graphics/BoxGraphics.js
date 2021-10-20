@@ -18,6 +18,47 @@ class BoxGraphics extends PIXI.Container {
 
         const type = this.type
 
+        if(this.name == "blackbox") {
+            this.videoTexture = PIXI.Texture.from('/video/box.mp4');
+            this.videoTexture.baseTexture.resource.source.muted = true
+            this.videoTexture.baseTexture.resource.source.loop = true
+            this.videoTexture.baseTexture.resource.source.playsinline = true
+            this.videoTexture.baseTexture.resource.autoPlay = true
+            this.videoTexture.baseTexture.resource.volume = 0
+
+            const video = this.videoTexture.baseTexture.resource.source
+            video.muted = true
+            video.playbackRate = 2;
+
+            const videoSprite = new PIXI.Sprite(this.videoTexture);
+            videoSprite.x = (-state.width/2)*2
+            videoSprite.y = (-state.height/2)*2
+            videoSprite.width = state.width*2 //.width;
+            videoSprite.height = state.height*2//state.height;
+            videoSprite.blendMode = PIXI.BLEND_MODES.MULTIPLY
+            this.addChild(videoSprite);
+        } else {
+
+            this.body = new PIXI.Graphics()
+            this.body.beginFill(this.color)
+            this.body.lineStyle(0, 0xffffff)
+            this.body.drawRoundedRect((-state.width/2)*2, (-state.height/2)*2, state.width*2, state.height*2, 1)
+            this.body.endFill()
+            this.body.blendMode = PIXI.BLEND_MODES.ADD
+            this.body.pivot.set(0.5,0.5)
+            this.body.scale.set(0.5)
+            this.addChild(this.body)
+
+        }
+
+        
+
+        
+
+
+
+        //blackbox
+
         /*if (state.color == "quote0") {
             state.width = 120
             state.height = 120
@@ -38,7 +79,7 @@ class BoxGraphics extends PIXI.Container {
         }*/
         //console.log(type)
 
-        if(this.name == "token") {
+        /*if(this.name == "token") {
             this.body = new PIXI.Graphics()
             this.tokenImage = new PIXI.Sprite.from('images/'+type+'-icon.svg');
             this.tokenImage.width = state.width;
@@ -55,16 +96,9 @@ class BoxGraphics extends PIXI.Container {
             this.addChild(this.body)
 
         } else {
-            this.body = new PIXI.Graphics()
-            this.body.beginFill(this.color)
-            this.body.lineStyle(2, 0xffffff)
-            this.body.drawRoundedRect((-state.width/2)*2, (-state.height/2)*2, state.width*2, state.height*2, 10)
-            this.body.endFill()
-            this.body.pivot.set(0.5,0.5)
-            this.body.scale.set(0.5)
-            this.addChild(this.body)
+            
 
-        }
+        }*/
 
 
         this.count = 0

@@ -19,6 +19,9 @@ class UIBuilder extends PIXI.Container {
         this.artNumber = null
         this.wasConnected = false 
         this.joined = false
+        this.artCount = 0
+
+        this.noahArt = null
 
         const resources = PIXI.Loader.shared.resources
 
@@ -29,7 +32,7 @@ class UIBuilder extends PIXI.Container {
         this.white = PIXI.utils.string2hex("#FFFFFF")
         const white = this.white
 
-        this.green = PIXI.utils.string2hex("#4DFA66")
+        this.green = PIXI.utils.string2hex("#05db4c")
         const green = this.green
 
         this.darkGreen = PIXI.utils.string2hex("#031e04")
@@ -183,17 +186,16 @@ class UIBuilder extends PIXI.Container {
         this.miniMapOn = true
         this.statusStageOn = true
         this.worldInfoOn = true
+        this.notificationStageOn = true
+        this.achievementStageOn = true
+
+
 
 
         this.scoreStageOn = false
         this.chatStageOn = false
         this.emojiStageOn = false
 
-
-       
-       
-
-        
         this.introScreenOn = false
 
         
@@ -201,7 +203,7 @@ class UIBuilder extends PIXI.Container {
         
 
         
-        this.notificationStageOn = false
+        
 
 
 
@@ -686,32 +688,32 @@ class UIBuilder extends PIXI.Container {
         if(this.statusStageOn == true) {
 
             this.statusStage = new PUXI.Stage({
-                width: 250,
-                height: 15
+                width: 150,
+                height: 108
             });
             
 
             this.statusWrapper = new PUXI.WidgetGroup({
             }).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
-                    width: 250,
-                    height: 15,
+                    width: 150,
+                    height: 108,
                     x: 10,
                     y: 0.985,
                     anchor: new PIXI.Point(0, 1)
                 }),
-            )//.setBackground(0xFFFFFF).setBackgroundAlpha(0.1)
+            ).setBackground(0xFFFFFF).setBackgroundAlpha(0.05)
 
 
             this.statusLayout = new PUXI.Widget({}).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
-                    height: 15,
-                    width: 250,
+                    width: 150,
+                    height: 108,
                     x: 0,
                     y: 0,
                     anchor: new PIXI.Point(0, 0)
                 }),
-            )//.setBackground(0xFF0000).setBackgroundAlpha(0.5)
+            ).setBackground(0x00b140).setBackgroundAlpha(0.05)
 
             this.statusWrapper.addChild(this.statusLayout)
             this.statusStage.addChild(this.statusWrapper)
@@ -734,16 +736,18 @@ class UIBuilder extends PIXI.Container {
                 fontSize: 12
             })
             this.updateText = new PUXI.TextWidget(
-                'Update Text', 
+                '', 
                 updateStyles
             ).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
-                    x: 100,
-                    y: 1,
+                    x: 0,
+                    y: 0,
+                    height: 100,
+                    width: 230,
+                    anchor: new PIXI.Point(0, 1)
                 })
             )
             this.updateText.tint = 0xFFFFFF
-            //this.updateText.contentContainer.y = -20
             this.updateText.contentContainer.alpha = 0
             
             this.statusLayout.addChild(this.updateText)
@@ -1205,7 +1209,7 @@ class UIBuilder extends PIXI.Container {
                 new PUXI.FastLayoutOptions({
                     width: width, 
                     height: height,
-                    x: 0.99,
+                    x: 0.5,
                     y: 0.01,
                     anchor: new PIXI.Point(1, 0)
                 })
@@ -1314,7 +1318,7 @@ class UIBuilder extends PIXI.Container {
             this.quoteWrapperBackground.beginFill(this.white, 1.0, true)
             this.quoteWrapperBackground.lineStyle(1, this.black)
             this.quoteWrapperBackground.drawRoundedRect(0, 0, 300, 300, 10)
-
+            this.quoteWrapper.contentContainer.addChild(this.quoteWrapperBackground)
 
 
 
@@ -1351,7 +1355,7 @@ class UIBuilder extends PIXI.Container {
 
             this.scrollWrapper.addChild(this.scrollContent);
             this.quoteWrapper.addChild(this.scrollWrapper);
-
+            
 
             const style = new PIXI.TextStyle({
                 fontFamily: "Trade Gothic Next",
@@ -1374,7 +1378,7 @@ class UIBuilder extends PIXI.Container {
                     title: "PRIVACY POLICY",
                     subtitle: "",
                     credit: "",
-                    paragraph:"<privacy>\n<u><bold>Your private information</bold></u>: You should not share or provide your own private information in the chat functionality. If you do, others may keep or store such information. Science Gallery Dublin accepts no liability for such. For information on our Privacy Policy and Data Retention Policy please visit sciencegallery.org/privacy.\n\n<bold>Other information</bold>: You may not publish or post other people's private information (such as names, home phone number and address) without their express permission.\nWe also prohibit threatening to expose private information or incentivizing others to do so. \n\n<bold>Authenticity</bold>\nPlatform manipulation and spam: You may not use the comment section in a manner intended to artificially amplify or suppress information or engage in behaviour that manipulates or disrupts people’s experience. \n\n<u>Civic integrity</u>: You may not use the comment section for the purpose of manipulating or interfering in elections or other civic processes. This includes posting or sharing content that may suppress participation or mislead people about when, where, or how to participate in a civic process. \n\n<u>Impersonation</u>: You may not impersonate individuals, groups, or organizations in a manner that is intended to or does mislead, confuse, or deceive others. \n\n<u>Synthetic and manipulated media</u>: You may not deceptively share synthetic or manipulated media that are likely to cause harm. \n\n<u>Copyright and trademark</u>: You may not violate others’ intellectual property rights, including copyright and trademark. \n\n<u>Enforcement</u>\nIf you violate the rules your chat functionality will be disabled and you may be removed from the exhibition. \n\n<u>Complaints and Reporting</u> \nAny person using the chat functionality may report or make a complaint about content being posted by another user by emailing <link>info@dublin.sciencegallery.com</link>.\n\n<bold>SAFETY</bold>\n\n<u>Violence</u>: You may not threaten violence against an individual or a group of people. \n\n<u>Terrorism/violent extremism</u>: You may not threaten or promote terrorism or violent extremism. \n\n<u>Child sexual exploitation</u>: We have zero tolerance for child sexual exploitation. \n\n<u>Abuse/harassment</u>: You may not engage in the targeted harassment of someone, or incite other people to do so. This includes wishing or hoping that someone experiences physical harm. \n\n<u>Hateful conduct</u>: You may not promote violence against, threaten, or harass other people on the basis of race, ethnicity, national origin, caste, sexual orientation, gender, gender identity, religious affiliation, age, disability, or serious disease. \n\n<u>Suicide or self-harm</u>: You may not promote or encourage suicide or self-harm. \n\n<u>Linking content</u>: You may not link any content through the comments section.  You may not post pictures, videos or any other contents through the comments section. \n\n<u>Illegal or certain regulated goods or services</u>: You may not use the chat function for any unlawful purpose or in furtherance of illegal activities. This includes selling, buying, or facilitating transactions in illegal goods or services, as well as certain types of regulated goods or services.\n\n</privacy>",
+                    paragraph:"<privacy><u><bold>Your private information</bold></u>: You should not share or provide your own private information in the chat functionality. If you do, others may keep or store such information. Science Gallery Dublin accepts no liability for such. For information on our Privacy Policy and Data Retention Policy please visit sciencegallery.org/privacy.\n\n<bold>Other information</bold>: You may not publish or post other people's private information (such as names, home phone number and address) without their express permission.\nWe also prohibit threatening to expose private information or incentivizing others to do so. \n\n<bold>Authenticity</bold>\nPlatform manipulation and spam: You may not use the comment section in a manner intended to artificially amplify or suppress information or engage in behaviour that manipulates or disrupts people’s experience. \n\n<u>Civic integrity</u>: You may not use the comment section for the purpose of manipulating or interfering in elections or other civic processes. This includes posting or sharing content that may suppress participation or mislead people about when, where, or how to participate in a civic process. \n\n<u>Impersonation</u>: You may not impersonate individuals, groups, or organizations in a manner that is intended to or does mislead, confuse, or deceive others. \n\n<u>Synthetic and manipulated media</u>: You may not deceptively share synthetic or manipulated media that are likely to cause harm. \n\n<u>Copyright and trademark</u>: You may not violate others’ intellectual property rights, including copyright and trademark. \n\n<u>Enforcement</u>\nIf you violate the rules your chat functionality will be disabled and you may be removed from the exhibition. \n\n<u>Complaints and Reporting</u> \nAny person using the chat functionality may report or make a complaint about content being posted by another user by emailing <link>info@dublin.sciencegallery.com</link>.\n\n<bold>SAFETY</bold>\n\n<u>Violence</u>: You may not threaten violence against an individual or a group of people. \n\n<u>Terrorism/violent extremism</u>: You may not threaten or promote terrorism or violent extremism. \n\n<u>Child sexual exploitation</u>: We have zero tolerance for child sexual exploitation. \n\n<u>Abuse/harassment</u>: You may not engage in the targeted harassment of someone, or incite other people to do so. This includes wishing or hoping that someone experiences physical harm. \n\n<u>Hateful conduct</u>: You may not promote violence against, threaten, or harass other people on the basis of race, ethnicity, national origin, caste, sexual orientation, gender, gender identity, religious affiliation, age, disability, or serious disease. \n\n<u>Suicide or self-harm</u>: You may not promote or encourage suicide or self-harm. \n\n<u>Linking content</u>: You may not link any content through the comments section.  You may not post pictures, videos or any other contents through the comments section. \n\n<u>Illegal or certain regulated goods or services</u>: You may not use the chat function for any unlawful purpose or in furtherance of illegal activities. This includes selling, buying, or facilitating transactions in illegal goods or services, as well as certain types of regulated goods or services.\n\n</privacy>",
                     style: "",
                     type: ""
                 },
@@ -1387,10 +1391,10 @@ class UIBuilder extends PIXI.Container {
                     type: ""
                 },
                 {
-                    title:"<boldtitle>WELCOME TO BIAS ONLINE</boldtitle>",
+                    title:"<boldtitle>About</boldtitle>",
                     subtitle:"",
                     credit:"——",
-                    paragraph: "\n<p>We’re launching our very first online-only exhibition: BIAS ONLINE bring online visitors on a journey of compelling exploration through datasets, emotion and facial recognition and artificial intelligence with new artworks from Libby Heaney, Johann Diedrick, Mushon Zer-Aviv, and Noah Levenson. BIAS ONLINE was developed and supported by Science Gallery at Trinity College Dublin as part of the European ARTificial Intelligence Lab project. Co-funded by Creative Europe.\n\n</p>",
+                    paragraph: "\n<p>Welcome to BIAS ONLINE: a virtual exhibition space by Science Gallery at Trinity College Dublin showcasing digital artworks exploring data equity, privacy, surveillance culture, facial recognition, class and artificial intelligence.\n\nFrom cognitive function to machine learning, bias is a shortcut, for our brain or for data. This virtual exhibition is part of Science Gallery Dublin’s year-long BIAS season, interrogating how bias moves from human to machine and how persuasion, preference, motivation and misinformation contribute to our individual, societal and digital biases.</p>",
                     style:"",
                     type: "face"
                 },
@@ -1429,7 +1433,7 @@ class UIBuilder extends PIXI.Container {
                     title:"SAFETY AND PRIVACY INFO",
                     subtitle:"",
                     credit:"",
-                    paragraph: "<privacy>\n<bold>SAFETY</bold>\n\n<u>Violence</u>: You may not threaten violence against an individual or a group of people. \n\n<u>Terrorism/violent extremism</u>: You may not threaten or promote terrorism or violent extremism. \n\n<u>Child sexual exploitation</u>: We have zero tolerance for child sexual exploitation. \n\n<u>Abuse/harassment</u>: You may not engage in the targeted harassment of someone, or incite other people to do so. This includes wishing or hoping that someone experiences physical harm. \n\n<u>Hateful conduct</u>: You may not promote violence against, threaten, or harass other people on the basis of race, ethnicity, national origin, caste, sexual orientation, gender, gender identity, religious affiliation, age, disability, or serious disease. \n\n<u>Suicide or self-harm</u>: You may not promote or encourage suicide or self-harm. \n\n<u>Linking content</u>: You may not link any content through the comments section.  You may not post pictures, videos or any other contents through the comments section. \n\n<u>Illegal or certain regulated goods or services</u>: You may not use the chat function for any unlawful purpose or in furtherance of illegal activities. This includes selling, buying, or facilitating transactions in illegal goods or services, as well as certain types of regulated goods or services.\n\n<bold>PRIVACY</bold>\n\n<u><bold>Your private information</bold></u>: You should not share or provide your own private information in the chat functionality. If you do, others may keep or store such information. Science Gallery Dublin accepts no liability for such. For information on our Privacy Policy and Data Retention Policy please visit sciencegallery.org/privacy.\n\n<bold>Other information</bold>: You may not publish or post other people's private information (such as names, home phone number and address) without their express permission.\nWe also prohibit threatening to expose private information or incentivizing others to do so. \n\n<bold>Authenticity</bold>\nPlatform manipulation and spam: You may not use the comment section in a manner intended to artificially amplify or suppress information or engage in behaviour that manipulates or disrupts people’s experience. \n\n<u>Civic integrity</u>: You may not use the comment section for the purpose of manipulating or interfering in elections or other civic processes. This includes posting or sharing content that may suppress participation or mislead people about when, where, or how to participate in a civic process. \n\n<u>Impersonation</u>: You may not impersonate individuals, groups, or organizations in a manner that is intended to or does mislead, confuse, or deceive others. \n\n<u>Synthetic and manipulated media</u>: You may not deceptively share synthetic or manipulated media that are likely to cause harm. \n\n<u>Copyright and trademark</u>: You may not violate others’ intellectual property rights, including copyright and trademark. \n\n<u>Enforcement</u>\nIf you violate the rules your chat functionality will be disabled and you may be removed from the exhibition. \n\n<u>Complaints and Reporting</u> \nAny person using the chat functionality may report or make a complaint about content being posted by another user by emailing <link>info@dublin.sciencegallery.com</link>.\n</privacy>",
+                    paragraph: "<privacy>\n\nBIAS ONLINE is a virtual exhibition space by Science Gallery at Trinity College Dublin showcasing digital artworks exploring data equity, privacy, surveillance culture, facial recognition, class and artificial intelligence.\n\n This exhibition and the chat functionality were created to allow public conversation about the exhibition. \n\nViolence, harassment and other similar types of behaviour discourage people from expressing themselves, and diminish the value of the conversation. Our rules are to ensure all people can participate in the conversation freely and safely. \n\nBy entering the exhibition you agree to be bound by the terms and conditions of this policy. Please note this experience is only available to users aged 18 and over. By entering the exhibition, you are confirmed that you are aged 18 and over.\n\n<bold>SAFETY</bold>\n\n<u>Violence</u>: You may not threaten violence against an individual or a group of people. \n\n<u>Terrorism/violent extremism</u>: You may not threaten or promote terrorism or violent extremism. \n\n<u>Child sexual exploitation</u>: We have zero tolerance for child sexual exploitation. \n\n<u>Abuse/harassment</u>: You may not engage in the targeted harassment of someone, or incite other people to do so. This includes wishing or hoping that someone experiences physical harm. \n\n<u>Hateful conduct</u>: You may not promote violence against, threaten, or harass other people on the basis of race, ethnicity, national origin, caste, sexual orientation, gender, gender identity, religious affiliation, age, disability, or serious disease. \n\n<u>Suicide or self-harm</u>: You may not promote or encourage suicide or self-harm. \n\n<u>Linking content</u>: You may not link any content through the comments section.  You may not post pictures, videos or any other contents through the comments section. \n\n<u>Illegal or certain regulated goods or services</u>: You may not use the chat function for any unlawful purpose or in furtherance of illegal activities. This includes selling, buying, or facilitating transactions in illegal goods or services, as well as certain types of regulated goods or services.\n\n<bold>PRIVACY</bold>\n\n<u><bold>Your private information</bold></u>: You should not share or provide your own private information in the chat functionality. If you do, others may keep or store such information. Science Gallery Dublin accepts no liability for such. For information on our Privacy Policy and Data Retention Policy please visit sciencegallery.org/privacy.\n\n<bold>Other information</bold>: You may not publish or post other people's private information (such as names, home phone number and address) without their express permission.\nWe also prohibit threatening to expose private information or incentivizing others to do so. \n\n<bold>Authenticity</bold>\nPlatform manipulation and spam: You may not use the comment section in a manner intended to artificially amplify or suppress information or engage in behaviour that manipulates or disrupts people’s experience. \n\n<u>Civic integrity</u>: You may not use the comment section for the purpose of manipulating or interfering in elections or other civic processes. This includes posting or sharing content that may suppress participation or mislead people about when, where, or how to participate in a civic process. \n\n<u>Impersonation</u>: You may not impersonate individuals, groups, or organizations in a manner that is intended to or does mislead, confuse, or deceive others. \n\n<u>Synthetic and manipulated media</u>: You may not deceptively share synthetic or manipulated media that are likely to cause harm. \n\n<u>Copyright and trademark</u>: You may not violate others’ intellectual property rights, including copyright and trademark. \n\n<u>Enforcement</u>\nIf you violate the rules your chat functionality will be disabled and you may be removed from the exhibition. \n\n<u>Complaints and Reporting</u> \nAny person using the chat functionality may report or make a complaint about content being posted by another user by emailing <link>info@dublin.sciencegallery.com</link>.\n</privacy>",
                     style:"",
                     type: "face"
                 },{
@@ -1451,7 +1455,7 @@ class UIBuilder extends PIXI.Container {
                     title:"<gap>\n</gap><boldtitle>CLASSES</boldtitle>",
                     subtitle:"How are biases translated into machine codes and practises?<gap>\n</gap>",
                     credit: "Libby Heaney | UK | 2021 \n<link>libbyheaney.co.uk</link> // <link>@libby_heaney_</link>",
-                    paragraph: '<p>CLASSES is a video essay exploring the entanglements between machine learning classification and social class(ification). The artwork takes place in a simulated model of a London council estate, where the artist lives. Machine and human voices playfully narrate aspects of her in-depth research into accented speech recognition, natural language processing* and public space surveillance, to understand how historical and cultural biases around social class are being translated into code and how this affects people’s material conditions.\n\nTowards the end of the essay, the artist finds inspiration in her community gardening on the estate to propose a rewilded AI that removes rigid hierarchical categories to build stronger relations between people and the world. \n\n*GPT-J, Facebook’s FastText and GloVe word embeddings.\n\n</p>',
+                    paragraph: '<p>CLASSES is a video essay exploring the entanglements between machine learning classification and social class(ification). The artwork takes place in a simulated model of a London council estate, where the artist lives. Machine and human voices playfully narrate aspects of her in-depth research into accented speech recognition, natural language processing (GPT-J, Facebook’s FastText and GloVe word embeddings) and public space surveillance, to understand how historical and cultural biases around social class are being translated into code and how this affects people’s material conditions.\n\nTowards the end of the essay, the artist finds inspiration in her community gardening on the estate to propose a rewilded AI that removes rigid hierarchical categories to build stronger relations between people and the world.\n\n</p>',
                     style: "",
                     type: "talking"  
                 },
@@ -1488,13 +1492,14 @@ class UIBuilder extends PIXI.Container {
                     type: "talking"  
                 },
                 {
-                    title:"<boldtitle>Multiuse Stage!<gap></gap></boldtitle>",
-                    subtitle:"\n<subtitle>You can see everyone's take</subtitle>",
-                    credit: "Upsizing the People. \n<link>link.link</link>",
-                    paragraph: '<p>Motor Engineers</p>\n',
+                    title:"<boldtitle>WELCOME TO BIAS ONLINE<gap></gap></boldtitle>",
+                    subtitle:"",
+                    credit: "",
+                    paragraph: '\n<p><bold>BIAS ONLINE is a real-time exhibition space that you move your avatar around to explore.</bold>\n\n<bold>Desktop:</bold> Use the W, A, S, and D keys to move your character inside the space.\n\nWhen you are near information panels and artworks, you will be able to activate them by clicking on them.\n</p>',
                     style: "",
                     type: "talking"  
                 }
+                //<bold>Mobile:</bold> Use the joypad in the bottom left corner of your mobile device to move your character around.\n\nWhen you are near information panels and artworks, you will be able to activate them by tapping on them.
 
                  
 
@@ -1790,6 +1795,7 @@ class UIBuilder extends PIXI.Container {
             this.mapIcon = PIXI.Sprite.from(resources['mapIcon'].texture);
             this.mapIcon.x = 5
             this.mapIcon.y = 5
+            this.mapIcon.scale.set(0.5)
             this.mapIcon.alpha = 1
 
             this.mapIcon.interactive = true
@@ -1917,7 +1923,7 @@ class UIBuilder extends PIXI.Container {
                     width: 0.999999, 
                     height: 0.99999,
                 }),
-            )//.setBackground(green)
+            ).setBackground(green).setBackgroundAlpha(1)
             
             
             //this.drawGridBackground(window.innerWidth, window.innerHeight)
@@ -2152,6 +2158,7 @@ class UIBuilder extends PIXI.Container {
                         */
 
                         color = '#'+(Math.random() * white << 0).toString(16).padStart(6, '0');
+
                         let colorNow = PIXI.utils.string2hex(color);
                         userInterface.updateColor(color)
                        
@@ -2587,8 +2594,9 @@ class UIBuilder extends PIXI.Container {
             )
             this.notificationStage.addChild(this.notificationWrapper)
             this.notificationStage.alpha = 0 
+            this.notificationStage.visible = false
 
-            ease.add(this.notificationStage, {alpha: 1}, { duration: 250, ease: 'easeOutExpo', wait: 1000 })
+            //ease.add(this.notificationStage, {alpha: 1}, { duration: 250, ease: 'easeOutExpo', wait: 1000 })
             
 
             this.notificationWrapperBackground = new Graphics()
@@ -2615,7 +2623,10 @@ class UIBuilder extends PIXI.Container {
 
             this.notifications = [
                 {      
-                    text: 'Welcome back to <extrabold>BIAS ONLINE</extrabold> \nNeed a refresher on how to play? Easy, just click here for quick tutorial'
+                    text: 'Welcome back to <bold>BIAS ONLINE</bold> \nNeed a refresher on how to play? Easy, just click <link>here</link> for quick tutorial.'
+                }, 
+                {      
+                    text: 'Welcome to <bold>BIAS ONLINE</bold> \nWant a quick tutorial on how to explore this space? Click <link>here</link> for a quick tutorial.'
                 }
             ]
 
@@ -2640,6 +2651,9 @@ class UIBuilder extends PIXI.Container {
                 },
                 "extrabold": {
                     fontWeight: 900
+                },
+                "link": {
+                    fill: this.blue
                 }
                 
             }, { imgMap: { notificationIcon },});
@@ -2724,6 +2738,120 @@ class UIBuilder extends PIXI.Container {
             )
         }
 
+
+        if(this.achievementStageOn == true) { 
+        
+            this.achievementStage = new PUXI.Stage(180, 45);
+            this.achievementWrapper = new PUXI.WidgetGroup({
+            }).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 180,
+                    height: 45,
+                    x: 0.995,
+                    y: 0.01,
+                    anchor: new PIXI.Point(1, 0)
+                }),
+            )
+            this.achievementStage.addChild(this.achievementWrapper)
+            this.achievementStage.alpha = 0 
+            //this.achievementStage.visible = false
+        
+            //ease.add(this.achievementStage, {alpha: 1}, { duration: 250, ease: 'easeOutExpo', wait: 1000 })
+            
+        
+            this.achievementWrapperBackground = new Graphics()
+            this.achievementWrapperBackground.beginFill(0x202526, 1.0, true)
+            this.achievementWrapperBackground.lineStyle(1, 0x83999b, 0.5)
+            this.achievementWrapperBackground.drawRoundedRect(0, 0, 180, 45, 15)
+            this.achievementWrapper.contentContainer.addChild(this.achievementWrapperBackground)
+        
+            this.achievementContentWrapper = new PUXI.WidgetGroup({
+            }).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 0.999,
+                    height: 0.999,
+                    x: 0.5,
+                    y: 0.5,
+                    anchor: new PIXI.Point(0.5, 0.5)
+                })
+            ).setPadding(17, 10)
+            
+            this.achievementWrapper.addChild(this.achievementContentWrapper);
+        
+            //<img imgSrc="achievementIcon" imgDisplay="inline" />
+            
+        
+            this.achievements = [
+                {      
+                    text: '🎨   +1 ART!  (1/4)'
+                }, 
+                {      
+                    text: '🎨   +1 ART!  (2/4)'
+                },
+                {      
+                    text: '🎨   +1 ART!  (3/4)'
+                }, 
+                {      
+                    text: '🎨   +1 ART!  (4/4)'
+                }
+            ]
+        
+            //const achievementIcon = new PIXI.Sprite.from('images/achievement-icon.svg');
+            
+            this.achievementTextWidget = new PUXI.TextWidget("")
+        
+            this.achievementTaggedText = new TaggedText("", {
+                "default": {
+                    fontFamily: "Trade Gothic Next",
+                    fontSize: "18px",
+                    fontWeight: 700,
+                    fill: 0xcadfe0,
+                    lineHeight: 16,
+                    wordWrap: true,
+                    wordWrapWidth: 150,
+                    padding: 10,
+                    leading: 1
+                },
+                "img": {},
+                "bold": {
+                    fontWeight: 700
+                },
+                "extrabold": {
+                    fontWeight: 900
+                },
+                "link": {
+                    fill: this.blue
+                }
+                
+            });
+            //{ imgMap: { achievementIcon },
+            //this.achievementTaggedText.y = 1
+            //this.achievementTaggedText.visible = false
+        
+            this.achievementTextWidget.contentContainer.addChild(this.achievementTaggedText)
+        
+            this.achievementContentWrapper.addChild(this.achievementTextWidget)
+        
+    
+            this.addChild(this.achievementStage)
+        
+            this.achievementStage.resize(window.innerWidth, window.innerHeight)
+            this.achievementStage.stage.hitArea = new PIXI.Rectangle(
+                0,0,0,0
+            )
+        }
+
+
+
+
+
+
+
+
+
+
+
+
         //let artNumber = this.artNumber  
 
         //if(this.viewArtButtonOn == true) {
@@ -2749,22 +2877,20 @@ class UIBuilder extends PIXI.Container {
                 } else {
                     userInterface.showArt(artnumber)
                 }
-                
-                //console.log(artnumber)
             })
 
             this.viewArtButtonWrapper.on('pointerdown', function(){
                 this.setBackground(0xFFFFFF)
             })
 
-            this.buttonOutline = new Graphics()
-            this.buttonOutline.lineStyle(0)
-            this.buttonOutline.beginFill(black, 1.0, true)
-            this.buttonOutline.drawRoundedRect(0, 0, 160, 60, 0)
-            this.buttonOutline.cacheAsBitmap = true
-            this.buttonOutline.scale.set(0.5)
+            this.viewArtButtonOutline = new Graphics()
+            this.viewArtButtonOutline.lineStyle(0)
+            this.viewArtButtonOutline.beginFill(black, 1.0, true)
+            this.viewArtButtonOutline.drawRoundedRect(0, 0, 160, 60, 0)
+            this.viewArtButtonOutline.cacheAsBitmap = true
+            this.viewArtButtonOutline.scale.set(0.5)
 
-            const buttonText = new TaggedText("   VIEW ", {
+            const viewArtButtonText = new TaggedText("   VIEW ", {
                 "default": {
                     fontFamily: "Trade Gothic Next",
                     fontSize: "15px",
@@ -2772,11 +2898,11 @@ class UIBuilder extends PIXI.Container {
                     letterSpacing: 2
                 }
             })
-            buttonText.x = 8
-            buttonText.y = 5
+            viewArtButtonText.x = 8
+            viewArtButtonText.y = 5
             
-            this.viewArtButtonWrapper.contentContainer.addChild(this.buttonOutline)
-            this.viewArtButtonWrapper.contentContainer.addChild(buttonText)
+            this.viewArtButtonWrapper.contentContainer.addChild(this.viewArtButtonOutline)
+            this.viewArtButtonWrapper.contentContainer.addChild(viewArtButtonText)
             this.viewArtButtonWrapper.contentContainer.interactive = true
             this.viewArtButtonWrapper.contentContainer.buttonMode = true
 
@@ -2788,12 +2914,74 @@ class UIBuilder extends PIXI.Container {
 
 
             this.viewArtButton.resize(window.innerWidth, window.innerHeight)
-            const viewArtBounds = this.buttonOutline.getBounds()
+            const viewArtBounds = this.viewArtButtonOutline.getBounds()
             this.viewArtButton.stage.hitArea = new PIXI.Rectangle(
                 viewArtBounds.x,
                 viewArtBounds.y, 
                 viewArtBounds.width,
                 viewArtBounds.height
+            )
+
+            
+
+
+
+
+
+
+            this.viewInfoButton = new PUXI.Stage(0, 0, 21, 21)
+            this.viewInfoButton.visible = false
+            this.viewInfoButtonWrapper = new PUXI.WidgetGroup().setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 21,
+                    height: 21,
+                    x: 0.99,
+                    y: 0.99,
+                    anchor: new PIXI.Point(0.5, 0.5)
+                })
+            )
+
+            this.viewInfoButtonWrapper.contentContainer.interactive = true
+            this.viewInfoButtonWrapper.contentContainer.buttonMode = true
+
+            this.viewInfoButtonWrapper.contentContainer.on('pointerdown', function(){
+                let artnumber = userInterface.getArtnumber()
+                if(artnumber > 4) {
+                    userInterface.showQuote(artnumber)
+                } else {
+                    userInterface.showArt(artnumber)
+                }
+            })
+
+            this.viewInfoButtonWrapper.on('pointerdown', function(){
+                this.setBackground(0xFFFFFF)
+            })
+
+            this.buttonOutline = new Graphics()
+            this.buttonOutline.lineStyle(0)
+            this.buttonOutline.beginFill(black, 0, true)
+            this.buttonOutline.drawRoundedRect(0, 0, 21, 21, 0)
+            this.buttonOutline.cacheAsBitmap = true
+          
+            
+            this.viewInfoButtonWrapper.contentContainer.addChild(this.buttonOutline)
+            this.viewInfoButtonWrapper.contentContainer.interactive = true
+            this.viewInfoButtonWrapper.contentContainer.buttonMode = true
+
+
+
+            this.viewInfoButton.addChild(this.viewInfoButtonWrapper)
+            this.addChild(this.viewInfoButton)
+
+
+
+            this.viewInfoButton.resize(window.innerWidth, window.innerHeight)
+            const viewInfoBounds = this.buttonOutline.getBounds()
+            this.viewInfoButton.stage.hitArea = new PIXI.Rectangle(
+                viewInfoBounds.x,
+                viewInfoBounds.y, 
+                viewInfoBounds.width,
+                viewInfoBounds.height
             )
         //}
 
@@ -2869,9 +3057,10 @@ class UIBuilder extends PIXI.Container {
 
 
         let ageConfirmed = window.localStorage.getItem('over18')
+        let name = window.localStorage.getItem('name')
         
 
-        if(ageConfirmed) {
+        if(ageConfirmed && name) {
             this.confirmAge()
             this.ageGate = new PUXI.Stage({
                 width: 0,
@@ -2941,7 +3130,7 @@ class UIBuilder extends PIXI.Container {
             
             
             
-            this.ageTextTagged = new TaggedText("<bold>BIAS ONLINE</bold> is a real-time online exhibition from <bold>Science Gallery Dublin</bold>. You must be 18 years or older to enter, please confirm your date of birth below", {
+            this.ageTextTagged = new TaggedText("<bold>BIAS ONLINE</bold> is a real-time online exhibition from <bold>Science Gallery Dublin</bold>. You must be 18 years or older to enter - please confirm your date of birth below", {
                 "default": {
                     fontFamily: 'Trade Gothic Next',
                     fill: white, 
@@ -2964,7 +3153,7 @@ class UIBuilder extends PIXI.Container {
             this.ageText.contentContainer.addChild(this.ageTextTagged)
             this.ageTextTagged.y = 50
 
-            this.ageTextTaggedTerms = new TaggedText("By entering this site you are agreeing to the <link>Terms of Use</link> and <link>Privacy Policy</link>.", {
+            this.ageTextTaggedTerms = new TaggedText("By entering the exhibition you agree to our <link>Legal Policy</link> and <link>Privacy Policy</link>", {
                 "default": {
                     fontFamily: 'Trade Gothic Next',
                     fill: '#afafaf', 
@@ -3085,7 +3274,7 @@ class UIBuilder extends PIXI.Container {
                         userInterface.showQuote("01")
                     })
                 }
-                if(element._text == "Privacy" || element._text == "Policy") {
+                if(element._text == "Legal" || element._text == "Policy") {
                     element.interactive = true
                     element.buttonMode = true
                     element.on('pointerdown', function(){
@@ -3193,7 +3382,7 @@ class UIBuilder extends PIXI.Container {
             if(this.joinModal.visible == true) {
 
                 this.avatarBox.contentContainer.rotation = rotation + 0.18
-                if(this.avatarWrapper.contentContainer.children > 1) {
+                if(this.avatarWrapper.contentContainer.children[1]) {
                     this.avatarWrapper.contentContainer.children[1].rotation = rotation - 1.57 
                 }
 
@@ -3203,6 +3392,14 @@ class UIBuilder extends PIXI.Container {
         })
         
         this.resize()
+
+        let updateTextTimer = this.updateText.contentContainer
+        let updateTextSwapper = this.updateText
+        setInterval(function(){
+            if(updateTextTimer.alpha == 0) {
+                updateTextSwapper.text = ""
+            }
+        }, 1000)
         
 
 
@@ -3268,7 +3465,9 @@ class UIBuilder extends PIXI.Container {
        
         //Interactive Stages
         if(this.quoteStageOn == true) {
+            console.log('checker')
             this.quoteStage.resize(window.innerWidth, window.innerHeight)
+            //this.quoteBackground.resize(window.innerWidth, window.innerHeight)
             const quoteBounds = this.quoteWrapperBackground.getBounds()
             this.quoteStage.stage.hitArea = new PIXI.Rectangle(
                 quoteBounds.x,
@@ -3362,7 +3561,7 @@ class UIBuilder extends PIXI.Container {
             
             worldDesign.art.forEach(artwork => {
                 let artShape = new Graphics()
-
+                
 
                 let artWidth = artwork.width / 25
                 let artHeight = artwork.height / 25
@@ -3376,12 +3575,20 @@ class UIBuilder extends PIXI.Container {
 
                 if(artwork.type == "circle") {
                     artShape.drawCircle(artShape.x + artWidth/2, artShape.y +artHeight/2, artWidth/2)
+
                 } else if (artwork.type == "triangle") {
 
-                    artShape.moveTo((400/50) -(artWidth/25) + 57.5, -(artHeight/25) + 30);
-                    artShape.lineTo((200/50) -(artWidth/50) + 57.5, (400/50) - (artHeight/50) + 30); 
-                    artShape.lineTo(0 -(artWidth/50) + 57.5, - (artHeight/50) + 30);
-                    artShape.lineTo((200/50) -(artWidth/50) + 57.5,  - (artHeight/50) + 30);
+
+                    artShape.x = 55
+                    artShape.y = 110
+
+                    artShape.pivot.set(artWidth/2,artHeight/2)
+                    console.log(artWidth/2, artHeight/2)
+                   
+                    artShape.moveTo(0, 0);
+                    artShape.lineTo(artWidth, 0);
+                    artShape.lineTo(artWidth/2, artHeight+3); 
+                    
                     
                 } else {
                     artShape.drawRect(artShape.x, artShape.y, artWidth, artHeight)
@@ -3391,7 +3598,10 @@ class UIBuilder extends PIXI.Container {
                 
                 artShape.endFill()
                 this.miniMap.addChild(artShape)
-
+                if(artwork.type == "triangle") {
+                    this.noahArt = artShape
+                }
+ 
             });
 
         }
@@ -3438,23 +3648,23 @@ class UIBuilder extends PIXI.Container {
         let buttonPos = renderer.toLocalCoordinates(x, y)
         //console.log(buttonPos)
 
-        this.viewArtButton.visible = true
-        this.viewArtButtonWrapper.setLayoutOptions(
+        this.viewInfoButton.visible = true
+        this.viewInfoButtonWrapper.setLayoutOptions(
         new PUXI.FastLayoutOptions({
-            width: 80,
-            height: 30,
+            width: 21,
+            height: 21,
             x: buttonPos.x,
             y: buttonPos.y,
             anchor: new PIXI.Point(0.5, 0.5)
         }))
 
-        this.viewArtButton.resize(window.innerWidth, window.innerHeight)
-        const viewArtBounds = this.buttonOutline.getBounds()
-        this.viewArtButton.stage.hitArea = new PIXI.Rectangle(
-            viewArtBounds.x,
-            viewArtBounds.y, 
-            viewArtBounds.width,
-            viewArtBounds.height
+        this.viewInfoButton.resize(window.innerWidth, window.innerHeight)
+        const viewInfoBounds = this.buttonOutline.getBounds()
+        this.viewInfoButton.stage.hitArea = new PIXI.Rectangle(
+            viewInfoBounds.x,
+            viewInfoBounds.y, 
+            viewInfoBounds.width,
+            viewInfoBounds.height
         )
 
     }
@@ -3530,18 +3740,9 @@ class UIBuilder extends PIXI.Container {
         }
 
 
-        
-       
-
-       
-
-    
-
-        
-
 
         this.viewArtButton.resize(window.innerWidth, window.innerHeight)
-        const viewArtBounds = this.buttonOutline.getBounds()
+        const viewArtBounds = this.viewArtButtonOutline.getBounds()
         this.viewArtButton.stage.hitArea = new PIXI.Rectangle(
             viewArtBounds.x,
             viewArtBounds.y, 
@@ -3743,10 +3944,47 @@ class UIBuilder extends PIXI.Container {
        
     }
 
+    showNotification(option, type) {
+        
+        console.log(option)
+        let message = this.notifications[option].text
+        let theUI = this
+        let notificationStage = this.notificationStage
+
+        notificationStage.visible = true
+        this.notificationTaggedText.text = message
+        this.notificationTaggedText.textContainer.children.forEach(element => {
+           
+            if(element._text == "here") {
+                element.interactive = true
+                element.buttonMode = true
+                element.on('pointerdown', function(){
+                    theUI.showQuote("14")
+                    ease.add(notificationStage, {alpha: 0}, { duration: 250, ease: 'easeOutExpo'})
+                    setTimeout(function(){
+                        notificationStage.visible = false
+                    }, 250)
+                })
+            }
+        })
+        ease.add(this.notificationStage, {alpha: 1}, { duration: 250, ease: 'easeOutExpo' })
+    }
+
+    showAchievement(option, type) {
+        
+        let message = this.achievements[option].text
+        this.achievementTaggedText.text = message
+        ease.add(this.achievementStage, {alpha: 1}, { duration: 250, ease: 'easeOutExpo', wait: 2000 })
+        ease.add(this.achievementStage, {alpha: 0}, { duration: 250, ease: 'easeOutExpo', wait: 5000 })
+    }
+
     hideArt(){
 
         //this.textBox.visible = true
        // this.statusStage.visible = true
+       
+       this.showAchievement(""+this.artCount+"")
+       this.artCount++
         
        // this.emojiStage.visible = true
        this.transitionTextTagged.text = ""
@@ -3847,7 +4085,7 @@ class UIBuilder extends PIXI.Container {
                 var overlay = document.createElement('div');
                 overlay.style = "position:fixed;height:100vh;width:100%;background-color:rgba(0,0,0,0.6);top:0;left:0;"
                 overlay.id = "overlay"
-                var close = document.createElement('div');
+                var close = document.createElement('a');
                 close.id = "back-to-bias"
                 var backTo = document.createTextNode('← return')
                 close.style = "cursor:pointer;position:absolute;top:0;width:100%;letter-spacing:2px;left:1.5%;top:1.5%;font-size:14px;text-transform:uppercase;color:#4DFA66;width:100%;z-index:4"
@@ -3992,7 +4230,7 @@ class UIBuilder extends PIXI.Container {
                             newTaggedText += "<subtitle>" + theQuote[quoteNumber].subtitle + "</subtitle><gap>\n</gap><gap>\n</gap>"
                         }
                         if(theQuote[quoteNumber].paragraph.length) {
-                            newTaggedText +=  "" + theQuote[quoteNumber].paragraph + "\n"
+                            newTaggedText +=  "" + theQuote[quoteNumber].paragraph + ""
                         }
                         if(theQuote[quoteNumber].credit.length) {
                             newTaggedText +=  "<extrasmall>" + theQuote[quoteNumber].credit + "</extrasmall>"
@@ -4100,6 +4338,8 @@ class UIBuilder extends PIXI.Container {
                                     element.on('pointerdown', function(){
                                         window.open('https://docs.google.com/spreadsheets/d/1dL6Ww7MfUqFtbeY8mQCkxf2ZoZ5QOWG6jDVeoiAZGKo/edit#gid=0', '_blank').focus();
                                     })
+                                    window.open('mailto:info@dublin.sciencegallery.com', '_blank').focus();
+                                    //info@dublin.sciencegallery.com?subject=BIAS online feedback
                                 }
 
 
@@ -4114,6 +4354,7 @@ class UIBuilder extends PIXI.Container {
                         });
 
                         userInterface.quoteStage.resize(window.innerWidth, window.innerHeight)
+                        userInterface.resize()
                         //ease.add(loadingIcon, { alpha: 0 }, { duration: 250, wait: 250 })
                         //
 
@@ -4279,9 +4520,34 @@ class UIBuilder extends PIXI.Container {
     }
 
     personJoined(name) {
-        this.updateText.text = ""+ name +" joined"
-        ease.add(this.updateText.contentContainer, {alpha: 0.6}, {duration:100})
-        ease.add(this.updateText.contentContainer, {alpha: 0 }, {duration: 250, wait: 3000})
+        
+        ease.add(this.updateText.contentContainer, {alpha: 0.6}, {duration: 100 })
+        ease.add(this.updateText.contentContainer, {alpha: 0}, {duration: 250, wait: 3000})
+        this.updateText.text = name +" joined"
+
+        /*let currentText = this.updateText.text
+        let length = (currentText.match(/\n/g)||[]).length
+        console.log(length)
+
+        if(length > 5) {
+            let current = this.updateText.text 
+            let currentList = current.split("\n")
+            currentList.pop()
+            let currentMinusOne = currentList.join("\n")
+            this.updateText.text = name +" joined\n" + currentMinusOne
+        } else {
+            let max = 6
+            let count = max - length
+            let current = this.updateText.text 
+            let text = ""
+            for(var x=0; x<count;x++) {
+                text += "\n"
+            }            
+            this.updateText.text = text + name +" joined\n" + current
+        }    */   
+       
+        
+        
     }
 
 
@@ -4811,6 +5077,8 @@ class UIBuilder extends PIXI.Container {
                 this.quoteWrapperBackground.lineStyle(1, this.black)
                 this.quoteWrapperBackground.drawRoundedRect(0, 0, 650, connectedText.parent.height, 10)
 
+                console.log('checker')
+
             } else {
 
                 this.quoteWrapper.setLayoutOptions(
@@ -4954,12 +5222,16 @@ class UIBuilder extends PIXI.Container {
 
         this.count++
 
-    
+        if(this.noahArt != null) {
+            this.noahArt.rotation += 0.01
+        }
+       
 
         if(this.ageGate.visible == true) {
             let loadingCurrent = this.loadingIcon.rotation
             this.loadingIcon.rotation = loadingCurrent + 0.08 + Math.sin(delta)
         }
+        
        
         //this.loadingIcon
         

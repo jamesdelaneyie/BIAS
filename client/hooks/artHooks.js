@@ -9,7 +9,13 @@ export default ({ artworks }, renderer) => {
             const graphics = new ArtGraphics(data)
 
             renderer.entities.set(data.nid, graphics)
-            renderer.middleground.addChild(graphics)
+
+            if(data.name == "<bold>DARK MATTERS</bold>\nJohann Diedrick") {
+                renderer.foreforeground.addChild(graphics)
+            } else {
+                renderer.middleground.addChild(graphics)
+            }
+            
 
             return graphics
         },

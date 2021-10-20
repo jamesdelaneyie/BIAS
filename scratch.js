@@ -761,6 +761,35 @@ function getLocalStream() {
         console.log("u got an error:" + err)
     });
 }
+const app = new PIXI.Application({
+	width: 200,
+  height: 200
+});
+document.body.appendChild(app.view);
+
+const circle = new PIXI.Graphics()
+	.beginTextureFill(gradient('#9ff', '#033'))
+  .drawStar(50, 50, 5, 50, 20);
+  
+  
+circle.position.set(100);
+circle.pivot.set(50);
+app.stage.addChild(circle);
+
+app.ticker.add(() => {
+   circle.rotation += 0.005;
+});
+
+function gradient(from, to) {
+  const c = document.createElement("canvas");
+  const ctx = c.getContext("2d");
+  const grd = ctx.createLinearGradient(0,0,100,100);
+  grd.addColorStop(0, from);
+  grd.addColorStop(1, to);
+  ctx.fillStyle = grd;
+  ctx.fillRect(0,0,100,100);
+  return new PIXI.Texture.from(c);
+}
 
 
 
