@@ -32,7 +32,7 @@ class UIBuilder extends PIXI.Container {
         this.white = PIXI.utils.string2hex("#FFFFFF")
         const white = this.white
 
-        this.green = PIXI.utils.string2hex("#05db4c")
+        this.green = PIXI.utils.string2hex("#00b140")
         const green = this.green
 
         this.darkGreen = PIXI.utils.string2hex("#031e04")
@@ -79,7 +79,6 @@ class UIBuilder extends PIXI.Container {
 
        
       
-//console.log(resources)
 
         
 
@@ -99,8 +98,8 @@ class UIBuilder extends PIXI.Container {
         let menuClose
         let menuHoverMain
 
-        let avatars = [] 
-        let avatarBackgrounds, avatarMiddlegrounds, avatarForegrounds   
+        
+
 
         loader.add('keys1', 'audio/keys1.mp3');
         loader.add('keys2', 'audio/keys2.mp3');
@@ -140,35 +139,41 @@ class UIBuilder extends PIXI.Container {
            
             menuHoverMain.filters = [telephone, distorsion]
 
-            avatarBackgrounds = [
-                resources.avatarBackground1, 
-                resources.avatarBackground2, 
-                resources.avatarBackground3, 
-                resources.avatarBackground4, 
-                resources.avatarBackground5, 
-                resources.avatarBackground6, 
-            ]
-            avatarMiddlegrounds = [
-                resources.avatarMiddleground1, 
-                resources.avatarMiddleground2, 
-                resources.avatarMiddleground3, 
-                resources.avatarMiddleground4, 
-                resources.avatarMiddleground5, 
-                resources.avatarMiddleground6, 
-            ]
-            avatarForegrounds = [
-                resources.avatarForeground1, 
-                resources.avatarForeground2, 
-                resources.avatarForeground3, 
-                resources.avatarForeground4, 
-                resources.avatarForeground5, 
-                resources.avatarForeground6, 
-            ]
-            avatars.push(avatarBackgrounds, avatarMiddlegrounds, avatarForegrounds)
-
+            
             loaded = true
             
         });
+
+
+
+        let avatars = [] 
+        let avatarBackgrounds, avatarMiddlegrounds, avatarForegrounds  
+        
+        avatarBackgrounds = [
+            resources.avatarBackground1, 
+            resources.avatarBackground2, 
+            resources.avatarBackground3, 
+            resources.avatarBackground4, 
+            resources.avatarBackground5, 
+            resources.avatarBackground6, 
+        ]
+        avatarMiddlegrounds = [
+            resources.avatarMiddleground1, 
+            resources.avatarMiddleground2, 
+            resources.avatarMiddleground3, 
+            resources.avatarMiddleground4, 
+            resources.avatarMiddleground5, 
+            resources.avatarMiddleground6, 
+        ]
+        avatarForegrounds = [
+            resources.avatarForeground1, 
+            resources.avatarForeground2, 
+            resources.avatarForeground3, 
+            resources.avatarForeground4, 
+            resources.avatarForeground5, 
+            resources.avatarForeground6, 
+        ]
+        avatars.push(avatarBackgrounds, avatarMiddlegrounds, avatarForegrounds)
     
        
         
@@ -212,6 +217,8 @@ class UIBuilder extends PIXI.Container {
        
         this.mainMenuStage = new PIXI.Container()
         this.addChild(this.mainMenuStage)
+        this.mainMenuStage.visible = false
+        this.mainMenuStage.alpha = 0
 
 
         if(this.mainMenuOn == true) {
@@ -232,7 +239,7 @@ class UIBuilder extends PIXI.Container {
 
 
             menuIcon.on("pointerover", function () {
-                //menuHoverMain.play()
+                menuHoverMain.play()
             })
 
             menuIcon.on("pointermove", function () {
@@ -253,7 +260,7 @@ class UIBuilder extends PIXI.Container {
                     resetLink.visible = true
                     helpLink.visible = true
                     feedbackLink.visible = true
-                    //menuOpen.play()
+                    menuOpen.play()
                 } else if(menuIcon.name == 'menu-icon-close') {
                     menuIcon.texture = menuIconGraphic.texture
                     menuIcon.name = 'menu-icon'
@@ -265,7 +272,7 @@ class UIBuilder extends PIXI.Container {
                     resetLink.visible = false
                     helpLink.visible = false
                     feedbackLink.visible = false
-                    //menuClose.play()
+                    menuClose.play()
                 }
             });
 
@@ -306,8 +313,13 @@ class UIBuilder extends PIXI.Container {
 
             aboutLink.on("pointerover", function () {
                 aboutLink.setText(aboutLinkUnderlineText)
-                //menuHover.play()
+                menuHover.play()
             })
+
+            let music = resources.music.sound
+            console.log(music)
+            music.volume = 0.01
+            music.play()
             
             aboutLink.on("pointerdown", function () {
                 userInterface.showQuote("2")
@@ -692,6 +704,8 @@ class UIBuilder extends PIXI.Container {
                 width: 150,
                 height: 108
             });
+            this.statusStage.visible = false
+            this.statusStage.alpha = 0
             
 
             this.statusWrapper = new PUXI.WidgetGroup({
@@ -954,8 +968,8 @@ class UIBuilder extends PIXI.Container {
                 x: 0,
                 y: 0
             })
-            
-            this.textBox.alpha = 1
+            this.textBox.visible = false
+            this.textBox.alpha = 0
     
             this.textBoxWrapper = new PUXI.WidgetGroup({
             }).setLayoutOptions(
@@ -1001,7 +1015,7 @@ class UIBuilder extends PIXI.Container {
                 maxLength: 30,
                 fontWeight: 300,
                 selectedColor: black,
-                selectedBackgroundColor: yellow,
+                selectedBackgroundColor: "#FFE401",
                 caretWidth: 2,
                 style: textInputStyles,
             }).setLayoutOptions(
@@ -1085,6 +1099,8 @@ class UIBuilder extends PIXI.Container {
                 x: 0,
                 y: 0
             })
+            this.emojiStage.visible = false
+            this.emojiStage.alpha = 0
 
             this.emojiWrapper = new PUXI.WidgetGroup({}).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
@@ -1205,6 +1221,8 @@ class UIBuilder extends PIXI.Container {
                 width: width,
                 height: height
             })
+            this.worldInfo.visible = false
+            this.worldInfo.alpha = 0
             
             this.worldInfoWrapper = new PUXI.WidgetGroup({}).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
@@ -1392,10 +1410,10 @@ class UIBuilder extends PIXI.Container {
                     type: ""
                 },
                 {
-                    title:"<boldtitle>About</boldtitle>",
+                    title:"ABOUT",
                     subtitle:"",
-                    credit:"——",
-                    paragraph: "\n<p>Welcome to BIAS ONLINE: a virtual exhibition space by Science Gallery at Trinity College Dublin showcasing digital artworks exploring data equity, privacy, surveillance culture, facial recognition, class and artificial intelligence.\n\nFrom cognitive function to machine learning, bias is a shortcut, for our brain or for data. This virtual exhibition is part of Science Gallery Dublin’s year-long BIAS season, interrogating how bias moves from human to machine and how persuasion, preference, motivation and misinformation contribute to our individual, societal and digital biases.</p>",
+                    credit:"",
+                    paragraph: "<gap>\n</gap><p>Welcome to BIAS ONLINE: a virtual exhibition space by Science Gallery at Trinity College Dublin showcasing digital artworks exploring data equity, privacy, surveillance culture, facial recognition, class and artificial intelligence.\n\n<privacy>From cognitive function to machine learning, bias is a shortcut, for our brain or for data. This virtual exhibition is part of Science Gallery Dublin’s year-long BIAS season, interrogating how bias moves from human to machine and how persuasion, preference, motivation and misinformation contribute to our individual, societal and digital biases.\n</privacy>\n\n</p>",
                     style:"",
                     type: "face"
                 },
@@ -1403,7 +1421,7 @@ class UIBuilder extends PIXI.Container {
                     title: "ARTISTS",
                     subtitle: "",
                     credit: "",
-                    paragraph:"\n<img imgSrc='mushonThumb' imgDisplay='inline' />\n<p><bold>Mushon Zer-Aviv</bold> is a designer, researcher, educator and media activist based in Tel Aviv. His love/hate relationship with data informs his design work, art pieces, activism, research, teaching, workshops and city life. He is currently writing a non-fiction book about friction – a design theory of change. Among Mushon’s collaborations, he is the CO-founder of Shual.com – a foxy design studio – and multiple government transparency and civic participation initiatives with the Public Knowledge Workshop; Mushon also designed the maps for Waze.com and led the design of Localize.city. \n\nMushon is an alumni of Eyebeam art + technology center in New York. He is a senior faculty member at Shenkar College and has previously taught at NYU, Parsons, and Bezalel. Adam Kariv developed the code for the work. Additionally, Mushon Zer-Aviv would like to thank the Science Gallery at Trinity College Dublin for commissioning this work.\n\n<link>mushon.com</link> // <link>@mushon</link>\n\n\n\n\n<img imgSrc='johannThumb' imgDisplay='inline' />\n\n<bold>Johann Diedrick</bold> is an artist, engineer, and musician that makes installations, performances, and sculptures for encountering the world through our ears. He surfaces vibratory histories of past interactions inscribed in material and embedded in space, peeling back sonic layers to reveal hidden memories and untold stories. He shares his tools and techniques through listening tours, workshops, and open-source hardware/software.\n\nHe is the founder of A Quiet Life, a sonic engineering and research studio that designs and builds audio-related software and hardware products for revealing possibilities off the grid through sonic encounter. He is a 2021 Mozilla Creative Media Award recipient, a member of NEW INC, and an adjunct professor at NYU\'s ITP program. His work has been featured in Wire Magazine, Musicworks Magazine, and presented internationally at MoMA PS1, Ars Electronica, and the Somerset House, among others. This project is supported by the Mozilla Foundation.\n\n<link>darkmatters.ml</link> // <link>@johanndiedrick</link>\n\n\n\n\n<img imgSrc='libbyThumb' imgDisplay='inline' />\n\n<bold>Libby Heaney</bold>\'s post-disciplinary art practice includes moving image works, performances and participatory and interactive experiences that span quantum computing, virtual reality, AI and installation. Her practice uses affect, humour, surrealism and nonsense to subvert the capitalist appropriation of technology, the endless categorizations of humans and non-humans alike. She uses tools like machine learning and quantum computing against their \'proper\' use, to undo biases and to forge new expressions of collective identity and belonging with each other and the world. She has exhibited widely in the UK and internationally, including Tate Modern, the V&A, London and Mutek & Sonar Festivals. She is currently resident of the London institution Somerset House, where she is currently working on a major commission with quantum computing for Berlin\'s Light Art Space. Sound Design by Barney Kass and the artist would also like to thank Public Space Surveillance Manager at Hackney Council, Oliver Martin and acknowledge the Art Quest Adaptations Residency for acting as a catalyst for this work.\n\n<link>libbyheaney.co.uk</link> // <link>@libby_heaney_</link>\n\n\n\n\n<img imgSrc='noahThumb' imgDisplay='inline' />\n\n<bold>Noah Levenson</bold> leads research engineering as \"Hacker in Residence\" at Consumer Reports Digital Lab. He is a 2019 Rockefeller Foundation Bellagio fellow. His computer science work has been profiled by Scientific American, MIT, Engadget, CBC News, and Fast Company, among others. He lives in New York City, where he was born.\n\n<link>noahlevenson.com</link> // <link>@noahlevenson</link>\n\n\n\n</p>",
+                    paragraph:"\n<img imgSrc='mushonThumb' imgDisplay='inline' />\n<p><bold>Mushon Zer-Aviv</bold> is a designer, researcher, educator and media activist based in Tel Aviv. His love/hate relationship with data informs his design work, art pieces, activism, research, teaching, workshops and city life. He is currently writing a non-fiction book about friction – a design theory of change. Among Mushon’s collaborations, he is the CO-founder of Shual.com – a foxy design studio – and multiple government transparency and civic participation initiatives with the Public Knowledge Workshop; Mushon also designed the maps for Waze.com and led the design of Localize.city. \n\nMushon is an alumni of Eyebeam art + technology center in New York. He is a senior faculty member at Shenkar College and has previously taught at NYU, Parsons, and Bezalel. Adam Kariv developed the code for the work. Additionally, Mushon Zer-Aviv would like to thank the Science Gallery at Trinity College Dublin for commissioning this work.\n\n<link>mushon.com</link> // <link>@mushon</link>\n\n\n\n\n<img imgSrc='johannThumb' imgDisplay='inline' />\n\n<bold>Johann Diedrick</bold> is an artist, engineer, and musician that makes installations, performances, and sculptures for encountering the world through our ears. He surfaces vibratory histories of past interactions inscribed in material and embedded in space, peeling back sonic layers to reveal hidden memories and untold stories. He shares his tools and techniques through listening tours, workshops, and open-source hardware/software.\n\nHe is the founder of A Quiet Life, a sonic engineering and research studio that designs and builds audio-related software and hardware products for revealing possibilities off the grid through sonic encounter. He is a 2021 Mozilla Creative Media Award recipient, a member of NEW INC, and an adjunct professor at NYU\'s ITP program. His work has been featured in Wire Magazine, Musicworks Magazine, and presented internationally at MoMA PS1, Ars Electronica, and the Somerset House, among others. This project is supported by the Mozilla Foundation.\n\n<link>darkmatters.ml</link> // <link>@johanndiedrick</link>\n\n\n\n\n<img imgSrc='libbyThumb' imgDisplay='inline' />\n\n<bold>Libby Heaney</bold>\'s post-disciplinary art practice includes moving image works, performances and participatory and interactive experiences that span quantum computing, virtual reality, AI and installation. Her practice uses affect, humour, surrealism and nonsense to subvert the capitalist appropriation of technology, the endless categorizations of humans and non-humans alike. She uses tools like machine learning and quantum computing against their \'proper\' use, to undo biases and to forge new expressions of collective identity and belonging with each other and the world. She has exhibited widely in the UK and internationally, including Tate Modern, the V&A, London and Mutek & Sonar Festivals. She is currently resident of the London institution Somerset House, where she is currently working on a major commission with quantum computing for Berlin\'s Light Art Space. Sound Design by Barney Kass and the artist would also like to thank Public Space Surveillance Manager at Hackney Council, Oliver Martin and acknowledge the Art Quest Adaptations Residency for acting as a catalyst for this work.\n\n<link>libbyheaney.co.uk</link> // <link>@libby_heaney_</link>\n\n\n\n\n<img imgSrc='noahThumb' imgDisplay='inline' />\n\n<bold>Noah Levenson</bold> leads research engineering as \"Hacker in Residence\" at Consumer Reports Digital Lab. He is a 2019 Rockefeller Foundation Bellagio fellow. His computer science work has been profiled by Scientific American, MIT, Engadget, CBC News, and Fast Company, among others. He lives in New York City, where he was born.\n\n<link>noahlevenson.com</link> // <link>@noahlevenson</link>\n\n\n\n</p>\n",
                     style: "",
                     type: ""
                 },
@@ -1425,7 +1443,7 @@ class UIBuilder extends PIXI.Container {
                     title:"CREDITS",
                     subtitle:"",
                     credit:"",
-                    paragraph: "<gap>\n</gap><p><bold>BIAS ONLINE</bold> was developed with the support of the European ARTificial Intelligence Lab, co-funded by the Creative Europe Programme of the European Union\n\n<bold>BIAS ONLINE</bold> was created with the support of The Department of Tourism, Culture, Arts, Gaeltacht, Sport and Media.\n\n<bold>Project Team</bold>: Aisling Murray, Mitzi D'Alton, Rory McCorrmick, Niamh O' Doherty, James Delaney \n<bold>Artists:</bold> Johann Diedrick, Libby Heaney, Mushon Zer-Aviv, Noah Levenson\n<bold>Music & Sound Design</bold> by Tom Winters\n\n</p>",
+                    paragraph: "<gap>\n</gap><p><bold>BIAS ONLINE</bold> was developed with the support of the European ARTificial Intelligence Lab, co-funded by the Creative Europe Programme of the European Union\n\n<privacy><bold>BIAS ONLINE</bold> was created with the support of The Department of Tourism, Culture, Arts, Gaeltacht, Sport and Media.\n\n<bold>Project Team</bold>: Aisling Murray, Mitzi D'Alton, Rory McCorrmick, Niamh O'Doherty\n\n<bold>Artists:</bold> Johann Diedrick, Libby Heaney, Mushon Zer-Aviv, Noah Levenson\n\n<bold>Music & Sound Design</bold> by Tom Winters\n\n</privacy><img imgSrc='logosThumb' imgDisplay='block' /></p>",
                     style:"",
                     type: ""
                 },
@@ -1525,6 +1543,12 @@ class UIBuilder extends PIXI.Container {
             const faceIconThumb = new PIXI.Sprite.from('images/stealing-header.png');
             const talkingIconThumb = new PIXI.Sprite.from('images/dark-matters-header.png');
 
+
+           
+            const logosThumb = new PIXI.Sprite.from('images/logos.png');
+
+            
+           
 
             this.textContent = new PUXI.TextWidget('', style)
             this.textContent.contentContainer.interactive = true
@@ -1632,9 +1656,14 @@ class UIBuilder extends PIXI.Container {
                 dialIconThumb, 
                 faceIconThumb, 
                 headerImage, 
-                headerImageTwo
+                headerImageTwo,
+                logosThumb,
             },  drawWhitespace: true, skipUpdate: false, skipDraw: false, debug: false, debugConsole: false });
             
+            
+            
+                
+                
         
         
             this.textContent.contentContainer.addChild(this.connectedText)
@@ -1742,7 +1771,8 @@ class UIBuilder extends PIXI.Container {
             })
             let miniMapStage = this.miniMapStage
 
-            this.miniMapStage.visible = true
+            this.miniMapStage.visible = false
+            this.miniMapStage.alpha = 0
 
             this.miniMapWrapper = new PUXI.WidgetGroup({
             }).setLayoutOptions(
@@ -1867,14 +1897,14 @@ class UIBuilder extends PIXI.Container {
                         new PUXI.FastLayoutOptions({
                             width: this.miniMapWidth,
                             height: this.miniMapHeight,
-                            x: 0.99,
-                            y: 0.99,
+                            x: 0.999,
+                            y: 0.999,
                             anchor: new PIXI.Point(1,1)
                         })
                     )
                     
     
-                    miniMapStage.resize(window.innerWidth, window.innerHeight)
+                    miniMapStage.resize(window.innerWidth + 10, window.innerHeight + 5)
                     const miniMapBounds = miniMapBackground.getBounds()
                     miniMapStage.stage.hitArea = new PIXI.Rectangle(
                         miniMapBounds.x,
@@ -1916,17 +1946,20 @@ class UIBuilder extends PIXI.Container {
                 window.innerHeight
             )   
             this.joinModal.visible = false
-            
+            this.joinModal.alpha = 0
             
             this.joinModalWrapper = new PUXI.Widget({
             }).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
                     width: 0.999999, 
                     height: 0.99999,
+                    anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
+                    x: 0.5,
+                    y: 0.5
                 }),
-            ).setBackground(green).setBackgroundAlpha(1)
+            ).setBackground(0x00b140).setBackgroundAlpha(1)
             
-            
+            this.joinModal.addChild(this.joinModalWrapper)
             //this.drawGridBackground(window.innerWidth, window.innerHeight)
 
             let modalWidth = 0.9999
@@ -1940,7 +1973,7 @@ class UIBuilder extends PIXI.Container {
                     width: 600,
                     height: 300
                 }),
-            )
+            )//.setBackground(0x00b140).setBackgroundAlpha(1)
 
             //Whats your name
             this.joinTitleWrapper = new PUXI.Widget({
@@ -2065,7 +2098,7 @@ class UIBuilder extends PIXI.Container {
                     width: 100,
                     height: 100,
                     x: 0.5,
-                    y: 0.525,
+                    y: 0.5,
                     anchor: new PIXI.Point(0.5,0.5)
                 }),
             )
@@ -2106,19 +2139,11 @@ class UIBuilder extends PIXI.Container {
                         let angle3 = Math.floor(Math.random() * 358) + 1
                         let angle4 = Math.floor(Math.random() * 358) + 1
 
-                        avatarBox.contentContainer.removeChildren()
-            
-                        /*if(avatarBox.contentContainer.children.length > 0) {
-                            avatarImageWrapper.removeChildAt(0)
-                            avatarImageWrapper.removeChildAt(0)
-                            avatarImageWrapper.removeChildAt(0)
-                            avatarImageWrapper.removeChildAt(0)
-                            avatarBox.contentContainer.removeChildAt(0)
-                            avatarBox.contentContainer.removeChildAt(0)
-                            avatarBox.contentContainer.removeChildAt(0)
+                        if(avatarBox.contentContainer.children.length > 0) {
+                            avatarBox.contentContainer.children[2].removeChildren()
+                            avatarBox.contentContainer.removeChildren()
                         }
                         
-            
                         avatarBackground = PIXI.Sprite.from(avatars[0][avatarBackground].url);
                         avatarMiddleground= PIXI.Sprite.from(avatars[1][avatarMiddleground].url);
                         avatarMiddleground2 = PIXI.Sprite.from(avatars[1][avatarMiddleground2].url);
@@ -2156,7 +2181,7 @@ class UIBuilder extends PIXI.Container {
                         //avatarForeground.alpha = 0
                         //avatarMiddleground2.cacheAsBitmap = true
                     
-                        */
+                        
 
                         color = '#'+(Math.random() * white << 0).toString(16).padStart(6, '0');
 
@@ -2185,14 +2210,11 @@ class UIBuilder extends PIXI.Container {
                         //body.cacheAsBitmap = true
                         body.endFill()
 
-                    
-
-                        /*
                         avatarImageWrapper.addChild(avatarBackground)
                         avatarImageWrapper.addChild(avatarMiddleground)
                         avatarImageWrapper.addChild(avatarMiddleground2)
                         avatarImageWrapper.addChild(avatarForeground)
-                       */
+                       
                         
                         avatarBox.contentContainer.addChildAt(body, 0)
                         avatarBox.contentContainer.addChildAt(nose, 0)
@@ -2211,10 +2233,6 @@ class UIBuilder extends PIXI.Container {
 
             this.avatarBox.alpha = 0
             this.avatarWrapper.addChild(this.avatarBox)
-
-        
-
-            
             this.joinModalWidgetGroup.addChild(this.avatarWrapper)
 
 
@@ -2251,15 +2269,19 @@ class UIBuilder extends PIXI.Container {
                 width: 0.9999,
                 height: 0.9999
             }))
-            .setBackground(white)
+            .setBackground(yellow)
             .setBackgroundAlpha(1)
 
             this.joinButtonWrapper.addChild(this.joinButton)
             this.joinButton.on("hover", function (over) {
                 if(over == true) {
-                    this.setBackground(white)
+                    this.setBackground(red)
+                    joinTextTagged.text = "<white>CONTINUE</white>"
                 } else {
-                    this.setBackground(white)
+                    this.setBackground(yellow)
+                    //console.log(joinTextTagged)
+                    joinTextTagged.text = "CONTINUE"
+                    //this.joinText.tint = 0x000000
                 }
             });
 
@@ -2284,8 +2306,15 @@ class UIBuilder extends PIXI.Container {
                     fill: black, 
                     fontWeight: 900,
                     fontSize: "36px", 
-                    letterSpacing: 1
-            }})
+                    letterSpacing: 1,
+                }, "white": {
+                    fontFamily: "Trade Gothic Next",
+                    fill: white, 
+                    fontWeight: 900,
+                    fontSize: "36px", 
+                    letterSpacing: 1,
+                }
+            })
 
             this.joinText.contentContainer.addChild(joinTextTagged)
 
@@ -2381,6 +2410,7 @@ class UIBuilder extends PIXI.Container {
             this.joinModalWidgetGroup.addChild(this.joinButtonWrapper)
             
             this.joinModal.addChild(this.joinModalWidgetGroup)
+            this.joinModal.resize(window.innerWidth, window.innerHeight)
             
             this.addChild(this.joinModal)
         }
@@ -2745,11 +2775,11 @@ class UIBuilder extends PIXI.Container {
 
         if(this.achievementStageOn == true) { 
         
-            this.achievementStage = new PUXI.Stage(180, 45);
+            this.achievementStage = new PUXI.Stage(135, 45);
             this.achievementWrapper = new PUXI.WidgetGroup({
             }).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
-                    width: 180,
+                    width: 135,
                     height: 45,
                     x: 0.995,
                     y: 0.01,
@@ -2766,7 +2796,7 @@ class UIBuilder extends PIXI.Container {
             this.achievementWrapperBackground = new Graphics()
             this.achievementWrapperBackground.beginFill(0x202526, 1.0, true)
             this.achievementWrapperBackground.lineStyle(1, 0x83999b, 0.5)
-            this.achievementWrapperBackground.drawRoundedRect(0, 0, 180, 45, 15)
+            this.achievementWrapperBackground.drawRoundedRect(0, 0, 135, 45, 15)
             this.achievementWrapper.contentContainer.addChild(this.achievementWrapperBackground)
         
             this.achievementContentWrapper = new PUXI.WidgetGroup({
@@ -2782,53 +2812,67 @@ class UIBuilder extends PIXI.Container {
             
             this.achievementWrapper.addChild(this.achievementContentWrapper);
         
-            //<img imgSrc="achievementIcon" imgDisplay="inline" />
+            //
             
         
             this.achievements = [
                 {      
-                    text: '🎨   +1 ART!  (1/4)'
+                    text: '<img imgSrc="robotThumb" imgDisplay="icon" />  <message>+1 ART</message>',
+                    score: 1
                 }, 
                 {      
-                    text: '🎨   +1 ART!  (2/4)'
+                    text: '<img imgSrc="robotThumb" imgDisplay="icon" />  <message>+1 ART</message>',
+                    score: 2
                 },
                 {      
-                    text: '🎨   +1 ART!  (3/4)'
+                    text: '<img imgSrc="robotThumb" imgDisplay="icon" />  <message>+1 ART</message>',
+                    score: 3
                 }, 
                 {      
-                    text: '🎨   +1 ART!  (4/4)'
+                    text: '<img imgSrc="robotThumb" imgDisplay="icon" />  <message>+1 ART</message>',
+                    score: 4
                 }, 
                 {      
-                    text: '💬   +1 QUOTE!  (1/4)'
+                    text: '<img imgSrc="quoteThumb" imgDisplay="icon" />  <message>+1 QUOTE</message>',
+                    score: 1
                 },
                 {      
-                    text: '💬   +1 QUOTE!  (2/4)'
+                    text: '<img imgSrc="quoteThumb" imgDisplay="icon" />  <message>+1 QUOTE!</message>',
+                    score: 2
                 },
                 {      
-                    text: '💬   +1 QUOTE!  (3/4)'
+                    text: '<img imgSrc="quoteThumb" imgDisplay="icon" />  <message>+1 QUOTE!</message>',
+                    score: 3
                 },
                 {      
-                    text: '💬   +1 QUOTE!  (4/4)'
+                    text: '<img imgSrc="quoteThumb" imgDisplay="icon" />  <message>+1 QUOTE!</message>',
+                    score: 4
                 }
             ]
         
             //const achievementIcon = new PIXI.Sprite.from('images/achievement-icon.svg');
+            const quoteThumb = new PIXI.Sprite.from('images/talking-icon.svg');
+            const robotThumb = new PIXI.Sprite.from('images/robot-icon.svg');
             
             this.achievementTextWidget = new PUXI.TextWidget("")
         
             this.achievementTaggedText = new TaggedText("", {
                 "default": {
                     fontFamily: "Trade Gothic Next",
-                    fontSize: "18px",
+                    fontSize: "20px",
                     fontWeight: 700,
                     fill: 0xcadfe0,
                     lineHeight: 16,
                     wordWrap: true,
                     wordWrapWidth: 150,
                     padding: 10,
+                    textBaseline:"bottom",
                     leading: 1
+                }, "message": {
+                    fontSize: "14px",
+                }, "img": {
+                    
                 },
-                "img": {},
                 "bold": {
                     fontWeight: 700
                 },
@@ -2839,7 +2883,13 @@ class UIBuilder extends PIXI.Container {
                     fill: this.blue
                 }
                 
-            });
+            }, { imgMap: { 
+                quoteThumb,
+                robotThumb
+            }});
+
+
+
             //{ imgMap: { achievementIcon },
             //this.achievementTaggedText.y = 1
             //this.achievementTaggedText.visible = false
@@ -3268,7 +3318,7 @@ class UIBuilder extends PIXI.Container {
             }
             confirmAgeButtonClick.onPress = function(){
                 userInterface.confirmAge()
-                userInterface.joinModal.visible = true
+                //userInterface.joinModal.visible = true
                 //userInterface.joined = true
             }
 
@@ -3438,7 +3488,10 @@ class UIBuilder extends PIXI.Container {
             this.transitionScreen.resize(window.innerWidth, window.innerHeight)
         }
         
-        
+        if(this.joinModal.visible) {
+            this.joinModal.resize(window.innerWidth, window.innerHeight)
+        }
+       
 
         //Non-Interactive Stages
         if(this.introScreenOn == true) {
@@ -3481,7 +3534,7 @@ class UIBuilder extends PIXI.Container {
        
         //Interactive Stages
         if(this.quoteStageOn == true) {
-            console.log('checker')
+            //console.log('checker')
             this.quoteStage.resize(window.innerWidth, window.innerHeight)
             //this.quoteBackground.resize(window.innerWidth, window.innerHeight)
             const quoteBounds = this.quoteWrapperBackground.getBounds()
@@ -3533,7 +3586,24 @@ class UIBuilder extends PIXI.Container {
 
     confirmAge(){
          window.localStorage.setItem('over18', true);
-         this.removeChild(this.ageGate)
+
+         let userInterface = this
+         let ageGate = this.ageGate
+         let joinModal = this.joinModal
+
+         if(ageGate) {
+            ease.add(ageGate, {alpha: 0}, {duration: 1000, ease: "easeOutExpo"})
+         
+            setTimeout(function(){
+               userInterface.removeChild(ageGate)
+               joinModal.visible = true
+               ease.add(joinModal, {alpha: 1}, {duration: 500, ease: "easeOutExpo"})
+            }, 1000)
+
+         }
+
+        
+         
      }
 
 
@@ -3650,7 +3720,7 @@ class UIBuilder extends PIXI.Container {
                     artShape.y = 110
 
                     artShape.pivot.set(artWidth/2,artHeight/2)
-                    console.log(artWidth/2, artHeight/2)
+                    //console.log(artWidth/2, artHeight/2)
                    
                     artShape.moveTo(0, 0);
                     artShape.lineTo(artWidth, 0);
@@ -3681,22 +3751,34 @@ class UIBuilder extends PIXI.Container {
 
 
     getAvatar() {
-        console.log(this.avatarImageWrapper.children[0])
+        let background = this.avatarImageWrapper.children[0]._texture.textureCacheIds[0]
+        background = background.split("-")[2][0]
+        background = "avatarBackground"+background
+
+        let middleground = this.avatarImageWrapper.children[1]._texture.textureCacheIds[0]
+        middleground = middleground.split("-")[2][0]
+        middleground = "avatarMiddleground"+middleground
+
+        let middleground2 = this.avatarImageWrapper.children[2]._texture.textureCacheIds[0]
+        middleground2 = middleground2.split("-")[2][0]
+        middleground2 = "avatarMiddleground"+middleground2
+
+        let foreground = this.avatarImageWrapper.children[3]._texture.textureCacheIds[0]
+        foreground = foreground.split("-")[2][0]
+        foreground = "avatarForeground"+foreground
+
+
         let avatar = [
-            this.avatarImageWrapper.children[0]._texture.textureCacheIds[0],
-            this.avatarImageWrapper.children[0]._texture.textureCacheIds[1],
+            background,
             this.avatarImageWrapper.children[0].rotation,
-            this.avatarImageWrapper.children[1]._texture.textureCacheIds[0],
-            this.avatarImageWrapper.children[1]._texture.textureCacheIds[1],
+            middleground,
             this.avatarImageWrapper.children[1].rotation,
-            this.avatarImageWrapper.children[2]._texture.textureCacheIds[0],
-            this.avatarImageWrapper.children[2]._texture.textureCacheIds[1],
+            middleground2,
             this.avatarImageWrapper.children[2].rotation,
-            this.avatarImageWrapper.children[3]._texture.textureCacheIds[0],
-            this.avatarImageWrapper.children[3]._texture.textureCacheIds[1],
+            foreground,
             this.avatarImageWrapper.children[3].rotation,
         ]
-        //console.log(avatar)
+
         return avatar
     }
 
@@ -3881,13 +3963,13 @@ class UIBuilder extends PIXI.Container {
             line.lineTo(width, i * this.gridGap)
             this.gridBackground.addChild(line)
         }
-        if(this.joinModalWrapper.contentContainer.children == 0) {
+        /*if(this.joinModalWrapper.contentContainer.children == 0) {
             this.joinModalWrapper.contentContainer.addChildAt(this.gridBackground, 0)
             this.joinModal.addChild(this.joinModalWrapper)
         } else {
             this.joinModalWrapper.contentContainer.removeChildAt(0)
             this.joinModalWrapper.contentContainer.addChildAt(this.gridBackground, 0)
-        }
+        }*/
 
 
         
@@ -3918,10 +4000,20 @@ class UIBuilder extends PIXI.Container {
     }*/
 
     joinSession(){
-        //console.log('tester')
-        this.removeChild(this.joinModal)
-        //this.joinModal.visible = true
-        //this.mainMenuStage.visible = true
+       
+        if(!this.mainMenuStage.visible) {
+            this.removeChild(this.joinModal)
+            //console.log('checker')
+            this.mainMenuStage.visible = true
+            this.miniMapStage.visible = true
+            this.textBox.visible = true
+            this.emojiStage.visible = true
+            ease.add(this.mainMenuStage, {alpha: 1}, { duration: 500, wait: 500 })
+            ease.add(this.miniMapStage, {alpha: 1}, { duration: 500, wait: 500 })
+            ease.add(this.textBox, {alpha: 1}, { duration: 500, wait: 500 })
+            ease.add(this.emojiStage, {alpha: 1}, { duration: 500, wait: 700 })
+        }
+       
         //this.statusStage.visible = true 
     }
 
@@ -4018,7 +4110,7 @@ class UIBuilder extends PIXI.Container {
     showNotification(option, type) {
         
 
-        console.log(option)
+        //console.log(option)
         let message = this.notifications[option].text
         let theUI = this
         let notificationStage = this.notificationStage
@@ -5162,7 +5254,7 @@ class UIBuilder extends PIXI.Container {
                 this.quoteWrapperBackground.lineStyle(1, this.black)
                 this.quoteWrapperBackground.drawRoundedRect(0, 0, 650, connectedText.parent.height, 10)
 
-                console.log('checker')
+                //console.log('checker')
 
             } else {
 

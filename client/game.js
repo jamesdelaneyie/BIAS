@@ -41,11 +41,9 @@ const create = () => {
 
     let input = new InputSystem(renderer, client)
 
-    const loader = new PIXI.Loader();
-    loader.add('boop', 'audio/boop.mp3');
-    loader.add('footstep', 'audio/footstep.mp3');
+   
 
-    let boop = ""
+    /*let boop = ""
     let footstep = ""
     loader.load(function(loader, resources) {
         boop = resources.boop.sound
@@ -53,20 +51,10 @@ const create = () => {
         footstep = resources.footstep.sound
         footstep.speed = 2
         footstep.volume = 0.005
-    });
-
-    const portalSound = Sound.from('audio/car.mp3');
-    const partySound = Sound.from('audio/grunt-birthday-party.mp3');
-    const messageSound = Sound.from('audio/message.mp3');
-    const leftSound = Sound.from('audio/left.mp3');
-    partySound.volume = 0.008
-    let lastMessage
+    });*/
 
 
-    const portalProximity = Sound.from('audio/portal-proximity.mp3');
-    portalProximity.volume = 0
-    portalProximity.loop = true
-    portalProximity.play()
+
 
 
     clientHookAPI(
@@ -378,7 +366,7 @@ const create = () => {
 
         if(message.type == "text") {
             addMessage(renderer.foreforeground, message);
-            console.log(message)
+            //console.log(message)
             /*if(!messageSound.isPlaying) {
                 messageSound.play()
             }*/
@@ -391,11 +379,11 @@ const create = () => {
         if(message.type == "sound") {
 
             renderer.UIBuilder.teleporting(message.text)
-            portalSound.play(); 
+            //portalSound.play(); 
   
         }
 
-        if(message.type == "portalVolume") {
+        /*if(message.type == "portalVolume") {
 
             var volume = (100 - message.text) / 500
             volume = Math.max(0, volume);
@@ -403,7 +391,7 @@ const create = () => {
 
         } else {
             portalProximity.volume = 0
-        }
+        }*/
 
         //Group Effect
         if(message.type == "command") {

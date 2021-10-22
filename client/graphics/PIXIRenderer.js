@@ -5,10 +5,14 @@ import PixiFps from "pixi-fps";
 import { AsciiFilter } from '@pixi/filter-ascii'
 import * as particles from 'pixi-particles'
 import * as particleSettings from "./emitter.json";
-import { WebfontLoaderPlugin } from "pixi-webfont-loader";
+import { WebfontLoaderPlugin } from "pixi-webfont-loader"
 import { ease } from 'pixi-ease'
 import TaggedText from 'pixi-tagged-text'
-import { Graphics } from 'pixi.js';
+import { Graphics } from 'pixi.js'
+import { GlowFilter } from '@pixi/filter-glow'
+import { Sound, filters } from '@pixi/sound'
+
+
 
 
 function opacityRatio(image) {
@@ -17,7 +21,7 @@ function opacityRatio(image) {
     canvas.width = 260;
     canvas.height = 260;
     context.drawImage(image, 0, 0);
-    console.log(image)
+    //console.log(image)
     const data = context.getImageData(0, 0, 260, 260).data;
     let opacity = 0;
     for (let i = 0; i < data.length; i += 4) {
@@ -101,6 +105,160 @@ class PIXIRenderer {
         PIXI.Loader.shared.add({ name: "avatarForeground5", url: "images/avatars/avatar-frontground-5.svg" });
         PIXI.Loader.shared.add({ name: "avatarForeground6", url: "images/avatars/avatar-frontground-6.svg" });
 
+        const cubeSprite = [ 
+            "images/white-cube/layer_1.png",
+            "images/white-cube/layer_2.png",
+            "images/white-cube/layer_3.png",
+            "images/white-cube/layer_4.png",
+            "images/white-cube/layer_5.png",
+            "images/white-cube/layer_6.png",
+            "images/white-cube/layer_7.png",
+            "images/white-cube/layer_8.png",
+            "images/white-cube/layer_9.png",
+            "images/white-cube/layer_10.png",
+            "images/white-cube/layer_11.png",
+            "images/white-cube/layer_12.png",
+            "images/white-cube/layer_13.png",
+            "images/white-cube/layer_14.png",
+            "images/white-cube/layer_15.png",
+            "images/white-cube/layer_16.png",
+            "images/white-cube/layer_17.png",
+            "images/white-cube/layer_18.png",
+            "images/white-cube/layer_19.png",
+            "images/white-cube/layer_20.png",
+            "images/white-cube/layer_21.png",
+            "images/white-cube/layer_22.png",
+            "images/white-cube/layer_23.png",
+            "images/white-cube/layer_24.png",
+            "images/white-cube/layer_25.png",
+            "images/white-cube/layer_26.png",
+            "images/white-cube/layer_27.png",
+            "images/white-cube/layer_28.png",
+            "images/white-cube/layer_29.png",
+            "images/white-cube/layer_30.png",
+            "images/white-cube/layer_31.png",
+            "images/white-cube/layer_32.png",
+            "images/white-cube/layer_33.png",
+            "images/white-cube/layer_34.png",
+            "images/white-cube/layer_35.png",
+            "images/white-cube/layer_36.png",
+            "images/white-cube/layer_37.png",
+            "images/white-cube/layer_38.png",
+            "images/white-cube/layer_39.png",
+            "images/white-cube/layer_40.png",
+            "images/white-cube/layer_41.png",
+            "images/white-cube/layer_42.png",
+            "images/white-cube/layer_43.png",
+            "images/white-cube/layer_44.png",
+            "images/white-cube/layer_45.png",
+            "images/white-cube/layer_46.png",
+            "images/white-cube/layer_47.png",
+            "images/white-cube/layer_48.png",
+            "images/white-cube/layer_49.png",
+            "images/white-cube/layer_50.png",
+            "images/white-cube/layer_51.png",
+            "images/white-cube/layer_52.png",
+            "images/white-cube/layer_53.png",
+            "images/white-cube/layer_54.png",
+            "images/white-cube/layer_55.png",
+            "images/white-cube/layer_56.png",
+            "images/white-cube/layer_57.png",
+            "images/white-cube/layer_58.png",
+            "images/white-cube/layer_59.png",
+            "images/white-cube/layer_60.png",
+            "images/white-cube/layer_61.png",
+            "images/white-cube/layer_62.png",
+            "images/white-cube/layer_63.png",
+            "images/white-cube/layer_64.png",
+            "images/white-cube/layer_65.png",
+            "images/white-cube/layer_66.png",
+            "images/white-cube/layer_67.png",
+            "images/white-cube/layer_68.png",
+            "images/white-cube/layer_69.png",
+            "images/white-cube/layer_70.png",
+            "images/white-cube/layer_71.png",
+            "images/white-cube/layer_72.png",
+            "images/white-cube/layer_73.png",
+            "images/white-cube/layer_74.png",
+            "images/white-cube/layer_75.png",
+            "images/white-cube/layer_76.png",
+            "images/white-cube/layer_77.png",
+            "images/white-cube/layer_78.png",
+            "images/white-cube/layer_79.png",
+            "images/white-cube/layer_80.png",
+            "images/white-cube/layer_81.png",
+            "images/white-cube/layer_82.png",
+            "images/white-cube/layer_83.png",
+            "images/white-cube/layer_84.png",
+            "images/white-cube/layer_85.png",
+            "images/white-cube/layer_86.png",
+            "images/white-cube/layer_87.png",
+            "images/white-cube/layer_88.png",
+            "images/white-cube/layer_89.png",
+            "images/white-cube/layer_90.png",
+            "images/white-cube/layer_91.png",
+            "images/white-cube/layer_92.png",
+            "images/white-cube/layer_93.png",
+            "images/white-cube/layer_94.png",
+            "images/white-cube/layer_95.png",
+            "images/white-cube/layer_96.png",
+            "images/white-cube/layer_97.png",
+            "images/white-cube/layer_98.png",
+            "images/white-cube/layer_99.png",
+            "images/white-cube/layer_100.png",
+            "images/white-cube/layer_101.png",
+            "images/white-cube/layer_102.png",
+            "images/white-cube/layer_103.png",
+            "images/white-cube/layer_104.png",
+            "images/white-cube/layer_105.png",
+            "images/white-cube/layer_106.png",
+            "images/white-cube/layer_107.png",
+            "images/white-cube/layer_108.png",
+            "images/white-cube/layer_109.png",
+            "images/white-cube/layer_110.png",
+            "images/white-cube/layer_111.png",
+            "images/white-cube/layer_112.png",
+            "images/white-cube/layer_113.png",
+            "images/white-cube/layer_114.png",
+            "images/white-cube/layer_115.png",
+            "images/white-cube/layer_116.png",
+            "images/white-cube/layer_117.png",
+            "images/white-cube/layer_118.png",
+            "images/white-cube/layer_119.png",
+            "images/white-cube/layer_120.png",
+            "images/white-cube/layer_121.png",
+            "images/white-cube/layer_122.png",
+            "images/white-cube/layer_123.png",
+            "images/white-cube/layer_124.png",
+            "images/white-cube/layer_125.png",
+            "images/white-cube/layer_126.png",
+            "images/white-cube/layer_127.png",
+            "images/white-cube/layer_128.png",
+            "images/white-cube/layer_129.png",
+            "images/white-cube/layer_130.png",
+            "images/white-cube/layer_131.png",
+            "images/white-cube/layer_132.png",
+            "images/white-cube/layer_133.png",
+            "images/white-cube/layer_134.png",
+            "images/white-cube/layer_135.png",
+            "images/white-cube/layer_136.png",
+            "images/white-cube/layer_137.png",
+            "images/white-cube/layer_138.png",
+            "images/white-cube/layer_139.png",
+            "images/white-cube/layer_140.png",
+            "images/white-cube/layer_141.png",
+            "images/white-cube/layer_142.png",
+            "images/white-cube/layer_143.png",
+            "images/white-cube/layer_144.png",
+            "images/white-cube/layer_145.png",
+            "images/white-cube/layer_146.png",
+            "images/white-cube/layer_147.png",
+            "images/white-cube/layer_148.png",
+            "images/white-cube/layer_149.png",
+            
+        ];
+        PIXI.Loader.shared.add(cubeSprite)
+
         //UI ICONS
         PIXI.Loader.shared.add({ name: "sg-logo-white-raster", url: "images/sg-logo-raster.png" })
         PIXI.Loader.shared.add({ name: "scienceGalleryLogoWhite", url: "images/sg-white.svg" })
@@ -109,6 +267,17 @@ class PIXIRenderer {
 
         PIXI.Loader.shared.add({ name: "loadingIcon", url: "images/loading-icon.svg" })
         PIXI.Loader.shared.add({ name: "mapIcon", url: "images/map-icon.svg" })
+
+        PIXI.Loader.shared.add({ name: "music", url: "audio/MoseyForSomeMimosas.wav" })
+        PIXI.Loader.shared.add({ name: "vines", url: "audio/Vines3[2].wav" })        
+        PIXI.Loader.shared.add({ name: "slap", url: "audio/StickerSlap.wav" })        
+
+        
+
+
+
+        //loader.add('boop', 'audio/boop.mp3');
+        //loader.add('footstep', 'audio/footstep.mp3');
 
         //'images/sg-white.svg'
         //'images/menu-icon.svg'
@@ -136,7 +305,7 @@ class PIXIRenderer {
         
         this.loadingBar = new PIXI.Graphics()
         this.loadingBar.lineStyle(0)
-        this.loadingBar.beginFill(0x00FF00, 1.0, true)
+        this.loadingBar.beginFill(0x00b140, 1.0, true)
         this.loadingBar.drawRect(0,0,1,10)
         this.loadingBar.endFill()
         this.loadingBar.x = window.innerWidth/2 - 100
@@ -164,12 +333,14 @@ class PIXIRenderer {
             ease.add(this.loadingText, {alpha: 0, y: loadingTextyPos + 5}, { duration: 250, ease: 'easeOutExpo', wait: 250})
             ease.add(this.loadingBar, {alpha: 0, y: loadingBaryPos - 5}, { duration: 250, ease: 'easeOutExpo', wait: 250})
 
-            ease.add(this.UIBuilder, {alpha: 1 }, { duration: 0, ease: 'easeOutExpo', wait: 250})
+            ease.add(this.UIBuilder, {alpha: 1 }, { duration: 1000, ease: 'easeOutExpo', wait: 250})
 
             setTimeout(function(){
                 Stage.removeChild(this.loadingText)
                 Stage.removeChild(this.loadingBar)
             }, 500)
+
+            
 
 
 
@@ -179,6 +350,29 @@ class PIXIRenderer {
             this.displacementFilterText1 = new PIXI.filters.DisplacementFilter(this.displacementSprite)
             this.displacementFilterText1.padding = 200
 
+
+
+            this.libbyTitle = new TaggedText("CLASSES", {
+                "default": {
+                    fontFamily: 'Tahoma',
+                    fill: 0x00ff02, 
+                    fontWeight: 400,
+                    fontSize: "54px",
+                    lineHeight: 32,
+                    leading: 1,
+                    letterSpacing: 30,
+                    wordWrap: true,
+                    wordWrapWidth: 200
+                }
+            })
+
+            this.libbyTitle.x = 782,
+            this.libbyTitle.y = 1057
+            
+            let glow = new GlowFilter({distance: 10, outerStrength: 2, color: 0x00ff02})
+            this.libbyTitle.filters = [glow]
+
+            this.background.addChild(this.libbyTitle)
 
             
             
@@ -346,7 +540,7 @@ class PIXIRenderer {
 
                 setTimeout(function(){
                     let isImage = opacityRatio(img2)
-                    console.log("image: "+isImage)
+                    //console.log("image: "+isImage)
                 }, 1000)
 
                 
@@ -378,7 +572,7 @@ class PIXIRenderer {
                 let randomY = Math.floor(Math.random() * 12) + 1
                 
                 if(randomX > 6 && randomX < 10) {
-                    console.log('skipping')
+                    ///console.log('skipping')
                     continue
                 }
 
@@ -476,7 +670,7 @@ class PIXIRenderer {
         
         
         const fpsCounter = new PixiFps();
-        this.stage.addChild(fpsCounter)
+        //this.stage.addChild(fpsCounter)
 
         this.particleContainer = new PIXI.ParticleContainer()
         this.foreground.addChild(this.particleContainer)
@@ -755,8 +949,7 @@ class PIXIRenderer {
         this.renderer.render(this.stage)
 
         if(this.count > 360) {
-            this.spriteShader.alpha = 0.1 + Math.sin((this.count/10)) * 0.1;
-
+            //this.spriteShader.alpha = 0.1 + Math.sin((this.count/10)) * 0.1;
         }
         
 

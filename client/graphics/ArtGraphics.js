@@ -135,7 +135,7 @@ class ArtGraphics extends PIXI.Container {
 
     addSticker(value, x, y){
         if(value > 1) {
-            console.log('checker')
+            //console.log('checker')
             let choice = Math.floor(Math.random() * (4 - 1) + 1)
             if(choice == 1) {
                 this.smileyStamp = new PIXI.Sprite.from('images/face-sticker-calm.svg');

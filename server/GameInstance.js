@@ -153,9 +153,9 @@ class GameInstance {
         }
 
         let welcomeInfoPanel = new InfoPanel(welcomeInfo)
-        this.instance.addEntity(welcomeInfoPanel)
-        this.world.addBody(welcomeInfoPanel.body)
-        this.infoPanels.set(welcomeInfoPanel.nid, welcomeInfoPanel)
+        //this.instance.addEntity(welcomeInfoPanel)
+        //this.world.addBody(welcomeInfoPanel.body)
+        //this.infoPanels.set(welcomeInfoPanel.nid, welcomeInfoPanel)
 
 
 
@@ -1525,7 +1525,7 @@ class GameInstance {
 
                         let directionVertical, directionHorizontal
 
-                        console.log('checker')
+                        //console.log('checker')
 
                         if(client.rawEntity.x < artwork.x - artwork.width/2) {
                             directionHorizontal = 1

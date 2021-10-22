@@ -60,10 +60,10 @@ export default (state, renderer ) => {
             },
             sticker({ graphics, value }) {
                 graphics.addSticker(value)
-                console.log('checker')
+               // console.log('checker')
             },
             floor({ graphics, value }) {
-                console.log(value)
+                //console.log(value)
                 if(value == false) {
                     renderer.foreforeground.removeChild(graphics)
                     renderer.middleground.addChild(graphics)

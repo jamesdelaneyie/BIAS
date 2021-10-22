@@ -78,19 +78,8 @@ class PlayerGraphics extends PIXI.Container {
 
         const avatar = (this.avatar).split(',')
 
-        //console.log(avatar)
+       
 
-        let avatarBackground = avatar[1]
-        let avatarMiddleground = avatar[4]
-        let avatarMiddleground2 = avatar[7]
-        let avatarForeground = avatar[10]
-
-        let angle1 = avatar[2]
-        let angle2 = avatar[5]
-        let angle3 = avatar[8]
-        let angle4 = avatar[11]
-
-        const loader = new PIXI.Loader();
 
         this.headphoneGraphics = new PIXI.Container()
         const headphoneGraphics = this.headphoneGraphics
@@ -125,11 +114,6 @@ class PlayerGraphics extends PIXI.Container {
         const typingIcon = this.typingIcon
         typingIcon.visible = false
 
-
-       /* loader.add('avatarBackground', ''+avatarBackground+'');
-        loader.add('avatarMiddleground', ''+avatarMiddleground+'');
-        loader.add('avatarMiddleground2', ''+avatarMiddleground2+'');
-        loader.add('avatarForeground', ''+avatarForeground+'');*/
 
         this.name = this.name.toUpperCase();
         
@@ -227,58 +211,52 @@ class PlayerGraphics extends PIXI.Container {
         nameText.contentContainer.addChild(typingIcon)
         
         
+        const resources = PIXI.Loader.shared.resources
+
+    
+
+    
+
+        let avatarBackground = new PIXI.Sprite.from(resources[''+avatar[0]+''].url);
+        avatarBackground.roundPixels = true
+        avatarBackground.width = 50
+        avatarBackground.height = 50
+        avatarBackground.anchor.set(0.5,0.5)
+        avatarBackground.angle = avatar[1]
+        avatarContainer.addChild(avatarBackground)
+
+        let avatarMiddleground = new PIXI.Sprite.from(resources[''+avatar[2]+''].url);
+        avatarMiddleground.roundPixels = true
+        avatarMiddleground.width = 50
+        avatarMiddleground.height = 50
+        avatarMiddleground.anchor.set(0.5,0.5)
+        avatarMiddleground.angle = avatar[3]
+        avatarContainer.addChild(avatarMiddleground)
+
+        let avatarMiddleground2 = new PIXI.Sprite.from(resources[''+avatar[4]+''].url);
+        avatarMiddleground2.roundPixels = true
+        avatarMiddleground2.width = 50
+        avatarMiddleground2.height = 50
+        avatarMiddleground2.anchor.set(0.5,0.5)
+        avatarMiddleground2.angle = avatar[5]
+        avatarContainer.addChild(avatarMiddleground2)
+
+        let avatarForeground = new PIXI.Sprite.from(resources[''+avatar[6]+''].url);
+        avatarForeground.roundPixels = true
+        avatarForeground.width = 50
+        avatarForeground.height = 50
+        avatarForeground.anchor.set(0.5,0.5)
+        avatarForeground.angle = avatar[7]
+        avatarContainer.addChild(avatarForeground)
 
 
-        loader.load(function(loader, resources) {
+        avatarContainer.addChild(headphoneGraphics)
 
-            /*avatarBackground = new PIXI.Sprite.from(''+avatarBackground+'');
-            avatarMiddleground = new PIXI.Sprite.from(''+avatarMiddleground+'');
-            avatarMiddleground2 = new PIXI.Sprite.from(''+avatarMiddleground2+'');
-            avatarForeground = new PIXI.Sprite.from(''+avatarForeground+'');
-            
-
-            avatarBackground.roundPixels = true
-            avatarMiddleground.roundPixels = true
-            avatarMiddleground2.roundPixels = true
-            avatarForeground.roundPixels = true
-
-            
-            avatarBackground.width = 50
-            avatarBackground.height = 50
-            avatarBackground.anchor.set(0.5,0.5)
-            avatarBackground.angle = angle1
-
-            avatarMiddleground.width = 50
-            avatarMiddleground.height = 50
-            avatarMiddleground.anchor.set(0.5, 0.5)
-            avatarMiddleground.angle = angle2 
-
-            avatarMiddleground2.width = 50
-            avatarMiddleground2.height = 50
-            avatarMiddleground2.anchor.set(0.5, 0.5)
-            avatarMiddleground2.angle = angle3    
-
-            avatarForeground.width = 52
-            avatarForeground.height = 52
-            avatarForeground.anchor.set(0.5, 0.5)
-            avatarForeground.angle = angle4        
-
-            avatarContainer.addChild(avatarBackground)
-            avatarContainer.addChild(avatarMiddleground)
-            avatarContainer.addChild(avatarMiddleground2)
-            avatarContainer.addChild(avatarForeground)*/
-
-            avatarContainer.addChild(headphoneGraphics)
-
-            playerBody.addChild(avatarContainer)
-
-            
-            ease.add(playerBody, {alpha: 1}, { duration: 250, ease: 'easeOutExpo'})
-
-
-        })
+        playerBody.addChild(avatarContainer)
 
         
+        ease.add(playerBody, {alpha: 1}, { duration: 250, ease: 'easeOutExpo'})
+    
 
 
 

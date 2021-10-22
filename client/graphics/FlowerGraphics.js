@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { SmoothGraphics as Graphics } from '@pixi/graphics-smooth';
 import { ease } from 'pixi-ease'
+import { visitNode } from 'typescript';
 
 function randomIntFromInterval(min, max) { // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min)
@@ -135,8 +136,12 @@ class FlowerGraphics extends PIXI.Container {
 
         this.flower = false
 
-        if(state.y < 1700 && state.x < 2850) {
+        const resources = PIXI.Loader.shared.resources
 
+        if(state.y < 1700 && state.x < 2370) {
+
+            let vines = resources.vines.sound
+            vines.play()
             
             this.flower = true
             var leaf = new PIXI.Graphics();
@@ -300,7 +305,10 @@ class FlowerGraphics extends PIXI.Container {
             /*
             */
 
-        } else if(state.y > 1300 && state.x < 2500) {
+        } else if(state.y > 1700 && state.x < 2370) {
+
+            let slap = resources.slap.sound
+            slap.play()
 
             let choice = Math.floor(Math.random() * (4 - 1) + 1)
             if(choice == 1) {
@@ -437,7 +445,7 @@ class FlowerGraphics extends PIXI.Container {
             
 
 
-        } else if (state.y < 1300 && state.x > 1850) {
+        } else if (state.y < 1700 && state.x > 1950) {
 
               
                 let dots = new PIXI.Graphics()

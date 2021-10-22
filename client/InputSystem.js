@@ -56,7 +56,7 @@ class InputSystem {
             
                                 let name = renderer.UIBuilder.getText();
                                 let color = renderer.UIBuilder.getColor()
-                                let avatar = ""//renderer.UIBuilder.getAvatar();
+                                let avatar = renderer.UIBuilder.getAvatar();
                                 renderer.UIBuilder.joinSession()
     
                                 client.addCommand(new JoinCommand(""+name+"", ""+avatar+"", ""+color+""))
@@ -82,7 +82,7 @@ class InputSystem {
                             client.addCommand(new ToggleCommand(false, "headphones"))
                         }
                     }
-                    console.log(renderer.UIBuilder.leaveButton.contentContainer)
+                    //console.log(renderer.UIBuilder.leaveButton.contentContainer)
 
                     renderer.UIBuilder.leaveButtonWrapper.contentContainer.on('pointerdown', function(){
                         console.log('closing')

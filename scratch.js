@@ -792,6 +792,20 @@ function gradient(from, to) {
 }
 
 
+    const portalProximity = Sound.from('audio/portal-proximity.mp3');
+    portalProximity.volume = 0
+    portalProximity.loop = true
+    portalProximity.play()
+        const portalSound = Sound.from('audio/car.mp3');
+    const partySound = Sound.from('audio/grunt-birthday-party.mp3');
+    const messageSound = Sound.from('audio/message.mp3');
+    const leftSound = Sound.from('audio/left.mp3');
+    partySound.volume = 0.008
+    let lastMessage
+
+
+
+
 
 
 
