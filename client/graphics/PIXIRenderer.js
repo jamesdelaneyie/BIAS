@@ -8,6 +8,24 @@ import * as particleSettings from "./emitter.json";
 import { WebfontLoaderPlugin } from "pixi-webfont-loader";
 import { ease } from 'pixi-ease'
 import TaggedText from 'pixi-tagged-text'
+import { Graphics } from 'pixi.js';
+
+
+function opacityRatio(image) {
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+    canvas.width = 260;
+    canvas.height = 260;
+    context.drawImage(image, 0, 0);
+    console.log(image)
+    const data = context.getImageData(0, 0, 260, 260).data;
+    let opacity = 0;
+    for (let i = 0; i < data.length; i += 4) {
+        opacity += data[i + 3];
+    }
+    return (opacity / 255) / (data.length / 4);
+}
+
 
 class PIXIRenderer {
 
@@ -60,6 +78,7 @@ class PIXIRenderer {
         PIXI.Loader.shared.add({ name: "bold", url: "/fonts/TradeGothicNextLTPro-Bd.woff2" });
         PIXI.Loader.shared.add({ name: "heavy", url: "/fonts/TradeGothicNextLTPro-Hv.woff2" });
         PIXI.Loader.shared.add({ name: "italic", url: "/fonts/TradeGothicNextLTPro-It.woff2" });
+        PIXI.Loader.shared.add({ name: "darkMatters", url: "/fonts/VG5000-Regular_web.woff2" });
 
         PIXI.Loader.shared.add({ name: "avatarBackground1", url: "images/avatars/avatar-background-1.svg" });
         PIXI.Loader.shared.add({ name: "avatarBackground2", url: "images/avatars/avatar-background-2.svg" });
@@ -161,13 +180,60 @@ class PIXIRenderer {
             this.displacementFilterText1.padding = 200
 
 
+            
+            
+            this.mushonTitle = new TaggedText("Normalizi.ng\n<title>HOW DO <bold>NORMAL</bold> POEPLE LOOK LIKE?</title>", {
+                "default": {
+                    fontFamily: 'American Typewriter,monospace',
+                    fill: 0x6b378f, 
+                    fontWeight: 400,
+                    fontSize: "32px",
+                    lineHeight: 32,
+                    leading: 1,
+                    wordWrap: true,
+                    wordWrapWidth: 200
+                },"title": {
+                    fontFamily: "sans-serif",
+                    fill: 0x000000,
+                    fontSize: "10px"
+                }, "bold": {
+                    fontWeight: 700
+                }
+            })
+
+            this.mushonTitle.x = 3280,
+            this.mushonTitle.y = 1020
+            this.background.addChild(this.mushonTitle)
+
+            var verticalNoRepeat = {
+                fill: ['#ff4d5f','#70108e'],
+                fillGradientStops: [0, 1],
+                fontSize: 40,
+                fontFamily: "VG",
+                fontWeight: 400,
+                lineHeight: 35,
+                wordWrap: true,
+                wordWrapWidth: 200,
+                letterSpacing: 4,
+                align: "center",
+            }
+
+            var textVerticalNoRepeat = new PIXI.Text('Dark\nMatters', verticalNoRepeat);
+            textVerticalNoRepeat.x = 3940,
+            textVerticalNoRepeat.y = 2940
+            textVerticalNoRepeat.alpha = 0.7
+            this.background.addChild(textVerticalNoRepeat)
+
+        
+
+
             //Jo's Quote
-            this.floorQuote1 = new TaggedText("“We need to normalize the idea that technology itself is not neutral.” - Mutale Nkonde", {
+            this.floorQuote1 = new TaggedText("“We need to normalize the idea that technology itself is not neutral.”\n\n                   - Mutale Nkonde", {
                 "default": {
                     fontFamily: 'Trade Gothic Next',
                     fill: 0xFFFFFF, 
                     fontWeight: 700,
-                    fontSize: "32px",
+                    fontSize: "30px",
                     lineHeight: 32,
                     leading: 1,
                     align: "center",
@@ -176,8 +242,8 @@ class PIXIRenderer {
                 }
             })
 
-            this.floorQuote1.x = 2272
-            this.floorQuote1.y = 2391
+            this.floorQuote1.x = 2559
+            this.floorQuote1.y = 2199
             this.floorQuote1.alpha = 0
             this.backbackground.addChild(this.floorQuote1)
             this.floorQuote1.filters = [this.displacementFilterText1]
@@ -216,8 +282,8 @@ class PIXIRenderer {
                     fontFamily: 'Trade Gothic Next',
                     fill: 0xFFFFFF, 
                     fontWeight: 700,
-                    fontSize: "14px",
-                    lineHeight: 26,
+                    fontSize: "16px",
+                    lineHeight: 22,
                     leading: 1,
                     align: "center",
                     wordWrap: true,
@@ -226,11 +292,143 @@ class PIXIRenderer {
             })
 
 
-            this.floorQuote3.x = 684
-            this.floorQuote3.y = 1551
+            this.floorQuote3.x = 1400
+            this.floorQuote3.y = 2129
             this.floorQuote3.alpha = 0
             this.backbackground.addChild(this.floorQuote3)
             this.floorQuote3.filters = [this.displacementFilterText1]
+
+
+
+            // Noah Quote
+            this.floorQuote4 = new TaggedText("There is no such thing as an innocent reading, we must ask what reading we are guilty of.” \n\n                                       ― Louis Althusser", {
+                "default": {
+                    fontFamily: 'Trade Gothic Next',
+                    fill: 0xFFFFFF, 
+                    fontWeight: 700,
+                    fontSize: "20px",
+                    lineHeight: 26,
+                    leading: 1,
+                    align: "center",
+                    wordWrap: true,
+                    wordWrapWidth: 420
+                }
+            })
+
+
+            this.floorQuote4.x = 3143
+            this.floorQuote4.y = 1410
+            this.floorQuote4.alpha = 0
+            this.backbackground.addChild(this.floorQuote4)
+            this.floorQuote4.filters = [this.displacementFilterText1]
+
+
+            for(let x=1; x<13; x++) {
+                let squareGraphic = new Graphics()
+                let randomWidth = Math.floor(Math.random() * 10)
+                squareGraphic.lineStyle(randomWidth, 0xFFFFFF)
+                squareGraphic.drawRect(0,0,45,45)
+                let randomX = Math.floor(Math.random() * 12) + 1
+                let randomY = Math.floor(Math.random() * 12) + 1
+                squareGraphic.x = 2910 + (randomX* 59)
+                squareGraphic.y = 300 + (randomY* 59)
+                this.background.addChild(squareGraphic)
+    
+                let randomFace1 = Math.floor(Math.random() * 10)
+                let randomFace2 = Math.floor(Math.random() * 10)
+    
+                let sprite = new PIXI.Sprite.from("https://normalizing-us-files.fra1.cdn.digitaloceanspaces.com/feature-tiles/3/faces/8/"+randomFace1+"/"+randomFace2+"")
+               
+
+                var img2 = new Image();
+                img2.crossOrigin='anonymous'
+                img2.src="https://normalizing-us-files.fra1.cdn.digitaloceanspaces.com/feature-tiles/3/faces/8/"+randomFace1+"/"+randomFace2+"";
+
+                setTimeout(function(){
+                    let isImage = opacityRatio(img2)
+                    console.log("image: "+isImage)
+                }, 1000)
+
+                
+    
+                sprite.width = 45
+                sprite.height = 45
+                sprite.x = 2910 + (randomX* 59)
+                sprite.y = 300 + (randomY* 59)
+                this.background.addChild(sprite)
+
+                if(x == 7) {
+                    this.spriteShader = new PIXI.Graphics()
+                    this.spriteShader.x = 2910 + (randomX* 59)
+                    this.spriteShader.y = 300 + (randomY* 59)
+                    this.spriteShader.width = 55
+                    this.spriteShader.height = 55
+                    this.spriteShader.beginFill(0xFFFFFF)
+                    this.spriteShader.drawRect(0,0,45,45)
+                    this.spriteShader.endFill()
+                    this.spriteShader.alpha = 0
+                    this.background.addChild(this.spriteShader)
+                }
+                
+            }
+    
+            for(let x=1; x<13; x++) {
+
+                let randomX = Math.floor(Math.random() * 12) + 1
+                let randomY = Math.floor(Math.random() * 12) + 1
+                
+                if(randomX > 6 && randomX < 10) {
+                    console.log('skipping')
+                    continue
+                }
+
+
+                let squareGraphic = new Graphics()
+                let randomWidth = Math.floor(Math.random() * 10)
+                squareGraphic.lineStyle(randomWidth, 0xFFFFFF)
+                squareGraphic.drawRect(0,0,45,45)
+               
+                squareGraphic.x = 2910 + (randomX* 59)
+                squareGraphic.y = 300 + (randomY* 59)
+                this.background.addChild(squareGraphic)
+    
+                let randomFace1 = Math.floor(Math.random() * 10)
+                let randomFace2 = Math.floor(Math.random() * 10)
+    
+                let sprite = new PIXI.Sprite.from("https://normalizing-us-files.fra1.cdn.digitaloceanspaces.com/feature-tiles/3/faces/8/"+randomFace1+"/"+randomFace2+"")
+               
+
+                var img2 = new Image();
+                img2.crossOrigin='anonymous'
+                img2.src="https://normalizing-us-files.fra1.cdn.digitaloceanspaces.com/feature-tiles/3/faces/8/"+randomFace1+"/"+randomFace2+"";
+
+                setTimeout(function(){
+                    let isImage = opacityRatio(img2)
+                    //console.log("image: "+isImage)
+                }, 1000)
+
+                
+    
+                sprite.width = 45
+                sprite.height = 45
+                sprite.x = 2910 + (randomX* 59)
+                sprite.y = 300 + (randomY* 59)
+                this.background.addChild(sprite)
+
+                if(x == 7 || x == 8) {
+                    this.spriteShader = new PIXI.Graphics()
+                    this.spriteShader.x = 2910 + (randomX* 59)
+                    this.spriteShader.y = 300 + (randomY* 59)
+                    this.spriteShader.width = 55
+                    this.spriteShader.height = 55
+                    this.spriteShader.beginFill(0xFFFFFF)
+                    this.spriteShader.drawRect(0,0,45,45)
+                    this.spriteShader.endFill()
+                    this.spriteShader.alpha = 0
+                    this.background.addChild(this.spriteShader)
+                }
+                
+            }
 
 
 
@@ -338,6 +536,9 @@ class PIXIRenderer {
 
         //inspace-jo.mp4
 
+
+       
+        this.count = 0
 
 
         
@@ -547,10 +748,16 @@ class PIXIRenderer {
         }
 
         //this.emitter.update(delta)
+        this.count++
 
         this.displacementSprite.y = delta*500
         this.displacementSprite.x = delta*500
         this.renderer.render(this.stage)
+
+        if(this.count > 360) {
+            this.spriteShader.alpha = 0.1 + Math.sin((this.count/10)) * 0.1;
+
+        }
         
 
         //this.backbackground.filters =  [this.ascaiiFilter, this.displacementFilter]

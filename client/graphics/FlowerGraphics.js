@@ -79,15 +79,15 @@ function animatePathDrawing(line, points) {
     //console.log(t1)
    
     if(t1 < 0.2) {
-        line.lineStyle(1, 0xffffb1, 0.3)
+        line.lineStyle(1, 0xff66b6, 0.3)
     } else if (t1 < 0.4) {
-        line.lineStyle(2, 0xffffb1, 0.2)
+        line.lineStyle(2, 0xff66b6, 0.2)
     } else if (t1 < 0.6) {
-        line.lineStyle(3, 0xffffb1, 0.2)
+        line.lineStyle(3, 0xff66b6, 0.2)
     } else if (t1 < 0.8) {
-        line.lineStyle(2, 0xffffb1, 0.2)
+        line.lineStyle(2, 0xff66b6, 0.2)
     } else {
-        line.lineStyle(1, 0xffffb1, 0.1)
+        line.lineStyle(1, 0xff66b6, 0.1)
     }
     
 
@@ -438,7 +438,102 @@ class FlowerGraphics extends PIXI.Container {
 
 
         } else if (state.y < 1300 && state.x > 1850) {
-            //nothing
+
+              
+                let dots = new PIXI.Graphics()
+
+                var WIDTH = window.innerWidth,
+                    HEIGHT = window.innerHeight;
+            
+               
+            
+                var Walker = function(x, y, size, stepSize, colorScale, walkStyle, pathTrace) {
+                    this.x = x;
+                    this.y = y;
+                    this.size = size;
+                    this.stepSize = typeof stepSize !== 'undefined' ? stepSize : 1;
+                    this.style = typeof walkStyle !== 'undefined' ? walkStyle : 2;
+                    this.trace = typeof pathTrace !== 'undefined' ? pathTrace : false;
+                    this.color = "#fff";
+                    this.colorScale = typeof colorScale !== 'undefined' ? colorScale : 1000;
+            
+                    this.display = function() {
+                      
+                        dots.beginFill(0xa162d3);
+                        dots.arc(this.x, this.y, this.size, 0, Math.PI * 2)
+                        
+                    }
+
+                    ease.add(dots, {alpha: 0.1}, {duration: 1000, wait: 3000})
+            
+                    
+            
+                    this.step = function() {
+                        if(this.progress < this.max) {
+                        if (this.style == 0) {
+                            this.x += (Math.random() * 2 - 1) * stepSize;
+                            this.y += (Math.random() * 2 - 1) * stepSize;
+                        } else if (this.style == 1) {
+                            var choice = Math.floor(Math.random() * 8);
+                            console.log(choice);
+                            switch (choice) {
+                                case 0:
+                                    this.x += stepSize;
+                                    break;
+                                case 1:
+                                    this.x -= stepSize;
+                                    break;
+                                case 2:
+                                    this.y += stepSize;
+                                    break;
+                                case 3:
+                                    this.y -= stepSize;
+                                    break;
+                                case 4:
+                                    this.x += stepSize;
+                                    this.y += stepSize;
+                                    break;
+                                case 5:
+                                    this.x += stepSize;
+                                    this.y -= stepSize;
+                                    break;
+                                case 6:
+                                    this.x -= stepSize;
+                                    this.y += stepSize;
+                                case 7:
+                                    this.x -= stepSize;
+                                    this.y -= stepSize;
+                            }
+                        } else if (this.style == 2) {
+                            var choice = Math.floor(Math.random() * 4);
+                            switch (choice) {
+                                case 0:
+                                    this.x += stepSize;
+                                    break;
+                                case 1:
+                                    this.x -= stepSize;
+                                    break;
+                                case 2:
+                                    this.y += stepSize;
+                                    break;
+                                case 3:
+                                    this.y -= stepSize;
+                                    break;
+                            }
+                        }
+                        }
+                    }
+                }
+            
+                this.rando = new Walker(0, 0, 2, 29, 500, 2, true);
+                this.rando.progress = 0
+                this.rando.max = Math.floor(Math.random() * 200)
+               
+                this.addChild(dots)
+
+               
+          
+
         } else {
 
             this.wrapper = new PIXI.Container()
@@ -522,6 +617,15 @@ class FlowerGraphics extends PIXI.Container {
             //console.log(this.lines)
             animatePathDrawing(this.lines[x], this.lines[x].points)
         }
+
+        if(this.rando) {
+            //this.rando.checkWorld();
+            this.rando.display();
+            this.rando.step();
+            this.rando.progress++
+        }
+
+        
 
        
 

@@ -25,6 +25,7 @@ class PlayerCharacter {
         this.typing = false
         this.bodyRotation = 0
         this.floor = state.floor
+        this.seat = Math.floor(100 + Math.random()*(150-100));
 
         this.circleShape = new p2.Circle({
             radius: this.size
@@ -89,7 +90,8 @@ PlayerCharacter.protocol = {
     headphones: nengi.Boolean,
     sleeping: nengi.Boolean,
     typing: nengi.Boolean,
-    sticker: nengi.UInt16
+    sticker: nengi.UInt16,
+    seat: nengi.UInt16
 }
 
 export default PlayerCharacter

@@ -37,11 +37,22 @@ class ObstacleGraphics extends PIXI.Container {
             //this.smileyStamp.height = size*10;
             this.addChild(this.body)
         }else {
+
             this.body = new Graphics()
             this.body.lineStyle(0)
-            this.body.beginFill(PIXI.utils.string2hex(state.color), 1.0, true)
+            if(state.color == "#6b378f") {
+                this.body.beginFill(PIXI.utils.string2hex("#FFFFFF"), 1.0, true)
+            } else {
+                this.body.beginFill(PIXI.utils.string2hex(state.color), 1.0, true)
+            }
             this.body.drawRect(0, 0, state.width, state.height)
             this.body.endFill()
+
+            if(state.color == "#6b378f") {
+                let glow = new GlowFilter({distance: 20, outerStrength: 5, color: PIXI.utils.string2hex(state.color)})
+                this.body.filters = [glow]
+            }
+
             this.wrapper.addChild(this.body)
             this.addChild(this.wrapper)
         }

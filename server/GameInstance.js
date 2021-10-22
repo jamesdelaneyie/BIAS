@@ -121,7 +121,7 @@ class GameInstance {
             this.boxes.set(box.nid, box)
         }
 
-        for(let x=0; x < 5; x++) {
+        for(let x=0; x < 20; x++) {
             let size = 30 + Math.floor(Math.random() * 120)
             let box = new Box({
                 name: "blackbox",
@@ -252,7 +252,7 @@ class GameInstance {
             name: "<bold>CLASSES</bold>\nLibby Heaney",
             type: "rectangle",
             x: 415,
-            y: 414,
+            y: 443,
             width: 830,
             height: 530,
             mass: 0,
@@ -435,8 +435,8 @@ class GameInstance {
         let johannArtworkInfo = {
             name: "12",
             type: "circle",
-            x: 3670,
-            y: 2147,
+            x: 3430,
+            y: 2380,
             width: 80,
             height: 80,
             color: "#e26d5a",
@@ -777,18 +777,43 @@ class GameInstance {
 
 
 
-
+        let mushonRoom = {
+            x: 2905,
+            y: 295,
+            width: 945,
+            height: 825,
+            floorColor: "#717a73",
+            gridColor: "#000000",
+            gridGap: 60,
+            wallThickness: 3,
+            wallColor: "#6b378f",
+            holes: [{
+                offset: 0,
+                width: 0,
+            },{
+                offset: 0,
+                width: 0,
+            },{
+                offset: 350,
+                width: 240,
+            },{
+                offset: 0,
+                width: 0,
+            }]
+        }
+        setupObjectWalls(this.instance, this.world, mushonRoom, this.boxes)
+        setupWalls(this.instance, mushonRoom, this.obstacles, 'wall')
 
 
 
         let mushonArtworkInfo = {
             name: "11",
             type: "circle",
-            x: 4411,
-            y: 840,
+            x: 3160,
+            y: 1205,
             width: 80,
             height: 80,
-            color: "#ff0000",
+            color: "#6b378f",
         }
 
         let mushonInfoPanel = new InfoPanel(mushonArtworkInfo)
@@ -799,11 +824,11 @@ class GameInstance {
 
         let mushonArtworkObject = {
             name: "<bold>NORMALIZI.NG</bold>\nMushon Zer-Aviv",
-            type: "rectangle",
-            x: 4485,
-            y: 300,
-            width: 200,
-            height: 600,
+            type: "",
+            x: 3320,
+            y: 650,
+            width: 119,
+            height: 119,
             mass: 0,
             color: "#ffffff",
         }
@@ -813,7 +838,7 @@ class GameInstance {
         this.artworks.set(mushonArtwork.nid, mushonArtwork)
 
 
-        let mushonKiller = new Box({
+        /*let mushonKiller = new Box({
             name: "mushonKiller",
             type: "",
             x: 3143,
@@ -908,7 +933,7 @@ class GameInstance {
         })
         this.instance.addEntity(mushonKillerSix)
         this.world.addBody(mushonKillerSix.body)
-        this.boxes.set(mushonKillerSix.nid, mushonKillerSix)
+        this.boxes.set(mushonKillerSix.nid, mushonKillerSix)*/
         
 
 
@@ -945,7 +970,8 @@ class GameInstance {
                 rooms: [
                     libbysRoom,
                     libbyInnerRoom,
-                    libbyEntrance
+                    libbyEntrance,
+                    mushonRoom
                 ]
             })
 
@@ -1044,6 +1070,7 @@ class GameInstance {
 
                 
                 for (let artwork of this.artworks.values()) {
+                    
                     if(artwork.name == "<bold>STEAL UR FEELINGS</bold>\nNoah Levenson") {
                         let collided = false
                         
@@ -1052,7 +1079,6 @@ class GameInstance {
                         if(collided == true) {
 
                             const response = new SAT.Response()
-
 
                             if (SAT.testCircleCircle(client.rawEntity.collider.circle, artwork.collider.circle, response)) {
                                 client.rawEntity.x -= response.overlapV.x * 4
@@ -1072,8 +1098,14 @@ class GameInstance {
                     if(client.rawEntity) {
                         client.rawEntity.headphones = false
                         client.smoothEntity.headphones = false
+                        if(client.rawEntity.x > 1700 && client.rawEntity.x < 2300) {
+                            client.rawEntity.x = 1009
+                            client.rawEntity.y = 2194
+                        }
+                        client.smoothEntity.sleeping = false
+                        client.rawEntity.sleeping = false
                     }
-                }, 200)
+                }, 500)
 
                 
               
@@ -1507,8 +1539,48 @@ class GameInstance {
                             directionVertical = 2
                         } 
 
-                        //let centerOfArt = artwork.collider.polygon.getCentroid()
-                        //console.log(centerOfArt)
+                        if(artwork.name == "<bold>STEAL UR FEELINGS</bold>\nNoah Levenson") {
+                            this.artworks.forEach(artwork => {
+                
+                                if(artwork.name == "<bold>STEAL UR FEELINGS</bold>\nNoah Levenson") {
+                                    
+                                    client.rawEntity.headphones = true
+                                    client.smoothEntity.headphones = true
+
+
+                                    let xPosition
+                                    let yPosition
+                                    
+                                    let xOffset = 150 * Math.sin(client.rawEntity.seat)
+                                    let yOffset = 150 * Math.cos(client.rawEntity.seat)
+                                    let offsetWorld = p2.vec2
+                                    artwork.body.vectorToWorldFrame(offsetWorld, [xOffset,yOffset])
+                                    console.log(offsetWorld)
+                                    
+                                    xPosition = artwork.collider.circle.pos.x + offsetWorld[0]
+                                    yPosition = artwork.collider.circle.pos.y + offsetWorld[1]
+                                    
+
+                                    console.log(artwork.collider)
+
+                                    client.rawEntity.x = xPosition
+                                    client.rawEntity.y = yPosition
+                                    
+                                    client.smoothEntity.x = xPosition
+                                    client.smoothEntity.y = yPosition
+
+                                    const dx = 950 -  client.rawEntity.x
+                                    const dy = 1980 -  client.rawEntity.y
+                                    const rotation = Math.atan2(dy, dx)
+                                    //client.rawEntity.rotation = rotation
+                                    //client.smoothEntity.rotation = rotation
+
+
+                                }
+                            })
+                        }
+
+                      
 
                         
                         this.instance.message(new Notification(artwork.name, 'showStartArtButton', directionHorizontal, directionVertical), client)
@@ -1588,7 +1660,7 @@ class GameInstance {
             
             if(artwork.name == "<bold>STEAL UR FEELINGS</bold>\nNoah Levenson") {
 
-                artwork.body.angle += 0.01
+                artwork.body.angle += 0.02
                
             }
         })

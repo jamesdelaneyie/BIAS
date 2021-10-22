@@ -5,7 +5,7 @@
 <style type="text/css">
 	.st0{fill:none;stroke:#00B140;stroke-width:0.25;stroke-miterlimit:10;}
 	.st1{fill:#3D4344;}
-	.st2{fill:#303431;}
+	.st2{opacity:0.8;fill:#A5A493;}
 	.st3{fill:none;}
 	.st4{fill:#5D6566;}
 	.st5{fill:#2C3233;}
@@ -559,7 +559,7 @@
 		c2.7-2.3,2.6-7.7-0.2-9.9c-3.5-2.9-6.9-5.8-10.3-8.7c-3.3,2.8-6.8,5.6-10.2,8.5c-3.1,2.6-3.1,8,0,10.6
 		C350.3,285.5,353.6,288.2,357,291z"/>
 </g>
-<rect x="2904.1" y="295.1" class="st2" width="1640" height="859"/>
+<rect x="2904.1" y="295.1" class="st2" width="948" height="826"/>
 <rect x="0.1" y="0.1" class="st3" width="4800" height="3480"/>
 <path class="st4" d="M237.6,236.6v943.5h533.2v176.5h412.7v-176.5h236.6V236.6H237.6z M1273.1,973.1h-889v-590h889V973.1z"/>
 <path class="st5" d="M295.4,1179.9h0.5v-0.1h58.8v0.1h0.5v-0.1h58.8v0.1h0.5v-0.1h58.8v0.1h0.5v-0.1h58.8v0.1h0.5v-0.1h58.8v0.1h0.5

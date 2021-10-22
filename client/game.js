@@ -472,9 +472,9 @@ const create = () => {
     handshake.y = inviteY
     handshake.floor = inviteFloor
 
-    client.connect('ws://localhost:8079', handshake)
+    //client.connect('ws://localhost:8079', handshake)
     
-    //client.connect('wss://bias.jamesdelaney.ie/test', handshake)
+    client.connect('wss://bias.jamesdelaney.ie/test', handshake)
 
     let connectionCounter = 0
 
@@ -554,6 +554,76 @@ const create = () => {
             
                 } else {
                     renderer.floorQuote2.alpha = 0
+                }
+
+                if(c < 100) {
+                    renderer.UIBuilder.showAchievement("5", "test")
+                }
+                
+            
+               
+            }
+
+            if(renderer.floorQuote3) {
+
+                let textCenterX = renderer.floorQuote3.x + renderer.floorQuote3.children[0].width/2
+                let textCenterY = renderer.floorQuote3.y + renderer.floorQuote3.children[0].height/2
+            
+                var a = textCenterX - state.mySmoothEntity.x;
+                var b = textCenterY - state.mySmoothEntity.y
+            
+                var c = Math.sqrt( a*a + b*b )
+             
+                if(c < 500) {
+            
+                    let alpha = ((500 - c) / 400) 
+
+                    //console.log(alpha)
+            
+                    renderer.floorQuote3.alpha = alpha
+                    let displacement = c - 150
+                    if(displacement < 0) {
+                        displacement = 0
+                    }
+                    renderer.displacementFilterText1.scale.set(displacement)
+            
+                } else {
+                    renderer.floorQuote3.alpha = 0
+                }
+
+                if(c < 100) {
+                    renderer.UIBuilder.showAchievement("5", "test")
+                }
+                
+            
+               
+            }
+
+            if(renderer.floorQuote4) {
+
+                let textCenterX = renderer.floorQuote4.x + renderer.floorQuote4.children[0].width/2
+                let textCenterY = renderer.floorQuote4.y + renderer.floorQuote4.children[0].height/2
+            
+                var a = textCenterX - state.mySmoothEntity.x;
+                var b = textCenterY - state.mySmoothEntity.y
+            
+                var c = Math.sqrt( a*a + b*b )
+             
+                if(c < 500) {
+            
+                    let alpha = ((500 - c) / 400) 
+
+                    //console.log(alpha)
+            
+                    renderer.floorQuote4.alpha = alpha
+                    let displacement = c - 150
+                    if(displacement < 0) {
+                        displacement = 0
+                    }
+                    renderer.displacementFilterText1.scale.set(displacement)
+            
+                } else {
+                    renderer.floorQuote4.alpha = 0
                 }
 
                 if(c < 100) {

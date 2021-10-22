@@ -513,6 +513,7 @@ class PlayerGraphics extends PIXI.Container {
         this.auraContainer.visible  = 0
         this.info.visible = 0
         this.avatarContainer.visible = 0
+        this.sleepingGraphic.visible = 0
     }
 
     show() {

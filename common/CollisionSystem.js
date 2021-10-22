@@ -211,6 +211,8 @@ CollisionSystem.moveWithCollisions = (entity, obstacles, boxes, artworks, infoPa
             } else {
                 if(artwork.name == "<bold>DARK MATTERS</bold>\nJohann Diedrick" && entity.floor == 0) {
 
+                } else if (artwork.name == "<bold>STEAL UR FEELINGS</bold>\nNoah Levenson" && entity.headphones == true) {
+
                 } else {
                     if (SAT.testCircleCircle(entity.collider.circle, artwork.collider.circle, response)) {
                         entity.x -= response.overlapV.x

@@ -1198,7 +1198,7 @@ class UIBuilder extends PIXI.Container {
 
         if(this.worldInfoOn == true) {
 
-            let width = 78
+            let width = 39
             let height = 23
 
             this.worldInfo = new PUXI.Stage({
@@ -1219,7 +1219,7 @@ class UIBuilder extends PIXI.Container {
             this.worldInfoBackground = new Graphics()
             this.worldInfoBackground.lineStyle(0)
             this.worldInfoBackground.beginFill(white, 0.3, true)
-            this.worldInfoBackground.drawRoundedRect(0, 0, width*2, height*2, 6)
+            this.worldInfoBackground.drawRoundedRect(0, 0, width*4, height*2, 6)
             this.worldInfoBackground.endFill()
             this.worldInfoBackground.scale.set(0.5)
             this.worldInfoBackground.cacheAsBitmap = true
@@ -1250,13 +1250,13 @@ class UIBuilder extends PIXI.Container {
             this.numberOfPeople = new PIXI.Text("Current:", {fill: white, fontSize: 10, fontFamily: 'Monaco'});
             this.numberOfPeople.x = 5
             this.numberOfPeople.y = 30
-            this.numberOfPeople.alpha = 0.5
+            this.numberOfPeople.alpha = 0//.5
             this.worldInfoWrapper.contentContainer.addChild(this.numberOfPeople);
             
             this.numberOfPeopleCounter = new PIXI.Text("0", {fill: white, fontSize: 10, fontFamily: 'Monaco', letterSpacing: 2});
             this.numberOfPeopleCounter.x = 58
             this.numberOfPeopleCounter.y = 30
-            this.numberOfPeopleCounter.alpha = 0.6
+            this.numberOfPeopleCounter.alpha = 0//.6
             this.worldInfoWrapper.contentContainer.addChild(this.numberOfPeopleCounter);
     
     
@@ -1264,13 +1264,13 @@ class UIBuilder extends PIXI.Container {
             this.totalNumberOfPeople = new PIXI.Text("Total:", {fill: white, fontSize: 10, fontFamily: 'Monaco'});
             this.totalNumberOfPeople.x = 5
             this.totalNumberOfPeople.y = 47
-            this.totalNumberOfPeople.alpha = 0.5
+            this.totalNumberOfPeople.alpha = 0//.5
             this.worldInfoWrapper.contentContainer.addChild(this.totalNumberOfPeople);
             
             this.totalNumberOfPeopleCounter = new PIXI.Text("0", {fill: white, fontSize: 10, fontFamily: 'Monaco', letterSpacing: 2});
             this.totalNumberOfPeopleCounter.x = 50
             this.totalNumberOfPeopleCounter.y = 47
-            this.totalNumberOfPeopleCounter.alpha = 0.6
+            this.totalNumberOfPeopleCounter.alpha = 0//.6
             this.worldInfoWrapper.contentContainer.addChild(this.totalNumberOfPeopleCounter);
     
     
@@ -1455,32 +1455,32 @@ class UIBuilder extends PIXI.Container {
                 {
                     title:"<gap>\n</gap><boldtitle>CLASSES</boldtitle>",
                     subtitle:"How are biases translated into machine codes and practises?<gap>\n</gap>",
-                    credit: "Libby Heaney | UK | 2021 \n<link>libbyheaney.co.uk</link> // <link>@libby_heaney_</link>",
-                    paragraph: '<p>CLASSES is a video essay exploring the entanglements between machine learning classification and social class(ification). The artwork takes place in a simulated model of a London council estate, where the artist lives. Machine and human voices playfully narrate aspects of her in-depth research into accented speech recognition, natural language processing (GPT-J, Facebook’s FastText and GloVe word embeddings) and public space surveillance, to understand how historical and cultural biases around social class are being translated into code and how this affects people’s material conditions.\n\nTowards the end of the essay, the artist finds inspiration in her community gardening on the estate to propose a rewilded AI that removes rigid hierarchical categories to build stronger relations between people and the world.\n\n</p>',
+                    credit: "<link>libbyheaney.co.uk</link> // <link>@libby_heaney_</link>",
+                    paragraph: '<p>Libby Heaney | UK | 2021 \n\nCLASSES is a video essay exploring the entanglements between machine learning classification and social class(ification). The artwork takes place in a simulated model of a London council estate, where the artist lives. Machine and human voices playfully narrate aspects of her in-depth research into accented speech recognition, natural language processing (GPT-J, Facebook’s FastText and GloVe word embeddings) and public space surveillance, to understand how historical and cultural biases around social class are being translated into code and how this affects people’s material conditions.\n\nTowards the end of the essay, the artist finds inspiration in her community gardening on the estate to propose a rewilded AI that removes rigid hierarchical categories to build stronger relations between people and the world.\n\n</p>',
                     style: "",
                     type: "talking"  
                 },
                 {
                     title:"<gap>\n</gap><boldtitle>STEALING UR FEELINGS</boldtitle>",
                     subtitle:"Can the internet read you?<gap>\n</gap>",
-                    credit: "Noah Levenson | USA | 2019 // <link>noahlevenson.com</link> // <link>@noahlevenson</link>",
-                    paragraph: '<p>Meet the new A.I. that knows you better than you know yourself. STEALING UR FEELINGS is an interactive film that learns your deepest, darkest secrets - just by looking at your face.  That\'s the good news. The bad news? Your favourite apps are doing exactly the same thing.\n</p>',
+                    credit: "<link>noahlevenson.com</link> // <link>@noahlevenson</link>",
+                    paragraph: '<p>Noah Levenson | USA | 2019\n\nMeet the new A.I. that knows you better than you know yourself. STEALING UR FEELINGS is an interactive film that learns your deepest, darkest secrets - just by looking at your face.  That\'s the good news. The bad news? Your favourite apps are doing exactly the same thing.\n</p>',
                     style: "",
                     type: "talking"  
                 },
                 {
                     title:"<gap>\n</gap><boldtitle>NORMALIZI.NG</boldtitle>",
                     subtitle:"What does normal look like?<gap>\n</gap>",
-                    credit: "Mushon Zer-Aviv | Israel | 2021 // <link>mushon.com</link> // <link>@mushon</link>\n\n",
-                    paragraph: '<p>NORMALIZI.NG by Mushon Zer-Aviv is a new digital commission further developing and adapting his existing work “The Normalizing Machine”. This experimental online research in machine-learning aims to analyze and understand how we decide who looks more “normal”. By contributing to the dataset and choosing between faces you deem more normal, the machine analyzes your decisions and will add you to its algorithmic map of normality.\n\nIn the late 1800s, the French forensics pioneer Alphonse Bertillon, the father of the mugshot, developed ‘Le Portrait Parle’ (the speaking portrait), a system for standardizing, indexing and classifying the human face. His statistical system was never meant to criminalize the face, but it was later widely adopted by both the eugenics movement and the Nazis to do exactly that.\n\nThe online work automates Alphonse’s speaking portraits and visualizes how today’s systematic discrimination is aggregated, amplified and conveniently hidden behind the seemingly objective black box of artificial intelligence.\n\n\n</p>',
+                    credit: "<link>mushon.com</link> // <link>@mushon</link>\n\n",
+                    paragraph: '<p>Mushon Zer-Aviv | Israel | 2021 \n\nNORMALIZI.NG by Mushon Zer-Aviv is a new digital commission further developing and adapting his existing work “The Normalizing Machine”. This experimental online research in machine-learning aims to analyze and understand how we decide who looks more “normal”. By contributing to the dataset and choosing between faces you deem more normal, the machine analyzes your decisions and will add you to its algorithmic map of normality.\n\nIn the late 1800s, the French forensics pioneer Alphonse Bertillon, the father of the mugshot, developed ‘Le Portrait Parle’ (the speaking portrait), a system for standardizing, indexing and classifying the human face. His statistical system was never meant to criminalize the face, but it was later widely adopted by both the eugenics movement and the Nazis to do exactly that.\n\nThe online work automates Alphonse’s speaking portraits and visualizes how today’s systematic discrimination is aggregated, amplified and conveniently hidden behind the seemingly objective black box of artificial intelligence.\n\n\n</p>',
                     style: "",
                     type: "talking"  
                 },
                 {
                     title:"<gap>\n</gap><boldtitle>DARK MATTERS</boldtitle>",
                     subtitle:"What does bias sound like?<gap>\n</gap>",
-                    credit: "Johann Diedrick | USA | 2021 // <link>darkmatters.ml</link> // <link>@johanndiedrick</link>",
-                    paragraph: '<p>Dark Matters exposes the absence of Black speech in the datasets used to train voice interface systems in consumer AI products like Alexa and Siri. Using 3D modeling, sound and storytelling, the project challenges us to grapple with racism and inequity through speech and the spoken word, and how AI systems underserve Black communities.\n\n\n</p>',
+                    credit: "<link>darkmatters.ml</link> // <link>@johanndiedrick</link>",
+                    paragraph: '<p>Johann Diedrick | USA | 2021\n\nDark Matters exposes the absence of Black speech in the datasets used to train voice interface systems in consumer AI products like Alexa and Siri. Using 3D modeling, sound and storytelling, the project challenges us to grapple with racism and inequity through speech and the spoken word, and how AI systems underserve Black communities.\n\n\n</p>',
                     style: "",
                     type: "talking"  
                 },
@@ -3595,6 +3595,36 @@ class UIBuilder extends PIXI.Container {
 
                 this.miniMap.addChild(miniRoom)
             });
+
+
+                let miniRoom = new PIXI.Graphics()
+            
+                let miniRoomWidth = 35
+                let miniRoomHeight = 35
+
+                miniRoom.x = 42.5
+                miniRoom.y = 32.5
+                
+                const roomColor = PIXI.utils.string2hex("#998675")
+
+                miniRoom.beginFill(roomColor, 0.2)
+                miniRoom.drawRect(miniRoom.x, miniRoom.y, miniRoomWidth, miniRoomHeight)
+                miniRoom.rotation = 0.785
+                miniRoom.endFill()
+
+                this.miniMap.addChild(miniRoom)
+
+                let sprite = new PIXI.Sprite.from("images/jo-room-map.svg")
+                sprite.width = 55
+                sprite.height = 55
+                sprite.x = 142.5
+                sprite.y = 92
+                sprite.alpha = 0.5
+                this.miniMap.addChild(sprite)
+
+                
+
+
             
             worldDesign.art.forEach(artwork => {
                 let artShape = new Graphics()
@@ -4049,6 +4079,9 @@ class UIBuilder extends PIXI.Container {
         }
         if(this.mainMenuOn) {
             this.mainMenuStage.visible = true
+        }
+        if(this.chatStageOn) {
+            this.textBox.visible = true
         }
 
         let allKids = this.children.length - 1
