@@ -6,10 +6,18 @@ const handleShot = (x, y, tx, ty, obstacles, renderer) => {
     let endY = ty
 
     obstacles.forEach(obstacle => {
-        const hitObstacle = CollisionSystem.checkLinePolygon(
-            x, y, tx, ty, 
-            obstacle.collider.polygon
-        )
+        if(obstacle.collider.polygon) {
+            var hitObstacle = CollisionSystem.checkLinePolygon(
+                x, y, tx, ty, 
+                obstacle.collider.polygon
+            )
+        } else {
+            var  hitObstacle = CollisionSystem.checkLineCircle(
+                x, y, tx, ty, 
+                obstacle.collider.circle
+            )
+        }
+        
 
         if (hitObstacle) {
             endX = hitObstacle.x

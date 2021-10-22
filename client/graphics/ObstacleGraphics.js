@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { SmoothGraphics as Graphics } from '@pixi/graphics-smooth';
 import { ease } from 'pixi-ease'
-
+import {GlowFilter} from '@pixi/filter-glow'
 
 class ObstacleGraphics extends PIXI.Container {
     constructor(state) {
@@ -16,57 +16,36 @@ class ObstacleGraphics extends PIXI.Container {
         this.color = state.color
         this.rotation = state.angle
 
+        //console.log(this.rotation)
         this.wrapper = new PIXI.Container()
 
-        if(this.name == "libbyVideoPreview") {
-            this.videoTexture = PIXI.Texture.from('/video/Libby.mp4');
-            this.videoTexture.baseTexture.resource.source.muted = true
-            this.videoTexture.baseTexture.resource.source.loop = true
-            this.videoTexture.baseTexture.resource.source.playsinline = true
-            this.videoTexture.baseTexture.resource.autoPlay = true
-            this.videoTexture.baseTexture.resource.volume = 0
-            //this.videoTexture.baseTexture.resource.updateFPS = 10
+        if(this.name == "johannBlocker" || this.name == "johannBlockerOuter") {
+            this.body = new Graphics()
+            this.body.lineStyle(5, PIXI.utils.string2hex(state.color))
+            this.body.drawCircle(0, 0, state.width*2)
+            this.wrapper.addChild(this.body)
+            let glow = new GlowFilter({distance: 40, outerStrength: 10, color: PIXI.utils.string2hex(state.color)})
+            this.body.filters = [glow]
+            this.addChild(this.wrapper)
 
-            this.displacementSprite = PIXI.Sprite.from('images/displacement-1.png')
-            this.displacementSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT
-            this.displacementFilter = new PIXI.filters.DisplacementFilter(this.displacementSprite)
+        } else if(this.name == "stairsUp" || this.name == "stairsDown") { 
 
-            this.displacementFilter.padding = 0
-
-            const video = this.videoTexture.baseTexture.resource.source
-            video.muted = true
-            video.playbackRate = 0.5;
-
-            const videoSprite = new PIXI.Sprite(this.videoTexture);
-
-            videoSprite.width = state.width;
-            videoSprite.height = state.height;
-            this.wrapper.addChild(videoSprite);
-
-        } else {
-
+            this.body = new PIXI.Sprite.from('images/stairs.svg');
+            this.body.width = state.width
+            this.body.height = state.height
+            //this.body.width = 
+            //this.smileyStamp.height = size*10;
+            this.addChild(this.body)
+        }else {
             this.body = new Graphics()
             this.body.lineStyle(0)
             this.body.beginFill(PIXI.utils.string2hex(state.color), 1.0, true)
-            if(state.name == "merryGoRound") {
-                this.body.pivot.set(0.5)
-                this.body.drawRect(-state.width/2, -state.height/2, state.width, state.height)
-            } else {
-                this.body.drawRect(0, 0, state.width, state.height)
-            }
-            
+            this.body.drawRect(0, 0, state.width, state.height)
             this.body.endFill()
             this.wrapper.addChild(this.body)
-            
+            this.addChild(this.wrapper)
         }
         
-        
-        this.addChild(this.wrapper)
-
-        this.interactive = true
-        this.buttonMode = true
-
-
 
         this.count = 0.01
         
@@ -102,24 +81,8 @@ class ObstacleGraphics extends PIXI.Container {
 
     update(delta) {
 
-        let rotation = this.angle
-        let pi = Math.PI
-        rotation = rotation * (180/pi)
-        //console.log(rotation)
-        if(this.name == "merryGoRound") {
-            this.angle = rotation + 45//-0.785398
-        } else {
-            this.angle = rotation
-        }
-       
         
-        if(this.name == "libbyVideoPreview") {
-            
-            this.displacementFilter.scale.x = 90 * Math.sin(this.count)//1
-            this.displacementFilter.scale.y = 90 * Math.sin(this.count*1.5)
-            this.count = this.count + 0.01
-            this.wrapper.filters =  [this.displacementFilter]
-        }
+       
     }
 }
 

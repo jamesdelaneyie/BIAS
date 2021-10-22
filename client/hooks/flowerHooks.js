@@ -16,7 +16,8 @@ export default ({ flowers }, renderer) => {
                 renderer.background.children[4].children[1].addChild(graphics)*/
                 
             } else {
-                renderer.backbackground.addChild(graphics)
+                //console.log()
+                renderer.backbackbackground.addChildAt(graphics, 0)
                 
             }
 
@@ -24,7 +25,7 @@ export default ({ flowers }, renderer) => {
         },
         delete({ nid, graphics }) {
             renderer.entities.delete(nid)
-            renderer.backbackground.removeChild(graphics)
+            renderer.backbackbackground.removeChild(graphics)
         }
     }
 }

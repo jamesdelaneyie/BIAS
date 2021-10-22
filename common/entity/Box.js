@@ -20,9 +20,33 @@ class Box {
         this.material = state.material
         this.offset = state.offset
         this.speedAdjust = state.speedAdjust
+
+        //particle
+
+        this.boxShape = new p2.Box({
+            width: state.width, 
+            height: state.height
+        });
+        this.boxShape.material = state.material;
+        
+    
+        this.body = new p2.Body({
+            mass: state.mass,
+            position: [state.x + state.width/2, state.y + state.height/2],
+        });
+
+        
+        this.body.addShape(this.boxShape)
+        if (this.type == "particle") {
+            this.collider = CollisionSystem.createRectangleColliderBox(0, 0, 1, 1)
+        } else {
+            this.collider = CollisionSystem.createRectangleColliderBox(0, 0, state.width, state.height)
+
+        }
+
        
         
-        if(state.name == "token") {
+        /*if(state.name == "token") {
 
 
             this.boxShape = new p2.Box({
@@ -100,7 +124,7 @@ class Box {
                 this.collider = CollisionSystem.createRectangleColliderBox(0, 0, state.width, state.height)
             }
             
-        }
+        }*/
 
         
     }

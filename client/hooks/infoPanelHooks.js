@@ -6,7 +6,7 @@ export default ({ infoPanels }, renderer) => {
 
             infoPanels.set(data.nid, entity)
 
-            console.log('chcker')
+            //console.log('chcker')
 
             const graphics = new InfoPanelGraphics(data)
 

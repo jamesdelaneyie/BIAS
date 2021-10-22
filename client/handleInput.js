@@ -87,16 +87,19 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
                 });
             //}*/
 
-            const sendMessage = renderer.UIBuilder.sendIcon
-            sendMessage.on("pointerdown", function () {
-                let message = renderer.UIBuilder.mockInput.value;
-                if(message != "") {
-                    const speakCommand = new SpeakCommand(message, "talk", myRawEntity.x, myRawEntity.y)
-                    client.addCommand(speakCommand)
-                }
-                renderer.UIBuilder.mockInput.blur();
-                renderer.UIBuilder.mockInput.text = ""
-            });
+            /*if(renderer.UIBuilder.sendIcon) {
+
+                const sendMessage = renderer.UIBuilder.sendIcon
+                sendMessage.on("pointerdown", function () {
+                    let message = renderer.UIBuilder.mockInput.value;
+                    if(message != "") {
+                        const speakCommand = new SpeakCommand(message, "talk", myRawEntity.x, myRawEntity.y)
+                        client.addCommand(speakCommand)
+                    }
+                    renderer.UIBuilder.mockInput.blur();
+                    renderer.UIBuilder.mockInput.text = ""
+                });
+            }*/
 
 
             document.addEventListener('keydown', event => {
@@ -140,6 +143,7 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
 
                 urlParams.set('x', parseInt(myRawEntity.x));
                 urlParams.set('y', parseInt(myRawEntity.y));
+                urlParams.set('floor', parseInt(myRawEntity.floor));
 
                 let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + urlParams.toString();
                 window.history.replaceState({path: newurl}, '', newurl);

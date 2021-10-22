@@ -98,7 +98,7 @@ export default (instance, room, obstacles, type) => {
                 }
                 let bottomWall1 = new Obstacle({ 
                     name: obstacleType,
-                    x: roomX - borderWidth, 
+                    x: roomX - borderWidth - 1, 
                     y: roomHeight + roomY, 
                     width: width, 
                     height: borderWidth, 
@@ -194,9 +194,9 @@ export default (instance, room, obstacles, type) => {
             } else if (index == 2) {
                 let bottomWall = new Obstacle({ 
                     name: obstacleType,
-                    x: roomX - borderWidth, 
+                    x: roomX - borderWidth - 1, 
                     y: roomHeight + roomY, 
-                    width: roomWidth + borderWidth*2, 
+                    width: roomWidth + borderWidth*2 + 1, 
                     height: borderWidth, 
                     border: borderWidth,
                     color: backgroundColor

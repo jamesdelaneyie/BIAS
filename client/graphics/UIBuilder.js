@@ -2710,11 +2710,14 @@ class UIBuilder extends PIXI.Container {
             const closeNotificationButtonClick = new PUXI.ClickManager(this.closeNotificationButton, true, false, false)
             const theNotification = this.notificationStage
 
+            const theNotificationText = this.notificationTaggedText.text
+
             closeNotificationButtonClick.onClick = function(){
                 ease.add(theNotification, {alpha: 0}, { duration: 250, ease: 'easeOutExpo'})
                 setTimeout(function(){
                     theNotification.visible = false
                 }, 250)
+                window.localStorage.setItem('notificationSettings', JSON.stringify({text: ""+theNotificationText+""}));
             }
 
             this.notificationWrapper.addChild(this.closeNotificationWrapper)
@@ -2794,6 +2797,18 @@ class UIBuilder extends PIXI.Container {
                 }, 
                 {      
                     text: '🎨   +1 ART!  (4/4)'
+                }, 
+                {      
+                    text: '💬   +1 QUOTE!  (1/4)'
+                },
+                {      
+                    text: '💬   +1 QUOTE!  (2/4)'
+                },
+                {      
+                    text: '💬   +1 QUOTE!  (3/4)'
+                },
+                {      
+                    text: '💬   +1 QUOTE!  (4/4)'
                 }
             ]
         
@@ -2994,7 +3009,7 @@ class UIBuilder extends PIXI.Container {
                 height: window.innerHeight
             })  
             this.transitionScreen.visible = false
-            
+            this.transitionScreen.alpha = 0
             this.transitionScreenWrapper = new PUXI.Widget({
             }).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
@@ -3559,6 +3574,27 @@ class UIBuilder extends PIXI.Container {
         if(this.miniMapOn == true) {
        
             let worldDesign = JSON.parse(design)
+
+            worldDesign.rooms.forEach(room => {
+                let miniRoom = new PIXI.Graphics()
+            
+                let miniRoomWidth = room.width / 25
+                let miniRoomHeight = room.height / 25
+
+                miniRoom.x = (room.x / 50) + 5
+                miniRoom.y = (room.y / 50) + 5
+
+
+                //console.log(miniRoom.x, miniRoom.y, miniRoomWidth, miniRoomHeight)
+                
+                const roomColor = PIXI.utils.string2hex(room.floorColor)
+
+                miniRoom.beginFill(roomColor, 0.2)
+                miniRoom.drawRect(miniRoom.x, miniRoom.y, miniRoomWidth, miniRoomHeight)
+                miniRoom.endFill()
+
+                this.miniMap.addChild(miniRoom)
+            });
             
             worldDesign.art.forEach(artwork => {
                 let artShape = new Graphics()
@@ -3604,6 +3640,10 @@ class UIBuilder extends PIXI.Container {
                 }
  
             });
+
+            
+
+
 
         }
 
@@ -3947,15 +3987,21 @@ class UIBuilder extends PIXI.Container {
 
     showNotification(option, type) {
         
+
         console.log(option)
         let message = this.notifications[option].text
         let theUI = this
         let notificationStage = this.notificationStage
 
-        notificationStage.visible = true
+        let notificationSettings = window.localStorage.getItem('notificationSettings')
+        notificationSettings = JSON.parse(notificationSettings)
+
         this.notificationTaggedText.text = message
+
+        if(notificationSettings.text == message) {
+            return
+        }
         this.notificationTaggedText.textContainer.children.forEach(element => {
-           
             if(element._text == "here") {
                 element.interactive = true
                 element.buttonMode = true
@@ -3968,15 +4014,18 @@ class UIBuilder extends PIXI.Container {
                 })
             }
         })
+        notificationStage.visible = true
         ease.add(this.notificationStage, {alpha: 1}, { duration: 250, ease: 'easeOutExpo' })
     }
 
     showAchievement(option, type) {
-        
-        let message = this.achievements[option].text
-        this.achievementTaggedText.text = message
-        ease.add(this.achievementStage, {alpha: 1}, { duration: 250, ease: 'easeOutExpo', wait: 2000 })
-        ease.add(this.achievementStage, {alpha: 0}, { duration: 250, ease: 'easeOutExpo', wait: 5000 })
+        if(this.achievementStage.alpha <= 0) {
+            //console.log(this.achievementStage.alpha)
+            let message = this.achievements[option].text
+            this.achievementTaggedText.text = message
+            ease.add(this.achievementStage, {alpha: 1}, { duration: 250, ease: 'easeOutExpo' })
+            ease.add(this.achievementStage, {alpha: 0}, { duration: 250, ease: 'easeOutExpo', wait: 3500 })
+        }
     }
 
     hideArt(){
@@ -4059,6 +4108,7 @@ class UIBuilder extends PIXI.Container {
         
 
         sound.toggleMuteAll()
+
         if(art == 1) {
             this.transitionTextTagged.text = "<bold>CLASSES</bold>\nLibby Heaney"
         } else if (art == 2) {
@@ -4072,6 +4122,7 @@ class UIBuilder extends PIXI.Container {
         //this.transitionTextTagged.text = 
 
         this.transitionScreen.visible = true
+        ease.add(this.transitionScreen, {alpha: 1}, { duration: 500, ease: 'easeOutExpo'})
         ease.add(this.transitionScreenWrapper, {alpha: 1}, { duration: 1000, ease: 'easeOutExpo'})
         this.transitionScreen.resize(window.innerWidth, window.innerHeight)
 
@@ -4560,7 +4611,7 @@ class UIBuilder extends PIXI.Container {
             this.connectionScreen.visible = false
         } else {
             if(this.wasConnected == true) {
-                this.connectionTextTagged.text = "Disconnected from <bold>BIAS ONLINE</bold>\nPlease Refresh the Page"
+                this.connectionTextTagged.text = "Disconnected from <bold>BIAS ONLINE</bold>\nPlease refresh the page"
             } else {
                 this.connectionTextTagged.text = "Unable to connect to <bold>BIAS ONLINE</bold>\nPlease Try Again Later"
             }

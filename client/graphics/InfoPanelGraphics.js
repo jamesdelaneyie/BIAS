@@ -78,7 +78,7 @@ class InfoPanelGraphics extends PIXI.Container {
         let max = 100
         let mapped = value - 20
         let brightness = (max - mapped) / 100
-        console.log(brightness)
+        //console.log(brightness)
         this.body.alpha = brightness
         
     }

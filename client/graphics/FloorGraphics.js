@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js'
 import {DropShadowFilter} from '@pixi/filter-drop-shadow';
 
 
+
 class FloorGraphics extends PIXI.Container {
     constructor(state) {
         super()

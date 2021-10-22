@@ -30,12 +30,18 @@ class BoxGraphics extends PIXI.Container {
             video.muted = true
             video.playbackRate = 2;
 
+            const filter = new PIXI.filters.ColorMatrixFilter();
+            filter.sepia();
+
+            
+
             const videoSprite = new PIXI.Sprite(this.videoTexture);
             videoSprite.x = (-state.width/2)*2
             videoSprite.y = (-state.height/2)*2
             videoSprite.width = state.width*2 //.width;
             videoSprite.height = state.height*2//state.height;
             videoSprite.blendMode = PIXI.BLEND_MODES.MULTIPLY
+            videoSprite.filter = [filter]
             this.addChild(videoSprite);
         } else {
 

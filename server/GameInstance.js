@@ -20,6 +20,9 @@ import setupObjectWalls from './setupObjectWalls.js'
 import setupPortals from './setupPortals.js'
 import setupObstacles from './setupObstacles.js'
 
+
+import addFlower from './addFlower.js'
+
 import Flower from '../common/entity/Flower.js'
 import Box from '../common/entity/Box.js'
 import Obstacle from '../common/entity/Obstacle.js'
@@ -105,7 +108,7 @@ class GameInstance {
         for(let x=0; x < 120; x++) {
             let box = new Box({
                 name: "",
-                type: "",
+                type: "particle",
                 x: 1773 + (15 * x),
                 y: 1333 + (10 * x),
                 width: 3,
@@ -136,32 +139,7 @@ class GameInstance {
         }
 
 
-        let stairsUp = new Obstacle({ 
-            name: 'stairsUp',
-            x: 3354,
-            y: 2185,
-            width: 100, 
-            height: 100, 
-            border: 0,
-            color: "#ffff00",
-            angle: 0
-        })
-        this.instance.addEntity(stairsUp)
-        this.obstacles.set(stairsUp.nid, stairsUp)
-
-        let stairsDown = new Obstacle({ 
-            name: 'stairsDown',
-            x: 3457,
-            y: 2086,
-            width: 100, 
-            height: 100, 
-            border: 0,
-            color: "#00ffff",
-            angle: 0
-        })
-        this.instance.addEntity(stairsDown)
-        this.obstacles.set(stairsDown.nid, stairsDown)
-
+        
 
 
         let welcomeInfo = {
@@ -183,6 +161,91 @@ class GameInstance {
 
 
 
+
+
+        let libbysRoom = {
+            x: 245,
+            y: 240,
+            width: 1175,
+            height: 940,
+            floorColor: "#717a73",
+            gridColor: "#000000",
+            gridGap: 60,
+            wallThickness: 10,
+            wallColor: "#00b140",
+            holes: [{
+                offset: 0,
+                width: 0,
+            },{
+                offset: 0,
+                width: 0,
+            },{
+                offset: 515,
+                width: 415,
+            },{
+                offset: 0,
+                width: 0,
+            }]
+        }
+
+        setupObjectWalls(this.instance, this.world, libbysRoom, this.boxes)
+        setupWalls(this.instance, libbysRoom, this.obstacles, 'wall')
+
+        let libbyInnerRoom = {
+            x: 389,
+            y: 388,
+            width: 880,
+            height: 580,
+            floorColor: "#717a73",
+            gridColor: "#000000",
+            gridGap: 60,
+            wallThickness: 5,
+            wallColor: "#00b140",
+            holes: [{
+                offset: 0,
+                width: 0,
+            },{
+                offset: 0,
+                width: 0,
+            },{
+                offset: 0,
+                width: 0,
+            },{
+                offset: 0,
+                width: 0,
+            }]
+        }
+
+        setupObjectWalls(this.instance, this.world, libbyInnerRoom, this.boxes)
+        setupWalls(this.instance, libbyInnerRoom, this.obstacles, 'wall')
+
+        let libbyEntrance = {
+            x: 774,
+            y: 1190,
+            width: 409,
+            height: 168,
+            floorColor: "#717a73",
+            gridColor: "#000000",
+            gridGap: 60,
+            wallThickness: 10,
+            wallColor: "#00b140",
+            holes: [{
+                offset: 0,
+                width: 415,
+            },{
+                offset: 0,
+                width: 0,
+            },{
+                offset: 0,
+                width: 415,
+            },{
+                offset: 0,
+                width: 0,
+            }]
+        }
+
+        setupObjectWalls(this.instance, this.world, libbyEntrance, this.boxes)
+        setupWalls(this.instance, libbyEntrance, this.obstacles, 'wall')
 
        
         let libbyArtworkObject = {
@@ -218,13 +281,33 @@ class GameInstance {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         let noahArtworkObject = {
             name: "<bold>STEAL UR FEELINGS</bold>\nNoah Levenson",
-            type: "triangle",
-            x: 777,
-            y: 2430,
-            width: 407,
-            height: 325,
+            type: "circle",
+            x: 800,
+            y: 2318,
+            width: 400,
+            height: 400,
             mass: 0,
             color: "#ffffff",
         }
@@ -237,8 +320,8 @@ class GameInstance {
         let noahArtworkInfo = {
             name: "10",
             type: "circle",
-            x: 1013,
-            y: 2143,
+            x: 1146,
+            y: 1910,
             width: 80,
             height: 80,
             color: "#ffff1a",
@@ -251,8 +334,103 @@ class GameInstance {
 
 
 
+        let noahWall1 = new Obstacle({ 
+            name: "noahWall",
+            x: 1130,
+            y: 2024, 
+            width: 600, 
+            height: 10, 
+            border: 10,
+            color: "#ffff00",
+            angle: 47.5
+        })
+        this.instance.addEntity(noahWall1)
+        this.obstacles.set(noahWall1.nid, noahWall1)
 
 
+        let noahWall2 = new Obstacle({ 
+            name: "noahWall",
+            x: 437,
+            y: 2425, 
+            width: 600, 
+            height: 10, 
+            border: 10,
+            color: "#ffff00",
+            angle: 317.5
+        })
+        this.instance.addEntity(noahWall2)
+        this.obstacles.set(noahWall2.nid, noahWall2)
+
+
+
+        let noahWall3 = new Obstacle({ 
+            name: "noahWall",
+            x: 433,
+            y: 2628, 
+            width: 600, 
+            height: 10, 
+            border: 10,
+            color: "#ffff00",
+            angle: 47.5
+        })
+        this.instance.addEntity(noahWall3)
+        this.obstacles.set(noahWall3.nid, noahWall3)
+
+
+        let noahWall4 = new Obstacle({ 
+            name: "noahWall",
+            x: 1091,
+            y: 3074, 
+            width: 600, 
+            height: 10, 
+            border: 10,
+            color: "#ffff00",
+            angle: 317.5
+        })
+        this.instance.addEntity(noahWall4)
+        this.obstacles.set(noahWall4.nid, noahWall4)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        let stairsUp = new Obstacle({ 
+            name: 'stairsUp',
+            x: 3390,
+            y: 2130,
+            width: 103, 
+            height: 150, 
+            border: 0,
+            color: "#ffff00",
+            angle: 45
+        })
+        this.instance.addEntity(stairsUp)
+        this.obstacles.set(stairsUp.nid, stairsUp)
+
+        let stairsDown = new Obstacle({ 
+            name: 'stairsDown',
+            x: 3515,
+            y: 2006,
+            width: 103, 
+            height: 150, 
+            border: 0,
+            color: "#00ffff",
+            angle: 45
+        })
+        this.instance.addEntity(stairsDown)
+        this.obstacles.set(stairsDown.nid, stairsDown)
+
+        let johannColor = "#fc5854" //##e26d5a ff7546
 
         let johannArtworkInfo = {
             name: "12",
@@ -268,6 +446,200 @@ class GameInstance {
         this.instance.addEntity(johannInfoPanel)
         this.world.addBody(johannInfoPanel.body)
         this.infoPanels.set(johannInfoPanel.nid, johannInfoPanel)
+
+
+
+        let johannBlocker = new Obstacle({ 
+            name: "johannBlocker",
+            x: 4015,
+            y: 2725, 
+            width: 680, 
+            height: 680, 
+            border: 10,
+            color: johannColor,
+            angle: 0
+        })
+        this.instance.addEntity(johannBlocker)
+        this.obstacles.set(johannBlocker.nid, johannBlocker)
+
+        let johannBlockerOuter = new Obstacle({ 
+            name: "johannBlockerOuter",
+            x: 4015,
+            y: 2725, 
+            width: 1360, 
+            height: 1360, 
+            border: 10,
+            color: johannColor,
+            angle: 0
+        })
+        this.instance.addEntity(johannBlockerOuter)
+        this.obstacles.set(johannBlockerOuter.nid, johannBlockerOuter)
+
+
+      
+
+
+        let johannInnerWall1 = new Obstacle({ 
+            name: "johannInnerWall",
+            x: 3420,
+            y: 2400, 
+            width: 80, 
+            height: 3, 
+            border: 5,
+            color: johannColor,
+            angle: 115
+        })
+        this.instance.addEntity(johannInnerWall1)
+        this.obstacles.set(johannInnerWall1.nid, johannInnerWall1)
+
+        let johannInnerWall2 = new Obstacle({ 
+            name: "johannInnerWall",
+            x: 3386,
+            y: 2473, 
+            width: 80, 
+            height: 3, 
+            border: 5,
+            color: johannColor,
+            angle: 108
+        })
+        this.instance.addEntity(johannInnerWall2)
+        this.obstacles.set(johannInnerWall2.nid, johannInnerWall2)
+
+        let johannInnerWall3 = new Obstacle({ 
+            name: "johannInnerWall",
+            x: 3359,
+            y: 2555, 
+            width: 100, 
+            height: 3, 
+            border: 5,
+            color: johannColor,
+            angle: 100
+        })
+        this.instance.addEntity(johannInnerWall3)
+        this.obstacles.set(johannInnerWall3.nid, johannInnerWall3)
+
+        let johannInnerWall4 = new Obstacle({ 
+            name: "johannInnerWall",
+            x: 3340,
+            y: 2794, 
+            width: 100, 
+            height: 3, 
+            border: 5,
+            color: johannColor,
+            angle: 80
+        })
+        this.instance.addEntity(johannInnerWall4)
+        this.obstacles.set(johannInnerWall4.nid, johannInnerWall4)
+
+
+        let johannInnerWall5 = new Obstacle({ 
+            name: "johannInnerWall",
+            x: 3360,
+            y: 2901, 
+            width: 100, 
+            height: 3, 
+            border: 5,
+            color: johannColor,
+            angle: 70
+        })
+        this.instance.addEntity(johannInnerWall5)
+        this.obstacles.set(johannInnerWall5.nid, johannInnerWall5)
+
+        let johannInnerWall6 = new Obstacle({ 
+            name: "johannInnerWall",
+            x: 3360,
+            y: 2901, 
+            width: 100, 
+            height: 3, 
+            border: 5,
+            color: johannColor,
+            angle: 70
+        })
+        this.instance.addEntity(johannInnerWall6)
+        this.obstacles.set(johannInnerWall6.nid, johannInnerWall6)
+
+
+        let johannInnerWall7 = new Obstacle({ 
+            name: "johannInnerWall",
+            x: 3398,
+            y: 3002, 
+            width: 100, 
+            height: 3, 
+            border: 5,
+            color: johannColor,
+            angle: 63
+        })
+        this.instance.addEntity(johannInnerWall7)
+        this.obstacles.set(johannInnerWall7.nid, johannInnerWall7)
+
+        
+
+        
+
+        
+
+
+        let johannWall1 = new Obstacle({ 
+            name: "johannWall1",
+            x: 3283,
+            y: 2235, 
+            width: 220, 
+            height: 10, 
+            border: 10,
+            color: johannColor,
+            angle: 45
+        })
+        this.instance.addEntity(johannWall1)
+        this.obstacles.set(johannWall1.nid, johannWall1)
+
+
+
+        let johannWall3 = new Obstacle({ 
+            name: "johannWall3",
+            x: 3398,
+            y: 2123, 
+            width: 100, 
+            height: 10, 
+            border: 10,
+            color: johannColor,
+            angle: 45
+        })
+        this.instance.addEntity(johannWall3)
+        this.obstacles.set(johannWall3.nid, johannWall3)
+
+
+        let johannWall4 = new Obstacle({ 
+            name: "johannWall4",
+            x: 3408,
+            y: 2113, 
+            width: 100, 
+            height: 10, 
+            border: 10,
+            color: johannColor,
+            angle: 45
+        })
+        this.instance.addEntity(johannWall4)
+        this.obstacles.set(johannWall4.nid, johannWall4)
+
+
+        let johannWall2 = new Obstacle({ 
+            name: "johannWall1",
+            x: 3521,
+            y: 1999, 
+            width: 220, 
+            height: 10, 
+            border: 10,
+            color: johannColor,
+            angle: 45
+        })
+        this.instance.addEntity(johannWall2)
+        this.obstacles.set(johannWall2.nid, johannWall2)
+
+
+
+
+
+       
 
     
 
@@ -383,6 +755,29 @@ class GameInstance {
         this.instance.addEntity(johannArtworkBooth7)
         this.world.addBody(johannArtworkBooth7.body)
         this.artworks.set(johannArtworkBooth7.nid, johannArtworkBooth7)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -546,6 +941,11 @@ class GameInstance {
                     johannArtworkBooth6Styles,
                     johannArtworkBooth7Styles,  
                     mushonArtworkObject
+                ],
+                rooms: [
+                    libbysRoom,
+                    libbyInnerRoom,
+                    libbyEntrance
                 ]
             })
 
@@ -565,7 +965,8 @@ class GameInstance {
 
             if(data.fromClient.name) {
                 this.instance.message(new Notification('', 'login', 0, 0), client)
-                let command = {name: data.fromClient.name, avatar: data.fromClient.avatar, color: data.fromClient.color, x: data.fromClient.x, y: data.fromClient.y}
+               
+                let command = {name: data.fromClient.name, avatar: data.fromClient.avatar, color: data.fromClient.color, x: data.fromClient.x, y: data.fromClient.y, floor: data.fromClient.floor}
                 this.joinSession(command, client, doc, creds, true)  
 
                 let theInstance = this.instance
@@ -642,18 +1043,18 @@ class GameInstance {
             } else if (command.type == "headphones" && command.boolean == false) {
 
                 
-                for (let obstacle of this.obstacles.values()) {
-                    if(obstacle.name == "merryGoRound") {
+                for (let artwork of this.artworks.values()) {
+                    if(artwork.name == "<bold>STEAL UR FEELINGS</bold>\nNoah Levenson") {
                         let collided = false
                         
-                        collided = SAT.testCirclePolygon(client.rawEntity.collider.circle, obstacle.collider.polygon) 
+                        collided = SAT.testCircleCircle(client.rawEntity.collider.circle, artwork.collider.circle) 
                         
                         if(collided == true) {
 
                             const response = new SAT.Response()
 
 
-                            if (SAT.testCirclePolygon(client.rawEntity.collider.circle, obstacle.collider.polygon, response)) {
+                            if (SAT.testCircleCircle(client.rawEntity.collider.circle, artwork.collider.circle, response)) {
                                 client.rawEntity.x -= response.overlapV.x * 4
                                 client.rawEntity.y -= response.overlapV.y * 4
                             }
@@ -806,7 +1207,87 @@ class GameInstance {
         })
 
         this.instance.on('command::FireCommand', ({ command, client, tick }) => {
+            const rawEntity = client.rawEntity
+            const smoothEntity = client.smoothEntity
+
+            if(command.color == "#00ff00") {
+                let x = client.rawEntity.x + Math.floor(Math.random() * 200)
+                let y = client.rawEntity.y + Math.floor(Math.random() * 200)
+                command.x = x
+                command.y = y
+            }
             
+            const flowerCommand = {x: command.x, y: command.y, color: command.color }
+
+            
+
+            let sticker = false 
+
+            if (fire(rawEntity)) {
+                let endX = command.x
+                let endY = command.y
+
+                this.artworks.forEach(artwork => {
+                    let hitObstacle
+                    if(artwork.name == "<bold>STEAL UR FEELINGS</bold>\nNoah Levenson") {
+                        hitObstacle = CollisionSystem.checkLineCircle(rawEntity.x, rawEntity.y, command.x, command.y, artwork.collider.circle)
+                    }
+                    if (hitObstacle) {
+                        endX = hitObstacle.x
+                        endY = hitObstacle.y
+
+                        artwork.sticker = parseInt(Math.random() * 100)
+                        sticker = true
+                    }
+                })
+
+                const timeAgo = client.latency + 100
+                const hits = lagCompensatedHitscanCheck(this.instance, rawEntity.x, rawEntity.y, endX, endY, timeAgo)
+
+
+                /*for (let box of this.boxes.values()) {
+
+                    if(box.type == "soccer-ball") {
+
+                        if(Math.abs(rawEntity.x - box.body.position[0]) <= 120 && Math.abs(rawEntity.y - box.body.position[1]) <= 120) {
+
+                                rawEntity.justFired = true
+
+                                //console.log('tester')
+                            
+                                let XForce = command.x/30000
+                                let yForce = command.y/30000
+                                
+                                XForce = 0.05 
+                                yForce = -0.05
+
+                                box.body.applyImpulse([XForce,yForce],[command.x, command.y])
+
+                        }
+                     }
+                    
+                }*/
+               
+                //console.log('checker')
+                hits.forEach(victim => {
+                    
+                    if (victim.nid !== rawEntity.nid && victim.nid !== smoothEntity.nid) {
+                        damagePlayer(victim, 25)
+                        victim.sticker = parseInt(Math.random() * 100)
+                        sticker = true
+                    }
+                })
+
+                if(sticker == false) {
+                    addFlower(this.instance, flowerCommand, this.flowers)
+                }
+                
+
+           
+
+                this.instance.addLocalMessage(new WeaponFired(smoothEntity.nid, smoothEntity.x, smoothEntity.y, command.x, command.y))
+            }
+       
         })
     }
 
@@ -870,8 +1351,8 @@ class GameInstance {
             //console.log("name:"+givenName)
             givenName = swearjar.censor(givenName);
 
-            const rawEntity = new PlayerCharacter({ self: true, avatar: ""+command.avatar+"", color: ""+command.color+"" })
-            const smoothEntity = new PlayerCharacter({ self: false, avatar: ""+command.avatar+"", color: ""+command.color+"" })
+            const rawEntity = new PlayerCharacter({ self: true, avatar: ""+command.avatar+"", color: ""+command.color+"", floor: command.floor })
+            const smoothEntity = new PlayerCharacter({ self: false, avatar: ""+command.avatar+"", color: ""+command.color+"", floor: command.floor })
 
             rawEntity.client = client
             client.rawEntity = rawEntity
@@ -1004,6 +1485,7 @@ class GameInstance {
                         collided = SAT.testCirclePolygon(client.rawEntity.collider.circle, artwork.collider.polygon) 
                    } else {
                         collided = SAT.testCircleCircle(client.rawEntity.collider.circle, artwork.collider.circle) 
+                        
                    }
                    
                    
@@ -1011,7 +1493,7 @@ class GameInstance {
 
                         let directionVertical, directionHorizontal
 
-                      
+                        console.log('checker')
 
                         if(client.rawEntity.x < artwork.x - artwork.width/2) {
                             directionHorizontal = 1
@@ -1089,6 +1571,7 @@ class GameInstance {
         this.world.step(1/20);
 
         
+       
 
         this.artworks.forEach(artwork => {
 
@@ -1103,19 +1586,18 @@ class GameInstance {
 
         this.artworks.forEach(artwork => {
             
-            if(artwork.type == "triangle") {
+            if(artwork.name == "<bold>STEAL UR FEELINGS</bold>\nNoah Levenson") {
 
-                //console.log(artwork)
-                //let newAngle = artwork.angle + 0.0
-                //console.log(artwork.angle)
-               // artwork.angle = newAngle
-                //artwork.collider.polygon.rotate(0.01)
-                //artwork.body.angle += 0.01
-                //artwork.body.updateAABB()                 
-                //artwork.rotation += 0.01
-                
+                artwork.body.angle += 0.01
                
             }
+        })
+
+        this.obstacles.forEach(obstacle => {
+            
+            //obstacle.angle = obstacle.body.angle 
+
+            
         })
 
 
@@ -1136,15 +1618,19 @@ class GameInstance {
                 
                 for (let obstacle of this.obstacles.values()) {
                     let collided = false
-                    collided = SAT.testCirclePolygon(client.rawEntity.collider.circle, obstacle.collider.polygon)
+                    if(obstacle.name == "johannBlocker") {
+                        collided = SAT.testCircleCircle(client.rawEntity.collider.circle, obstacle.collider.circle)
+                    } else {
+                        collided = SAT.testCirclePolygon(client.rawEntity.collider.circle, obstacle.collider.polygon)
+                    }
+                    
                     if(collided) {
-                        if(obstacle.name == "stairsUp") {
+                        if(obstacle.name == "stairsUp" && client.rawEntity.floor == 0) {
                             client.rawEntity.floor = 1
-                            
                         }
                     }
                     if(collided) {
-                        if(obstacle.name == "stairsDown") {
+                        if(obstacle.name == "stairsDown" && client.rawEntity.floor == 1) {
                             client.rawEntity.floor = 0
                         }
                     }

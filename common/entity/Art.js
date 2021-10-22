@@ -58,7 +58,14 @@ class Art {
         
         this.body.addShape(this.boxShape)
         if(this.type == "circle") {
-            this.collider = CollisionSystem.createCircleCollider(0, 0, state.width/2)
+            if(this.name == "<bold>DARK MATTERS</bold>\nJohann Diedrick") {
+                this.collider = CollisionSystem.createCircleCollider(0, 0, state.width/2)
+            } else if (this.name == "<bold>STEAL UR FEELINGS</bold>\nNoah Levenson") {
+                this.collider = CollisionSystem.createCircleCollider(0, 0, state.width/2)
+            } else {
+                this.collider = CollisionSystem.createCircleCollider(0, 0, state.width/2)
+            }
+            
         } else if(this.type == "triangle") {
             this.collider = CollisionSystem.createPolygonCollider(0, 0, vectors)
         } else {
@@ -96,6 +103,7 @@ Art.protocol = {
     radius: nengi.UInt16,
     width: nengi.UInt16,
     height: nengi.UInt16,
+    sticker: nengi.UInt16
 }
 
 export default Art

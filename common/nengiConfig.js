@@ -32,7 +32,7 @@ const config = {
     TYPE_PROPERTY_NAME: 'ntype', 
 
     USE_HISTORIAN: true,
-    HISTORIAN_TICKS: 40,
+    HISTORIAN_TICKS: 20,
 
     protocols: {
         entities: [

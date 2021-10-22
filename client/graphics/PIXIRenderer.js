@@ -7,6 +7,7 @@ import * as particles from 'pixi-particles'
 import * as particleSettings from "./emitter.json";
 import { WebfontLoaderPlugin } from "pixi-webfont-loader";
 import { ease } from 'pixi-ease'
+import TaggedText from 'pixi-tagged-text'
 
 class PIXIRenderer {
 
@@ -36,8 +37,12 @@ class PIXIRenderer {
         this.stage = new PIXI.Container()
         this.camera = new PIXI.Container()
 
-        this.background = new PIXI.Container()
+        this.backbackbackground = new PIXI.Container()
         this.backbackground = new PIXI.Container()
+        this.background = new PIXI.Container()
+      
+        
+
         this.middleground = new PIXI.Container()
         this.foreground = new PIXI.Container()
         this.foreforeground = new PIXI.Container()
@@ -147,7 +152,92 @@ class PIXIRenderer {
                 Stage.removeChild(this.loadingBar)
             }, 500)
 
+
+
+
+            this.displacementSprite = PIXI.Sprite.from('images/displacement-1.png')
+            this.displacementSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT
+            this.displacementFilterText1 = new PIXI.filters.DisplacementFilter(this.displacementSprite)
+            this.displacementFilterText1.padding = 200
+
+
+            //Jo's Quote
+            this.floorQuote1 = new TaggedText("“We need to normalize the idea that technology itself is not neutral.” - Mutale Nkonde", {
+                "default": {
+                    fontFamily: 'Trade Gothic Next',
+                    fill: 0xFFFFFF, 
+                    fontWeight: 700,
+                    fontSize: "32px",
+                    lineHeight: 32,
+                    leading: 1,
+                    align: "center",
+                    wordWrap: true,
+                    wordWrapWidth: 500
+                }
+            })
+
+            this.floorQuote1.x = 2272
+            this.floorQuote1.y = 2391
+            this.floorQuote1.alpha = 0
+            this.backbackground.addChild(this.floorQuote1)
+            this.floorQuote1.filters = [this.displacementFilterText1]
+
+
+
+            // Libby Quote
+            this.floorQuote2 = new TaggedText("“Zeros and ones, if we are not careful, could deepen the divides between haves and have-nots, between the deserving and the undeserving – rusty value judgments embedded in shiny new systems.” \n\n                                       — Ruha Benjamin", {
+                "default": {
+                    fontFamily: 'Trade Gothic Next',
+                    fill: 0xFFFFFF, 
+                    fontWeight: 700,
+                    fontSize: "18px",
+                    lineHeight: 26,
+                    leading: 1,
+                    align: "center",
+                    wordWrap: true,
+                    wordWrapWidth: 500
+                }
+            })
             
+            
+            this.floorQuote2.x = 720
+            this.floorQuote2.y = 1450
+            this.floorQuote2.alpha = 0
+            this.background.addChild(this.floorQuote2)
+            this.floorQuote2.filters = [this.displacementFilterText1]
+
+
+
+
+
+            // Noah Quote
+            this.floorQuote3 = new TaggedText(" “If Kindle is upgraded with face recognition and biometric sensors, it can know what made you laugh, what made you sad and what made you angry. Soon, books will read you while you are reading them.” \n\n                                       — Yuval Noah Harari", {
+                "default": {
+                    fontFamily: 'Trade Gothic Next',
+                    fill: 0xFFFFFF, 
+                    fontWeight: 700,
+                    fontSize: "14px",
+                    lineHeight: 26,
+                    leading: 1,
+                    align: "center",
+                    wordWrap: true,
+                    wordWrapWidth: 400
+                }
+            })
+
+
+            this.floorQuote3.x = 684
+            this.floorQuote3.y = 1551
+            this.floorQuote3.alpha = 0
+            this.backbackground.addChild(this.floorQuote3)
+            this.floorQuote3.filters = [this.displacementFilterText1]
+
+
+
+
+
+            //If Kindle is upgraded with face recognition and biometric sensors, it can know what made you laugh, what made you sad and what made you angry. Soon, books will read you while you are reading them.” - Yuval Noah Harari
+
             
         })
 
@@ -156,7 +246,7 @@ class PIXIRenderer {
         
 
         this.cameraWrapper = new PIXI.Container()
-
+        this.cameraWrapper.addChild(this.backbackbackground)
         this.cameraWrapper.addChild(this.backbackground)
         this.cameraWrapper.addChild(this.background)
         this.cameraWrapper.addChild(this.middleground)
@@ -188,7 +278,7 @@ class PIXIRenderer {
         
         
         const fpsCounter = new PixiFps();
-        //this.stage.addChild(fpsCounter)
+        this.stage.addChild(fpsCounter)
 
         this.particleContainer = new PIXI.ParticleContainer()
         this.foreground.addChild(this.particleContainer)
@@ -248,6 +338,15 @@ class PIXIRenderer {
 
         //inspace-jo.mp4
 
+
+
+        
+      
+
+
+
+
+
         this.chars = '01'
         this.charsArray = this.chars.split('')
         this.drops = []
@@ -255,7 +354,7 @@ class PIXIRenderer {
         this.numberOfColumns = window.innerWidth / this.fontSize,
         this.matrixCounter
         this.randomChar;
-    
+
 
         for (let i = 0; i < this.numberOfColumns; i++) {
             this.drops[i] = 0;

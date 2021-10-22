@@ -6,7 +6,13 @@ export default (state, renderer ) => {
             
             const graphics = new PlayerGraphics(data)
             
-            renderer.middleground.addChild(graphics)
+            //console.log(data)
+            if(data.floor == 1) {
+                renderer.foreforeground.addChild(graphics)
+            } else {
+                renderer.middleground.addChild(graphics)
+            }
+            
             renderer.entities.set(graphics.nid, graphics)
 
             /* self, raw */
@@ -54,6 +60,7 @@ export default (state, renderer ) => {
             },
             sticker({ graphics, value }) {
                 graphics.addSticker(value)
+                console.log('checker')
             },
             floor({ graphics, value }) {
                 console.log(value)
@@ -64,7 +71,7 @@ export default (state, renderer ) => {
                     renderer.middleground.removeChild(graphics)
                     renderer.foreforeground.addChild(graphics)
                 }
-                graphics.addSticker(value)
+                //graphics.addSticker(value)
             }
         }
     }

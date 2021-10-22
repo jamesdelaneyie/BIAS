@@ -16,6 +16,7 @@ import emojiBlast from './graphics/emojiBlast.js'
 
 import * as PIXI from 'pixi.js'
 import { Sound, filters } from '@pixi/sound'
+import { ease } from 'pixi-ease'
 
 
 
@@ -122,14 +123,29 @@ const create = () => {
         let trail = new PIXI.Graphics()
         let color = PIXI.utils.string2hex(message.color)
 
-        trail.beginFill(color, 0.1)
-        trail.drawCircle(message.x, message.y, 3)
-        trail.endFill()
+        if(message.x > 2355 && message.y > 1760) {
+            //let color = PIXI.utils.string2hex("#12b5db")
+            trail.lineStyle(1, color, 0.5)
+            trail.drawCircle(0,0,5)
+            trail.drawCircle(0,0,10)
+            trail.drawCircle(0,0,20)
+            trail.x = message.x
+            trail.y = message.y
+            trail.scale.set(0.2)
+            ease.add(trail, {alpha: 0, scale: 4}, {duration: 2000})
+            
+        } else {
+            trail.beginFill(color, 0.2)
+            trail.drawCircle(message.x, message.y, 3)
+            trail.endFill()
+        }
+       
 
         trails.push(trail)
         stepCounter++
+        renderer.background.addChild(trail)
 
-        let angle
+        /*let angle
         if(message.angle > -1.5708 && message.angle < -0.7853) {
             angle = 'top'
         } else if (message.angle > -0.7853 && message.angle < 0) {
@@ -160,9 +176,11 @@ const create = () => {
                 } else {
                     trail.y = 10
                 }
-            } 
-            renderer.background.addChild(trail)
+            } */
+           
         //}
+
+        
         
         if(state.mySmoothEntity) {
             if (message.id === state.mySmoothEntity.nid) {
@@ -176,6 +194,9 @@ const create = () => {
         if(renderer.UIBuilder) {
             renderer.UIBuilder.setPlayerPositionMiniMap(message.id, message.x, message.y)
         }
+
+        
+        
 
         
 
@@ -446,12 +467,14 @@ const create = () => {
     invite = new URL(invite);
     var inviteX = invite.searchParams.get("x");
     var inviteY = invite.searchParams.get("y")
+    var inviteFloor = invite.searchParams.get("floor")
     handshake.x = inviteX
     handshake.y = inviteY
+    handshake.floor = inviteFloor
 
-    //client.connect('ws://localhost:8079', handshake)
+    client.connect('ws://localhost:8079', handshake)
     
-    client.connect('wss://bias.jamesdelaney.ie/test', handshake)
+    //client.connect('wss://bias.jamesdelaney.ie/test', handshake)
 
     let connectionCounter = 0
 
@@ -468,6 +491,81 @@ const create = () => {
 
         if(connectionCounter > 50) {
             renderer.UIBuilder.updateConnection(null, false);
+        }
+
+
+        if(state.mySmoothEntity) {
+
+            if(renderer.floorQuote1) {
+
+                let textCenterX = renderer.floorQuote1.x + renderer.floorQuote1.children[0].width/2
+                let textCenterY = renderer.floorQuote1.y + renderer.floorQuote1.children[0].height/2
+    
+                var a = textCenterX - state.mySmoothEntity.x;
+                var b = textCenterY - state.mySmoothEntity.y
+        
+                var c = Math.sqrt( a*a + b*b )
+                            
+
+                if(c < 500) {
+
+                    let alpha = (500 - c) / 100
+
+                    renderer.floorQuote1.alpha = alpha
+                    let displacement = c - 150
+                    if(displacement < 0) {
+                        displacement = 0
+                    }
+
+                    //console.log(alpha)
+
+                    renderer.displacementFilterText1.scale.set(displacement)
+
+                } else {
+                    renderer.floorQuote1.alpha = 0
+                }
+                
+    
+               
+            }
+
+            if(renderer.floorQuote2) {
+
+                let textCenterX = renderer.floorQuote2.x + renderer.floorQuote2.children[0].width/2
+                let textCenterY = renderer.floorQuote2.y + renderer.floorQuote2.children[0].height/2
+            
+                var a = textCenterX - state.mySmoothEntity.x;
+                var b = textCenterY - state.mySmoothEntity.y
+            
+                var c = Math.sqrt( a*a + b*b )
+             
+                if(c < 500) {
+            
+                    let alpha = ((500 - c) / 400) 
+
+                    //console.log(alpha)
+            
+                    renderer.floorQuote2.alpha = alpha
+                    let displacement = c - 150
+                    if(displacement < 0) {
+                        displacement = 0
+                    }
+                    renderer.displacementFilterText1.scale.set(displacement)
+            
+                } else {
+                    renderer.floorQuote2.alpha = 0
+                }
+
+                if(c < 100) {
+                    renderer.UIBuilder.showAchievement("5", "test")
+                }
+                
+            
+               
+            }
+            
+           
+            
         }
 
         client.readNetworkAndEmit()

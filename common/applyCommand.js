@@ -3,15 +3,7 @@ import { update as updateWeapon } from './weapon.js'
 
 export default (entity, command, obstacles, boxes, artworks, infoPanels) => {
     
-        /*if (!entity.isAlive) {
-            return
-        }*/
-    
-        //console.log(entity)
         entity.bodyRotation = command.rotation
-        //entity.rotation = command.rotation
-
-        //console.log(entity)
 
         let unitX = 0
         let unitY = 0
@@ -34,7 +26,15 @@ export default (entity, command, obstacles, boxes, artworks, infoPanels) => {
 
     // readjusts this entities position by uncolliding it from obstacles
     CollisionSystem.moveWithCollisions(entity, obstacles, boxes, artworks, infoPanels)
-
-    // advances the weapon-related timer(s)
-    //updateWeapon(entity, command.delta)
+    
+    let name = entity.name
+    if(name) {
+        name = name.substring(0,3)
+        if(name != "Bot") {
+            updateWeapon(entity, command.delta)
+        }
+    }
+    
+   
+    
 }

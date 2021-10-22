@@ -43,38 +43,83 @@ function getLineEndPoint(pos, len, ang) {
             y: pos.y + len*Math.sin(ang*180/Math.PI)};
 }
 
-function drawRandomLine(line, width, startPos, color) {
-    let angle = random(0, 360);
-
-    var color = hslToHex(color, 65, 33)
-    color = PIXI.utils.string2hex(color);
-    
-    let lineWidth = randomIntFromInterval(1, 3)
-    line.lineStyle(lineWidth, color, 0.3)
-    //line.beginFill(color, 0.1, true)
-
-    let length = random(0, width / 10);
-    console.log(length)
-    let endPos = getLineEndPoint(startPos, length, angle);
-
-    let bezier1Angle = random(angle - 90, angle + 90) % 360;
-    let bezier2Angle = (180 + random(angle - 90, angle + 90)) % 360;
-
-    //console.log(bezier1Angle,bezier2Angle)
-    let lineSize = randomIntFromInterval(20, 100)
-    let bezier1Length = lineSize;
-    let bezier2Length = lineSize;
-
-    let bezier1Pos = getLineEndPoint(startPos, bezier1Length, bezier1Angle);
-    let bezier2Pos = getLineEndPoint(endPos, bezier2Length, bezier2Angle);
-    line.bezierCurveTo(
-        bezier1Pos.x, bezier1Pos.y,
-        bezier2Pos.x, bezier2Pos.y,
-        endPos.x, endPos.y
-    );
-    //line.endFill()
-
+function lerp(v0, v1, t) {
+    return ( 1.0 - t ) * v0 + t * v1;
 }
+
+
+function animatePathDrawing(line, points) {
+
+        if(line.progress < 1) {
+            line.progress += 0.01
+            line.alpha = line.progress
+            drawBezierSplit(line, 0, 0, points[2], points[3], points[4], points[5], 0, line.progress);
+        } 
+        
+    
+}
+
+
+/**
+ * Draws a splitted bezier-curve
+ * 
+ * @param ctx       The canvas context to draw to
+ * @param x0        The x-coord of the start point
+ * @param y0        The y-coord of the start point
+ * @param x1        The x-coord of the control point
+ * @param y1        The y-coord of the control point
+ * @param x2        The x-coord of the end point
+ * @param y2        The y-coord of the end point
+ * @param t0        The start ratio of the splitted bezier from 0.0 to 1.0
+ * @param t1        The start ratio of the splitted bezier from 0.0 to 1.0
+ */
+
+ function drawBezierSplit(line, x0, y0, x1, y1, x2, y2, t0, t1) {
+    //ctx.beginPath();
+    //console.log(t1)
+   
+    if(t1 < 0.2) {
+        line.lineStyle(1, 0xffffb1, 0.3)
+    } else if (t1 < 0.4) {
+        line.lineStyle(2, 0xffffb1, 0.2)
+    } else if (t1 < 0.6) {
+        line.lineStyle(3, 0xffffb1, 0.2)
+    } else if (t1 < 0.8) {
+        line.lineStyle(2, 0xffffb1, 0.2)
+    } else {
+        line.lineStyle(1, 0xffffb1, 0.1)
+    }
+    
+
+	if( 0.0 == t0 && t1 == 1.0 ) {
+		line.moveTo( x0, y0 );
+		line.quadraticCurveTo( x1, y1, x2, y2 );
+	} else if( t0 != t1 ) {
+        var t00 = t0 * t0,
+            t01 = 1.0 - t0,
+            t02 = t01 * t01,
+            t03 = 2.0 * t0 * t01;
+        
+        var nx0 = t02 * x0 + t03 * x1 + t00 * x2,
+            ny0 = t02 * y0 + t03 * y1 + t00 * y2;
+        
+        t00 = t1 * t1;
+        t01 = 1.0 - t1;
+        t02 = t01 * t01;
+        t03 = 2.0 * t1 * t01;
+        
+        var nx2 = t02 * x0 + t03 * x1 + t00 * x2,
+            ny2 = t02 * y0 + t03 * y1 + t00 * y2;
+        
+        var nx1 = lerp ( lerp ( x0 , x1 , t0 ) , lerp ( x1 , x2 , t0 ) , t1 ),
+            ny1 = lerp ( lerp ( y0 , y1 , t0 ) , lerp ( y1 , y2 , t0 ) , t1 );
+        
+        line.moveTo( nx0, ny0 );
+        line.quadraticCurveTo( nx1, ny1, nx2, ny2 );
+	}
+    
+}
+
 
 class FlowerGraphics extends PIXI.Container {
     constructor(state) {
@@ -86,21 +131,11 @@ class FlowerGraphics extends PIXI.Container {
         this.color = state.color    
         this.color = PIXI.utils.string2hex(this.color);
 
-        //console.log(this.color)
-        /* Circle Stamp
-        let flower = new Graphics()
-        flower.lineStyle(0)
-        flower.beginFill(this.color, 1.0, true)
-        flower.drawCircle(0, 0, 25)
-        flower.endFill()
-        flower.cacheAsBitmap = true
-        flower.alpha = 0
-        flower.scale.set(0.2)
-        */
+        this.lines = []
 
         this.flower = false
 
-        if(state.y < 1300 && state.x < 2850) {
+        if(state.y < 1700 && state.x < 2850) {
 
             
             this.flower = true
@@ -168,7 +203,7 @@ class FlowerGraphics extends PIXI.Container {
 
 
             let flowerColor = this.color
-            console.log(flowerColor)
+            //console.log(flowerColor)
 
 
             this.prev = 0;
@@ -178,7 +213,7 @@ class FlowerGraphics extends PIXI.Container {
             }
 
             function randColor(){
-                return {r:0, g:Math.random(), b:0};
+                return {r:0, g:Math.random()+0.2, b:0};
             }
 
             window.uTime = 0;
@@ -194,7 +229,7 @@ class FlowerGraphics extends PIXI.Container {
                     this.head = p
                 } else {
                     this.head = getRandomTarget();
-                    console.log(this.head)
+                    //console.log(this.head)
                 }
 
                 this.head.time = window.uTime;
@@ -406,36 +441,55 @@ class FlowerGraphics extends PIXI.Container {
             //nothing
         } else {
 
-            this.lineWidth =  randomIntFromInterval(300, 1000)
+            this.wrapper = new PIXI.Container()
+            this.wrapper.alpha = 0.02
 
-            this.i = 500
-            this.startPos = {
-                x : 0,
-                y : 0
-            };
-            this.line = new Graphics()
-            let randomToAdd = randomIntFromInterval(0, 20)
-            var plusOrMinus = Math.random() < 0.5 ? -1 : 1;
-            randomToAdd = randomToAdd*plusOrMinus
-            this.colorCounter = 260 + randomToAdd
-           
-            this.color = hslToHex(this.colorCounter, 100, 33)
-            this.color = PIXI.utils.string2hex(this.color);
-            this.line.lineStyle(3, this.color, 0.3)
-            this.line.blendMode = PIXI.BLEND_MODES.SCREEN
-            this.line.moveTo(0, 0);
-            this.addChild(this.line)
+            for(var i=0;i<1;i++) {
+               
             
-            const lineContainer = new PIXI.Container()
-            lineContainer.alpha = 0
-            this.alpha = 0
-            this.scale.set(0.1, 2)
-            //this.angle = 180
-            ease.add(this, {alpha: 1, angle: 0}, { duration: 350, ease: 'easeOutQuad'})
-            ease.add(this, {scaleX: 1, scaleY: 1}, { duration: 350, ease: 'easeOutBack', wait: 50 })
+                let line = new Graphics()
+                line.progress = 0
+    
+                let angle = random(0, 360);
 
-            this.addChild(lineContainer)
-            //console.log('tester')
+                let length = random(800, 1000);
+                let startPos = {
+                    x : 0,
+                    y : 0
+                }
+
+                let endPos = getLineEndPoint(startPos, length, angle);
+    
+                let bezier1Angle = random(angle - 90, angle + 90) % 360;
+                let bezier2Angle = (180 + random(angle - 90, angle + 90)) % 360;
+    
+                let lineSize = 500
+    
+                let bezier1Length = lineSize;
+                let bezier2Length = lineSize;
+    
+                let bezier1Pos = getLineEndPoint(startPos, bezier1Length, bezier1Angle);
+                let bezier2Pos = getLineEndPoint(endPos, bezier2Length, bezier2Angle);
+    
+                line.points = [bezier1Angle, bezier2Angle, bezier1Pos.x, bezier1Pos.y,
+                    bezier2Pos.x, bezier2Pos.y,
+                    endPos.x, endPos.y]
+              
+               
+                this.lines.push(line)
+                
+
+                this.wrapper.addChild(line)
+
+                
+
+            }
+
+            this.addChild(this.wrapper)
+
+
+         
+           
 
         }
        
@@ -463,39 +517,13 @@ class FlowerGraphics extends PIXI.Container {
 
         }
 
-        
-
-        if(this.line) {
-           
-            if(this.i-- > 1) {
-
-               console.log(this.lineWidth)
-
-                drawRandomLine(this.line, this.lineWidth, this.startPos, this.colorCounter)
-                drawRandomLine(this.line, this.lineWidth, this.startPos, this.colorCounter)
-                drawRandomLine(this.line, this.lineWidth, this.startPos, this.colorCounter)
-                drawRandomLine(this.line, this.lineWidth, this.startPos, this.colorCounter)
-                drawRandomLine(this.line, this.lineWidth, this.startPos, this.colorCounter)
-                drawRandomLine(this.line, this.lineWidth, this.startPos, this.colorCounter)
-                drawRandomLine(this.line, this.lineWidth, this.startPos, this.colorCounter)
-                drawRandomLine(this.line, this.lineWidth, this.startPos, this.colorCounter)
-                drawRandomLine(this.line, this.lineWidth, this.startPos, this.colorCounter)
-                drawRandomLine(this.line, this.lineWidth, this.startPos, this.colorCounter)
-
-                //console.log(this.i)
-                this.i--
-                this.i--
-                this.i--
-                this.i--
-                this.i--
-                this.i--
-                this.i--
-                this.i--
-                this.i--
-                this.i--
-                
-            }
+        //console.log(this)
+        for(let x=0;x<this.lines.length;x++) {
+            //console.log(this.lines)
+            animatePathDrawing(this.lines[x], this.lines[x].points)
         }
+
+       
 
 
         

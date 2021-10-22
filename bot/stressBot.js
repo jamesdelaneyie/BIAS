@@ -2,11 +2,12 @@ import nengi from 'nengi'
 import nengiConfig from '../common/nengiConfig.js'
 import MoveCommand from '../common/command/MoveCommand.js'
 import applyCommand from '../common/applyCommand.js'
+import FireCommand from '../common/command/FireCommand.js'
 import ToggleCommand from '../common/command/ToggleCommand.js'
 
 const protocolMap = new nengi.ProtocolMap(nengiConfig, nengi.metaConfig)
 
-const address = 'wss://bias.jamesdelaney.ie/test'
+const address = 'ws://localhost:8079'
 const numberOfBots = 20//Math.floor(Math.random() * 40)
 const bots = new Map()
 
@@ -27,6 +28,8 @@ function connectNewBot(id) {
     bot.smoothEntity = {}
     bot.smoothEntity.headphones = false
     bot.notMoving = false
+
+   
 
     bot.onConnect(response => {
         console.log('Bot attempted connection, response:', response)
@@ -88,11 +91,18 @@ const loop = function() {
                  bot.addCommand(new ToggleCommand(true, 'headphones'))
                  bot.notMoving = true
             } 
-            if (Math.random() > 0.99) {
+            if (Math.random() > 0.999) {
                 
                 bot.addCommand(new ToggleCommand(false, 'headphones'))
                 bot.notMoving = false
             } 
+
+            if (Math.random() > 0.99) {
+                if(bot.headphones == false) {
+                    bot.addCommand(new FireCommand(0, 0, "#00ff00"))
+                }
+                 
+            }
             
     
             if(bot.notMoving == false) {

@@ -12,14 +12,23 @@ class Obstacle {
         this.height = state.height
         this.color = state.color
         this.angle = state.angle
-        this.rotation = state.rotation
 
-        this.collider = CollisionSystem.createRectangleCollider(state.x, state.y, state.width, state.height)
+        let angle = state.angle
+        angle = angle * Math.PI / 180;
 
-        if(this.name == "merryGoRound") {
-            this.collider.polygon.rotate(0.785398)
-            this.collider.polygon.translate(0, -210)
+        if(this.name == "johannBlocker" ) {
+            this.collider = CollisionSystem.createCircleCollider(state.x, state.y, state.width/2)
+        } else if (this.name == "johannBlockerOuter" ) { 
+            this.collider = CollisionSystem.createRectangleCollider(state.x, state.y, 1, 1)
+        } else {
+            this.collider = CollisionSystem.createRectangleCollider(state.x, state.y, state.width, state.height)
+
         }
+
+        if(angle > 0) {
+            this.collider.polygon.setAngle(angle)
+        }
+        
           
     }
 }
@@ -32,8 +41,8 @@ Obstacle.protocol = {
     height: nengi.UInt16,
     color: nengi.String,
     angle: { type: nengi.RotationFloat32, interp: true },
-    sticker: nengi.UInt16,
-    rotation: { type: nengi.RotationFloat32, interp: true }
+    sticker: nengi.UInt16
+    //rotate: { type: nengi.RotationFloat32, interp: true }
 }
 
 export default Obstacle

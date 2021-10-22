@@ -134,11 +134,24 @@ CollisionSystem.moveWithCollisions = (entity, obstacles, boxes, artworks, infoPa
 
     if(obstacles) {
         obstacles.forEach(obstacle => {
-            if(obstacle.name == "circleBuilding") {
-                if (SAT.testCircleCircle(entity.collider.circle, obstacle.collider.circle, response)) {
-                    entity.x -= response.overlapV.x
-                    entity.y -= response.overlapV.y
-                }
+            if(obstacle.name == "johannBlocker") {
+               
+                if(entity.floor == 1) {
+                    if (SAT.testCircleCircle(entity.collider.circle, obstacle.collider.circle, response)) {
+                        entity.x -= response.overlapV.x
+                        entity.y -= response.overlapV.y
+                    }
+                } 
+                
+            } else if (obstacle.name == "johannInnerWall") {
+
+                if(entity.floor == 1) {
+                    if (SAT.testCirclePolygon(entity.collider.circle, obstacle.collider.polygon, response)) {
+                        entity.x -= response.overlapV.x
+                        entity.y -= response.overlapV.y
+                    }
+                } 
+            
             } else if(obstacle.name == "stairsUp") {
                 
             } else if(obstacle.name == "stairsDown") {
@@ -156,9 +169,13 @@ CollisionSystem.moveWithCollisions = (entity, obstacles, boxes, artworks, infoPa
     
     if(boxes) {    
         boxes.forEach(box => {
-            if (SAT.testCirclePolygon(entity.collider.circle, box.collider.polygon, response)) {
-                entity.x -= response.overlapV.x
-                entity.y -= response.overlapV.y
+            if(box.type == "particle") {
+
+            } else {
+                if (SAT.testCirclePolygon(entity.collider.circle, box.collider.polygon, response)) {
+                    entity.x -= response.overlapV.x
+                    entity.y -= response.overlapV.y
+                }
             }
             response.clear()
         })
@@ -192,10 +209,15 @@ CollisionSystem.moveWithCollisions = (entity, obstacles, boxes, artworks, infoPa
                 }
                 response.clear()
             } else {
-                if (SAT.testCircleCircle(entity.collider.circle, artwork.collider.circle, response)) {
-                    entity.x -= response.overlapV.x
-                    entity.y -= response.overlapV.y
+                if(artwork.name == "<bold>DARK MATTERS</bold>\nJohann Diedrick" && entity.floor == 0) {
+
+                } else {
+                    if (SAT.testCircleCircle(entity.collider.circle, artwork.collider.circle, response)) {
+                        entity.x -= response.overlapV.x
+                        entity.y -= response.overlapV.y
+                    }
                 }
+               
                 response.clear()
             }
             

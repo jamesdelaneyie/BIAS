@@ -22,6 +22,11 @@ export default ({ artworks }, renderer) => {
         delete({ nid, graphics, entity }) {
             renderer.entities.delete(nid)
             renderer.middleground.removeChild(graphics)
+        },
+        watch: {
+            sticker({ graphics, value }) {
+                graphics.addSticker(value)
+            }
         }
     }
 }

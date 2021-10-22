@@ -10,7 +10,7 @@ export default ({ obstacles }, renderer) => {
 
             renderer.entities.set(data.nid, graphics)
 
-            if(data.name == "stairsUp") {
+            if(data.name == "stairsUp" || data.name == "johannBlocker") {
                 renderer.foreforeground.addChild(graphics)
             } else {
                 renderer.middleground.addChild(graphics)
