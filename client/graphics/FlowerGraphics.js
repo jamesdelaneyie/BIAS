@@ -141,7 +141,7 @@ class FlowerGraphics extends PIXI.Container {
         if(state.y < 1700 && state.x < 2370) {
 
             let vines = resources.vines.sound
-            vines.play()
+            //vines.play()
             
             this.flower = true
             var leaf = new PIXI.Graphics();
