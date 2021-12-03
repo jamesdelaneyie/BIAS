@@ -308,7 +308,7 @@ class FlowerGraphics extends PIXI.Container {
         } else if(state.y > 1700 && state.x < 2370) {
 
             let slap = resources.slap.sound
-            slap.play()
+            //slap.play()
 
             let choice = Math.floor(Math.random() * (4 - 1) + 1)
             if(choice == 1) {
