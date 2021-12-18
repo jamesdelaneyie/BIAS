@@ -69,10 +69,6 @@ class PIXIRenderer {
         this.foreground = new PIXI.Container()
         this.foreforeground = new PIXI.Container()
 
-       // let Loader = new PIXI.Loader()
-
-
-        
 
         PIXI.Loader.registerPlugin(WebfontLoaderPlugin);
 
@@ -267,31 +263,17 @@ class PIXIRenderer {
 
         PIXI.Loader.shared.add({ name: "loadingIcon", url: "images/loading-icon.svg" })
         PIXI.Loader.shared.add({ name: "mapIcon", url: "images/map-icon.svg" })
+        PIXI.Loader.shared.add({ name: "mapIconClose", url: "images/map-icon-close.svg" })
+
+
 
         PIXI.Loader.shared.add({ name: "music", url: "audio/MoseyForSomeMimosas.wav" })
         PIXI.Loader.shared.add({ name: "vines", url: "audio/Vines3[2].wav" })        
-        PIXI.Loader.shared.add({ name: "slap", url: "audio/StickerSlap.wav" })        
+        PIXI.Loader.shared.add({ name: "slap", url: "audio/StickerSlap.wav" }) 
+        PIXI.Loader.shared.add({ name: "slapLaugh", url: "audio/StickerSlapGiggle.wav" })        
+       
+        PIXI.Loader.shared.add({ name: "gruntBirthdayParty", url: "audio/grunt-birthday-party.wav" })        
 
-        
-
-
-
-        //loader.add('boop', 'audio/boop.mp3');
-        //loader.add('footstep', 'audio/footstep.mp3');
-
-        //'images/sg-white.svg'
-        //'images/menu-icon.svg'
-        //'images/menu-icon-close.svg')
-        //'images/menu-icon.svg'
-        //'images/sound-on-icon.svg'
-        //'images/sound-off-icon.svg'
-        //'images/sound-on-icon.svg'
-        //'images/share-icon.svg'
-        //'images/twitter-icon.svg'
-        //'images/facebook-icon.svg'
-
-       // PIXI.Loader.shared.add({ name: "Loading File", url: "100MiB.bin" });
-        
 
         this.loadingText = new PIXI.Text("Loading 0%", {
             fontFamily : 'Arial',
@@ -312,9 +294,6 @@ class PIXIRenderer {
         this.loadingBar.y = window.innerHeight/2 + 25
         let loadingBaryPos = this.loadingBar.y
       
-       
-
-
         PIXI.Loader.shared.onProgress.add(() => {
             this.loadingText.text = "Loading " + PIXI.Loader.shared.progress.toFixed(0) + "%";
             this.loadingBar.width = PIXI.Loader.shared.progress.toFixed(0)*2
@@ -323,7 +302,10 @@ class PIXIRenderer {
         const Stage = this.stage
 
         PIXI.Loader.shared.onComplete.once(() => {
+
             this.loadingText.text = "100% Complete";
+
+           
             this.UIBuilder = new UIBuilder(this.renderer, client)
             this.UIBuilder.alpha = 0
             this.stage.addChild(this.UIBuilder) 
@@ -366,7 +348,7 @@ class PIXIRenderer {
                 }
             })
 
-            this.libbyTitle.x = 782,
+            this.libbyTitle.x = 1282,
             this.libbyTitle.y = 1057
             
             let glow = new GlowFilter({distance: 10, outerStrength: 2, color: 0x00ff02})
@@ -376,7 +358,7 @@ class PIXIRenderer {
 
             
             
-            this.mushonTitle = new TaggedText("Normalizi.ng\n<title>HOW DO <bold>NORMAL</bold> POEPLE LOOK LIKE?</title>", {
+            this.mushonTitle = new TaggedText("Normalizi.ng\n<title>HOW DO <bold>NORMAL</bold> PEOPLE LOOK LIKE?</title>", {
                 "default": {
                     fontFamily: 'American Typewriter,monospace',
                     fill: 0x6b378f, 
@@ -413,8 +395,8 @@ class PIXIRenderer {
             }
 
             var textVerticalNoRepeat = new PIXI.Text('Dark\nMatters', verticalNoRepeat);
-            textVerticalNoRepeat.x = 3940,
-            textVerticalNoRepeat.y = 2940
+            textVerticalNoRepeat.x = 3940 - 200
+            textVerticalNoRepeat.y = 2940 - 300
             textVerticalNoRepeat.alpha = 0.7
             this.background.addChild(textVerticalNoRepeat)
 
@@ -422,7 +404,7 @@ class PIXIRenderer {
 
 
             //Jo's Quote
-            this.floorQuote1 = new TaggedText("“We need to normalize the idea that technology itself is not neutral.”\n\n                   - Mutale Nkonde", {
+            this.floorQuote1 = new TaggedText("We need to normalize the idea that technology itself is not neutral\n\n                   - Mutale Nkonde", {
                 "default": {
                     fontFamily: 'Trade Gothic Next',
                     fill: 0xFFFFFF, 
@@ -435,7 +417,7 @@ class PIXIRenderer {
                     wordWrapWidth: 500
                 }
             })
-
+            this.floorQuote1.seen = false
             this.floorQuote1.x = 2559
             this.floorQuote1.y = 2199
             this.floorQuote1.alpha = 0
@@ -445,7 +427,7 @@ class PIXIRenderer {
 
 
             // Libby Quote
-            this.floorQuote2 = new TaggedText("“Zeros and ones, if we are not careful, could deepen the divides between haves and have-nots, between the deserving and the undeserving – rusty value judgments embedded in shiny new systems.” \n\n                                       — Ruha Benjamin", {
+            this.floorQuote2 = new TaggedText("Zeros and ones, if we are not careful, could deepen the divides between haves and have-nots, between the deserving and the undeserving – rusty value judgments embedded in shiny new systems \n\n                                       — Ruha Benjamin", {
                 "default": {
                     fontFamily: 'Trade Gothic Next',
                     fill: 0xFFFFFF, 
@@ -460,8 +442,8 @@ class PIXIRenderer {
             })
             
             
-            this.floorQuote2.x = 720
-            this.floorQuote2.y = 1450
+            this.floorQuote2.x = 1020
+            this.floorQuote2.y = 1600
             this.floorQuote2.alpha = 0
             this.background.addChild(this.floorQuote2)
             this.floorQuote2.filters = [this.displacementFilterText1]
@@ -471,7 +453,7 @@ class PIXIRenderer {
 
 
             // Noah Quote
-            this.floorQuote3 = new TaggedText(" “If Kindle is upgraded with face recognition and biometric sensors, it can know what made you laugh, what made you sad and what made you angry. Soon, books will read you while you are reading them.” \n\n                                       — Yuval Noah Harari", {
+            this.floorQuote3 = new TaggedText("If Kindle is upgraded with face recognition and biometric sensors, it can know what made you laugh, what made you sad and what made you angry. Soon, books will read you while you are reading them \n\n                                       — Yuval Noah Harari", {
                 "default": {
                     fontFamily: 'Trade Gothic Next',
                     fill: 0xFFFFFF, 
@@ -486,8 +468,8 @@ class PIXIRenderer {
             })
 
 
-            this.floorQuote3.x = 1400
-            this.floorQuote3.y = 2129
+            this.floorQuote3.x = 1900
+            this.floorQuote3.y = 2200
             this.floorQuote3.alpha = 0
             this.backbackground.addChild(this.floorQuote3)
             this.floorQuote3.filters = [this.displacementFilterText1]
@@ -495,7 +477,7 @@ class PIXIRenderer {
 
 
             // Noah Quote
-            this.floorQuote4 = new TaggedText("There is no such thing as an innocent reading, we must ask what reading we are guilty of.” \n\n                                       ― Louis Althusser", {
+            this.floorQuote4 = new TaggedText("There is no such thing as an innocent reading, we must ask what reading we are guilty of \n\n                                       ― Louis Althusser", {
                 "default": {
                     fontFamily: 'Trade Gothic Next',
                     fill: 0xFFFFFF, 
@@ -626,10 +608,6 @@ class PIXIRenderer {
 
 
 
-
-
-            //If Kindle is upgraded with face recognition and biometric sensors, it can know what made you laugh, what made you sad and what made you angry. Soon, books will read you while you are reading them.” - Yuval Noah Harari
-
             
         })
 
@@ -660,20 +638,12 @@ class PIXIRenderer {
         this.stage.addChild(this.loadingBar)
         this.stage.addChild(this.loadingText)
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        const fpsCounter = new PixiFps();
+
+        //const fpsCounter = new PixiFps();
         //this.stage.addChild(fpsCounter)
 
-        this.particleContainer = new PIXI.ParticleContainer()
-        this.foreground.addChild(this.particleContainer)
+        //this.particleContainer = new PIXI.ParticleContainer()
+        //this.foreground.addChild(this.particleContainer)
 
         //console.log(particleSettings.default)
 
@@ -693,6 +663,12 @@ class PIXIRenderer {
         lobbyFloor.x = 1481
         lobbyFloor.y = 1180
         this.backbackground.addChild(lobbyFloor)
+
+
+        let baseball = new PIXI.Sprite.from('/images/baseball-pitch.svg')
+        baseball.x = 0
+        baseball.y = 0
+        this.backbackground.addChild(baseball)
 
 
 
@@ -718,8 +694,8 @@ class PIXIRenderer {
         videoSprite.width = 436 //.width;
         videoSprite.height = 532//state.height;
         
-        videoSprite.x = 3769//&y=
-        videoSprite.y = 2433
+        videoSprite.x = 3769 - 200//&y=
+        videoSprite.y = 2433 - 300
         videoSprite.blendMode = PIXI.BLEND_MODES.SCREEN
         this.foreground.addChild(videoSprite);
 
@@ -728,18 +704,9 @@ class PIXIRenderer {
         firstFloor.y = 0
         this.foreforeground.addChild(firstFloor)
 
-        //inspace-jo.mp4
-
 
        
         this.count = 0
-
-
-        
-      
-
-
-
 
 
         this.chars = '01'
@@ -756,16 +723,6 @@ class PIXIRenderer {
         }
 
         
-
-        
-
-
-
-      
-    
-
-      
-      
 
 
         // Start the update
@@ -829,11 +786,7 @@ class PIXIRenderer {
 
         this.displacementFilter = new PIXI.filters.DisplacementFilter(this.displacementSprite)
         this.displacementFilter.padding = 50
-        
-        
 
-
-        
         window.addEventListener('resize', () => {
             this.resize()
         })
@@ -887,10 +840,7 @@ class PIXIRenderer {
             }
                   
         }, 250);
-      
 
-        
-        
     }
 
     
@@ -947,6 +897,32 @@ class PIXIRenderer {
         this.displacementSprite.y = delta*500
         this.displacementSprite.x = delta*500
         this.renderer.render(this.stage)
+
+        if(this.floorQuote1) {
+            if(this.floorQuote1.seen) {
+                this.floorQuote1.filters = []
+            }
+        }
+
+        if(this.floorQuote2) {
+            if(this.floorQuote2.seen) {
+                this.floorQuote2.filters = []
+            }
+        }
+
+        if(this.floorQuote3) {
+            if(this.floorQuote3.seen) {
+                this.floorQuote3.filters = []
+            }
+        }
+
+        if(this.floorQuote4) {
+            if(this.floorQuote4.seen) {
+                this.floorQuote4.filters = []
+            }
+        }
+
+
 
         if(this.count > 360) {
             //this.spriteShader.alpha = 0.1 + Math.sin((this.count/10)) * 0.1;

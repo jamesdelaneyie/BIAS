@@ -111,7 +111,7 @@ class PlayerGraphics extends PIXI.Container {
        
 
         this.typingIcon = new PIXI.Container()
-        const typingIcon = this.typingIcon
+        let typingIcon = this.typingIcon
         typingIcon.visible = false
 
 
@@ -333,11 +333,19 @@ class PlayerGraphics extends PIXI.Container {
     }
 
     addSticker(value){
+
+        const resources = PIXI.Loader.shared.resources
+
         
         if(value > 1) {
             if(this.self == false) {
                 
             } else {
+
+                let slap = resources.slapLaugh.sound
+                if(slap) {
+                    slap.play()
+                }
                 let choice = Math.floor(Math.random() * (4 - 1) + 1)
                 if(choice == 1) {
                     this.smileyStamp = new PIXI.Sprite.from('images/face-sticker-calm.svg');
@@ -519,13 +527,13 @@ class PlayerGraphics extends PIXI.Container {
         if(this.sleeping == false) {
             this.sleepingGraphic.visible = false
          } else {
-            //console.log('show')
             this.sleepingGraphic.visible = true 
          }
 
         if(this.typing == false) {
             this.typingIcon.visible = false
          } else {
+            console.log('show')
             this.typingIcon.visible = true
          }
     

@@ -20,16 +20,9 @@ class InputSystem {
         
         let isJoined = false;
 
-        
-
         const footstep = Sound.from('audio/footstep.mp3');
         footstep.speed = 2
-        footstep.volume = 0.005
-
-        
-      
-
-      
+        footstep.volume = 0.005      
 
         window.onblur = function() {
             //console.log('leave')
@@ -75,18 +68,40 @@ class InputSystem {
                         client.addCommand(new ToggleCommand(true, "headphones"))
                     })
 
+                    renderer.UIBuilder.mainMenuStage.children.forEach((element, index) => {
+                        if(index == 0) {
+                            return;
+                        }
+                        element.on('pointerdown', function(){
+                            client.addCommand(new ToggleCommand(true, "headphones"))
+                        })
+                    })
+
+                   
+                    renderer.UIBuilder.viewInfoButton.on('pointerdown', function(){
+                        client.addCommand(new ToggleCommand(true, "headphones"))
+                    });
+                    
+
+                    
+
+                    console.log(renderer.UIBuilder)//renderer.UIBuilder.showQuoteButton
+                    
+
                     document.addEventListener( "pointerdown", closeArtButton );
                     function closeArtButton(event){
                         var element = event.target;
                         if(element.id == 'back-to-bias'){
                             client.addCommand(new ToggleCommand(false, "headphones"))
+                            client.rawEntity.artNumber++
+                            console.log(client.rawEntity);
                         }
                     }
-                    //console.log(renderer.UIBuilder.leaveButton.contentContainer)
 
                     renderer.UIBuilder.leaveButtonWrapper.contentContainer.on('pointerdown', function(){
-                        console.log('closing')
-                        client.addCommand(new ToggleCommand(false, "headphones"))
+                        if(renderer.UIBuilder.showingQuote == true) {
+                            client.addCommand(new ToggleCommand(false, "headphones"))
+                        }
                     });
                     
                     listenersOn == true
@@ -96,11 +111,6 @@ class InputSystem {
         }, 200 )
 
 
-        
-
-
-
-
 
         window.addEventListener('resize', () => {
             
@@ -108,8 +118,6 @@ class InputSystem {
         
         })
 
-        
-            
         
 
         this.currentState = {
@@ -147,59 +155,47 @@ class InputSystem {
         
 
         this.isMobile = isMobile();
-/*
-        const chatBox = renderer.UIBuilder.mockInput
-        //if(isMobile == false) {
-        if(chatBox) {
-            //console.log('tester')
-        } else {
-            //console.log('checker')
-        }*/
 
             
 
             document.addEventListener('keydown', event => {
-               
+                               
+                if(!renderer.UIBuilder.mockInput._isFocused) {
 
-                
-                //if(!renderer.stage.children[1].mockInput._isFocused) {
-                    
-                
+                    if (event.keyCode === 87 || event.keyCode === 38) {
+                        this.currentState.w = true
+                        this.frameState.w = true
+                        if(!footstep.isPlaying) {
+                            footstep.play()
+                        }
+                    }
+                    // a or left arrow
+                    if (event.keyCode === 65 || event.keyCode === 37) {
+                        this.currentState.a = true
+                        this.frameState.a = true
+                        if(!footstep.isPlaying) {
+                            footstep.play()
+                        }
+                    }
+                    // s or down arrow
+                    if (event.keyCode === 83 || event.keyCode === 40) {
+                        this.currentState.s = true
+                        this.frameState.s = true
+                        if(!footstep.isPlaying) {
+                            footstep.play()
+                        }
+                    }
+                    // d or right arrow
+                    if (event.keyCode === 68 || event.keyCode === 39) {
+                        this.currentState.d = true
+                        this.frameState.d = true
+                        if(!footstep.isPlaying) {
+                            footstep.play()
+                        }
+                    }
 
-
-                if (event.keyCode === 87 || event.keyCode === 38) {
-                    this.currentState.w = true
-                    this.frameState.w = true
-                    if(!footstep.isPlaying) {
-                        footstep.play()
-                    }
-                }
-                // a or left arrow
-                if (event.keyCode === 65 || event.keyCode === 37) {
-                    this.currentState.a = true
-                    this.frameState.a = true
-                    if(!footstep.isPlaying) {
-                        footstep.play()
-                    }
-                }
-                // s or down arrow
-                if (event.keyCode === 83 || event.keyCode === 40) {
-                    this.currentState.s = true
-                    this.frameState.s = true
-                    if(!footstep.isPlaying) {
-                        footstep.play()
-                    }
-                }
-                // d or right arrow
-                if (event.keyCode === 68 || event.keyCode === 39) {
-                    this.currentState.d = true
-                    this.frameState.d = true
-                    if(!footstep.isPlaying) {
-                        footstep.play()
-                    }
                 }
 
-            //}
 
                 // r
                 if (event.keyCode === 82) {
@@ -212,11 +208,6 @@ class InputSystem {
                     this.currentState.spacebar = true
                     this.frameState.spacebar = true
                 }
-            
-                //this.currentState.message = this.UIBuilder.getMessageText();
-                //this.frameState.message = this.UIBuilder.getMessageText();
-
-                
 
             
 
@@ -290,11 +281,7 @@ class InputSystem {
                 this.frameState.mouseMoving = false
             })
 
-            if(this.isMobile.any || window.innerWidth <= 500) {
-                var joypadSize = 0.5
-            } else {
-                var joypadSize = 0.2
-            }
+            var joypadSize = 0.5
 
 
             this.leftController = new Joystick({
@@ -446,7 +433,7 @@ class InputSystem {
                 if(userInterface) {
                     if(placed == false) {
                         if(mobile || window.innerWidth <= 500) {
-                            renderer.UIBuilder.addChild(leftController);
+                            renderer.UIBuilder.addChildAt(leftController, 5);
                             placed == true
                             clearInterval(placeStick)
                         }
@@ -466,7 +453,7 @@ class InputSystem {
         if(this.isMobile.any || window.innerWidth <= 500) {
             this.leftController.position.set(45, window.innerHeight - this.leftController.height + 15);
             if(renderer.UIBuilder) {
-                renderer.UIBuilder.addChild(this.leftController);
+                renderer.UIBuilder.addChildAt(this.leftController, 5);
             }
             
         } else {

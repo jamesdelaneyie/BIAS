@@ -85,6 +85,26 @@ class BoxGraphics extends PIXI.Container {
 
         }
 
+        if(this.type == "soccer-ball") {
+            this.body.clear()
+            this.tokenImage = new PIXI.Sprite.from('images/soccer-ball-icon.svg');
+            this.tokenImage.width = state.width;
+            this.tokenImage.height = state.height;
+            this.tokenImage.x = -state.width/2
+            this.tokenImage.y = -state.height/2
+            
+            this.body.addChild(this.tokenImage)
+            this.addChild(this.body)
+
+        }
+
+        if(state.type == "security-cam") {
+            this.tokenImage.x = 0
+            this.tokenImage.y = 0
+            this.tokenImage.angle = -90
+            this.tokenImage.anchor.set(0.5, 0.8)
+        }
+
         
 
         

@@ -10,6 +10,12 @@ export default (instance, flowerCommand, flowers) => {
     instance.addEntity(flower)
     flowers.set(flower.nid, flower)
 
+    
+    setTimeout(function(){
+        instance.removeEntity(flower)
+        // 6 hours 
+    }, 2160000)
+
     return flowers
 
 }

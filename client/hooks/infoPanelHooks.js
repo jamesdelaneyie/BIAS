@@ -6,21 +6,15 @@ export default ({ infoPanels }, renderer) => {
 
             infoPanels.set(data.nid, entity)
 
-            //console.log('chcker')
-
             const graphics = new InfoPanelGraphics(data)
 
             renderer.entities.set(data.nid, graphics)
-
             
             if(data.name == "12") {
                 renderer.foreforeground.addChild(graphics)
             } else {
                 renderer.middleground.addChild(graphics)
             }
-
-
-            //renderer.middleground.addChild(graphics)
 
             return graphics
         },

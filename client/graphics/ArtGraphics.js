@@ -134,8 +134,17 @@ class ArtGraphics extends PIXI.Container {
     }
 
     addSticker(value, x, y){
+
+        //console.log(value)
         if(value > 1) {
             //console.log('checker')
+
+            const resources = PIXI.Loader.shared.resources
+            let slap = resources.slap.sound
+            if(slap) {
+                slap.play()
+            }
+
             let choice = Math.floor(Math.random() * (4 - 1) + 1)
             if(choice == 1) {
                 this.smileyStamp = new PIXI.Sprite.from('images/face-sticker-calm.svg');
@@ -147,8 +156,12 @@ class ArtGraphics extends PIXI.Container {
             let size = Math.floor(Math.random() * (6 - 2) + 1)
             this.smileyStamp.width = size*10;
             this.smileyStamp.height = size*10;
+
+            console.log(x, y)
+
             this.smileyStamp.x = Math.floor(Math.random() * (300) - 150)
             this.smileyStamp.y = Math.floor(Math.random() * (300)  - 150)
+
             let angle = Math.floor(Math.random() * (360 - 1) + 1)
             this.smileyStamp.scale.set(3)
             this.smileyStamp.angle = angle 

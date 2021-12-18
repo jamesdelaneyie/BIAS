@@ -141,7 +141,10 @@ class FlowerGraphics extends PIXI.Container {
         if(state.y < 1700 && state.x < 2370) {
 
             let vines = resources.vines.sound
-            //vines.play()
+            if(vines) {
+                vines.speed = 1.5
+                vines.play()
+            }
             
             this.flower = true
             var leaf = new PIXI.Graphics();
@@ -308,7 +311,9 @@ class FlowerGraphics extends PIXI.Container {
         } else if(state.y > 1700 && state.x < 2370) {
 
             let slap = resources.slap.sound
-            //slap.play()
+            if(slap) {
+                slap.play()
+            }
 
             let choice = Math.floor(Math.random() * (4 - 1) + 1)
             if(choice == 1) {

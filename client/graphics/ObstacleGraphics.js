@@ -56,6 +56,10 @@ class ObstacleGraphics extends PIXI.Container {
             this.wrapper.addChild(this.body)
             this.addChild(this.wrapper)
         }
+
+        if(this.name == "johannInnerWall") {
+            this.alpha = 0
+        }
         
 
         this.count = 0.01
@@ -64,6 +68,13 @@ class ObstacleGraphics extends PIXI.Container {
 
     addSticker(value){
         if(value > 1) {
+
+            const resources = PIXI.Loader.shared.resources
+            let slap = resources.slap.sound
+            if(slap) {
+                slap.play()
+            }
+
             let choice = Math.floor(Math.random() * (4 - 1) + 1)
             if(choice == 1) {
                 this.smileyStamp = new PIXI.Sprite.from('images/face-sticker-calm.svg');

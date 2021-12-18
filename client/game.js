@@ -41,18 +41,6 @@ const create = () => {
 
     let input = new InputSystem(renderer, client)
 
-   
-
-    /*let boop = ""
-    let footstep = ""
-    loader.load(function(loader, resources) {
-        boop = resources.boop.sound
-
-        footstep = resources.footstep.sound
-        footstep.speed = 2
-        footstep.volume = 0.005
-    });*/
-
 
 
 
@@ -112,7 +100,6 @@ const create = () => {
         let color = PIXI.utils.string2hex(message.color)
 
         if(message.x > 2355 && message.y > 1760) {
-            //let color = PIXI.utils.string2hex("#12b5db")
             trail.lineStyle(1, color, 0.5)
             trail.drawCircle(0,0,5)
             trail.drawCircle(0,0,10)
@@ -183,11 +170,6 @@ const create = () => {
             renderer.UIBuilder.setPlayerPositionMiniMap(message.id, message.x, message.y)
         }
 
-        
-        
-
-        
-
     })
 
 
@@ -232,8 +214,6 @@ const create = () => {
 
     client.on('message::Notification', message => {
 
-        //console.log(message)
-
         if(message.type == "floorTrigger") {
             //console.log(message.text)
             //renderer.UIBuilder.buildMiniMap(message.text)
@@ -276,11 +256,11 @@ const create = () => {
         if(message.type == "showQuote") {
             if(!renderer.UIBuilder.showingQuote) {
                 renderer.UIBuilder.showQuote(message.text)
+                
             }
         }
 
         if(message.type == "showQuoteButton") {
-            //console.log('checker')
             if(renderer.UIBuilder) {
                 renderer.UIBuilder.showQuoteButton(message.text, message.type, message.x, message.y)
             }
@@ -343,10 +323,16 @@ const create = () => {
         }
 
         if(message.type == "emojiBlast") {
-            emojiBlast(renderer.middleground, message);
+            emojiBlast(renderer.foreforeground, message);
             
-            if(!partySound.isPlaying && message.text == "🎉") {
-                partySound.play()
+            
+            const resources = PIXI.Loader.shared.resources
+
+            let hb = resources.gruntBirthdayParty.sound
+            hb.volume = 0.04
+            console.log('checker')
+            if(message.text == "🎉") {
+                hb.play()
             }
 
             /*if(message.text == "⚡") {
@@ -460,9 +446,14 @@ const create = () => {
     handshake.y = inviteY
     handshake.floor = inviteFloor
 
-    //client.connect('ws://localhost:8079', handshake)
+    if(!inviteFloor) {
+        handshake.floor = 0;
+    }
+
+    //wss://bias.jamesdelaney.ie/test
+    client.connect('ws://localhost:8079', handshake)
     
-    client.connect('wss://bias.jamesdelaney.ie/test', handshake)
+    //client.connect('wss://bias.jamesdelaney.ie/test', handshake)
 
     let connectionCounter = 0
 
@@ -494,23 +485,34 @@ const create = () => {
         
                 var c = Math.sqrt( a*a + b*b )
                             
+                if(!renderer.floorQuote1.seen) {
+                    if(c < 500) {
 
-                if(c < 500) {
+                        let alpha = (500 - c) / 100
 
-                    let alpha = (500 - c) / 100
+                        renderer.floorQuote1.alpha = alpha
+                        let displacement = c - 150
+                        if(displacement < 0) {
+                            displacement = 0
+                        }
 
-                    renderer.floorQuote1.alpha = alpha
-                    let displacement = c - 150
-                    if(displacement < 0) {
-                        displacement = 0
+                        renderer.displacementFilterText1.scale.set(displacement)
+
+                    } else {
+                        renderer.floorQuote1.alpha = 0
                     }
-
-                    //console.log(alpha)
-
-                    renderer.displacementFilterText1.scale.set(displacement)
-
                 } else {
-                    renderer.floorQuote1.alpha = 0
+                    renderer.floorQuote1.alpha = 1
+                }
+
+                if(c < 100 && !renderer.floorQuote1.seen) {
+                    //console.log('checker')
+                    state.myRawEntity.quoteNumber++
+                    renderer.floorQuote1.seen = true
+                    renderer.UIBuilder.showAchievement("5", "test")
+                    if(state.myRawEntity.quoteNumber == 4) {
+                        //alert('all quotes')
+                    }
                 }
                 
     
@@ -527,25 +529,32 @@ const create = () => {
             
                 var c = Math.sqrt( a*a + b*b )
              
-                if(c < 500) {
-            
-                    let alpha = ((500 - c) / 400) 
-
-                    //console.log(alpha)
-            
-                    renderer.floorQuote2.alpha = alpha
-                    let displacement = c - 150
-                    if(displacement < 0) {
-                        displacement = 0
+                if(!renderer.floorQuote2.seen) {
+                    if(c < 500) {
+                
+                        let alpha = ((500 - c) / 400) 
+                
+                        renderer.floorQuote2.alpha = alpha
+                        let displacement = c - 150
+                        if(displacement < 0) {
+                            displacement = 0
+                        }
+                        renderer.displacementFilterText1.scale.set(displacement)
+                
+                    } else {
+                        renderer.floorQuote2.alpha = 0
                     }
-                    renderer.displacementFilterText1.scale.set(displacement)
-            
                 } else {
-                    renderer.floorQuote2.alpha = 0
+                    renderer.floorQuote2.alpha = 1
                 }
 
-                if(c < 100) {
+                if(c < 100 && !renderer.floorQuote2.seen) {
+                    state.myRawEntity.quoteNumber++
+                    renderer.floorQuote2.seen = true
                     renderer.UIBuilder.showAchievement("5", "test")
+                    if(state.myRawEntity.quoteNumber == 4) {
+                        //alert('all quotes')
+                    }
                 }
                 
             
@@ -562,25 +571,32 @@ const create = () => {
             
                 var c = Math.sqrt( a*a + b*b )
              
-                if(c < 500) {
-            
-                    let alpha = ((500 - c) / 400) 
-
-                    //console.log(alpha)
-            
-                    renderer.floorQuote3.alpha = alpha
-                    let displacement = c - 150
-                    if(displacement < 0) {
-                        displacement = 0
+                if(!renderer.floorQuote3.seen) {
+                    if(c < 500) {
+                
+                        let alpha = ((500 - c) / 400) 
+                
+                        renderer.floorQuote3.alpha = alpha
+                        let displacement = c - 150
+                        if(displacement < 0) {
+                            displacement = 0
+                        }
+                        renderer.displacementFilterText1.scale.set(displacement)
+                
+                    } else {
+                        renderer.floorQuote3.alpha = 0
                     }
-                    renderer.displacementFilterText1.scale.set(displacement)
-            
                 } else {
-                    renderer.floorQuote3.alpha = 0
+                    renderer.floorQuote3.alpha = 1
                 }
 
-                if(c < 100) {
+                if(c < 100 && !renderer.floorQuote3.seen) {
+                    state.myRawEntity.quoteNumber++
+                    renderer.floorQuote3.seen = true
                     renderer.UIBuilder.showAchievement("5", "test")
+                    if(state.myRawEntity.quoteNumber == 4) {
+                        //alert('all quotes')
+                    }
                 }
                 
             
@@ -597,25 +613,33 @@ const create = () => {
             
                 var c = Math.sqrt( a*a + b*b )
              
-                if(c < 500) {
-            
-                    let alpha = ((500 - c) / 400) 
-
-                    //console.log(alpha)
-            
-                    renderer.floorQuote4.alpha = alpha
-                    let displacement = c - 150
-                    if(displacement < 0) {
-                        displacement = 0
+                if(!renderer.floorQuote4.seen) {
+                    if(c < 500) {
+                
+                        let alpha = ((500 - c) / 400) 
+                
+                        renderer.floorQuote4.alpha = alpha
+                        let displacement = c - 150
+                        if(displacement < 0) {
+                            displacement = 0
+                        }
+                        renderer.displacementFilterText1.scale.set(displacement)
+                
+                    } else {
+                        renderer.floorQuote4.alpha = 0
                     }
-                    renderer.displacementFilterText1.scale.set(displacement)
-            
                 } else {
-                    renderer.floorQuote4.alpha = 0
+                    renderer.floorQuote4.alpha = 1
                 }
 
-                if(c < 100) {
+                if(c < 100 && !renderer.floorQuote4.seen) {
+                    state.myRawEntity.quoteNumber++
+                    renderer.floorQuote4.seen = true
                     renderer.UIBuilder.showAchievement("5", "test")
+                    //console.log('')
+                    if(state.myRawEntity.quoteNumber == 4) {
+                        //alert('all quotes')
+                    }
                 }
                 
             

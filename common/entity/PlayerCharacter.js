@@ -91,7 +91,9 @@ PlayerCharacter.protocol = {
     sleeping: nengi.Boolean,
     typing: nengi.Boolean,
     sticker: nengi.UInt16,
-    seat: nengi.UInt16
+    seat: nengi.UInt16,
+    artNumber: nengi.UInt16,
+    quoteNumber: nengi.UInt16,
 }
 
 export default PlayerCharacter

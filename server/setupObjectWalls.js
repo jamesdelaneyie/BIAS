@@ -141,7 +141,7 @@ export default (instance, world, room, boxes) => {
 
                 let height
                 if(hole.width > 0) {
-                    height = hole.offset + borderWidth*2
+                    height = hole.offset + borderWidth
                 } else {
                     height = 0
                 }

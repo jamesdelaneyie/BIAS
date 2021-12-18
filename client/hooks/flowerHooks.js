@@ -9,7 +9,7 @@ export default ({ flowers }, renderer) => {
 
             
 
-            if(data.y > 1300) {
+            if(data.y > 1700) {
                 renderer.middleground.addChild(graphics)
                 /*data.y = data.y - 60
                 data.x = data.x - 60
@@ -17,15 +17,15 @@ export default ({ flowers }, renderer) => {
                 
             } else {
                 //console.log()
-                renderer.backbackbackground.addChildAt(graphics, 0)
-                
+                renderer.backbackground.addChildAt(graphics, 0)
             }
 
             return graphics
         },
         delete({ nid, graphics }) {
             renderer.entities.delete(nid)
-            renderer.backbackbackground.removeChild(graphics)
+            renderer.backbackground.removeChild(graphics)
+            renderer.middleground.removeChild(graphics)
         }
     }
 }

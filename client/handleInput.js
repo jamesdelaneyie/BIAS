@@ -7,15 +7,14 @@ import { fire } from '../common/weapon.js'
 import handleShot from './handleShot.js'
 import isMobile from 'ismobilejs'
 import * as PIXI from 'pixi.js'
+import { UInt16 } from 'nengi'
+
+let isFiring = false
 
 const handleInput = (inputSystem, state, client, renderer, delta) => {
 
     const input = inputSystem.frameState
     inputSystem.releaseKeys()
-
-
-    
-
 
     const { myRawEntity, obstacles, boxes, artworks, infoPanels } = state
 
@@ -46,11 +45,9 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
             
             
 
-            if(input.message != "") {
-                //console.log('typing')
+            if(renderer.UIBuilder.mockInput.text != "" && renderer.UIBuilder.mockInput._isFocused) {
                 client.addCommand(new ToggleCommand(true, "typing"))
             } else {
-                //console.log('not typing')
                 client.addCommand(new ToggleCommand(false, "typing"))
             }
 
@@ -61,33 +58,34 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
             // apply moveCommand  to our local entity
             applyCommand(myRawEntity, moveCommand, obstacles, boxes, artworks, infoPanels)
 
-            
 
 
-            //if (input.mouseDown) {
+            if (input.mouseDown) {
+               
+                const heartEmoji = renderer.UIBuilder.heartEmoji.contentContainer;
+                heartEmoji.on("pointerdown", function () {
+                    client.addCommand(new SpeakCommand("❤️", "emojiBlast", myRawEntity.x, myRawEntity.y))
+                });
+                const partyEmoji = renderer.UIBuilder.partyEmoji.contentContainer;
+                partyEmoji.on("pointerdown", function () {
+                    client.addCommand(new SpeakCommand("🎉", "emojiBlast", myRawEntity.x, myRawEntity.y))
+                });
                 /*const coolEmoji = renderer.stage.children[1].coolEmoji.contentContainer;
                 coolEmoji.on("pointerdown", function () {
                     client.addCommand(new SpeakCommand("😎", "emojiBlast", myRawEntity.x, myRawEntity.y))
-                });
-            const heartEmoji = renderer.stage.children[1].heartEmoji.contentContainer;
-                heartEmoji.on("pointerdown", function () {
-                    client.addCommand(new SpeakCommand("❤️", "emojiBlast", myRawEntity.x, myRawEntity.y))
                 });
                 const lighteningEmoji = renderer.stage.children[1].lighteningEmoji.contentContainer;
                 lighteningEmoji.on("pointerdown", function () {
                     client.addCommand(new SpeakCommand("⚡", "emojiBlast", myRawEntity.x, myRawEntity.y))
                 });
-                const sadEmoji = renderer.stage.children[1].sadEmoji.contentContainer;
-                sadEmoji.on("pointerdown", function () {
-                    client.addCommand(new SpeakCommand("🎉", "emojiBlast", myRawEntity.x, myRawEntity.y))
-                });
+                
                 const whateverEmoji = renderer.stage.children[1].whateverEmoji.contentContainer;
                 whateverEmoji.on("pointerdown", function () {
                     client.addCommand(new SpeakCommand("🙄", "emojiBlast", myRawEntity.x, myRawEntity.y))
-                });
-            //}*/
+                });*/
+            }
 
-            /*if(renderer.UIBuilder.sendIcon) {
+            if(renderer.UIBuilder) {
 
                 const sendMessage = renderer.UIBuilder.sendIcon
                 sendMessage.on("pointerdown", function () {
@@ -98,8 +96,9 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
                     }
                     renderer.UIBuilder.mockInput.blur();
                     renderer.UIBuilder.mockInput.text = ""
+                    renderer.UIBuilder.TextBoxPlaceholder.alpha = 0.4;
                 });
-            }*/
+            }
 
 
             document.addEventListener('keydown', event => {
@@ -109,6 +108,7 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
                     client.addCommand(speakCommand)
                     renderer.UIBuilder.mockInput.blur();
                     renderer.UIBuilder.mockInput.text = ""
+                    renderer.UIBuilder.TextBoxPlaceholder.alpha = 0.4;
                 }
             })
 
@@ -148,13 +148,59 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
                 let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + urlParams.toString();
                 window.history.replaceState({path: newurl}, '', newurl);
 
-                if (fire(myRawEntity)) {
-                    // send shot to the server
-                    client.addCommand(new FireCommand(worldCoord.x, worldCoord.y, myRawEntity.color))
-                    // draw a predicted shot locally
-                    handleShot(myRawEntity.x, myRawEntity.y, worldCoord.x, worldCoord.y, state.obstacles, renderer)
+                let canFire = true
+                //console.log(renderer.UIBuilder)
+
+                //menu button
+                if(inputSystem.currentState.mx < 55 && inputSystem.currentState.my < 55) {
+                    canFire = false;
+                }
+                if(renderer.UIBuilder.mainMenuStage.children[1].visible == true) {
+                    if(inputSystem.currentState.mx < 145 && inputSystem.currentState.my < 190) {
+                        canFire = false;
+                    }
                 }
 
+                //map button
+                if(inputSystem.currentState.mx > (window.innerWidth - 55) && inputSystem.currentState.my > (window.innerHeight - 55)) {
+                    canFire = false;
+                }
+                if(renderer.UIBuilder.miniMap.visible == true) {
+                    if(inputSystem.currentState.mx > (window.innerWidth - 210) && inputSystem.currentState.my > (window.innerHeight - 170)) {
+                        canFire = false;
+                    }
+                }
+                //console.log(inputSystem.currentState.mx)
+                //Text input
+                 if(inputSystem.currentState.mx > (window.innerWidth/2 - 220) && inputSystem.currentState.mx < (window.innerWidth/2 + 220)) {
+                    if(inputSystem.currentState.my > (window.innerHeight - 70)) {
+                        canFire = false;
+                    }
+                }
+
+                if(renderer.UIBuilder.showingQuote) {
+                    canFire = false;
+                }
+
+                //console.log()
+                if(!isFiring) {
+
+                    if (fire(myRawEntity) && canFire) {
+                        // send shot to the server
+                        client.addCommand(new FireCommand(worldCoord.x, worldCoord.y, myRawEntity.color))
+                        // draw a predicted shot locally
+                        handleShot(myRawEntity.x, myRawEntity.y, worldCoord.x, worldCoord.y, state.obstacles, renderer)
+    
+                        isFiring = true
+                    }
+
+                }
+
+                
+                
+
+            } else {
+                isFiring = false
             }
 
         } else {

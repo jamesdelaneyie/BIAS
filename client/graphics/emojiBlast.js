@@ -37,7 +37,7 @@ const emojiBlast = (layer, message) => {
 
         ease.add(emoji, fadeInStyles, fadeInSettings)
 
-        /*var id = setInterval(frame, 10)
+        var id = setInterval(frame, 10)
         function frame() {
             if (emoji.alpha > 1) { 
                 clearInterval(id);
@@ -45,7 +45,7 @@ const emojiBlast = (layer, message) => {
                 emoji.y = emoji.y - 0.5
                 emoji.alpha = emoji.alpha + 0.1
             }
-        }*/
+        }
 
         setTimeout(() => {
             layer.children.forEach(emoji => {

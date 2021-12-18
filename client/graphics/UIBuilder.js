@@ -6,7 +6,9 @@ import { ease } from 'pixi-ease'
 import { Sound, filters, sound } from '@pixi/sound'
 import { CRTFilter } from '@pixi/filter-crt'
 import { GlitchFilter } from '@pixi/filter-glitch'
+import { GlowFilter } from '@pixi/filter-glow'
 import { join } from 'path';
+
 
 class UIBuilder extends PIXI.Container {
     constructor(renderer, client) {
@@ -34,6 +36,7 @@ class UIBuilder extends PIXI.Container {
 
         this.green = PIXI.utils.string2hex("#00b140")
         const green = this.green
+        //old bright green #4dfa66
 
         this.darkGreen = PIXI.utils.string2hex("#031e04")
         const darkGreen = this.darkGreen
@@ -191,7 +194,7 @@ class UIBuilder extends PIXI.Container {
         this.miniMapOn = true
         this.statusStageOn = true
         this.worldInfoOn = true
-        this.notificationStageOn = true
+        this.notificationStageOn = false
         this.achievementStageOn = true
         this.chatStageOn = true
         this.emojiStageOn = true
@@ -241,11 +244,6 @@ class UIBuilder extends PIXI.Container {
             menuIcon.on("pointerover", function () {
                 menuHoverMain.play()
             })
-
-            menuIcon.on("pointermove", function () {
-                
-            })
-
            
 
             menuIcon.on("pointerdown", function () {
@@ -953,14 +951,21 @@ class UIBuilder extends PIXI.Container {
 
         if(this.chatStageOn == true) {
 
-            let textBoxWidth
-            if(window.innerWidth <= 320) {
-                textBoxWidth = 290
-            } else {
-                textBoxWidth = 420
+            
+
+            let textBoxHeight = 50
+            let textBoxWidth = 420
+            let textBoxY = 0.995
+
+
+            if(window.innerWidth <= 375) {
+                textBoxWidth = 350
             }
 
-            const textBoxHeight = 50
+            if(window.innerWidth <= 320) {
+                textBoxWidth = 295
+            }
+
             
             this.textBox = new PUXI.Stage({
                 width: textBoxWidth,
@@ -970,14 +975,16 @@ class UIBuilder extends PIXI.Container {
             })
             this.textBox.visible = false
             this.textBox.alpha = 0
-    
+            let textBox = this.textBox
+           
+            
             this.textBoxWrapper = new PUXI.WidgetGroup({
             }).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
                     width: textBoxWidth,
                     height: textBoxHeight,
                     x: 0.5,
-                    y: 0.99,
+                    y: textBoxY,
                     anchor: new PIXI.Point(0.5, 1)
                 }),
             )
@@ -1027,8 +1034,11 @@ class UIBuilder extends PIXI.Container {
                 }),
             )
             this.textBoxWrapper.addChild(this.mockInput);
+            this.textBoxWrapper.contentContainer.buttonMode = true
+            this.textBoxWrapper.contentContainer.interactive = true
             this.textBoxWrapper.contentContainer.cursor = "text";
-    
+            let textBoxInput = this.mockInput
+
             this.TextBoxPlaceholder = new PUXI.TextWidget(
                 'Type to speak!', 
                 textInputStyles
@@ -1038,6 +1048,7 @@ class UIBuilder extends PIXI.Container {
                     y: 9,
                 })
             )
+            let textBoxPlaceholder = this.TextBoxPlaceholder
             this.TextBoxPlaceholder.alpha = 0.4;
             this.textBoxWrapper.addChild(this.TextBoxPlaceholder);
     
@@ -1075,23 +1086,44 @@ class UIBuilder extends PIXI.Container {
     
             this.sendIcon.interactive = true;
             this.sendIcon.buttonMode = true;
+
+            let sendIcon = this.sendIcon
+            this.sendIcon.on("pointerover", function () {
+                sendIcon.alpha = 0.6
+            })
+            this.sendIcon.on("pointerout", function () {
+                sendIcon.alpha = 0.4
+            })
     
             this.textBoxWrapper.contentContainer.addChild(this.sendIcon)
+
+
+
+
+
+
+            
             
         }
+
 
         
 
         if(this.emojiStageOn == true) {
 
-            let textBoxWidth
-            if(window.innerWidth <= 320) {
-                textBoxWidth = 290
-            } else {
-                textBoxWidth = 420
+
+            let textBoxWidth = 420
+            let textBoxY = 0.995
+    
+
+            if(window.innerWidth <= 375) {
+                textBoxWidth = 350
             }
 
-            const textBoxHeight = 50
+            if(window.innerWidth <= 320) {
+                textBoxWidth = 295
+            }
+            
 
             this.emojiStage = new PUXI.Stage({
                 width: textBoxWidth,
@@ -1107,19 +1139,20 @@ class UIBuilder extends PIXI.Container {
                     width: textBoxWidth, 
                     height: 50,
                     x: 0.5,
-                    y: 0.99,
+                    y: textBoxY,
                     anchor: new PIXI.Point(0.5, 1)
                 })
             )
 
 
             this.emojiWrapperBackground = new PIXI.Graphics()
-            this.emojiWrapperBackground.beginFill(white)
-            this.emojiWrapperBackground.drawRoundedRect(2, 2, 50, 46, 25)
+            this.emojiWrapperBackground.drawRoundedRect(2, 2, 55, 46, 25)
             this.emojiWrapperBackground.endFill()
             this.emojiWrapper.contentContainer.addChild(this.emojiWrapperBackground)
 
-            this.coolEmoji = new PUXI.Widget({}).setLayoutOptions(
+
+
+            this.buttonEmoji = new PUXI.Widget({}).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
                     width: 60,
                     height: 45,
@@ -1129,31 +1162,89 @@ class UIBuilder extends PIXI.Container {
             ).setPadding(7, 0)
 
 
-            const coolEmoji = new PIXI.Text("☺", {fontSize: 38});
-            coolEmoji.alpha = 0.35
+            let buttonEmoji = new PIXI.Text("☺", {fontSize: 38});
+            buttonEmoji.alpha = 0.35
 
-            this.coolEmoji.contentContainer.addChild(coolEmoji)
-            this.emojiWrapper.addChild(this.coolEmoji)
-            this.coolEmoji.contentContainer.buttonMode = true
-            this.coolEmoji.contentContainer.interactive = true
+            this.buttonEmoji.contentContainer.addChild(buttonEmoji)
+            this.emojiWrapper.addChild(this.buttonEmoji)
+            
+            this.buttonEmoji.contentContainer.buttonMode = true
+            this.buttonEmoji.contentContainer.interactive = true
+
+            this.buttonEmoji.contentContainer.on("pointerover", function () {
+                buttonEmoji.alpha = 0.5
+            })
+
+            this.buttonEmoji.contentContainer.on("pointerout", function () {
+                buttonEmoji.alpha = 0.35
+            })
+
+            this.emojiBarOpen = false;
+            let emojiBarOpen = this.emojiBarOpen
+            let emojiWrapperBackground = this.emojiWrapperBackground 
+            let emojiStage = this.emojiStage
+
+            
 
 
 
-            /*this.heartEmoji = new PUXI.Widget({}).setLayoutOptions(
+            this.heartEmoji = new PUXI.Widget({}).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
                     width: 60,
                     height: 50,
-                    x: 50,
+                    x: 38,
+                    y: 2
+                })
+            ).setPadding(15, 10)
+            let heartEmojiText = new PIXI.Text("❤️", {fontSize: 24});
+            this.heartEmoji.contentContainer.addChild(heartEmojiText)
+            this.emojiWrapper.addChild(this.heartEmoji)
+            this.heartEmoji.contentContainer.alpha = 0
+            this.heartEmoji.contentContainer.buttonMode = true
+            this.heartEmoji.contentContainer.interactive = true
+            let heartEmoji = this.heartEmoji
+
+
+
+            this.partyEmoji = new PUXI.Widget({}).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 60,
+                    height: 50,
+                    x: 81,
+                    y: 2
+                })
+            ).setPadding(15, 10)
+            let partyEmojiText = new PIXI.Text("🎉", {fontSize: 24});
+            this.partyEmoji.contentContainer.addChild(partyEmojiText)
+            this.emojiWrapper.addChild(this.partyEmoji)
+            this.partyEmoji.contentContainer.alpha = 0
+            this.partyEmoji.contentContainer.buttonMode = true
+            this.partyEmoji.contentContainer.interactive = true
+            let partyEmoji = this.partyEmoji
+
+
+
+
+
+            /*this.newEmoji = new PUXI.Widget({}).setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 60,
+                    height: 50,
+                    x: 150,
                     y: 0
                 })
             ).setPadding(15, 10)
-            const heartEmoji = new PIXI.Text("❤️", {fontSize: 28});
-            this.heartEmoji.contentContainer.addChild(heartEmoji)
-            this.emojiWrapper.addChild(this.heartEmoji)
-            this.heartEmoji.contentContainer.buttonMode = true
-            this.heartEmoji.contentContainer.interactive = true
+            let newEmojiText = new PIXI.Text("🎉", {fontSize: 28});
+            this.newEmoji.contentContainer.addChild(newEmojiText)
+            this.emojiWrapper.addChild(this.newEmoji)
+            this.newEmoji.contentContainer.alpha = 0
+            this.newEmoji.contentContainer.buttonMode = true
+            this.newEmoji.contentContainer.interactive = true
+            let newEmoji = this.newEmoji*/
 
-            this.lighteningEmoji = new PUXI.Widget({}).setLayoutOptions(
+
+
+            /*this.lighteningEmoji = new PUXI.Widget({}).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
                     width: 60,
                     height: 50,
@@ -1167,20 +1258,6 @@ class UIBuilder extends PIXI.Container {
             this.emojiWrapper.addChild(this.lighteningEmoji)
             this.lighteningEmoji.contentContainer.buttonMode = true
             this.lighteningEmoji.contentContainer.interactive = true
-
-            this.sadEmoji = new PUXI.Widget({}).setLayoutOptions(
-                new PUXI.FastLayoutOptions({
-                    width: 60,
-                    height: 50,
-                    x: 150,
-                    y: 0
-                })
-            ).setPadding(15, 10)
-            const sadEmoji = new PIXI.Text("🎉", {fontSize: 28});
-            this.sadEmoji.contentContainer.addChild(sadEmoji)
-            this.emojiWrapper.addChild(this.sadEmoji)
-            this.sadEmoji.contentContainer.buttonMode = true
-            this.sadEmoji.contentContainer.interactive = true
 
             this.whateverEmoji = new PUXI.Widget({}).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
@@ -1196,6 +1273,59 @@ class UIBuilder extends PIXI.Container {
             this.whateverEmoji.contentContainer.interactive = true
             this.emojiWrapper.addChild(this.whateverEmoji)
                 */
+
+            let textBox = this.TextBoxPlaceholder
+
+            this.buttonEmoji.contentContainer.on("pointerdown", function () {
+
+                buttonEmoji.alpha = 0.6
+
+                if(emojiBarOpen) {
+
+                    emojiBarOpen = false
+                    textBox.alpha = 0.4
+
+                    heartEmoji.contentContainer.alpha = 0
+                    partyEmoji.contentContainer.alpha = 0
+                    emojiWrapperBackground.clear()
+                    //emojiWrapperBackground.beginFill(white)
+                    emojiWrapperBackground.drawRoundedRect(2, 2, 55, 46, 25)
+                    emojiWrapperBackground.endFill()
+
+                    const bounds = emojiWrapperBackground.getBounds()
+                    emojiStage.stage.hitArea = new PIXI.Rectangle(
+                        bounds.x,
+                        bounds.y,
+                        bounds.width,
+                        bounds.height
+                    );
+
+
+                } else {
+
+                    emojiBarOpen = true
+
+                    heartEmoji.contentContainer.alpha = 1
+                    partyEmoji.contentContainer.alpha = 1
+
+                    textBox.alpha = 0
+                
+                    emojiWrapperBackground.clear()
+                    emojiWrapperBackground.drawRoundedRect(2, 2, textBoxWidth/2, 46, 25)
+                    emojiWrapperBackground.endFill()
+
+                    const bounds = emojiWrapperBackground.getBounds()
+                    emojiStage.stage.hitArea = new PIXI.Rectangle(
+                        bounds.x,
+                        bounds.y,
+                        bounds.width,
+                        bounds.height
+                    );
+
+                }
+                
+
+            })
             
             this.emojiStage.addChild(this.emojiWrapper);
             this.addChild(this.emojiStage);
@@ -1209,6 +1339,68 @@ class UIBuilder extends PIXI.Container {
                 bounds.height
             );
         }
+
+
+        this.chatIconStage = new PUXI.Stage({
+            width: 47,
+            height: 47,
+            x: 0,
+            y: 0
+        })
+                   
+        this.chatIconWrapper = new PUXI.WidgetGroup({
+        }).setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 47,
+                height: 47,
+                x: 0.9,
+                y: 0.98,
+                anchor: new PIXI.Point(0.5, 0.5)
+            }),
+        )
+
+        this.chatIcon = PIXI.Sprite.from('images/chat-icon.svg');
+        this.chatIcon.width = 23.5
+        this.chatIcon.height = 23.5
+        this.chatIcon.anchor.set(0.5)
+
+        this.chatIconWrapperBackground = new PIXI.Graphics()
+        this.chatIconWrapperBackground.drawRoundedRect(2, 2, 55, 46, 25)
+        this.chatIconWrapperBackground.endFill()
+        this.chatIconWrapper.contentContainer.addChild(this.chatIconWrapperBackground)
+        
+        this.chatIcon.interactive = true;
+        this.chatIcon.buttonMode = true;
+
+        let textBox = this.textBox
+        let emojiBox = this.emojiWrapper
+     
+        this.chatIcon.on("pointerdown", function () {
+            if(textBox.visible == true) {
+                textBox.visible = false
+                emojiBox.visible = false
+            } else {
+                textBox.visible = true
+                emojiBox.visible = true
+            }
+        })
+        
+        this.chatIconWrapper.contentContainer.addChild(this.chatIcon)
+
+        this.chatIconStage.addChild(this.chatIconWrapper);
+        this.addChild(this.chatIconStage)
+
+        this.chatIconStage.resize(window.innerWidth, window.innerHeight)
+        let chatIconBounds = this.chatIconWrapper.contentContainer.getBounds()
+        this.chatIconStage.stage.hitArea = new PIXI.Rectangle(
+            chatIconBounds.x,
+            chatIconBounds.y,
+            chatIconBounds.width,
+            chatIconBounds.height
+        );
+
+
+        
 
 
 
@@ -1360,7 +1552,7 @@ class UIBuilder extends PIXI.Container {
                 scrollX: false,
                 scrollBars: true,
                 softness: 1,
-                dragScrolling: true
+                dragScrolling: false
             }).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
                     width: 0.999,
@@ -1434,7 +1626,7 @@ class UIBuilder extends PIXI.Container {
                     title: "ARTWORKS",
                     subtitle: "",
                     credit: "",
-                    paragraph:'<gap>\n</gap><img imgSrc="dialIconThumb" /><gap>\n</gap><boldtitle>NORMALIZI.NG</boldtitle>\n<subtitle>What does normal look like?</subtitle>\n<gap>\n</gap><gap>\n</gap><p>NORMALIZI.NG by Mushon Zer-Aviv is a new digital commission further developing and adapting his existing work “The Normalizing Machine”. This experimental online research in machine-learning aims to analyze and understand how we decide who looks more “normal”. By contributing to the dataset and choosing between faces you deem more normal, the machine analyzes your decisions and will add you to its algorithmic map of normality.\n\nIn the late 1800s, the French forensics pioneer Alphonse Bertillon, the father of the mugshot, developed ‘Le Portrait Parle’ (the speaking portrait), a system for standardizing, indexing and classifying the human face. His statistical system was never meant to criminalize the face, but it was later widely adopted by both the eugenics movement and the Nazis to do exactly that.\n\nThe online work automates Alphonse’s speaking portraits and visualizes how today’s systematic discrimination is aggregated, amplified and conveniently hidden behind the seemingly objective black box of artificial intelligence.\n\n\n\n\n<img imgSrc="talkingIconThumb" imgDisplay="block" /><gap>\n</gap><boldtitle>DARK MATTERS</boldtitle>\n<subtitle>What does bias sound like?</subtitle>\n<gap>\n</gap><gap>\n</gap><p>Dark Matters exposes the absence of Black speech in the datasets used to train voice interface systems in consumer AI products like Alexa and Siri. Using 3D modeling, sound and storytelling, the project challenges us to grapple with racism and inequity through speech and the spoken word, and how AI systems underserve Black communities.</p>\n\n\n\n\n<img imgSrc="robotIconThumb" imgDisplay="block" /><gap>\n</gap><boldtitle>CLASSES</boldtitle>\n<subtitle>How are biases translated into code?</subtitle>\n<gap>\n</gap><gap>\n</gap><p>CLASSES is a video essay exploring the entanglements between machine learning classification and social class(ification). The artwork takes place in a simulated model of a London council estate, where the artist lives. Machine and human voices playfully narrate aspects of her in-depth research into accented speech recognition, natural language processing* and public space surveillance, to understand how historical and cultural biases around social class are being translated into code and how this affects people’s material conditions.\n\nTowards the end of the essay, the artist finds inspiration in her community gardening on the estate to propose a rewilded AI that removes rigid hierarchical categories to build stronger relations between people and the world.\n\n\n\n\n<img imgSrc="faceIconThumb" imgDisplay="block" /><gap>\n</gap><boldtitle>STEALING UR FEELINGS</boldtitle>\n<subtitle>Can the internet read you?</subtitle>\n<gap>\n</gap><gap>\n</gap><p>Meet the new A.I. that knows you better than you know yourself. STEALING UR FEELINGS is an interactive film that learns your deepest, darkest secrets - just by looking at your face.  That\'s the good news. The bad news? Your favourite apps are doing exactly the same thing.</p>',
+                    paragraph:'<gap>\n</gap><img imgSrc="dialIconThumb" /><gap>\n</gap><boldtitle>NORMALIZI.NG</boldtitle>\n<subtitle>What does normal look like?</subtitle>\n<gap>\n</gap><gap>\n</gap><p>NORMALIZI.NG by Mushon Zer-Aviv is a new digital commission further developing and adapting his existing work “The Normalizing Machine”. This experimental online research in machine-learning aims to analyze and understand how we decide who looks more “normal”. By contributing to the dataset and choosing between faces you deem more normal, the machine analyzes your decisions and will add you to its algorithmic map of normality.\n\nIn the late 1800s, the French forensics pioneer Alphonse Bertillon, the father of the mugshot, developed ‘Le Portrait Parle’ (the speaking portrait), a system for standardizing, indexing and classifying the human face. His statistical system was never meant to criminalize the face, but it was later widely adopted by both the eugenics movement and the Nazis to do exactly that.\n\nThe online work automates Alphonse’s speaking portraits and visualizes how today’s systematic discrimination is aggregated, amplified and conveniently hidden behind the seemingly objective black box of artificial intelligence.\n\n\n\n\n<img imgSrc="talkingIconThumb" imgDisplay="block" /><gap>\n</gap><boldtitle>DARK MATTERS</boldtitle>\n<subtitle>What does bias sound like?</subtitle>\n<gap>\n</gap><gap>\n</gap><p>Dark Matters exposes the absence of Black speech in the datasets used to train voice interface systems in consumer AI products like Alexa and Siri. Using 3D modeling, sound and storytelling, the project challenges us to grapple with racism and inequity through speech and the spoken word, and how AI systems underserve Black communities.</p>\n\n\n\n\n<img imgSrc="robotIconThumb" imgDisplay="block" /><gap>\n</gap><boldtitle>CLASSES</boldtitle>\n<subtitle>How are biases translated into code?</subtitle>\n<gap>\n</gap><gap>\n</gap><p>CLASSES is a video essay exploring the entanglements between machine learning classification and social class(ification). The artwork takes place in a simulated model of a London council estate, where the artist lives. Machine and human voices playfully narrate aspects of her in-depth research into accented speech recognition, natural language processing* and public space surveillance, to understand how historical and cultural biases around social class are being translated into code and how this affects people’s material conditions.\n\nTowards the end of the essay, the artist finds inspiration in her community gardening on the estate to propose a rewilded AI that removes rigid hierarchical categories to build stronger relations between people and the world.\n\n\n\n\n<img imgSrc="faceIconThumb" imgDisplay="block" /><gap>\n</gap><boldtitle>STEALING UR FEELINGS</boldtitle>\n<subtitle>Can the internet read you?</subtitle>\n<gap>\n</gap><gap>\n</gap><p>Meet the new A.I. that knows you better than you know yourself. STEALING UR FEELINGS is an interactive film that learns your deepest, darkest secrets - just by looking at your face.  That\'s the good news. The bad news? Your favourite apps are doing exactly the same thing.\n</p>',
                     style: "",
                     type: ""
                 },
@@ -1473,32 +1665,32 @@ class UIBuilder extends PIXI.Container {
                 {
                     title:"<gap>\n</gap><boldtitle>CLASSES</boldtitle>",
                     subtitle:"How are biases translated into machine codes and practises?<gap>\n</gap>",
-                    credit: "<link>libbyheaney.co.uk</link> // <link>@libby_heaney_</link>",
-                    paragraph: '<p>Libby Heaney | UK | 2021 \n\nCLASSES is a video essay exploring the entanglements between machine learning classification and social class(ification). The artwork takes place in a simulated model of a London council estate, where the artist lives. Machine and human voices playfully narrate aspects of her in-depth research into accented speech recognition, natural language processing (GPT-J, Facebook’s FastText and GloVe word embeddings) and public space surveillance, to understand how historical and cultural biases around social class are being translated into code and how this affects people’s material conditions.\n\nTowards the end of the essay, the artist finds inspiration in her community gardening on the estate to propose a rewilded AI that removes rigid hierarchical categories to build stronger relations between people and the world.\n\n</p>',
+                    credit: "<medium>Libby Heaney | UK | 2021 | <link>libbyheaney.co.uk</link> | <link>@libby_heaney_</link></medium>",
+                    paragraph: '<p>CLASSES is a video essay exploring the entanglements between machine learning classification and social class(ification). The artwork takes place in a simulated model of a London council estate, where the artist lives. Machine and human voices playfully narrate aspects of her in-depth research into accented speech recognition, natural language processing (GPT-J, Facebook’s FastText and GloVe word embeddings) and public space surveillance, to understand how historical and cultural biases around social class are being translated into code and how this affects people’s material conditions.\n\nTowards the end of the essay, the artist finds inspiration in her community gardening on the estate to propose a rewilded AI that removes rigid hierarchical categories to build stronger relations between people and the world.\n\n</p>',
                     style: "",
                     type: "talking"  
                 },
                 {
                     title:"<gap>\n</gap><boldtitle>STEALING UR FEELINGS</boldtitle>",
                     subtitle:"Can the internet read you?<gap>\n</gap>",
-                    credit: "<link>noahlevenson.com</link> // <link>@noahlevenson</link>",
-                    paragraph: '<p>Noah Levenson | USA | 2019\n\nMeet the new A.I. that knows you better than you know yourself. STEALING UR FEELINGS is an interactive film that learns your deepest, darkest secrets - just by looking at your face.  That\'s the good news. The bad news? Your favourite apps are doing exactly the same thing.\n</p>',
+                    credit: "<medium>Noah Levenson | USA | 2019 | <link>noahlevenson.com</link> | <link>@noahlevenson</link></medium>",
+                    paragraph: '<p>Meet the new A.I. that knows you better than you know yourself. STEALING UR FEELINGS is an interactive film that learns your deepest, darkest secrets - just by looking at your face.  That\'s the good news. The bad news? Your favourite apps are doing exactly the same thing.\n\n</p>',
                     style: "",
                     type: "talking"  
                 },
                 {
                     title:"<gap>\n</gap><boldtitle>NORMALIZI.NG</boldtitle>",
                     subtitle:"What does normal look like?<gap>\n</gap>",
-                    credit: "<link>mushon.com</link> // <link>@mushon</link>\n\n",
-                    paragraph: '<p>Mushon Zer-Aviv | Israel | 2021 \n\nNORMALIZI.NG by Mushon Zer-Aviv is a new digital commission further developing and adapting his existing work “The Normalizing Machine”. This experimental online research in machine-learning aims to analyze and understand how we decide who looks more “normal”. By contributing to the dataset and choosing between faces you deem more normal, the machine analyzes your decisions and will add you to its algorithmic map of normality.\n\nIn the late 1800s, the French forensics pioneer Alphonse Bertillon, the father of the mugshot, developed ‘Le Portrait Parle’ (the speaking portrait), a system for standardizing, indexing and classifying the human face. His statistical system was never meant to criminalize the face, but it was later widely adopted by both the eugenics movement and the Nazis to do exactly that.\n\nThe online work automates Alphonse’s speaking portraits and visualizes how today’s systematic discrimination is aggregated, amplified and conveniently hidden behind the seemingly objective black box of artificial intelligence.\n\n\n</p>',
+                    credit: "<medium>Mushon Zer-Aviv | Israel | 2021 | <link>mushon.com</link> | <link>@mushon</link></medium>",
+                    paragraph: '<p>NORMALIZI.NG by Mushon Zer-Aviv is a new digital commission further developing and adapting his existing work “The Normalizing Machine”. This experimental online research in machine-learning aims to analyze and understand how we decide who looks more “normal”. By contributing to the dataset and choosing between faces you deem more normal, the machine analyzes your decisions and will add you to its algorithmic map of normality.\n\nIn the late 1800s, the French forensics pioneer Alphonse Bertillon, the father of the mugshot, developed ‘Le Portrait Parle’ (the speaking portrait), a system for standardizing, indexing and classifying the human face. His statistical system was never meant to criminalize the face, but it was later widely adopted by both the eugenics movement and the Nazis to do exactly that.\n\nThe online work automates Alphonse’s speaking portraits and visualizes how today’s systematic discrimination is aggregated, amplified and conveniently hidden behind the seemingly objective black box of artificial intelligence.\n\n\n</p>',
                     style: "",
                     type: "talking"  
                 },
                 {
                     title:"<gap>\n</gap><boldtitle>DARK MATTERS</boldtitle>",
                     subtitle:"What does bias sound like?<gap>\n</gap>",
-                    credit: "<link>darkmatters.ml</link> // <link>@johanndiedrick</link>",
-                    paragraph: '<p>Johann Diedrick | USA | 2021\n\nDark Matters exposes the absence of Black speech in the datasets used to train voice interface systems in consumer AI products like Alexa and Siri. Using 3D modeling, sound and storytelling, the project challenges us to grapple with racism and inequity through speech and the spoken word, and how AI systems underserve Black communities.\n\n\n</p>',
+                    credit: "<medium>Johann Diedrick | USA | 2021 | <link>darkmatters.ml</link> | <link>@johanndiedrick</link></medium>",
+                    paragraph: '<p>Dark Matters exposes the absence of Black speech in the datasets used to train voice interface systems in consumer AI products like Alexa and Siri. Using 3D modeling, sound and storytelling, the project challenges us to grapple with racism and inequity through speech and the spoken word, and how AI systems underserve Black communities.\n\n\n</p>',
                     style: "",
                     type: "talking"  
                 },
@@ -1588,6 +1780,9 @@ class UIBuilder extends PIXI.Container {
                     leading: 1,
                     textBaseline: "middle",
                 },
+                "medium": {
+                    fontWeight: 500,
+                },
                 "bold": {
                     fontWeight: 700,
                 },
@@ -1602,6 +1797,7 @@ class UIBuilder extends PIXI.Container {
                 },
                 "gap": {
                     fontSize: "9px",
+                    textDecoration:"none",
                 },
                 "subtitle": {
                     fontFamily: "Trade Gothic Next",
@@ -1618,8 +1814,8 @@ class UIBuilder extends PIXI.Container {
                     fontStyle: "italic",
                 },
                 "p": {
-                    fontSize: "18px",
-                    lineHeight: 25,
+                    fontSize: "15px",
+                    lineHeight: 21,
                     fontWeight: 300,
                 },
                 "link": {
@@ -1637,7 +1833,7 @@ class UIBuilder extends PIXI.Container {
                     textBaseline: "alphabetical",
                 },
                 "extrasmall": {
-                    fontSize: "16px",
+                    fontSize: "14px",
                     lineHeight: 24,
                     wordWrap: true,
                     wordWrapWidth: 385,
@@ -1755,15 +1951,9 @@ class UIBuilder extends PIXI.Container {
 
         if(this.miniMapOn == true) {
 
-            if(window.innerWidth <= 500) {
-                this.miniMapWidth = 30
-            } else {
-                this.miniMapWidth = 20
-            }
-            
+           
+            this.miniMapWidth = 25
             this.miniMapHeight = 25
-            let miniMapWidth = this.miniMapWidth
-            let miniMapHeight = this.miniMapHeight
             
             this.miniMapStage = new PUXI.Stage({
                 width: this.miniMapWidth,
@@ -1774,13 +1964,20 @@ class UIBuilder extends PIXI.Container {
             this.miniMapStage.visible = false
             this.miniMapStage.alpha = 0
 
+            let miniMapX = 0.985
+            let miniMapY = 0.985
+            if(window.innerWidth <= 500) {
+                miniMapX = 0.97
+                miniMapY = 0.97
+            }
+
             this.miniMapWrapper = new PUXI.WidgetGroup({
             }).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
                     width: this.miniMapWidth,
                     height: this.miniMapHeight,
-                    x: 0.985,
-                    y: 0.985,
+                    x: miniMapX,
+                    y: miniMapY,
                     anchor: new PIXI.Point(1,1)
                 })
             )
@@ -1815,6 +2012,8 @@ class UIBuilder extends PIXI.Container {
             this.miniMapPlayerPosition.pivot.set(0.5, 0.5)
             this.miniMapPlayerPosition.visible = false
             this.miniMapPlayerPosition.alpha = 0
+            this.miniMapPlayerPosition.x = 100
+            this.miniMapPlayerPosition.y = 100
             let miniMapPlayerPosition = this.miniMapPlayerPosition
 
             this.miniMapWrapper.contentContainer.addChild(this.miniMapBackground)
@@ -1824,8 +2023,8 @@ class UIBuilder extends PIXI.Container {
 
 
             this.mapIcon = PIXI.Sprite.from(resources['mapIcon'].texture);
-            this.mapIcon.x = 5
-            this.mapIcon.y = 5
+            const mapIconClose = PIXI.Sprite.from(resources['mapIconClose'].texture);
+            const mapIconNormal = this.mapIcon.texture
             this.mapIcon.scale.set(0.5)
             this.mapIcon.alpha = 1
 
@@ -1836,53 +2035,69 @@ class UIBuilder extends PIXI.Container {
             let miniMapOpen = this.miniMapOpen
             let mapIcon = this.mapIcon 
 
+            let glow = new GlowFilter({distance: 15, outerStrength: 1, color: 0xffffff})
+            
+            this.mapIcon.on('pointerover', function(){
+                mapIcon.filters = [glow]
+            })
+            this.mapIcon.on('pointerout', function(){
+                mapIcon.filters = []
+            })
             this.mapIcon.on('pointerdown', function(){
+
                 if(miniMapOpen) {
 
-                    miniMap.visible = false
+                    setTimeout(function(){
 
-                    if(window.innerWidth <= 500) {
-                        mapIcon.x = 0
-                    }
+                        miniMap.visible = false
 
-                    miniMapHeight = 25
-                   
-                    miniMapBackground.visible = false
-                    miniMapPlayerPosition.visible = false
-                    miniMapOpen = false
+                        mapIcon.texture = mapIconNormal
 
-                    miniMapBackground.clear()
-                    miniMapBackground.lineStyle(0)
-                    miniMapBackground.beginFill(white, 0, true)
-                    miniMapBackground.drawRoundedRect(0, 0, miniMapWidth, miniMapHeight, 10)
-                    miniMapBackground.endFill()
+                        let miniMapHeight = 25
+                        let miniMapWidth = 25
+                        miniMapBackground.visible = false
+                        miniMapPlayerPosition.visible = false
+                        miniMapOpen = false
 
-                    miniMapWrapper.setLayoutOptions(
-                        new PUXI.FastLayoutOptions({
-                            width: this.miniMapWidth,
-                            height: this.miniMapHeight,
-                            x: 0.987,
-                            y: 0.985,
-                            anchor: new PIXI.Point(1,1)
-                        })
-                    )
+                        miniMapBackground.clear()
+                        miniMapBackground.lineStyle(0)
+                        miniMapBackground.beginFill(white, 0, true)
+                        miniMapBackground.drawRoundedRect(0, 0, miniMapWidth, miniMapHeight, 10)
+                        miniMapBackground.endFill()
 
-                    miniMapStage.resize(window.innerWidth, window.innerHeight)
-                    const miniMapBounds = miniMapBackground.getBounds()
-                    miniMapStage.stage.hitArea = new PIXI.Rectangle(
-                        miniMapBounds.x,
-                        miniMapBounds.y,
-                        miniMapBounds.width,
-                        miniMapBounds.height
-                    )
+                        miniMapWrapper.setLayoutOptions(
+                            new PUXI.FastLayoutOptions({
+                                width: this.miniMapWidth,
+                                height: this.miniMapHeight,
+                                x: miniMapX,
+                                y: miniMapY,
+                                anchor: new PIXI.Point(1,1)
+                            })
+                        )
+
+                        miniMapStage.resize(window.innerWidth, window.innerHeight)
+                        const miniMapBounds = miniMapBackground.getBounds()
+                        miniMapStage.stage.hitArea = new PIXI.Rectangle(
+                            miniMapBounds.x,
+                            miniMapBounds.y,
+                            miniMapBounds.width,
+                            miniMapBounds.height
+                        )
+                        
+
+                    }, 220)
+
+                    
 
                 } else {
                     //console.log('open')
                     miniMapOpen = true
                     miniMap.visible = true
-                    miniMapWidth = 210
-                    miniMapHeight = 150
-                    mapIcon.x = 5
+                    
+                    let miniMapWidth = 210
+                    let miniMapHeight = 150
+
+                    mapIcon.texture = mapIconClose.texture
 
                     miniMapBackground.clear()
                     miniMapBackground.lineStyle(1, white, 0.3)
@@ -1897,14 +2112,14 @@ class UIBuilder extends PIXI.Container {
                         new PUXI.FastLayoutOptions({
                             width: this.miniMapWidth,
                             height: this.miniMapHeight,
-                            x: 0.999,
-                            y: 0.999,
+                            x: miniMapX,
+                            y: miniMapY,
                             anchor: new PIXI.Point(1,1)
                         })
                     )
                     
     
-                    miniMapStage.resize(window.innerWidth + 10, window.innerHeight + 5)
+                    miniMapStage.resize(window.innerWidth, window.innerHeight)
                     const miniMapBounds = miniMapBackground.getBounds()
                     miniMapStage.stage.hitArea = new PIXI.Rectangle(
                         miniMapBounds.x,
@@ -1918,8 +2133,6 @@ class UIBuilder extends PIXI.Container {
             })
 
             this.miniMapWrapper.contentContainer.addChild(this.mapIcon)
-
-
 
             this.addChild(this.miniMapStage)
             this.miniMapStage.resize(window.innerWidth, window.innerHeight)
@@ -2004,7 +2217,7 @@ class UIBuilder extends PIXI.Container {
                     width: 650,
                     height: 75,
                     x: 0.5,
-                    y: 0.5,
+                    y: 0.52,
                     anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
                 }),
             ).setBackground(white).setBackgroundAlpha(1);
@@ -2034,7 +2247,7 @@ class UIBuilder extends PIXI.Container {
                     width: 0.99,
                     height: 0.95,
                     x: 0.5,
-                    y: 0.5,
+                    y: 0.47,
                     anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
                 }),
             )
@@ -2048,7 +2261,7 @@ class UIBuilder extends PIXI.Container {
             ).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
                     x: 20,
-                    y: 21,
+                    y: 19,
                 })
             )
             this.nameFieldPlaceholder.alpha = 0.4;
@@ -2098,7 +2311,7 @@ class UIBuilder extends PIXI.Container {
                     width: 100,
                     height: 100,
                     x: 0.5,
-                    y: 0.5,
+                    y: 0.54,
                     anchor: new PIXI.Point(0.5,0.5)
                 }),
             )
@@ -2233,6 +2446,8 @@ class UIBuilder extends PIXI.Container {
 
             this.avatarBox.alpha = 0
             this.avatarWrapper.addChild(this.avatarBox)
+            this.avatarWrapper.contentContainer.scale.y = 0.9
+            this.avatarWrapper.contentContainer.scale.x = 0.9
             this.joinModalWidgetGroup.addChild(this.avatarWrapper)
 
 
@@ -2269,16 +2484,17 @@ class UIBuilder extends PIXI.Container {
                 width: 0.9999,
                 height: 0.9999
             }))
-            .setBackground(yellow)
+            .setBackground(white)
             .setBackgroundAlpha(1)
 
             this.joinButtonWrapper.addChild(this.joinButton)
             this.joinButton.on("hover", function (over) {
                 if(over == true) {
-                    this.setBackground(red)
-                    joinTextTagged.text = "<white>CONTINUE</white>"
+                    //this.setBackground(black)
+                    //joinTextTagged.text = "<white>CONTINUE</white>"
+                    joinTextTagged.text = "<black>CONTINUE</black>"
                 } else {
-                    this.setBackground(yellow)
+                    this.setBackground(white)
                     //console.log(joinTextTagged)
                     joinTextTagged.text = "CONTINUE"
                     //this.joinText.tint = 0x000000
@@ -2303,15 +2519,27 @@ class UIBuilder extends PIXI.Container {
             const joinTextTagged = new TaggedText("CONTINUE", {
                 "default": {
                     fontFamily: "Trade Gothic Next",
-                    fill: black, 
+                    fill: green, 
                     fontWeight: 900,
-                    fontSize: "36px", 
+                    fontSize: "38px", 
                     letterSpacing: 1,
                 }, "white": {
                     fontFamily: "Trade Gothic Next",
                     fill: white, 
                     fontWeight: 900,
-                    fontSize: "36px", 
+                    fontSize: "38px", 
+                    letterSpacing: 1,
+                }, "green": {
+                    fontFamily: "Trade Gothic Next",
+                    fill: green, 
+                    fontWeight: 900,
+                    fontSize: "38px", 
+                    letterSpacing: 1,
+                }, "black": {
+                    fontFamily: "Trade Gothic Next",
+                    fill: black, 
+                    fontWeight: 900,
+                    fontSize: "38px", 
                     letterSpacing: 1,
                 }
             })
@@ -2419,14 +2647,7 @@ class UIBuilder extends PIXI.Container {
 
         if(this.introScreenOn == true) {
 
-                //this.joinModal.visible = false
-                //this.mainMenuStage.visible = false
-                //this.statusStage.visible = false
-
-                //Intro Screen
-                let joinModal = this.joinModal
-                let mainMenu = this.mainMenuStage
-                let statusStage = this.statusStage
+              
 
                 this.introScreen = new PUXI.Stage({
                     width:window.innerWidth,
@@ -3318,8 +3539,6 @@ class UIBuilder extends PIXI.Container {
             }
             confirmAgeButtonClick.onPress = function(){
                 userInterface.confirmAge()
-                //userInterface.joinModal.visible = true
-                //userInterface.joined = true
             }
 
             this.loadingIcon = PIXI.Sprite.from(resources['loadingIcon'].texture);
@@ -3345,7 +3564,7 @@ class UIBuilder extends PIXI.Container {
                     element.buttonMode = true
                     element.on('pointerdown', function(){
                         loadingIcon.alpha = 1
-                        userInterface.showQuote("00")
+                        userInterface.showQuote("01")
                     })
                 }
             })
@@ -3472,18 +3691,20 @@ class UIBuilder extends PIXI.Container {
     }
 
     resize(){
-        //if(this.quoteStage.visible == true) {
-            this.resizeText()
-        //}
+
+
+       
         
 
         if(this.ageGate.visible == true) {
             this.ageGate.resize(window.innerWidth, window.innerHeight)
         }
 
-         if(this.introScreenOn) {
+        if(this.introScreenOn) {
             this.introScreen.resize(window.innerWidth, window.innerHeight)
         }
+
+        
         if(this.transitionScreenOn) {
             this.transitionScreen.resize(window.innerWidth, window.innerHeight)
         }
@@ -3491,13 +3712,20 @@ class UIBuilder extends PIXI.Container {
         if(this.joinModal.visible) {
             this.joinModal.resize(window.innerWidth, window.innerHeight)
         }
-       
 
-        //Non-Interactive Stages
-        if(this.introScreenOn == true) {
-            //this.statusStage.resize(window.innerWidth, window.innerHeight)
-            ///this.statusStage.stage.hitArea = new PIXI.Rectangle(0,0,0,0);
-        }
+        this.connectionScreen.resize(window.innerWidth, window.innerHeight)
+    
+
+        this.chatIconStage.resize(window.innerWidth, window.innerHeight)
+        let chatIconBounds = this.chatIconWrapper.contentContainer.getBounds()
+        this.chatIconStage.stage.hitArea = new PIXI.Rectangle(
+            chatIconBounds.x,
+            chatIconBounds.y,
+            chatIconBounds.width,
+            chatIconBounds.height
+        );
+
+
         if(this.scoreStageOn == true) {
             this.scoreStage.resize(window.innerWidth, window.innerHeight)
             this.scoreStage.stage.hitArea = new PIXI.Rectangle(0,0,0,0);
@@ -3529,14 +3757,12 @@ class UIBuilder extends PIXI.Container {
         }
 
        
-
+       
 
        
         //Interactive Stages
-        if(this.quoteStageOn == true) {
-            //console.log('checker')
+        if(this.quoteStageOn == true) {           
             this.quoteStage.resize(window.innerWidth, window.innerHeight)
-            //this.quoteBackground.resize(window.innerWidth, window.innerHeight)
             const quoteBounds = this.quoteWrapperBackground.getBounds()
             this.quoteStage.stage.hitArea = new PIXI.Rectangle(
                 quoteBounds.x,
@@ -3578,6 +3804,8 @@ class UIBuilder extends PIXI.Container {
                 emojiBounds.height
             )
         }
+
+        this.resizeText()
         
 
 
@@ -3672,8 +3900,8 @@ class UIBuilder extends PIXI.Container {
                 let miniRoomWidth = 35
                 let miniRoomHeight = 35
 
-                miniRoom.x = 42.5
-                miniRoom.y = 32.5
+                miniRoom.x = 47.5
+                miniRoom.y = 30.5
                 
                 const roomColor = PIXI.utils.string2hex("#998675")
 
@@ -3687,8 +3915,8 @@ class UIBuilder extends PIXI.Container {
                 let sprite = new PIXI.Sprite.from("images/jo-room-map.svg")
                 sprite.width = 55
                 sprite.height = 55
-                sprite.x = 142.5
-                sprite.y = 92
+                sprite.x = 136
+                sprite.y = 80
                 sprite.alpha = 0.5
                 this.miniMap.addChild(sprite)
 
@@ -3711,7 +3939,7 @@ class UIBuilder extends PIXI.Container {
                 
 
                 if(artwork.type == "circle") {
-                    artShape.drawCircle(artShape.x + artWidth/2, artShape.y +artHeight/2, artWidth/2)
+                    artShape.drawCircle(artShape.x + artWidth/2 + 2, artShape.y +artHeight/2, artWidth/2)
 
                 } else if (artwork.type == "triangle") {
 
@@ -4003,18 +4231,24 @@ class UIBuilder extends PIXI.Container {
        
         if(!this.mainMenuStage.visible) {
             this.removeChild(this.joinModal)
-            //console.log('checker')
             this.mainMenuStage.visible = true
             this.miniMapStage.visible = true
-            this.textBox.visible = true
-            this.emojiStage.visible = true
-            ease.add(this.mainMenuStage, {alpha: 1}, { duration: 500, wait: 500 })
-            ease.add(this.miniMapStage, {alpha: 1}, { duration: 500, wait: 500 })
-            ease.add(this.textBox, {alpha: 1}, { duration: 500, wait: 500 })
-            ease.add(this.emojiStage, {alpha: 1}, { duration: 500, wait: 700 })
+            this.statusStage.visible = true
+            if(window.innerWidth <= 500) {
+
+            } else {
+                this.textBox.visible = true
+                this.emojiStage.visible = true
+                ease.add(this.textBox, {alpha: 1}, { duration: 500, wait: 500 })
+                ease.add(this.emojiStage, {alpha: 1}, { duration: 500, wait: 700 })
+            }
+           
+            ease.add(this.mainMenuStage, {alpha: 1}, { duration: 500 })
+            ease.add(this.miniMapStage, {alpha: 1}, { duration: 500 })
+            
         }
        
-        //this.statusStage.visible = true 
+         
     }
 
 
@@ -4109,7 +4343,9 @@ class UIBuilder extends PIXI.Container {
 
     showNotification(option, type) {
         
+        if(this.notificationStageOn == true) {
 
+       
         //console.log(option)
         let message = this.notifications[option].text
         let theUI = this
@@ -4118,11 +4354,13 @@ class UIBuilder extends PIXI.Container {
         let notificationSettings = window.localStorage.getItem('notificationSettings')
         notificationSettings = JSON.parse(notificationSettings)
 
-        this.notificationTaggedText.text = message
-
-        if(notificationSettings.text == message) {
-            return
-        }
+        /*this.notificationTaggedText.text = message
+        if(notificationSettings.text) {
+            if(notificationSettings.text == message) {
+                return
+            }
+        }*/
+        
         this.notificationTaggedText.textContainer.children.forEach(element => {
             if(element._text == "here") {
                 element.interactive = true
@@ -4138,6 +4376,8 @@ class UIBuilder extends PIXI.Container {
         })
         notificationStage.visible = true
         ease.add(this.notificationStage, {alpha: 1}, { duration: 250, ease: 'easeOutExpo' })
+
+        }
     }
 
     showAchievement(option, type) {
@@ -4265,7 +4505,7 @@ class UIBuilder extends PIXI.Container {
                 var close = document.createElement('a');
                 close.id = "back-to-bias"
                 var backTo = document.createTextNode('← return')
-                close.style = "cursor:pointer;position:absolute;top:0;width:100%;letter-spacing:2px;left:1.5%;top:1.5%;font-size:14px;text-transform:uppercase;color:#4DFA66;width:100%;z-index:4"
+                close.style = "cursor:pointer;position:absolute;top:0;width:100%;letter-spacing:2px;left:1.5%;top:1.5%;font-size:14px;text-transform:uppercase;color:#00b140;width:100%;z-index:4"
                 close.appendChild(backTo)
                 document.body.appendChild(close);
                 video = document.createElement('video');
@@ -4303,7 +4543,7 @@ class UIBuilder extends PIXI.Container {
                 var close = document.createElement('div');
                 close.id = "back-to-bias"
                 var backTo = document.createTextNode('← return')
-                close.style = "cursor:pointer;position:absolute;top:0;width:100%;left:2.5%;top:1.5%;font-size:14px;text-transform:uppercase;color:#4DFA66;width:100%;letter-spacing:2px;z-index:4"
+                close.style = "cursor:pointer;position:absolute;top:0;width:100%;left:2.5%;top:1.5%;font-size:14px;text-transform:uppercase;color:#00b140;width:100%;letter-spacing:2px;z-index:4"
                 close.appendChild(backTo)
                 document.body.appendChild(close);
                 var iframe = document.createElement('iframe');
@@ -4396,13 +4636,23 @@ class UIBuilder extends PIXI.Container {
 
             this.addChild(this.quoteStage)
             this.quoteWrapper.contentContainer.alpha = 1
+
+            this.quoteBackground.setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: window.innerWidth,
+                    height: window.innerHeight,
+                    x: 0.5,
+                    y: 0.5,
+                    anchor: new PIXI.Point(0.5, 0.5)
+                }),
+            ).setBackground(0x000000).setBackgroundAlpha(0.5)
             //ease.add(loadingIcon, { alpha: 1 }, { duration: 250 })
 
             if(this.showingQuote == false) {
 
                     setTimeout(function(){
 
-                        let newTaggedText = '<gap>\n\n</gap><boldtitle>' + theQuote[quoteNumber].title +'</boldtitle>\n'
+                        let newTaggedText = '<gap>\n</gap><boldtitle>' + theQuote[quoteNumber].title +'</boldtitle>\n'
                         if(theQuote[quoteNumber].subtitle.length) {
                             newTaggedText += "<subtitle>" + theQuote[quoteNumber].subtitle + "</subtitle><gap>\n</gap><gap>\n</gap>"
                         }
@@ -4435,7 +4685,7 @@ class UIBuilder extends PIXI.Container {
                                 element.buttonMode = true
                                 let underline = new PIXI.Graphics()
                                 underline.beginFill(colorBlue)
-                                underline.drawRect(0, element.height - 5, element.width, 1)
+                                underline.drawRect(0, element.height - 8, element.width, 1)
                                 underline.endFill()
                                 element.on('pointerover', function(){                                
                                     element.addChild(underline)
@@ -4443,9 +4693,10 @@ class UIBuilder extends PIXI.Container {
                                 element.on('pointerout', function(){
                                     element.removeChild(underline)
                                 })
+                                //console.log('link')
                             }
                             if(element._text == "mushon.com") {
-                            // console.log('link!')
+                                //console.log('link!')
                                 element.interactive = true
                                 element.buttonMode = true
                                 element.on('pointerdown', function(){
@@ -4453,7 +4704,7 @@ class UIBuilder extends PIXI.Container {
                                 })
                             }
                             if(element._text == "@mushon") {
-                                //console.log('link!')
+                                //console.log('mushon')
                                 element.interactive = true
                                 element.buttonMode = true
                                 element.on('pointerdown', function(){
@@ -4508,14 +4759,15 @@ class UIBuilder extends PIXI.Container {
                                     window.open('https://instagram.com/noahlevenson', '_blank').focus();
                                 })
                             }
-                            if(element._text == "feedback") {
+
+                            if(element._text === "feedback") {
                                 // console.log('link!')
                                     element.interactive = true
                                     element.buttonMode = true
                                     element.on('pointerdown', function(){
                                         window.open('https://docs.google.com/spreadsheets/d/1dL6Ww7MfUqFtbeY8mQCkxf2ZoZ5QOWG6jDVeoiAZGKo/edit#gid=0', '_blank').focus();
                                     })
-                                    window.open('mailto:info@dublin.sciencegallery.com', '_blank').focus();
+                                    //window.open('mailto:info@dublin.sciencegallery.com', '_blank').focus();
                                     //info@dublin.sciencegallery.com?subject=BIAS online feedback
                                 }
 
@@ -4531,7 +4783,7 @@ class UIBuilder extends PIXI.Container {
                         });
 
                         userInterface.quoteStage.resize(window.innerWidth, window.innerHeight)
-                        userInterface.resize()
+                        //userInterface.resize()
                         //ease.add(loadingIcon, { alpha: 0 }, { duration: 250, wait: 250 })
                         //
 
@@ -4702,7 +4954,7 @@ class UIBuilder extends PIXI.Container {
         ease.add(this.updateText.contentContainer, {alpha: 0}, {duration: 250, wait: 3000})
         this.updateText.text = name +" joined"
 
-        /*let currentText = this.updateText.text
+        let currentText = this.updateText.text
         let length = (currentText.match(/\n/g)||[]).length
         console.log(length)
 
@@ -4721,7 +4973,7 @@ class UIBuilder extends PIXI.Container {
                 text += "\n"
             }            
             this.updateText.text = text + name +" joined\n" + current
-        }    */   
+        }     
        
         
         
@@ -4741,6 +4993,7 @@ class UIBuilder extends PIXI.Container {
                 this.connectionTextTagged.text = "Unable to connect to <bold>BIAS ONLINE</bold>\nPlease Try Again Later"
             }
             this.connectionScreen.visible = true
+            
             sound.muteAll()
 
             if(this.chatStageOn) {
@@ -4782,8 +5035,6 @@ class UIBuilder extends PIXI.Container {
         
         const width = window.innerWidth
         let ageGate = this.ageGate
-        //let userInterface = userInterface
-        //respty
 
         if(width <= 375) {
 
@@ -4846,14 +5097,14 @@ class UIBuilder extends PIXI.Container {
                         element.interactive = true
                         element.buttonMode = true
                         element.on('pointerdown', function(){
-                            userInterface.showQuote('quote1')
+                            userInterface.showQuote('01')
                         })
                     }
                     if(element._text == "Privacy" || element._text == "Policy") {
                         element.interactive = true
                         element.buttonMode = true
                         element.on('pointerdown', function(){
-                            userInterface.showQuote('quote0')
+                            userInterface.showQuote('00')
                         })
                     }
                 })
@@ -4869,12 +5120,9 @@ class UIBuilder extends PIXI.Container {
             }
 
 
-            //this.statusStage.visible = false
-
             this.scrollWrapper.setPadding(15, 2, 15, 2)
             this.scrollContent.setPadding(3, 2, 3, 2)
 
-            
 
             this.connectedText.setStyleForTag("default", {
                 fontFamily: "Trade Gothic Next",
@@ -4981,17 +5229,6 @@ class UIBuilder extends PIXI.Container {
             }
             
 
-            /*this.leaveButtonWrapper.setLayoutOptions(
-                new PUXI.FastLayoutOptions({
-                    width: 40,
-                    height: 40,
-                    x: 0.990,
-                    y: 35,
-                    anchor: new PIXI.Point(0.5,0.5)
-                }),
-            )*/
-
-
 
         }  else if (width <= 720) {
 
@@ -5053,14 +5290,14 @@ class UIBuilder extends PIXI.Container {
                         element.interactive = true
                         element.buttonMode = true
                         element.on('pointerdown', function(){
-                            userInterface.showQuote('quote1')
+                            userInterface.showQuote('01')
                         })
                     }
                     if(element._text == "Privacy" || element._text == "Policy") {
                         element.interactive = true
                         element.buttonMode = true
                         element.on('pointerdown', function(){
-                            userInterface.showQuote('quote0')
+                            userInterface.showQuote('00')
                         })
                     }
                 })
@@ -5205,23 +5442,18 @@ class UIBuilder extends PIXI.Container {
                         element.interactive = true
                         element.buttonMode = true
                         element.on('pointerdown', function(){
-                            userInterface.showQuote('quote1')
+                            userInterface.showQuote('01')
                         })
                     }
                     if(element._text == "Privacy" || element._text == "Policy") {
                         element.interactive = true
                         element.buttonMode = true
                         element.on('pointerdown', function(){
-                            userInterface.showQuote('quote0')
+                            userInterface.showQuote('00')
                         })
                     }
                 })
             }
-
-
-
-
-
 
             
             this.connectedText.setStyleForTag("default", {
@@ -5254,8 +5486,6 @@ class UIBuilder extends PIXI.Container {
                 this.quoteWrapperBackground.lineStyle(1, this.black)
                 this.quoteWrapperBackground.drawRoundedRect(0, 0, 650, connectedText.parent.height, 10)
 
-                //console.log('checker')
-
             } else {
 
                 this.quoteWrapper.setLayoutOptions(
@@ -5275,120 +5505,7 @@ class UIBuilder extends PIXI.Container {
             }
 
 
-
-
         } 
-
-/*
-
-        
-
-        // Join Modal Title
-        if(width <= 500) {
-            this.joinTitle.contentContainer.children[0].style.fontSize = 40
-        } else if (width <= 960) {
-            this.joinTitle.contentContainer.children[0].style.fontSize = 50
-        } else if (width <= 1240) {
-            this.joinTitle.contentContainer.children[0].style.fontSize = 80
-        } else {
-            this.joinTitle.contentContainer.children[0].style.fontSize = 108
-        }
-
-        //join Modal input box
-        if(width <= 500) {
-            //wrapper
-            this.inputBox.setLayoutOptions(
-                new PUXI.FastLayoutOptions({
-                    width: 300,
-                    height: 50,
-                    x: 0.5,
-                    y: 0.545,
-                    anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-                })
-            )
-            //The Input
-            this.nameFieldInput.textContainer.setPadding(10)
-            this.nameFieldInput.caret = new PIXI.Graphics();
-            this.nameFieldInput.caret.visible = false;
-            this.nameFieldInput.caret._index = 0;
-            this.nameFieldInput.caret.lineStyle(1, black);
-            this.nameFieldInput.caret.moveTo(0, 0);
-            this.nameFieldInput.caret.lineTo(0, 25);
-            this.nameFieldInput.lineHeight = 20
-            this.nameFieldInput.textHeight = 20
-            //The Placeholder
-            this.nameFieldPlaceholder.contentContainer.children[0].style.fontSize = 20
-            this.nameFieldPlaceholder.setLayoutOptions(
-                new PUXI.FastLayoutOptions({
-                    x: 10,
-                    y: 12,
-                })
-            )
-
-            this.joinButtonWrapper.setLayoutOptions(
-                new PUXI.FastLayoutOptions({
-                    width: 200,
-                    height: 50,
-                    x: 0.5,
-                    y: 0.727,
-                    anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-                })
-            )
-            this.joinText.contentContainer.children[0].style.fontSize = 20
-
-        } else if (width <= 960) {
-            this.inputBox.setLayoutOptions(
-                new PUXI.FastLayoutOptions({
-                    width: 600,
-                    height: 80,
-                    x: 0.5,
-                    y: 0.545,
-                    anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-                })
-            )
-        } else if (width <= 1240) {
-            this.inputBox.setLayoutOptions(
-                new PUXI.FastLayoutOptions({
-                    width: 820,
-                    height: 80,
-                    x: 0.5,
-                    y: 0.545,
-                    anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-                })
-            )
-        } else {
-            this.inputBox.setLayoutOptions(
-                new PUXI.FastLayoutOptions({
-                    width: 1100,
-                    height: 100,
-                    x: 0.5,
-                    y: 0.545,
-                    anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
-                })
-            )
-            //The Input
-            this.nameFieldInput.textContainer.setPadding(20)
-            this.nameFieldInput.caret = new PIXI.Graphics();
-            this.nameFieldInput.caret.visible = false;
-            this.nameFieldInput.caret._index = 0;
-            this.nameFieldInput.caret.lineStyle(1, black);
-            this.nameFieldInput.caret.moveTo(0, 0);
-            this.nameFieldInput.caret.lineTo(0, 60);
-            this.nameFieldInput.lineHeight = 60
-            this.nameFieldInput.textHeight = 60
-            //The Placeholder
-            this.nameFieldPlaceholder.contentContainer.children[0].style.fontSize = 52
-            this.nameFieldPlaceholder.setLayoutOptions(
-                new PUXI.FastLayoutOptions({
-                    x: 20,
-                    y: 21,
-                })
-            )
-        }*/
-
-
-
-
 
 
     }
@@ -5409,8 +5526,6 @@ class UIBuilder extends PIXI.Container {
             this.loadingIcon.rotation = loadingCurrent + 0.08 + Math.sin(delta)
         }
         
-       
-        //this.loadingIcon
         
 
         if(this.introScreenOn == true) {
@@ -5437,9 +5552,7 @@ class UIBuilder extends PIXI.Container {
                 this.filters = []
             }
 
-        } else {
-            //this.introScreen.visible = false
-        }
+        } 
     
     }
 
