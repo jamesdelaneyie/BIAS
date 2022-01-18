@@ -1,7 +1,8 @@
 import * as PIXI from 'pixi.js'
 import { SmoothGraphics as Graphics } from '@pixi/graphics-smooth';
 import { ease } from 'pixi-ease'
-import { visitNode } from 'typescript';
+import { GlowFilter } from '@pixi/filter-glow'
+
 
 function randomIntFromInterval(min, max) { // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min)
@@ -126,8 +127,15 @@ class FlowerGraphics extends PIXI.Container {
     constructor(state) {
         super()
         this.nid = state.nid
-        this.x = state.x
-        this.y = state.y
+        if(state.y < 1700 && state.x > 1950) {
+            state.x = Math.ceil(state.x/59.05)*59.05 + 13;
+            state.y = Math.ceil(state.y/59.05)*59.05 + 5;
+        } else {
+            this.x = state.x
+            this.y = state.y
+        }
+        
+    
 
         this.color = state.color    
         this.color = PIXI.utils.string2hex(this.color);
@@ -135,15 +143,33 @@ class FlowerGraphics extends PIXI.Container {
         this.lines = []
 
         this.flower = false
+        this.buffers = []
+
+        let glow = new GlowFilter({distance: 10, outerStrength: 2, color: this.color})
+
 
         const resources = PIXI.Loader.shared.resources
 
         if(state.y < 1700 && state.x < 2370) {
 
-            let vines = resources.vines.sound
-            if(vines) {
-                vines.speed = 1.5
-                vines.play()
+            
+            let vines = [
+                resources.vines1.sound,
+                resources.vines2.sound,
+                resources.vines3.sound,
+                resources.vines4.sound,
+                resources.vines5.sound,
+                resources.vines6.sound,
+                resources.vines7.sound,
+                resources.vines8.sound,
+                resources.vines9.sound
+            ]
+
+            if(resources.vines9.sound) {
+                let selection = Math.floor(Math.random() * 8) + 1;
+                vines[selection].volume = 0.1
+                vines[selection].speed = 1.5
+                vines[selection].play()
             }
             
             this.flower = true
@@ -311,7 +337,9 @@ class FlowerGraphics extends PIXI.Container {
         } else if(state.y > 1700 && state.x < 2370) {
 
             let slap = resources.slap.sound
+            //
             if(slap) {
+                slap.volume = 0.1
                 slap.play()
             }
 
@@ -452,72 +480,30 @@ class FlowerGraphics extends PIXI.Container {
 
         } else if (state.y < 1700 && state.x > 1950) {
 
-              
                 let dots = new PIXI.Graphics()
-
-                var WIDTH = window.innerWidth,
-                    HEIGHT = window.innerHeight;
             
-               
-            
-                var Walker = function(x, y, size, stepSize, colorScale, walkStyle, pathTrace) {
+                var Walker = function(x, y, size, stepSize, walkStyle) {
                     this.x = x;
                     this.y = y;
                     this.size = size;
                     this.stepSize = typeof stepSize !== 'undefined' ? stepSize : 1;
-                    this.style = typeof walkStyle !== 'undefined' ? walkStyle : 2;
-                    this.trace = typeof pathTrace !== 'undefined' ? pathTrace : false;
                     this.color = "#fff";
-                    this.colorScale = typeof colorScale !== 'undefined' ? colorScale : 1000;
             
                     this.display = function() {
+
+                        //console.log(this.x, this.y)
                       
-                        dots.beginFill(0xa162d3);
+                        dots.beginFill(0xffffff);
                         dots.arc(this.x, this.y, this.size, 0, Math.PI * 2)
                         
                     }
 
                     ease.add(dots, {alpha: 0.1}, {duration: 1000, wait: 3000})
-            
+                    ease.add(dots, {blend: 0xa162d3}, {duration: 1000, wait: 250})
                     
-            
+
                     this.step = function() {
                         if(this.progress < this.max) {
-                        if (this.style == 0) {
-                            this.x += (Math.random() * 2 - 1) * stepSize;
-                            this.y += (Math.random() * 2 - 1) * stepSize;
-                        } else if (this.style == 1) {
-                            var choice = Math.floor(Math.random() * 8);
-                            console.log(choice);
-                            switch (choice) {
-                                case 0:
-                                    this.x += stepSize;
-                                    break;
-                                case 1:
-                                    this.x -= stepSize;
-                                    break;
-                                case 2:
-                                    this.y += stepSize;
-                                    break;
-                                case 3:
-                                    this.y -= stepSize;
-                                    break;
-                                case 4:
-                                    this.x += stepSize;
-                                    this.y += stepSize;
-                                    break;
-                                case 5:
-                                    this.x += stepSize;
-                                    this.y -= stepSize;
-                                    break;
-                                case 6:
-                                    this.x -= stepSize;
-                                    this.y += stepSize;
-                                case 7:
-                                    this.x -= stepSize;
-                                    this.y -= stepSize;
-                            }
-                        } else if (this.style == 2) {
                             var choice = Math.floor(Math.random() * 4);
                             switch (choice) {
                                 case 0:
@@ -534,22 +520,20 @@ class FlowerGraphics extends PIXI.Container {
                                     break;
                             }
                         }
-                        }
                     }
                 }
-            
-                this.rando = new Walker(0, 0, 2, 29, 500, 2, true);
+               
+                var chosenValue = Math.random() < 0.5 ? 59.05 : 29.525;
+
+                this.rando = new Walker(0, 0, 2, chosenValue);
                 this.rando.progress = 0
-                this.rando.max = Math.floor(Math.random() * 200)
+                this.rando.max = Math.floor(Math.random() * 80)
                
                 this.addChild(dots)
 
-               
-          
-
         } else {
 
-            this.wrapper = new PIXI.Container()
+            /*this.wrapper = new PIXI.Container()
             this.wrapper.alpha = 0.02
 
             for(var i=0;i<1;i++) {
@@ -593,8 +577,35 @@ class FlowerGraphics extends PIXI.Container {
 
             }
 
-            this.addChild(this.wrapper)
+            this.addChild(this.wrapper)*/
+            const texture = new PIXI.Texture.from("images/particle.png")
 
+            // Create the simple plane
+            const verticesX = 10
+            const verticesY = 10
+           
+            const plane = new PIXI.SimplePlane(texture, verticesX, verticesY);
+            //plane.filters = [glow]
+            //plane.width = Math.floor(Math.random() * 900)
+            //plane.height = Math.floor(Math.random() * 900)
+            //plane.blendMode = PIXI.BLEND_MODES.SCREEN
+            //texture.blendMode = PIXI.BLEND_MODES.SCREEN
+            plane.scale.set(0)
+            let container = new PIXI.Container()
+            //container.blendMode = PIXI.BLEND_MODES.SCREEN
+            container.addChild(plane);
+            container.filters = [glow]
+            this.addChild(container)
+        
+            plane.alpha = 0
+            ease.add(plane, {alpha: 0.5, x: -50, y: -50, scale: 2}, { duration: 3000, ease: 'easeOutExpo' })
+            ease.add(container, {blend: 0x000000, alpha: 0.1}, { duration: 4000, wait: 3000 })
+            ease.add(container, {scale: 0.5, alpha: 0.1}, { duration: 2000, wait: 5000 })
+            plane.count = 0
+
+            const buffer = plane.geometry.getBuffer('aVertexPosition');
+            buffer.count = 0
+            this.buffers.push(buffer)
 
          
            
@@ -628,21 +639,29 @@ class FlowerGraphics extends PIXI.Container {
         //console.log(this)
         for(let x=0;x<this.lines.length;x++) {
             //console.log(this.lines)
-            animatePathDrawing(this.lines[x], this.lines[x].points)
+            //animatePathDrawing(this.lines[x], this.lines[x].points)
         }
 
         if(this.rando) {
-            //this.rando.checkWorld();
-            this.rando.display();
-            this.rando.step();
-            this.rando.progress++
+            if(this.rando.progress < this.rando.max) {
+                this.rando.display();
+                this.rando.step();
+                this.rando.progress++
+            }
         }
-
         
-
+        for(let i = 0; i < this.buffers.length;  i++) {
+            if(this.buffers[i].count > 500) {
+                continue
+            }
+            for (let j = 0; j < this.buffers[i].data.length; j++) {
+                this.buffers[i].data[j] += (Math.random() - 0.5);
+                this.buffers[i].update();
+            }
+            this.buffers[i].count++
+            console.log(this.buffers[i].count)
+        }
        
-
-
         
 
     }

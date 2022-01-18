@@ -59,7 +59,7 @@ class ArtGraphics extends PIXI.Container {
 
                     this.body.beginFill(0x000000, 0.6, true)
                     this.body.drawCircle(0, 0, state.width)
-                    this.body.beginFill(this.color, 0.5, true)
+                    this.body.beginFill(0x686366, 0.9, true)
                     this.body.lineStyle(2, this.color, 0.8)
                     this.body.drawCircle(0, 0, state.width)
                     

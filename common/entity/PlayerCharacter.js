@@ -11,9 +11,9 @@ class PlayerCharacter {
         this.rotation = 0
         this.hitpoints = 100
         this.isAlive = false
-        this.speed = 235
+        this.speed = 935
         this.size = 30
-        this.mass = 20
+        this.mass = 1
         this.material = new p2.Material();
         this.footDown = false
         this.color = state.color
@@ -94,6 +94,7 @@ PlayerCharacter.protocol = {
     seat: nengi.UInt16,
     artNumber: nengi.UInt16,
     quoteNumber: nengi.UInt16,
+    interactionNumber: nengi.UInt16,
 }
 
 export default PlayerCharacter

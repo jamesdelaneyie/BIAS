@@ -45,11 +45,6 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
             
             
 
-            if(renderer.UIBuilder.mockInput.text != "" && renderer.UIBuilder.mockInput._isFocused) {
-                client.addCommand(new ToggleCommand(true, "typing"))
-            } else {
-                client.addCommand(new ToggleCommand(false, "typing"))
-            }
 
             
             const moveCommand = new MoveCommand(input.w, input.a, input.s, input.d, rotationAmount, delta)
@@ -83,10 +78,6 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
                 whateverEmoji.on("pointerdown", function () {
                     client.addCommand(new SpeakCommand("🙄", "emojiBlast", myRawEntity.x, myRawEntity.y))
                 });*/
-            }
-
-            if(renderer.UIBuilder) {
-
                 const sendMessage = renderer.UIBuilder.sendIcon
                 sendMessage.on("pointerdown", function () {
                     let message = renderer.UIBuilder.mockInput.value;
@@ -98,6 +89,19 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
                     renderer.UIBuilder.mockInput.text = ""
                     renderer.UIBuilder.TextBoxPlaceholder.alpha = 0.4;
                 });
+            }
+
+            if(renderer.UIBuilder) {
+
+                
+
+                            
+                if(renderer.UIBuilder.mockInput.text != "" && renderer.UIBuilder.mockInput._isFocused) {
+                    client.addCommand(new ToggleCommand(true, "typing"))
+                } else {
+                    client.addCommand(new ToggleCommand(false, "typing"))
+                }
+
             }
 
 
@@ -181,6 +185,8 @@ const handleInput = (inputSystem, state, client, renderer, delta) => {
                 if(renderer.UIBuilder.showingQuote) {
                     canFire = false;
                 }
+
+                //inputSystem.currentState.mx < 55 && inputSystem.currentState.my
 
                 //console.log()
                 if(!isFiring) {

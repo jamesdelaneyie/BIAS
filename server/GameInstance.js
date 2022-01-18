@@ -146,11 +146,11 @@ class GameInstance {
         let welcomeInfo = {
             name: "14",
             type: "circle",
-            x: 2600,
-            y: 1560,
+            x: 2745,
+            y: 1560 - 125,
             width: 80,
             height: 80,
-            color: "#FB4D3D",
+            color: "#FFFFFF",
         }
 
         let welcomeInfoPanel = new InfoPanel(welcomeInfo)
@@ -165,10 +165,10 @@ class GameInstance {
 
 
         let libbysRoom = {
-            x: 745,
-            y: 240,
-            width: 1375,
-            height: 940,
+            x: 715,
+            y: 245,
+            width: 1415,
+            height: 935,
             floorColor: "#717a73",
             gridColor: "#000000",
             gridGap: 60,
@@ -181,8 +181,8 @@ class GameInstance {
                 offset: 0,
                 width: 0,
             },{
-                offset: 515,
-                width: 415,
+                offset: 460,
+                width: 475,
             },{
                 offset: 350,
                 width: 350,
@@ -197,14 +197,17 @@ class GameInstance {
             type: "soccer-ball",
             x: 200,
             y: 700,
-            width: 3,
-            height: 3,
-            mass: 0.001,
+            width: 25,
+            height: 25,
+            mass: 10,
             color: "05db4c",
         })
+        this.instance.addEntity(soccerBall)
+        this.world.addBody(soccerBall.body)
+        this.boxes.set(soccerBall.nid, soccerBall)
 
         let libbyInnerRoom = {
-            x: 992,
+            x: 985,
             y: 392,
             width: 880,
             height: 580,
@@ -232,10 +235,10 @@ class GameInstance {
         setupWalls(this.instance, libbyInnerRoom, this.obstacles, 'wall')
 
         let libbyEntrance = {
-            x: 1274,
+            x: 1188,
             y: 1190,
-            width: 409,
-            height: 168,
+            width: 470,
+            height: 113,
             floorColor: "#717a73",
             gridColor: "#000000",
             gridGap: 60,
@@ -243,13 +246,13 @@ class GameInstance {
             wallColor: "#00b140",
             holes: [{
                 offset: 0,
-                width: 415,
+                width: 470,
             },{
                 offset: 0,
                 width: 0,
             },{
                 offset: 0,
-                width: 415,
+                width: 470,
             },{
                 offset: 0,
                 width: 0,
@@ -264,7 +267,7 @@ class GameInstance {
             name: "<bold>CLASSES</bold>\nLibby Heaney",
             type: "rectangle",
             x: 1015,
-            y: 443,
+            y: 448,
             width: 830,
             height: 530,
             mass: 0,
@@ -316,8 +319,8 @@ class GameInstance {
         let noahArtworkObject = {
             name: "<bold>STEAL UR FEELINGS</bold>\nNoah Levenson",
             type: "circle",
-            x: 1000,
-            y: 2318,
+            x: 990+220,
+            y: 2350,
             width: 400,
             height: 400,
             mass: 0,
@@ -332,7 +335,7 @@ class GameInstance {
         let noahArtworkInfo = {
             name: "10",
             type: "circle",
-            x: 1146 + 200,
+            x: 1146 + 200 + 210,
             y: 1910,
             width: 80,
             height: 80,
@@ -348,7 +351,7 @@ class GameInstance {
 
         let noahWall1 = new Obstacle({ 
             name: "noahWall",
-            x: 1130 + 200,
+            x: 1550,
             y: 2024, 
             width: 600, 
             height: 10, 
@@ -359,10 +362,28 @@ class GameInstance {
         this.instance.addEntity(noahWall1)
         this.obstacles.set(noahWall1.nid, noahWall1)
 
+        const wallMaterial = new p2.Material();
+        let noahWall11 = new Box({ 
+            name: "noahWall",
+            x: 1452,
+            y: 2239, 
+            width: 600, 
+            height: 10, 
+            border: 10,
+            color: "#ffff00",
+            angle: 47.5,
+            rotation: 0.785398, 
+            material: wallMaterial 
+        })
+        this.instance.addEntity(noahWall11)
+        this.world.addBody(noahWall11.body)
+        this.boxes.set(noahWall11.nid, noahWall11)
+        
+
 
         let noahWall2 = new Obstacle({ 
             name: "noahWall",
-            x: 437 + 200,
+            x: 437 + 420,
             y: 2425, 
             width: 600, 
             height: 10, 
@@ -377,7 +398,7 @@ class GameInstance {
 
         let noahWall3 = new Obstacle({ 
             name: "noahWall",
-            x: 433 + 200,
+            x: 433 + 420,
             y: 2628, 
             width: 600, 
             height: 10, 
@@ -391,7 +412,7 @@ class GameInstance {
 
         let noahWall4 = new Obstacle({ 
             name: "noahWall",
-            x: 1091 + 200,
+            x: 1091 + 420,
             y: 3074, 
             width: 600, 
             height: 10, 
@@ -401,6 +422,39 @@ class GameInstance {
         })
         this.instance.addEntity(noahWall4)
         this.obstacles.set(noahWall4.nid, noahWall4)
+
+        const thisInstance = this.instance
+        const thisWorld = this.world
+        const thisBoxes = this.boxes
+        setInterval(function(){
+            let likePump = new Box({
+                name: "token",
+                type: "thumbs-up",
+                x: 1424,
+                y: 2096,
+                width: 20,
+                height: 20,
+                mass: 0.0005,
+                color: "0000ff",
+            })
+            thisInstance.addEntity(likePump)
+            thisWorld.addBody(likePump.body)
+            thisBoxes.set(likePump.nid, likePump)
+
+            let heartPump = new Box({
+                name: "token",
+                type: "heart",
+                x: 1790,
+                y: 2549,
+                width: 20,
+                height: 20,
+                mass: 0.0005,
+                color: "0000ff",
+            })
+            thisInstance.addEntity(heartPump)
+            thisWorld.addBody(heartPump.body)
+            thisBoxes.set(heartPump.nid, heartPump)
+        }, 2000)
 
 
 
@@ -969,13 +1023,13 @@ class GameInstance {
 
         let mushonRoom = {
             x: 2905,
-            y: 295,
+            y: 300,
             width: 945,
             height: 825,
             floorColor: "#717a73",
             gridColor: "#000000",
             gridGap: 60,
-            wallThickness: 3,
+            wallThickness: 5,
             wallColor: "#6b378f",
             holes: [{
                 offset: 0,
@@ -1015,10 +1069,10 @@ class GameInstance {
         let mushonArtworkObject = {
             name: "<bold>NORMALIZI.NG</bold>\nMushon Zer-Aviv",
             type: "",
-            x: 3320,
-            y: 650,
-            width: 119,
-            height: 119,
+            x: 3260,
+            y: 300,
+            width: 240,
+            height: 120,
             mass: 0,
             color: "#ffffff",
         }
@@ -1265,42 +1319,47 @@ class GameInstance {
 
             if(command.type == "headphones" && command.boolean == true) {
 
-                client.headphones = true
-                client.rawEntity.headphones = true
-                client.smoothEntity.headphones = true
+                if(client.rawEntity) {
+                    client.headphones = true
+                    client.rawEntity.headphones = true
+                    client.smoothEntity.headphones = true
+                }
+                
 
             } else if (command.type == "headphones" && command.boolean == false) {
 
-                client.headphones = false
-                client.rawEntity.headphones = false
-                client.smoothEntity.headphones = false
+                if(client.rawEntity) {
+                    client.headphones = false
+                    client.rawEntity.headphones = false
+                    client.smoothEntity.headphones = false
 
-                client.sleeping = false
-                client.smoothEntity.sleeping = false
-                client.rawEntity.sleeping = false
-
-                
-                for (let artwork of this.artworks.values()) {
-                    
-                    if(artwork.name == "<bold>STEAL UR FEELINGS</bold>\nNoah Levenson") {
-                        let collided = false
+                    client.sleeping = false
+                    client.smoothEntity.sleeping = false
+                    client.rawEntity.sleeping = false
+  
+                    for (let artwork of this.artworks.values()) {
                         
-                        collided = SAT.testCircleCircle(client.rawEntity.collider.circle, artwork.collider.circle) 
-                        
-                        if(collided == true) {
-
-                            const response = new SAT.Response()
-
-                            if (SAT.testCircleCircle(client.rawEntity.collider.circle, artwork.collider.circle, response)) {
-                                client.rawEntity.x -= response.overlapV.x * 2
-                                client.rawEntity.y -= response.overlapV.y * 2
-                            }
+                        if(artwork.name == "<bold>STEAL UR FEELINGS</bold>\nNoah Levenson") {
+                            let collided = false
                             
- 
-                        }
+                            collided = SAT.testCircleCircle(client.rawEntity.collider.circle, artwork.collider.circle) 
+                            
+                            if(collided == true) {
 
+                                const response = new SAT.Response()
+
+                                if (SAT.testCircleCircle(client.rawEntity.collider.circle, artwork.collider.circle, response)) {
+                                    client.rawEntity.x -= response.overlapV.x * 2
+                                    client.rawEntity.y -= response.overlapV.y * 2
+                                }
+                                
+    
+                            }
+
+                        }
+                        
                     }
-                    
+
                 }
 
 
@@ -1444,7 +1503,6 @@ class GameInstance {
             const flowerCommand = {x: command.x, y: command.y, color: command.color }
 
             
-
             let sticker = false 
 
             if (fire(rawEntity)) {
@@ -1469,28 +1527,60 @@ class GameInstance {
                 const hits = lagCompensatedHitscanCheck(this.instance, rawEntity.x, rawEntity.y, endX, endY, timeAgo)
 
 
-                /*for (let box of this.boxes.values()) {
+                for (let box of this.boxes.values()) {
 
                     if(box.type == "soccer-ball") {
 
-                        if(Math.abs(rawEntity.x - box.body.position[0]) <= 120 && Math.abs(rawEntity.y - box.body.position[1]) <= 120) {
+                        if(Math.abs(rawEntity.x - box.body.position[0]) <= 80 && Math.abs(rawEntity.y - box.body.position[1]) <= 80) {
 
+                            
                                 rawEntity.justFired = true
 
-                                //console.log('tester')
-                            
-                                let XForce = command.x/30000
-                                let yForce = command.y/30000
-                                
-                                XForce = 0.05 
-                                yForce = -0.05
+                                let XForce
+                                let YForce
 
-                                box.body.applyImpulse([XForce,yForce],[command.x, command.y])
+                                
+
+                                if(Math.abs(rawEntity.x - box.body.position[0]) <= 30 && Math.abs(rawEntity.y - box.body.position[1]) <= 30) {
+                                    if(rawEntity.x < box.body.position[0]) {
+                                        XForce = 1000
+                                    } else {
+                                        XForce = -1000
+                                    }
+    
+                                    if(rawEntity.y < box.body.position[1]) {
+                                        YForce = 1000
+                                    } else {
+                                        YForce = -1000
+                                    }
+                                
+                                } else {
+                                    if(rawEntity.x < box.body.position[0]) {
+                                        XForce = 1000
+                                    } else {
+                                        XForce = -1000
+                                    }
+    
+                                    if(rawEntity.y < box.body.position[1]) {
+                                        YForce = 1000
+                                    } else {
+                                        YForce = -1000
+                                    }
+
+                                }
+
+
+
+
+                                box.body.applyImpulse([XForce,YForce])
+                                //box.body.applyForce([XForce,YForce])
+
+
 
                         }
                      }
                     
-                }*/
+                }
                
                 //console.log('checker')
                 hits.forEach(victim => {
@@ -1503,7 +1593,36 @@ class GameInstance {
                 })
 
                 if(sticker == false) {
-                    addFlower(this.instance, flowerCommand, this.flowers)
+                    
+
+                   
+                    if(command.color.length > 10) {
+                        if(command.x > 2929 && command.x < 3825) {
+                            if(command.y > 324 && command.y < 1111) { 
+                                //face ceration
+                                let likePump = new Box({
+                                    name: "token",
+                                    type: "realFace",
+                                    x: command.x + 5,
+                                    y: command.y + 5,
+                                    width: 60,
+                                    height: 60,
+                                    mass: 0.01,
+                                    color: command.color,
+                                })
+                                this.instance.addEntity(likePump)
+                                this.world.addBody(likePump.body)
+                                this.boxes.set(likePump.nid, likePump)
+                            }
+                        } 
+
+                    } else {
+                        addFlower(this.instance, flowerCommand, this.flowers)
+                    }
+                    
+
+                    
+
                 }
                 
 
@@ -1588,8 +1707,8 @@ class GameInstance {
 
             const peerID = client.peerID;
 
-            let spawnX = 2400
-            let spawnY = 1950
+            let spawnX = 2360
+            let spawnY = 1660
 
             //2402&y=1947
 

@@ -16,12 +16,11 @@ class Box {
         this.color = state.color
         this.mass = state.mass
         this.radius = state.radius
-        this.spin = state.spin
+        
         this.material = state.material
         this.offset = state.offset
         this.speedAdjust = state.speedAdjust
-
-        //particle
+        this.rotation = state.rotation
 
         this.boxShape = new p2.Box({
             width: state.width, 
@@ -29,11 +28,22 @@ class Box {
         });
         this.boxShape.material = state.material;
         
+        
     
         this.body = new p2.Body({
             mass: state.mass,
             position: [state.x + state.width/2, state.y + state.height/2],
+            angle: 0//0.7854
         });
+
+        if(this.name == "noahWall") {
+            console.log('checker')
+            this.body = new p2.Body({
+                mass: state.mass,
+                position: [state.x + state.width/2, state.y + state.height/2],
+                angle: 0.8290314
+            });
+        }
 
         
         this.body.addShape(this.boxShape)
@@ -41,7 +51,9 @@ class Box {
             this.collider = CollisionSystem.createRectangleColliderBox(0, 0, 1, 1)
         } else {
             this.collider = CollisionSystem.createRectangleColliderBox(0, 0, state.width, state.height)
-
+            if(this.name == "noahWall") {
+                this.collider = CollisionSystem.createRectangleColliderBox(0, 0, 1, 1)
+            }
         }
 
        
@@ -151,6 +163,7 @@ Box.protocol = {
     x: { type: nengi.Number, interp: true },
     y: { type: nengi.Number, interp: true },
     rotation: { type: nengi.RotationFloat32, interp: true },
+    angle: { type: nengi.RotationFloat32, interp: true },
     mass: nengi.Number,
     color: nengi.String,
     radius: nengi.UInt16,

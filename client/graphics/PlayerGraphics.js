@@ -385,7 +385,6 @@ class PlayerGraphics extends PIXI.Container {
     }
 
     toggleSleeping(boolean) {
-        //console.log(boolean)
         if(boolean) {
             this.sleeping = true
         } else {

@@ -14,6 +14,7 @@ class BoxGraphics extends PIXI.Container {
         this.color = state.color    
         this.radius = state.radius
        
+        let originalColor = this.color
         this.color = PIXI.utils.string2hex(this.color);
 
         const type = this.type
@@ -78,7 +79,6 @@ class BoxGraphics extends PIXI.Container {
             this.body.lineStyle(0, 0xffffff)
             this.body.drawRoundedRect((-state.width/2)*2, (-state.height/2)*2, state.width*2, state.height*2, 1)
             this.body.endFill()
-            //this.body.blendMode = PIXI.BLEND_MODES.ADD
             this.body.pivot.set(0.5,0.5)
             this.body.scale.set(0.5)
             this.addChild(this.body)
@@ -105,8 +105,40 @@ class BoxGraphics extends PIXI.Container {
             this.tokenImage.anchor.set(0.5, 0.8)
         }
 
-        
+        if(this.name == "token") {
+            this.body.clear()
+            this.body = new PIXI.Graphics()
+            this.tokenImage = new PIXI.Sprite.from('images/'+type+'-icon.svg');
+            this.tokenImage.width = state.width;
+            this.tokenImage.height = state.height;
+            this.tokenImage.x = -state.width/2
+            this.tokenImage.y = -state.height/2
+            this.body.addChild(this.tokenImage)
+            this.addChild(this.body)
 
+        }
+
+        if(this.name == "noahWall") {
+            this.body.clear()
+        }
+
+
+        
+        if(this.type == "realFace") {
+            this.body.clear()
+            this.body = new PIXI.Graphics()
+            this.body.beginFill(0xFFFFFF)
+            this.body.drawRoundedRect(-state.width, -state.height, state.width*2, state.height*2, 1)
+
+            this.tokenImage = new PIXI.Sprite.from(originalColor);
+            this.tokenImage.width = state.width*2;
+            this.tokenImage.height = state.height*2;
+            this.tokenImage.x = 0
+            this.tokenImage.y = 0
+            this.tokenImage.anchor.set(0.5, 0.5)
+            this.addChild(this.body)
+            this.addChild(this.tokenImage)
+        }
         
 
 

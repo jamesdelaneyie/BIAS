@@ -109,8 +109,8 @@ class InfoPanelGraphics extends PIXI.Container {
             } else {
                 this.clickNudge.alpha = brightness + 0.2
             }
-            let yOffset = (value / 4) - 35
-            console.log(yOffset)
+            let yOffset = (value / 4) - 40
+            //console.log(yOffset)
             this.clickNudge.y = yOffset
             this.clickNudge.update();
         } else {

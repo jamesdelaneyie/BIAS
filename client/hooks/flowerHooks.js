@@ -9,15 +9,12 @@ export default ({ flowers }, renderer) => {
 
             
 
-            if(data.y > 1700) {
-                renderer.middleground.addChild(graphics)
-                /*data.y = data.y - 60
-                data.x = data.x - 60
-                renderer.background.children[4].children[1].addChild(graphics)*/
-                
+            if(data.y > 1500 && data.x > 2560) {
+                renderer.background.addChild(graphics)
+            } else if (data.y < 1500 && data.x < 2560) {
+                renderer.background.addChildAt(graphics, 0)
             } else {
-                //console.log()
-                renderer.backbackground.addChildAt(graphics, 0)
+                renderer.background.addChildAt(graphics, 0)
             }
 
             return graphics

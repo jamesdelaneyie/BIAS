@@ -182,8 +182,8 @@ class UIBuilder extends PIXI.Container {
         
         this.mainMenuOn = true
         
-        this.shareMenuOn = false
-        this.muteButtonOn = false
+        this.shareMenuOn = true
+        this.muteButtonOn = true
 
 
 
@@ -194,14 +194,13 @@ class UIBuilder extends PIXI.Container {
         this.miniMapOn = true
         this.statusStageOn = true
         this.worldInfoOn = true
-        this.notificationStageOn = false
+        
         this.achievementStageOn = true
         this.chatStageOn = true
         this.emojiStageOn = true
+        this.scoreStageOn = true
 
-
-
-        this.scoreStageOn = false
+        this.notificationStageOn = false
         
         
 
@@ -314,10 +313,11 @@ class UIBuilder extends PIXI.Container {
                 menuHover.play()
             })
 
-            let music = resources.music.sound
-            console.log(music)
-            music.volume = 0.01
-            music.play()
+          
+
+
+            //console.log(music)
+           
             
             aboutLink.on("pointerdown", function () {
                 userInterface.showQuote("2")
@@ -356,8 +356,8 @@ class UIBuilder extends PIXI.Container {
 
 
 
-            const workLinkText = 'Work';
-            const workLinkUnderlineText = '<underline>Work</underline>';
+            const workLinkText = 'Artworks';
+            const workLinkUnderlineText = '<underline>Artworks</underline>';
             
             const workLink = new TaggedText(workLinkText, navLinkTextStyles, {
                 drawWhitespace: true,
@@ -462,6 +462,14 @@ class UIBuilder extends PIXI.Container {
                 window.localStorage.removeItem('x');
                 window.localStorage.removeItem('y');
                 window.localStorage.removeItem('over18');
+                window.localStorage.removeItem('quote1');
+                window.localStorage.removeItem('quote2');
+                window.localStorage.removeItem('quote3');
+                window.localStorage.removeItem('quote4');
+                window.localStorage.removeItem('art1');
+                window.localStorage.removeItem('art2');
+                window.localStorage.removeItem('art3');
+                window.localStorage.removeItem('art4');
                 setTimeout(function(){
                     window.location.reload()
                 }, 500)
@@ -497,7 +505,7 @@ class UIBuilder extends PIXI.Container {
                 helpLink.setText(helpLinkText)
             })
             
-            this.mainMenuStage.addChild(helpLink)
+            //this.mainMenuStage.addChild(helpLink)
 
 
 
@@ -524,9 +532,9 @@ class UIBuilder extends PIXI.Container {
                 feedbackLink.setText(feedbackLinkText)
             })
             
-            this.mainMenuStage.addChild(feedbackLink)
+            //this.mainMenuStage.addChild(feedbackLink)
 
-            
+            let soundIcon
 
             if(this.muteButtonOn) {
         
@@ -534,7 +542,7 @@ class UIBuilder extends PIXI.Container {
                 const soundOffGraphic = PIXI.Sprite.from('images/sound-off-icon.svg')
 
                 this.soundIcon = new PIXI.Sprite.from('images/sound-on-icon.svg')
-                const soundIcon = this.soundIcon
+                soundIcon = this.soundIcon
                 soundIcon.name = 'sound-icon-on'
                 soundIcon.width = 20
                 soundIcon.height = 17
@@ -699,37 +707,46 @@ class UIBuilder extends PIXI.Container {
         if(this.statusStageOn == true) {
 
             this.statusStage = new PUXI.Stage({
-                width: 150,
-                height: 108
+                width: 115,
+                height: 55
             });
             this.statusStage.visible = false
             this.statusStage.alpha = 0
             
 
-            this.statusWrapper = new PUXI.WidgetGroup({
-            }).setLayoutOptions(
+            this.statusWrapper = new PUXI.WidgetGroup().setLayoutOptions(
                 new PUXI.FastLayoutOptions({
-                    width: 150,
-                    height: 108,
+                    width: 115,
+                    height: 55,
                     x: 10,
                     y: 0.985,
                     anchor: new PIXI.Point(0, 1)
                 }),
-            ).setBackground(0xFFFFFF).setBackgroundAlpha(0.05)
+            ).setBackground(0x000000).setBackgroundAlpha(0.1)
 
 
-            this.statusLayout = new PUXI.Widget({}).setLayoutOptions(
+            this.statusLayout = new PUXI.Widget().setLayoutOptions(
                 new PUXI.FastLayoutOptions({
-                    width: 150,
-                    height: 108,
-                    x: 0,
-                    y: 0,
+                    width: 115,
+                    height: 55,
+                    x: 5,
+                    y: 5,
                     anchor: new PIXI.Point(0, 0)
                 }),
-            ).setBackground(0x00b140).setBackgroundAlpha(0.05)
+            )
 
             this.statusWrapper.addChild(this.statusLayout)
             this.statusStage.addChild(this.statusWrapper)
+
+            this.loadingIcon = PIXI.Sprite.from(resources['loadingIcon'].texture);
+            this.loadingIcon.x = 20 
+            this.loadingIcon.y = 90
+            this.loadingIcon.anchor.set(0.5,0.5)
+            this.loadingIcon.scale.set(0.13)
+            this.loadingIcon.alpha = 0
+
+            //let loadingIcon = this.loadingIcon
+            this.statusWrapper.contentContainer.addChild(this.loadingIcon)
 
 
             const scienceGalleryLogo = PIXI.Sprite.from(resources['sg-logo-white-raster'].texture);
@@ -743,27 +760,60 @@ class UIBuilder extends PIXI.Container {
             })
             //this.statusLayout.contentContainer.addChild(scienceGalleryLogo)
 
-            const updateStyles = new PIXI.TextStyle({ 
-                fontFamily: 'Trade Gothic Next',
-                fill: white, 
-                fontSize: 12
-            })
-            this.updateText = new PUXI.TextWidget(
-                '', 
-                updateStyles
-            ).setLayoutOptions(
+            this.updateText = new PUXI.TextWidget('').setLayoutOptions(
                 new PUXI.FastLayoutOptions({
-                    x: 0,
-                    y: 0,
+                    x: 10,
+                    y: 10,
                     height: 100,
                     width: 230,
-                    anchor: new PIXI.Point(0, 1)
+                    anchor: new PIXI.Point(1, 1)
                 })
             )
-            this.updateText.tint = 0xFFFFFF
-            this.updateText.contentContainer.alpha = 0
+            //this.updateText.tint = 0xFFFFFF
+            //this.updateText.contentContainer.alpha = 0
+
+            this.statusTextTagged = new TaggedText("", {
+                "default": {
+                    fontFamily: 'Trade Gothic Next',
+                    fill: 0xFFFFFF,
+                    fontWeight: 400,
+                    fontSize: "11px",
+                    wordWrap: true,
+                    letterSpacing: 0,
+                    wordWrapWidth: 180
+                },"bold": {
+                    fontWeight: 700,
+                },"fade0": {
+                    fill: 0x262626,
+                },"fade1": {
+                    fill: 0x6d6d6d,
+                }, "fade2": {
+                    fill: 0x9e9e9e,
+                }, "fade3": {
+                    fill: 0xFFFFFF,
+                }, "fade4": {
+                    fill: 0xFFFFFF,
+                }
+            })
             
+            this.updateText.contentContainer.addChild(this.statusTextTagged)
             this.statusLayout.addChild(this.updateText)
+
+
+            const versionStyles = new PIXI.TextStyle({ 
+                fontFamily: 'Iosevka',
+                fill: white, 
+                fontSize: 9
+            })
+            this.versionText = new PUXI.TextWidget(
+                'BIAS :: v0.5 :: github', 
+                versionStyles
+            ).setLayoutOptions()
+            
+            this.versionText.tint = 0xFFFFFF
+            this.versionText.contentContainer.alpha = 0.4
+            this.versionText.contentContainer.y = 45
+            this.statusLayout.addChild(this.versionText)
         
             this.addChild(this.statusStage)
            
@@ -797,43 +847,25 @@ class UIBuilder extends PIXI.Container {
                 })
             )
             this.scoreWrapper.contentContainer.scale.set(0.6, 0.6);
-            
-            this.scoreWrapperBackground = new PIXI.Graphics()
-            this.scoreWrapperBackground.beginFill(black)
-            this.scoreWrapperBackground.drawRoundedRect(0, 0, scoreStageWidth*3.5, scoreStageHeight*2, 65)
-            this.scoreWrapperBackground.endFill()
-            this.scoreWrapperBackground.cacheAsBitmap = true
-            this.scoreWrapperBackground.roundPixels = true
-            this.scoreWrapperBackground.scale.set(0.5)
-            
-           
-            this.scoreWrapper.contentContainer.addChild(this.scoreWrapperBackground)
+        
             
             this.talkingScore = new PUXI.Widget({}).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
                     width: 64,
-                    height: 25,
+                    height: 20,
                     x: 85,
                     y: 15
                 })
             )
             this.talkingScore.isComplete = false
 
-            const talkingIcon = new PIXI.Sprite.from('images/talking-icon.svg');
-            talkingIcon.x = -67
+            let talkingIcon = new PIXI.Sprite.from('images/talking-icon.svg');
+            talkingIcon.scale.set(0.75)
             this.talkingScore.contentContainer.addChild(talkingIcon)
             
-            this.talkingScoreText = new PIXI.Text("0/10", {fill: black, fontSize: 26, align: "right", wordWrap: true, fontWeight: 900});
-            this.talkingScoreText.x = 22
-            this.talkingScoreText.y = 7
-            this.talkingScoreTextBackground = new PIXI.Graphics()
-            this.talkingScoreTextBackground.beginFill(white)
-            this.talkingScoreTextBackground.drawRoundedRect(0, 0, 200, 86, 42)
-            this.talkingScoreTextBackground.endFill()
-            this.talkingScoreTextBackground.cacheAsBitmap = true
-            this.talkingScoreTextBackground.roundPixels = true
-            this.talkingScoreTextBackground.scale.set(0.5)
-            this.talkingScore.contentContainer.addChild(this.talkingScoreTextBackground)
+            this.talkingScoreText = new PIXI.Text("0/4", {fill: white, fontSize: 26, align: "right", wordWrap: true, fontWeight: 900});
+            this.talkingScoreText.x = 60
+            
             this.talkingScore.contentContainer.addChild(this.talkingScoreText)
             this.scoreWrapper.addChild(this.talkingScore)
 
@@ -844,28 +876,19 @@ class UIBuilder extends PIXI.Container {
                     width: 62,
                     height: 22,
                     x: 85,
-                    y: 72
+                    y: 65
                 })
             )
             this.robotScore.isComplete = false
 
-            const robotIcon = new PIXI.Sprite.from('images/robot-icon-ui.svg');
-            robotIcon.x = -67
-            robotIcon.y = 0
+            let robotIcon = new PIXI.Sprite.from('images/dial-icon.svg');
+            robotIcon.y = -1
+            robotIcon.x = 1
+            robotIcon.scale.set(0.85)
             this.robotScore.contentContainer.addChild(robotIcon)
 
-            this.robotScoreText = new PIXI.Text("0/10", {fill: black, fontSize: 26, align: "right", wordWrap: true, fontWeight: 900});
-            this.robotScoreText.x = 22
-            this.robotScoreText.y = 7
-            this.robotScoreTextBackground = new PIXI.Graphics()
-            this.robotScoreTextBackground.beginFill(white)
-            this.robotScoreTextBackground.drawRoundedRect(0, 0, 200, 86, 42)
-            this.robotScoreTextBackground.endFill()
-            this.robotScoreTextBackground.cacheAsBitmap = true
-            this.robotScoreTextBackground.roundPixels = true
-            this.robotScoreTextBackground.scale.set(0.5)
-
-            this.robotScore.contentContainer.addChild(this.robotScoreTextBackground)
+            this.robotScoreText = new PIXI.Text("0/4", {fill: white, fontSize: 26, align: "right", wordWrap: true, fontWeight: 900});
+            this.robotScoreText.x = 60
             this.robotScore.contentContainer.addChild(this.robotScoreText)
             this.scoreWrapper.addChild(this.robotScore)
 
@@ -878,27 +901,19 @@ class UIBuilder extends PIXI.Container {
                     width: 64,
                     height: 25,
                     x: 85,
-                    y: 130
+                    y: 118
                 })
             )
             this.dialScore.isComplete = false
 
-            const dialIcon = new PIXI.Sprite.from('images/dial-icon.svg');
-            dialIcon.x = -60
-            dialIcon.y = 0
+            const dialIcon = new PIXI.Sprite.from('images/robot-icon.svg');
+            dialIcon.y = -3
+            dialIcon.x = 1
+            dialIcon.scale.set(1)
             this.dialScore.contentContainer.addChild(dialIcon)
 
-            this.dialScoreText = new PIXI.Text("0/10", {fill: black, fontSize: 26, align: "right", wordWrap: true, fontWeight: 900});
-            this.dialScoreText.x = 22
-            this.dialScoreText.y = 7
-            this.dialScoreTextBackground = new PIXI.Graphics()
-            this.dialScoreTextBackground.beginFill(white)
-            this.dialScoreTextBackground.drawRoundedRect(0, 0, 200, 86, 42)
-            this.dialScoreTextBackground.cacheAsBitmap = true
-            this.dialScoreTextBackground.roundPixels = true
-            this.dialScoreTextBackground.scale.set(0.5)
-            this.dialScoreTextBackground.endFill()
-            this.dialScore.contentContainer.addChild(this.dialScoreTextBackground)
+            this.dialScoreText = new PIXI.Text("0/4", {fill: white, fontSize: 26, align: "right", wordWrap: true, fontWeight: 900});
+            this.dialScoreText.x = 60
             this.dialScore.contentContainer.addChild(this.dialScoreText)
             this.scoreWrapper.addChild(this.dialScore)
 
@@ -906,7 +921,7 @@ class UIBuilder extends PIXI.Container {
 
 
             
-            this.faceScore = new PUXI.Widget({}).setLayoutOptions(
+            /*this.faceScore = new PUXI.Widget({}).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
                     width: 64,
                     height: 25,
@@ -917,26 +932,11 @@ class UIBuilder extends PIXI.Container {
             this.faceScore.isComplete = false
 
             const faceIcon = new PIXI.Sprite.from('images/face-icon.svg');
-            faceIcon.x = -60
-            faceIcon.y = 0
+            faceIcon.y = -10
+            faceIcon.x = 55
+            faceIcon.scale.set(1)
             this.faceScore.contentContainer.addChild(faceIcon)
-
-
-            this.faceScoreText = new PIXI.Text("0/10", {fill: black, fontSize: 26, align: "right", wordWrap: true, fontWeight: 900});
-            this.faceScoreText.x = 22
-            this.faceScoreText.y = 7
-            this.faceScoreTextBackground = new PIXI.Graphics()
-            this.faceScoreTextBackground.beginFill(white)
-            
-            this.faceScoreTextBackground.drawRoundedRect(0, 0, 200, 86, 42)
-            this.faceScoreTextBackground.cacheAsBitmap = true
-            this.faceScoreTextBackground.roundPixels = true
-            this.faceScoreTextBackground.scale.set(0.5)
-
-            this.faceScoreTextBackground.endFill()
-            this.faceScore.contentContainer.addChild(this.faceScoreTextBackground)
-            this.faceScore.contentContainer.addChild(this.faceScoreText)
-            this.scoreWrapper.addChild(this.faceScore)
+            this.scoreWrapper.addChild(this.faceScore)*/
             
 
             this.scoreStage.addChild(this.scoreWrapper);
@@ -955,11 +955,18 @@ class UIBuilder extends PIXI.Container {
 
             let textBoxHeight = 50
             let textBoxWidth = 420
-            let textBoxY = 0.995
+            let textBoxY = 0.98
 
+            if(window.innerWidth <= 500) {
+                textBoxWidth = 380
+            }
+
+            if(window.innerWidth <= 414) {
+                textBoxWidth = 300
+            }
 
             if(window.innerWidth <= 375) {
-                textBoxWidth = 350
+                textBoxWidth = 260
             }
 
             if(window.innerWidth <= 320) {
@@ -976,6 +983,14 @@ class UIBuilder extends PIXI.Container {
             this.textBox.visible = false
             this.textBox.alpha = 0
             let textBox = this.textBox
+
+            let textBoxX = 0.5;
+            if(window.innerWidth <= 500) {
+                textBoxX = 0.4
+            }
+            if(window.innerWidth <= 375) {
+                textBoxX = 0.38
+            }
            
             
             this.textBoxWrapper = new PUXI.WidgetGroup({
@@ -983,7 +998,7 @@ class UIBuilder extends PIXI.Container {
                 new PUXI.FastLayoutOptions({
                     width: textBoxWidth,
                     height: textBoxHeight,
-                    x: 0.5,
+                    x: textBoxX,
                     y: textBoxY,
                     anchor: new PIXI.Point(0.5, 1)
                 }),
@@ -1113,12 +1128,20 @@ class UIBuilder extends PIXI.Container {
 
 
             let textBoxWidth = 420
-            let textBoxY = 0.995
+            let textBoxY = 0.98
     
+            if(window.innerWidth <= 500) {
+                textBoxWidth = 380
+            }
+
+            if(window.innerWidth <= 414) {
+                textBoxWidth = 300
+            }
 
             if(window.innerWidth <= 375) {
-                textBoxWidth = 350
+                textBoxWidth = 260
             }
+
 
             if(window.innerWidth <= 320) {
                 textBoxWidth = 295
@@ -1131,14 +1154,22 @@ class UIBuilder extends PIXI.Container {
                 x: 0,
                 y: 0
             })
-            this.emojiStage.visible = false
-            this.emojiStage.alpha = 0
+            this.emojiStage.visible = true
+            this.emojiStage.alpha = 1
+
+            let textBoxX = 0.5;
+            if(window.innerWidth <= 500) {
+                textBoxX = 0.4
+            }
+            if(window.innerWidth <= 375) {
+                textBoxX = 0.38
+            }
 
             this.emojiWrapper = new PUXI.WidgetGroup({}).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
                     width: textBoxWidth, 
                     height: 50,
-                    x: 0.5,
+                    x: textBoxX,
                     y: textBoxY,
                     anchor: new PIXI.Point(0.5, 1)
                 })
@@ -1196,13 +1227,20 @@ class UIBuilder extends PIXI.Container {
                     y: 2
                 })
             ).setPadding(15, 10)
-            let heartEmojiText = new PIXI.Text("❤️", {fontSize: 24});
+            let heartEmojiText = new PIXI.Text("❤️", {fontSize: 28});
             this.heartEmoji.contentContainer.addChild(heartEmojiText)
             this.emojiWrapper.addChild(this.heartEmoji)
             this.heartEmoji.contentContainer.alpha = 0
             this.heartEmoji.contentContainer.buttonMode = true
             this.heartEmoji.contentContainer.interactive = true
+            this.heartEmoji.contentContainer.scale.set(0.9)
             let heartEmoji = this.heartEmoji
+            this.heartEmoji.contentContainer.on("pointerover", function () {
+                heartEmoji.contentContainer.scale.set(1)
+            })
+            this.heartEmoji.contentContainer.on("pointerout", function () {
+                heartEmoji.contentContainer.scale.set(0.9)
+            })
 
 
 
@@ -1275,6 +1313,7 @@ class UIBuilder extends PIXI.Container {
                 */
 
             let textBox = this.TextBoxPlaceholder
+            let textInput = this.mockInput
 
             this.buttonEmoji.contentContainer.on("pointerdown", function () {
 
@@ -1283,12 +1322,17 @@ class UIBuilder extends PIXI.Container {
                 if(emojiBarOpen) {
 
                     emojiBarOpen = false
-                    textBox.alpha = 0.4
+                    if(textInput.value == "") {
+                        textBox.alpha = 0.4
+                    } else {
+                        textBox.alpha = 0
+                    }
+                    //textBox.alpha = 0.4
+                    textInput.alpha = 1
 
                     heartEmoji.contentContainer.alpha = 0
                     partyEmoji.contentContainer.alpha = 0
                     emojiWrapperBackground.clear()
-                    //emojiWrapperBackground.beginFill(white)
                     emojiWrapperBackground.drawRoundedRect(2, 2, 55, 46, 25)
                     emojiWrapperBackground.endFill()
 
@@ -1309,6 +1353,7 @@ class UIBuilder extends PIXI.Container {
                     partyEmoji.contentContainer.alpha = 1
 
                     textBox.alpha = 0
+                    textInput.alpha = 0
                 
                     emojiWrapperBackground.clear()
                     emojiWrapperBackground.drawRoundedRect(2, 2, textBoxWidth/2, 46, 25)
@@ -1342,8 +1387,8 @@ class UIBuilder extends PIXI.Container {
 
 
         this.chatIconStage = new PUXI.Stage({
-            width: 47,
-            height: 47,
+            width: 23.5,
+            height: 23.5,
             x: 0,
             y: 0
         })
@@ -1351,11 +1396,11 @@ class UIBuilder extends PIXI.Container {
         this.chatIconWrapper = new PUXI.WidgetGroup({
         }).setLayoutOptions(
             new PUXI.FastLayoutOptions({
-                width: 47,
-                height: 47,
-                x: 0.9,
-                y: 0.98,
-                anchor: new PIXI.Point(0.5, 0.5)
+                width: 25,
+                height: 25,
+                x: window.innerWidth - 50,
+                y: window.innerHeight - 6,
+                anchor: new PIXI.Point(1, 1)
             }),
         )
 
@@ -1363,6 +1408,9 @@ class UIBuilder extends PIXI.Container {
         this.chatIcon.width = 23.5
         this.chatIcon.height = 23.5
         this.chatIcon.anchor.set(0.5)
+        if(window.innerWidth <= 500) {
+            this.chatIcon.alpha = 0.5
+        }
 
         this.chatIconWrapperBackground = new PIXI.Graphics()
         this.chatIconWrapperBackground.drawRoundedRect(2, 2, 55, 46, 25)
@@ -1372,16 +1420,36 @@ class UIBuilder extends PIXI.Container {
         this.chatIcon.interactive = true;
         this.chatIcon.buttonMode = true;
 
+        let chatIcon = this.chatIcon
+
         let textBox = this.textBox
         let emojiBox = this.emojiWrapper
+        let statusStage = this.statusStage
      
         this.chatIcon.on("pointerdown", function () {
             if(textBox.visible == true) {
                 textBox.visible = false
                 emojiBox.visible = false
+                textBox.alpha = 0
+                emojiBox.alpha = 0
+                chatIcon.alpha = 0.5
+                console.log()
+                if(window.innerWidth <= 500) {
+                    statusStage.alpha = 0
+                    userInterface.children[5].alpha = 1
+                    userInterface.children[5].visible = true
+                }
             } else {
                 textBox.visible = true
                 emojiBox.visible = true
+                textBox.alpha = 1
+                emojiBox.alpha = 1
+                chatIcon.alpha = 1
+                if(window.innerWidth <= 500) {
+                    statusStage.alpha = 1
+                    userInterface.children[5].alpha = 0
+                    userInterface.children[5].visible = false
+                }
             }
         })
         
@@ -1413,8 +1481,8 @@ class UIBuilder extends PIXI.Container {
                 width: width,
                 height: height
             })
-            this.worldInfo.visible = false
-            this.worldInfo.alpha = 0
+            this.worldInfo.visible = true
+            this.worldInfo.alpha = 1
             
             this.worldInfoWrapper = new PUXI.WidgetGroup({}).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
@@ -1428,7 +1496,7 @@ class UIBuilder extends PIXI.Container {
             
             this.worldInfoBackground = new Graphics()
             this.worldInfoBackground.lineStyle(0)
-            this.worldInfoBackground.beginFill(white, 0.3, true)
+            this.worldInfoBackground.beginFill(white, 0.1, true)
             this.worldInfoBackground.drawRoundedRect(0, 0, width*4, height*2, 6)
             this.worldInfoBackground.endFill()
             this.worldInfoBackground.scale.set(0.5)
@@ -1452,6 +1520,7 @@ class UIBuilder extends PIXI.Container {
                     textBaseline: "alphabetical"
                 }
             })
+            this.currentTime.alpha = 0.4
             this.currentTime.x = 4
             this.worldInfoWrapper.contentContainer.addChild(this.currentTime);
     
@@ -1602,10 +1671,10 @@ class UIBuilder extends PIXI.Container {
                     type: ""
                 },
                 {
-                    title:"ABOUT",
+                    title:"BIAS: ONLINE",
                     subtitle:"",
                     credit:"",
-                    paragraph: "<gap>\n</gap><p>Welcome to BIAS ONLINE: a virtual exhibition space by Science Gallery at Trinity College Dublin showcasing digital artworks exploring data equity, privacy, surveillance culture, facial recognition, class and artificial intelligence.\n\n<privacy>From cognitive function to machine learning, bias is a shortcut, for our brain or for data. This virtual exhibition is part of Science Gallery Dublin’s year-long BIAS season, interrogating how bias moves from human to machine and how persuasion, preference, motivation and misinformation contribute to our individual, societal and digital biases.\n</privacy>\n\n</p>",
+                    paragraph: "<gap>\n</gap><intro>Welcome to BIAS ONLINE: a virtual exhibition space by Science Gallery at Trinity College Dublin showcasing digital artworks exploring data equity, privacy, surveillance culture, facial recognition, class and artificial intelligence.\n</intro><privacy>\nFrom cognitive function to machine learning, bias is a shortcut, for our brain or for data. This virtual exhibition is part of Science Gallery Dublin’s year-long BIAS season, interrogating how bias moves from human to machine and how persuasion, preference, motivation and misinformation contribute to our individual, societal and digital biases.\n\nThis new season by Science Gallery Dublin interrogates how prejudice can move quickly from human to machine as algorithms and artificial intelligence systems are encoded by humans with very human values, preferences and predispositions.\n</privacy>",
                     style:"",
                     type: "face"
                 },
@@ -1613,7 +1682,7 @@ class UIBuilder extends PIXI.Container {
                     title: "ARTISTS",
                     subtitle: "",
                     credit: "",
-                    paragraph:"\n<img imgSrc='mushonThumb' imgDisplay='inline' />\n<p><bold>Mushon Zer-Aviv</bold> is a designer, researcher, educator and media activist based in Tel Aviv. His love/hate relationship with data informs his design work, art pieces, activism, research, teaching, workshops and city life. He is currently writing a non-fiction book about friction – a design theory of change. Among Mushon’s collaborations, he is the CO-founder of Shual.com – a foxy design studio – and multiple government transparency and civic participation initiatives with the Public Knowledge Workshop; Mushon also designed the maps for Waze.com and led the design of Localize.city. \n\nMushon is an alumni of Eyebeam art + technology center in New York. He is a senior faculty member at Shenkar College and has previously taught at NYU, Parsons, and Bezalel. Adam Kariv developed the code for the work. Additionally, Mushon Zer-Aviv would like to thank the Science Gallery at Trinity College Dublin for commissioning this work.\n\n<link>mushon.com</link> // <link>@mushon</link>\n\n\n\n\n<img imgSrc='johannThumb' imgDisplay='inline' />\n\n<bold>Johann Diedrick</bold> is an artist, engineer, and musician that makes installations, performances, and sculptures for encountering the world through our ears. He surfaces vibratory histories of past interactions inscribed in material and embedded in space, peeling back sonic layers to reveal hidden memories and untold stories. He shares his tools and techniques through listening tours, workshops, and open-source hardware/software.\n\nHe is the founder of A Quiet Life, a sonic engineering and research studio that designs and builds audio-related software and hardware products for revealing possibilities off the grid through sonic encounter. He is a 2021 Mozilla Creative Media Award recipient, a member of NEW INC, and an adjunct professor at NYU\'s ITP program. His work has been featured in Wire Magazine, Musicworks Magazine, and presented internationally at MoMA PS1, Ars Electronica, and the Somerset House, among others. This project is supported by the Mozilla Foundation.\n\n<link>darkmatters.ml</link> // <link>@johanndiedrick</link>\n\n\n\n\n<img imgSrc='libbyThumb' imgDisplay='inline' />\n\n<bold>Libby Heaney</bold>\'s post-disciplinary art practice includes moving image works, performances and participatory and interactive experiences that span quantum computing, virtual reality, AI and installation. Her practice uses affect, humour, surrealism and nonsense to subvert the capitalist appropriation of technology, the endless categorizations of humans and non-humans alike. She uses tools like machine learning and quantum computing against their \'proper\' use, to undo biases and to forge new expressions of collective identity and belonging with each other and the world. She has exhibited widely in the UK and internationally, including Tate Modern, the V&A, London and Mutek & Sonar Festivals. She is currently resident of the London institution Somerset House, where she is currently working on a major commission with quantum computing for Berlin\'s Light Art Space. Sound Design by Barney Kass and the artist would also like to thank Public Space Surveillance Manager at Hackney Council, Oliver Martin and acknowledge the Art Quest Adaptations Residency for acting as a catalyst for this work.\n\n<link>libbyheaney.co.uk</link> // <link>@libby_heaney_</link>\n\n\n\n\n<img imgSrc='noahThumb' imgDisplay='inline' />\n\n<bold>Noah Levenson</bold> leads research engineering as \"Hacker in Residence\" at Consumer Reports Digital Lab. He is a 2019 Rockefeller Foundation Bellagio fellow. His computer science work has been profiled by Scientific American, MIT, Engadget, CBC News, and Fast Company, among others. He lives in New York City, where he was born.\n\n<link>noahlevenson.com</link> // <link>@noahlevenson</link>\n\n\n\n</p>\n",
+                    paragraph:"<gap>\n</gap><gap>\n</gap><gap>\n</gap><img imgSrc='mushonThumb' imgDisplay='inline' />\n<p><bold>Mushon Zer-Aviv</bold> is a designer, researcher, educator and media activist based in Tel Aviv. His love/hate relationship with data informs his design work, art pieces, activism, research, teaching, workshops and city life. He is currently writing a non-fiction book about friction – a design theory of change. Among Mushon’s collaborations, he is the CO-founder of Shual.com – a foxy design studio – and multiple government transparency and civic participation initiatives with the Public Knowledge Workshop; Mushon also designed the maps for Waze.com and led the design of Localize.city. \n\nMushon is an alumni of Eyebeam art + technology center in New York. He is a senior faculty member at Shenkar College and has previously taught at NYU, Parsons, and Bezalel. Adam Kariv developed the code for the work. Additionally, Mushon Zer-Aviv would like to thank the Science Gallery at Trinity College Dublin for commissioning this work.\n\n<link>mushon.com</link> // <link>@mushon</link>\n\n\n\n\n<img imgSrc='johannThumb' imgDisplay='inline' />\n<bold>Johann Diedrick</bold> is an artist, engineer, and musician that makes installations, performances, and sculptures for encountering the world through our ears. He surfaces vibratory histories of past interactions inscribed in material and embedded in space, peeling back sonic layers to reveal hidden memories and untold stories. He shares his tools and techniques through listening tours, workshops, and open-source hardware/software.\n\nHe is the founder of A Quiet Life, a sonic engineering and research studio that designs and builds audio-related software and hardware products for revealing possibilities off the grid through sonic encounter. He is a 2021 Mozilla Creative Media Award recipient, a member of NEW INC, and an adjunct professor at NYU\'s ITP program. His work has been featured in Wire Magazine, Musicworks Magazine, and presented internationally at MoMA PS1, Ars Electronica, and the Somerset House, among others. This project is supported by the Mozilla Foundation.\n\n<link>darkmatters.ml</link> // <link>@johanndiedrick</link>\n\n\n\n\n<img imgSrc='libbyThumb' imgDisplay='inline' />\n<bold>Libby Heaney</bold>\'s post-disciplinary art practice includes moving image works, performances and participatory and interactive experiences that span quantum computing, virtual reality, AI and installation. Her practice uses affect, humour, surrealism and nonsense to subvert the capitalist appropriation of technology, the endless categorizations of humans and non-humans alike. She uses tools like machine learning and quantum computing against their \'proper\' use, to undo biases and to forge new expressions of collective identity and belonging with each other and the world. She has exhibited widely in the UK and internationally, including Tate Modern, the V&A, London and Mutek & Sonar Festivals. She is currently resident of the London institution Somerset House, where she is currently working on a major commission with quantum computing for Berlin\'s Light Art Space. Sound Design by Barney Kass and the artist would also like to thank Public Space Surveillance Manager at Hackney Council, Oliver Martin and acknowledge the Art Quest Adaptations Residency for acting as a catalyst for this work.\n\n<link>libbyheaney.co.uk</link> // <link>@libby_heaney_</link>\n\n\n\n\n<img imgSrc='noahThumb' imgDisplay='inline' />\n<bold>Noah Levenson</bold> leads research engineering as \"Hacker in Residence\" at Consumer Reports Digital Lab. He is a 2019 Rockefeller Foundation Bellagio fellow. His computer science work has been profiled by Scientific American, MIT, Engadget, CBC News, and Fast Company, among others. He lives in New York City, where he was born.\n\n<link>noahlevenson.com</link> // <link>@noahlevenson</link>\n\n\n\n\n\n</p>\n",
                     style: "",
                     type: ""
                 },
@@ -1626,7 +1695,7 @@ class UIBuilder extends PIXI.Container {
                     title: "ARTWORKS",
                     subtitle: "",
                     credit: "",
-                    paragraph:'<gap>\n</gap><img imgSrc="dialIconThumb" /><gap>\n</gap><boldtitle>NORMALIZI.NG</boldtitle>\n<subtitle>What does normal look like?</subtitle>\n<gap>\n</gap><gap>\n</gap><p>NORMALIZI.NG by Mushon Zer-Aviv is a new digital commission further developing and adapting his existing work “The Normalizing Machine”. This experimental online research in machine-learning aims to analyze and understand how we decide who looks more “normal”. By contributing to the dataset and choosing between faces you deem more normal, the machine analyzes your decisions and will add you to its algorithmic map of normality.\n\nIn the late 1800s, the French forensics pioneer Alphonse Bertillon, the father of the mugshot, developed ‘Le Portrait Parle’ (the speaking portrait), a system for standardizing, indexing and classifying the human face. His statistical system was never meant to criminalize the face, but it was later widely adopted by both the eugenics movement and the Nazis to do exactly that.\n\nThe online work automates Alphonse’s speaking portraits and visualizes how today’s systematic discrimination is aggregated, amplified and conveniently hidden behind the seemingly objective black box of artificial intelligence.\n\n\n\n\n<img imgSrc="talkingIconThumb" imgDisplay="block" /><gap>\n</gap><boldtitle>DARK MATTERS</boldtitle>\n<subtitle>What does bias sound like?</subtitle>\n<gap>\n</gap><gap>\n</gap><p>Dark Matters exposes the absence of Black speech in the datasets used to train voice interface systems in consumer AI products like Alexa and Siri. Using 3D modeling, sound and storytelling, the project challenges us to grapple with racism and inequity through speech and the spoken word, and how AI systems underserve Black communities.</p>\n\n\n\n\n<img imgSrc="robotIconThumb" imgDisplay="block" /><gap>\n</gap><boldtitle>CLASSES</boldtitle>\n<subtitle>How are biases translated into code?</subtitle>\n<gap>\n</gap><gap>\n</gap><p>CLASSES is a video essay exploring the entanglements between machine learning classification and social class(ification). The artwork takes place in a simulated model of a London council estate, where the artist lives. Machine and human voices playfully narrate aspects of her in-depth research into accented speech recognition, natural language processing* and public space surveillance, to understand how historical and cultural biases around social class are being translated into code and how this affects people’s material conditions.\n\nTowards the end of the essay, the artist finds inspiration in her community gardening on the estate to propose a rewilded AI that removes rigid hierarchical categories to build stronger relations between people and the world.\n\n\n\n\n<img imgSrc="faceIconThumb" imgDisplay="block" /><gap>\n</gap><boldtitle>STEALING UR FEELINGS</boldtitle>\n<subtitle>Can the internet read you?</subtitle>\n<gap>\n</gap><gap>\n</gap><p>Meet the new A.I. that knows you better than you know yourself. STEALING UR FEELINGS is an interactive film that learns your deepest, darkest secrets - just by looking at your face.  That\'s the good news. The bad news? Your favourite apps are doing exactly the same thing.\n</p>',
+                    paragraph:'<gap>\n</gap><img imgDisplay="icon" imgSrc="talkingIconThumb"  /><gap>\n</gap><boldtitle>DARK MATTERS</boldtitle>\n<subtitle>What does bias sound like?</subtitle>\n<gap>\n</gap><gap>\n</gap><p>Dark Matters exposes the absence of Black speech in the datasets used to train voice interface systems in consumer AI products like Alexa and Siri. Using 3D modeling, sound and storytelling, the project challenges us to grapple with racism and inequity through speech and the spoken word, and how AI systems underserve Black communities.\n\n\n\n</p><img imgDisplay="icon" imgSrc="dialIconThumb" /><gap>\n</gap><boldtitle>NORMALIZI.NG</boldtitle>\n<subtitle>What does normal look like?</subtitle>\n<gap>\n</gap><gap>\n</gap><p>NORMALIZI.NG by Mushon Zer-Aviv is a new digital commission further developing and adapting his existing work “The Normalizing Machine”. This experimental online research in machine-learning aims to analyze and understand how we decide who looks more “normal”. By contributing to the dataset and choosing between faces you deem more normal, the machine analyzes your decisions and will add you to its algorithmic map of normality.\n\nIn the late 1800s, the French forensics pioneer Alphonse Bertillon, the father of the mugshot, developed ‘Le Portrait Parle’ (the speaking portrait), a system for standardizing, indexing and classifying the human face. His statistical system was never meant to criminalize the face, but it was later widely adopted by both the eugenics movement and the Nazis to do exactly that.\n\nThe online work automates Alphonse’s speaking portraits and visualizes how today’s systematic discrimination is aggregated, amplified and conveniently hidden behind the seemingly objective black box of artificial intelligence.\n\n\n\n</p><img imgDisplay="icon" imgSrc="robotIconThumb"/><gap>\n</gap><boldtitle>CLASSES</boldtitle>\n<subtitle>How are biases translated into code?</subtitle>\n<gap>\n</gap><gap>\n</gap><p>CLASSES is a video essay exploring the entanglements between machine learning classification and social class(ification). The artwork takes place in a simulated model of a London council estate, where the artist lives. Machine and human voices playfully narrate aspects of her in-depth research into accented speech recognition, natural language processing* and public space surveillance, to understand how historical and cultural biases around social class are being translated into code and how this affects people’s material conditions.\n\nTowards the end of the essay, the artist finds inspiration in her community gardening on the estate to propose a rewilded AI that removes rigid hierarchical categories to build stronger relations between people and the world.\n\n\n\n</p><img imgSrc="faceIconThumb"  imgDisplay="icon" /><gap>\n</gap><boldtitle>STEALING UR FEELINGS</boldtitle>\n<subtitle>Can the internet read you?</subtitle>\n<gap>\n</gap><gap>\n</gap><p>Meet the new A.I. that knows you better than you know yourself. STEALING UR FEELINGS is an interactive film that learns your deepest, darkest secrets - just by looking at your face.  That\'s the good news. The bad news? Your favourite apps are doing exactly the same thing.\n</p>',
                     style: "",
                     type: ""
                 },
@@ -1635,16 +1704,16 @@ class UIBuilder extends PIXI.Container {
                     title:"CREDITS",
                     subtitle:"",
                     credit:"",
-                    paragraph: "<gap>\n</gap><p><bold>BIAS ONLINE</bold> was developed with the support of the European ARTificial Intelligence Lab, co-funded by the Creative Europe Programme of the European Union\n\n<privacy><bold>BIAS ONLINE</bold> was created with the support of The Department of Tourism, Culture, Arts, Gaeltacht, Sport and Media.\n\n<bold>Project Team</bold>: Aisling Murray, Mitzi D'Alton, Rory McCorrmick, Niamh O'Doherty\n\n<bold>Artists:</bold> Johann Diedrick, Libby Heaney, Mushon Zer-Aviv, Noah Levenson\n\n<bold>Music & Sound Design</bold> by Tom Winters\n\n</privacy><img imgSrc='logosThumb' imgDisplay='block' /></p>",
+                    paragraph: "<gap>\n</gap><p><bold>BIAS: ONLINE</bold> was developed with the support of the European ARTificial Intelligence Lab, co-funded by the Creative Europe Programme of the European Union, as well as support by The Department of Tourism, Culture, Arts, Gaeltacht, Sport and Media.\n\n<privacy><bold>Project Team</bold>: Aisling Murray (Curation), Mitzi D'Alton (Project Management), Rory McCorrmick (Graphic Artwork), Niamh O'Doherty (Content Management)\n\n<bold>Artists:</bold> Johann Diedrick, Libby Heaney, Mushon Zer-Aviv, Noah Levenson\n\n<bold>Music & Sound Design</bold> by Tom Winters\n\n<bold>Designed & Developed</bold> by James Delaney\n\n<bold>BIAS: ONLINE</bold> is experimental open source software. You can read more about it's development and download a copy on <link>github.com</link>\n\n</privacy><img imgSrc='logosThumb' imgDisplay='block' /></p>",
                     style:"",
                     type: ""
                 },
                 //Privacy
                 {
-                    title:"SAFETY AND PRIVACY INFO",
+                    title:"SAFETY & PRIVACY",
                     subtitle:"",
                     credit:"",
-                    paragraph: "<privacy>\n\nBIAS ONLINE is a virtual exhibition space by Science Gallery at Trinity College Dublin showcasing digital artworks exploring data equity, privacy, surveillance culture, facial recognition, class and artificial intelligence.\n\n This exhibition and the chat functionality were created to allow public conversation about the exhibition. \n\nViolence, harassment and other similar types of behaviour discourage people from expressing themselves, and diminish the value of the conversation. Our rules are to ensure all people can participate in the conversation freely and safely. \n\nBy entering the exhibition you agree to be bound by the terms and conditions of this policy. Please note this experience is only available to users aged 18 and over. By entering the exhibition, you are confirmed that you are aged 18 and over.\n\n<bold>SAFETY</bold>\n\n<u>Violence</u>: You may not threaten violence against an individual or a group of people. \n\n<u>Terrorism/violent extremism</u>: You may not threaten or promote terrorism or violent extremism. \n\n<u>Child sexual exploitation</u>: We have zero tolerance for child sexual exploitation. \n\n<u>Abuse/harassment</u>: You may not engage in the targeted harassment of someone, or incite other people to do so. This includes wishing or hoping that someone experiences physical harm. \n\n<u>Hateful conduct</u>: You may not promote violence against, threaten, or harass other people on the basis of race, ethnicity, national origin, caste, sexual orientation, gender, gender identity, religious affiliation, age, disability, or serious disease. \n\n<u>Suicide or self-harm</u>: You may not promote or encourage suicide or self-harm. \n\n<u>Linking content</u>: You may not link any content through the comments section.  You may not post pictures, videos or any other contents through the comments section. \n\n<u>Illegal or certain regulated goods or services</u>: You may not use the chat function for any unlawful purpose or in furtherance of illegal activities. This includes selling, buying, or facilitating transactions in illegal goods or services, as well as certain types of regulated goods or services.\n\n<bold>PRIVACY</bold>\n\n<u><bold>Your private information</bold></u>: You should not share or provide your own private information in the chat functionality. If you do, others may keep or store such information. Science Gallery Dublin accepts no liability for such. For information on our Privacy Policy and Data Retention Policy please visit sciencegallery.org/privacy.\n\n<bold>Other information</bold>: You may not publish or post other people's private information (such as names, home phone number and address) without their express permission.\nWe also prohibit threatening to expose private information or incentivizing others to do so. \n\n<bold>Authenticity</bold>\nPlatform manipulation and spam: You may not use the comment section in a manner intended to artificially amplify or suppress information or engage in behaviour that manipulates or disrupts people’s experience. \n\n<u>Civic integrity</u>: You may not use the comment section for the purpose of manipulating or interfering in elections or other civic processes. This includes posting or sharing content that may suppress participation or mislead people about when, where, or how to participate in a civic process. \n\n<u>Impersonation</u>: You may not impersonate individuals, groups, or organizations in a manner that is intended to or does mislead, confuse, or deceive others. \n\n<u>Synthetic and manipulated media</u>: You may not deceptively share synthetic or manipulated media that are likely to cause harm. \n\n<u>Copyright and trademark</u>: You may not violate others’ intellectual property rights, including copyright and trademark. \n\n<u>Enforcement</u>\nIf you violate the rules your chat functionality will be disabled and you may be removed from the exhibition. \n\n<u>Complaints and Reporting</u> \nAny person using the chat functionality may report or make a complaint about content being posted by another user by emailing <link>info@dublin.sciencegallery.com</link>.\n</privacy>",
+                    paragraph: "<privacy>\n<bold>BIAS: ONLINE</bold> is a virtual exhibition space by Science Gallery at Trinity College Dublin showcasing digital artworks exploring data equity, privacy, surveillance culture, facial recognition, class and artificial intelligence. This exhibition and the chat functionality were created to allow public conversation about the exhibition. \n\nViolence, harassment and other similar types of behaviour discourage people from expressing themselves, and diminish the value of the conversation. Our rules are to ensure all people can participate in the conversation freely and safely. \n\nBy entering the exhibition you agree to be bound by the terms and conditions of this policy. Please note this experience is only available to users aged 18 and over. By entering the exhibition, you are confirmed that you are aged 18 and over.\n\n\n<bold>SAFETY</bold>\n\n<u>Violence</u>: You may not threaten violence against an individual or a group of people. \n\n<u>Terrorism/violent extremism</u>: You may not threaten or promote terrorism or violent extremism. \n\n<u>Child sexual exploitation</u>: We have zero tolerance for child sexual exploitation. \n\n<u>Abuse/harassment</u>: You may not engage in the targeted harassment of someone, or incite other people to do so. This includes wishing or hoping that someone experiences physical harm. \n\n<u>Hateful conduct</u>: You may not promote violence against, threaten, or harass other people on the basis of race, ethnicity, national origin, caste, sexual orientation, gender, gender identity, religious affiliation, age, disability, or serious disease. \n\n<u>Suicide or self-harm</u>: You may not promote or encourage suicide or self-harm. \n\n<u>Linking content</u>: You may not link any content through the comments section.  You may not post pictures, videos or any other contents through the comments section. \n\n<u>Illegal or certain regulated goods or services</u>: You may not use the chat function for any unlawful purpose or in furtherance of illegal activities. This includes selling, buying, or facilitating transactions in illegal goods or services, as well as certain types of regulated goods or services.\n\n\n<bold>PRIVACY</bold>\n\n<u><bold>Your private information</bold></u>: You should not share or provide your own private information in the chat functionality. If you do, others may keep or store such information. Science Gallery Dublin accepts no liability for such. For information on our Privacy Policy and Data Retention Policy please visit sciencegallery.org/privacy.\n\n<bold>Other information</bold>: You may not publish or post other people's private information (such as names, home phone number and address) without their express permission.\nWe also prohibit threatening to expose private information or incentivizing others to do so. \n\n<bold>Authenticity</bold>\nPlatform manipulation and spam: You may not use the comment section in a manner intended to artificially amplify or suppress information or engage in behaviour that manipulates or disrupts people’s experience. \n\n<u>Civic integrity</u>: You may not use the comment section for the purpose of manipulating or interfering in elections or other civic processes. This includes posting or sharing content that may suppress participation or mislead people about when, where, or how to participate in a civic process. \n\n<u>Impersonation</u>: You may not impersonate individuals, groups, or organizations in a manner that is intended to or does mislead, confuse, or deceive others. \n\n<u>Synthetic and manipulated media</u>: You may not deceptively share synthetic or manipulated media that are likely to cause harm. \n\n<u>Copyright and trademark</u>: You may not violate others’ intellectual property rights, including copyright and trademark. \n\n<u>Enforcement</u>\nIf you violate the rules your chat functionality will be disabled and you may be removed from the exhibition. \n\n<u>Complaints and Reporting</u> \nAny person using the chat functionality may report or make a complaint about content being posted by another user by emailing <link>info@dublin.sciencegallery.com</link>.\n\n</privacy>",
                     style:"",
                     type: "face"
                 },{
@@ -1664,9 +1733,9 @@ class UIBuilder extends PIXI.Container {
                 },
                 {
                     title:"<gap>\n</gap><boldtitle>CLASSES</boldtitle>",
-                    subtitle:"How are biases translated into machine codes and practises?<gap>\n</gap>",
+                    subtitle:"How are biases translated to machine practises?<gap>\n</gap>",
                     credit: "<medium>Libby Heaney | UK | 2021 | <link>libbyheaney.co.uk</link> | <link>@libby_heaney_</link></medium>",
-                    paragraph: '<p>CLASSES is a video essay exploring the entanglements between machine learning classification and social class(ification). The artwork takes place in a simulated model of a London council estate, where the artist lives. Machine and human voices playfully narrate aspects of her in-depth research into accented speech recognition, natural language processing (GPT-J, Facebook’s FastText and GloVe word embeddings) and public space surveillance, to understand how historical and cultural biases around social class are being translated into code and how this affects people’s material conditions.\n\nTowards the end of the essay, the artist finds inspiration in her community gardening on the estate to propose a rewilded AI that removes rigid hierarchical categories to build stronger relations between people and the world.\n\n</p>',
+                    paragraph: '<p>CLASSES is a video essay exploring the entanglements between machine learning classification and social class(ification). The artwork takes place in a simulated model of a London council estate, where the artist lives. Machine and human voices playfully narrate aspects of her in-depth research into accented speech recognition, natural language processing (GPT-J, Facebook’s FastText and GloVe word embeddings) and public space surveillance, to understand how historical and cultural biases around social class are being translated into code and how this affects people’s material conditions.\n\nTowards the end of the essay, the artist finds inspiration in her community gardening on the estate to propose a rewilded AI that removes rigid hierarchical categories to build stronger relations between people and the world.\n\n\n\n</p>',
                     style: "",
                     type: "talking"  
                 },
@@ -1674,7 +1743,7 @@ class UIBuilder extends PIXI.Container {
                     title:"<gap>\n</gap><boldtitle>STEALING UR FEELINGS</boldtitle>",
                     subtitle:"Can the internet read you?<gap>\n</gap>",
                     credit: "<medium>Noah Levenson | USA | 2019 | <link>noahlevenson.com</link> | <link>@noahlevenson</link></medium>",
-                    paragraph: '<p>Meet the new A.I. that knows you better than you know yourself. STEALING UR FEELINGS is an interactive film that learns your deepest, darkest secrets - just by looking at your face.  That\'s the good news. The bad news? Your favourite apps are doing exactly the same thing.\n\n</p>',
+                    paragraph: '<p>Meet the new A.I. that knows you better than you know yourself. STEALING UR FEELINGS is an interactive film that learns your deepest, darkest secrets - just by looking at your face.  That\'s the good news. The bad news? Your favourite apps are doing exactly the same thing.\n\n\n\n</p>',
                     style: "",
                     type: "talking"  
                 },
@@ -1682,7 +1751,7 @@ class UIBuilder extends PIXI.Container {
                     title:"<gap>\n</gap><boldtitle>NORMALIZI.NG</boldtitle>",
                     subtitle:"What does normal look like?<gap>\n</gap>",
                     credit: "<medium>Mushon Zer-Aviv | Israel | 2021 | <link>mushon.com</link> | <link>@mushon</link></medium>",
-                    paragraph: '<p>NORMALIZI.NG by Mushon Zer-Aviv is a new digital commission further developing and adapting his existing work “The Normalizing Machine”. This experimental online research in machine-learning aims to analyze and understand how we decide who looks more “normal”. By contributing to the dataset and choosing between faces you deem more normal, the machine analyzes your decisions and will add you to its algorithmic map of normality.\n\nIn the late 1800s, the French forensics pioneer Alphonse Bertillon, the father of the mugshot, developed ‘Le Portrait Parle’ (the speaking portrait), a system for standardizing, indexing and classifying the human face. His statistical system was never meant to criminalize the face, but it was later widely adopted by both the eugenics movement and the Nazis to do exactly that.\n\nThe online work automates Alphonse’s speaking portraits and visualizes how today’s systematic discrimination is aggregated, amplified and conveniently hidden behind the seemingly objective black box of artificial intelligence.\n\n\n</p>',
+                    paragraph: '<p>NORMALIZI.NG by Mushon Zer-Aviv is a new digital commission further developing and adapting his existing work “The Normalizing Machine”. This experimental online research in machine-learning aims to analyze and understand how we decide who looks more “normal”. By contributing to the dataset and choosing between faces you deem more normal, the machine analyzes your decisions and will add you to its algorithmic map of normality.\n\nIn the late 1800s, the French forensics pioneer Alphonse Bertillon, the father of the mugshot, developed ‘Le Portrait Parle’ (the speaking portrait), a system for standardizing, indexing and classifying the human face. His statistical system was never meant to criminalize the face, but it was later widely adopted by both the eugenics movement and the Nazis to do exactly that.\n\nThe online work automates Alphonse’s speaking portraits and visualizes how today’s systematic discrimination is aggregated, amplified and conveniently hidden behind the seemingly objective black box of artificial intelligence.\n\n\n\n</p>',
                     style: "",
                     type: "talking"  
                 },
@@ -1690,7 +1759,7 @@ class UIBuilder extends PIXI.Container {
                     title:"<gap>\n</gap><boldtitle>DARK MATTERS</boldtitle>",
                     subtitle:"What does bias sound like?<gap>\n</gap>",
                     credit: "<medium>Johann Diedrick | USA | 2021 | <link>darkmatters.ml</link> | <link>@johanndiedrick</link></medium>",
-                    paragraph: '<p>Dark Matters exposes the absence of Black speech in the datasets used to train voice interface systems in consumer AI products like Alexa and Siri. Using 3D modeling, sound and storytelling, the project challenges us to grapple with racism and inequity through speech and the spoken word, and how AI systems underserve Black communities.\n\n\n</p>',
+                    paragraph: '<p>Dark Matters exposes the absence of Black speech in the datasets used to train voice interface systems in consumer AI products like Alexa and Siri. Using 3D modeling, sound and storytelling, the project challenges us to grapple with racism and inequity through speech and the spoken word, and how AI systems underserve Black communities.\n\n\n\n</p>',
                     style: "",
                     type: "talking"  
                 },
@@ -1703,14 +1772,14 @@ class UIBuilder extends PIXI.Container {
                     type: "talking"  
                 },
                 {
-                    title:"<boldtitle>WELCOME TO BIAS ONLINE<gap></gap></boldtitle>",
-                    subtitle:"",
+                    title:"<boldtitle>BIAS: ONLINE<gap></gap></boldtitle>",
+                    subtitle:"Real-time 2D Multiplayer Exhibition Space<gap>\n</gap>",
                     credit: "",
-                    paragraph: '\n<p><bold>BIAS ONLINE is a real-time exhibition space that you move your avatar around to explore.</bold>\n\n<bold>Desktop:</bold> Use the W, A, S, and D keys to move your character inside the space.\n\nWhen you are near information panels and artworks, you will be able to activate them by clicking on them.\n</p>',
+                    paragraph: '<p>A virtual exhibition space by Science Gallery at Trinity College Dublin showcasing digital artworks exploring data equity, privacy, surveillance culture, facial recognition, class and artificial intelligence.\n\n<bold>Desktop:</bold> Use the W, A, S, and D keys to move your character inside the space.\n\n<bold>Mobile:</bold> Use the joypad in the bottom left corner of your mobile device to move your character around.\n\nWhen you are near information panels and artworks, you will be able to activate them by clicking on them.\n</p>\n',
                     style: "",
                     type: "talking"  
                 }
-                //<bold>Mobile:</bold> Use the joypad in the bottom left corner of your mobile device to move your character around.\n\nWhen you are near information panels and artworks, you will be able to activate them by tapping on them.
+                //
 
                  
 
@@ -1771,9 +1840,9 @@ class UIBuilder extends PIXI.Container {
                 },
                 "intro": {
                     fontFamily: "Trade Gothic Next",
-                    fontSize: "28px",
+                    fontSize: "20px",
                     wordWrap: true,
-                    lineHeight: 36,
+                    lineHeight: 29,
                     padding: 10,
                     fontWeight: 300,
                     wordWrapWidth: 385,
@@ -1781,7 +1850,7 @@ class UIBuilder extends PIXI.Container {
                     textBaseline: "middle",
                 },
                 "medium": {
-                    fontWeight: 500,
+                    fontWeight: 300,
                 },
                 "bold": {
                     fontWeight: 700,
@@ -1840,7 +1909,8 @@ class UIBuilder extends PIXI.Container {
                     textBaseline: "alphabetical",
                 },
                 "img": {
-                    fontSize: "100px",
+                    fontSize: "600px",
+                    lineHeight: 0
                 }
             }, { imgMap: { 
                 johannThumb, 
@@ -1976,8 +2046,8 @@ class UIBuilder extends PIXI.Container {
                 new PUXI.FastLayoutOptions({
                     width: this.miniMapWidth,
                     height: this.miniMapHeight,
-                    x: miniMapX,
-                    y: miniMapY,
+                    x: window.innerWidth - 20,
+                    y: window.innerHeight - 20,
                     anchor: new PIXI.Point(1,1)
                 })
             )
@@ -1999,6 +2069,7 @@ class UIBuilder extends PIXI.Container {
             this.miniMapBackground.endFill()
             this.miniMapBackground.visible = false
             let miniMapBackground = this.miniMapBackground
+
             
 
             this.miniMapPlayerPosition = new Graphics()
@@ -2026,7 +2097,7 @@ class UIBuilder extends PIXI.Container {
             const mapIconClose = PIXI.Sprite.from(resources['mapIconClose'].texture);
             const mapIconNormal = this.mapIcon.texture
             this.mapIcon.scale.set(0.5)
-            this.mapIcon.alpha = 1
+            this.mapIcon.alpha = 0.5
 
             this.mapIcon.interactive = true
             this.mapIcon.buttonMode = true
@@ -2039,9 +2110,11 @@ class UIBuilder extends PIXI.Container {
             
             this.mapIcon.on('pointerover', function(){
                 mapIcon.filters = [glow]
+                mapIcon.alpha = 1
             })
             this.mapIcon.on('pointerout', function(){
                 mapIcon.filters = []
+                mapIcon.alpha = 0.5
             })
             this.mapIcon.on('pointerdown', function(){
 
@@ -2050,8 +2123,12 @@ class UIBuilder extends PIXI.Container {
                     setTimeout(function(){
 
                         miniMap.visible = false
+                        mapIcon.alpha = 0.5
 
                         mapIcon.texture = mapIconNormal
+
+                        mapIcon.x = 0
+                        mapIcon.y = 0
 
                         let miniMapHeight = 25
                         let miniMapWidth = 25
@@ -2067,10 +2144,10 @@ class UIBuilder extends PIXI.Container {
 
                         miniMapWrapper.setLayoutOptions(
                             new PUXI.FastLayoutOptions({
-                                width: this.miniMapWidth,
-                                height: this.miniMapHeight,
-                                x: miniMapX,
-                                y: miniMapY,
+                                width: 25,
+                                height: 25,
+                                x: window.innerWidth - 20,
+                                y: window.innerHeight - 20,
                                 anchor: new PIXI.Point(1,1)
                             })
                         )
@@ -2093,6 +2170,11 @@ class UIBuilder extends PIXI.Container {
                     //console.log('open')
                     miniMapOpen = true
                     miniMap.visible = true
+
+                    mapIcon.alpha = 1
+
+                    mapIcon.x = 180
+                    mapIcon.y = 5
                     
                     let miniMapWidth = 210
                     let miniMapHeight = 150
@@ -2102,7 +2184,7 @@ class UIBuilder extends PIXI.Container {
                     miniMapBackground.clear()
                     miniMapBackground.lineStyle(1, white, 0.3)
                     miniMapBackground.beginFill(black, 1, true)
-                    miniMapBackground.drawRoundedRect(0, 0, miniMapWidth, miniMapHeight, 10)
+                    miniMapBackground.drawRoundedRect(10, 0, miniMapWidth - 10, miniMapHeight, 10)
                     miniMapBackground.endFill()
     
                     miniMapPlayerPosition.visible = true
@@ -2110,10 +2192,10 @@ class UIBuilder extends PIXI.Container {
 
                     miniMapWrapper.setLayoutOptions(
                         new PUXI.FastLayoutOptions({
-                            width: this.miniMapWidth,
-                            height: this.miniMapHeight,
-                            x: miniMapX,
-                            y: miniMapY,
+                            width: miniMapWidth,
+                            height: miniMapHeight,
+                            x: window.innerWidth - 10,
+                            y: window.innerHeight - 10,
                             anchor: new PIXI.Point(1,1)
                         })
                     )
@@ -2996,29 +3078,19 @@ class UIBuilder extends PIXI.Container {
 
         if(this.achievementStageOn == true) { 
         
-            this.achievementStage = new PUXI.Stage(135, 45);
+            this.achievementStage = new PUXI.Stage(70, 15);
             this.achievementWrapper = new PUXI.WidgetGroup({
             }).setLayoutOptions(
                 new PUXI.FastLayoutOptions({
-                    width: 135,
-                    height: 45,
-                    x: 0.995,
-                    y: 0.01,
-                    anchor: new PIXI.Point(1, 0)
+                    width: 70,
+                    height: 15,
+                    x: 0.5,
+                    y: 0.4,
+                    anchor: new PIXI.Point(0.5, 0.5)
                 }),
             )
             this.achievementStage.addChild(this.achievementWrapper)
             this.achievementStage.alpha = 0 
-            //this.achievementStage.visible = false
-        
-            //ease.add(this.achievementStage, {alpha: 1}, { duration: 250, ease: 'easeOutExpo', wait: 1000 })
-            
-        
-            this.achievementWrapperBackground = new Graphics()
-            this.achievementWrapperBackground.beginFill(0x202526, 1.0, true)
-            this.achievementWrapperBackground.lineStyle(1, 0x83999b, 0.5)
-            this.achievementWrapperBackground.drawRoundedRect(0, 0, 135, 45, 15)
-            this.achievementWrapper.contentContainer.addChild(this.achievementWrapperBackground)
         
             this.achievementContentWrapper = new PUXI.WidgetGroup({
             }).setLayoutOptions(
@@ -3029,7 +3101,7 @@ class UIBuilder extends PIXI.Container {
                     y: 0.5,
                     anchor: new PIXI.Point(0.5, 0.5)
                 })
-            ).setPadding(17, 10)
+            )
             
             this.achievementWrapper.addChild(this.achievementContentWrapper);
         
@@ -3038,35 +3110,35 @@ class UIBuilder extends PIXI.Container {
         
             this.achievements = [
                 {      
-                    text: '<img imgSrc="robotThumb" imgDisplay="icon" />  <message>+1 ART</message>',
+                    text: '<message>+1 Artwork</message>',
                     score: 1
                 }, 
                 {      
-                    text: '<img imgSrc="robotThumb" imgDisplay="icon" />  <message>+1 ART</message>',
+                    text: '<message>+1 Artwork</message>',
                     score: 2
                 },
                 {      
-                    text: '<img imgSrc="robotThumb" imgDisplay="icon" />  <message>+1 ART</message>',
+                    text: '<message>+1 Artwork</message>',
                     score: 3
                 }, 
                 {      
-                    text: '<img imgSrc="robotThumb" imgDisplay="icon" />  <message>+1 ART</message>',
+                    text: '<message>+1 Artwork</message>',
                     score: 4
                 }, 
                 {      
-                    text: '<img imgSrc="quoteThumb" imgDisplay="icon" />  <message>+1 QUOTE</message>',
+                    text: '<message>+1 Quote</message>',
                     score: 1
                 },
                 {      
-                    text: '<img imgSrc="quoteThumb" imgDisplay="icon" />  <message>+1 QUOTE!</message>',
+                    text: '<message>+1 Quote</message>',
                     score: 2
                 },
                 {      
-                    text: '<img imgSrc="quoteThumb" imgDisplay="icon" />  <message>+1 QUOTE!</message>',
+                    text: '<message>+1 Quote</message>',
                     score: 3
                 },
                 {      
-                    text: '<img imgSrc="quoteThumb" imgDisplay="icon" />  <message>+1 QUOTE!</message>',
+                    text: '<message>+1 Quote</message>',
                     score: 4
                 }
             ]
@@ -3080,15 +3152,14 @@ class UIBuilder extends PIXI.Container {
             this.achievementTaggedText = new TaggedText("", {
                 "default": {
                     fontFamily: "Trade Gothic Next",
-                    fontSize: "20px",
-                    fontWeight: 700,
-                    fill: 0xcadfe0,
+                    fontSize: "22px",
+                    fontWeight: 400,
+                    fill: 0xffffff,
                     lineHeight: 16,
-                    wordWrap: true,
-                    wordWrapWidth: 150,
                     padding: 10,
-                    textBaseline:"bottom",
-                    leading: 1
+                    textBaseline:"middle",
+                    leading: 1,
+                    letterSpacing: 1.4
                 }, "message": {
                     fontSize: "14px",
                 }, "img": {
@@ -3541,21 +3612,13 @@ class UIBuilder extends PIXI.Container {
                 userInterface.confirmAge()
             }
 
-            this.loadingIcon = PIXI.Sprite.from(resources['loadingIcon'].texture);
-            this.loadingIcon.x = 20 
-            this.loadingIcon.y = 20
-            this.loadingIcon.anchor.set(0.5,0.5)
-            this.loadingIcon.scale.set(0.13)
-            this.loadingIcon.alpha = 0
 
-            const loadingIcon = this.loadingIcon
         
             this.ageTextTaggedTerms.textContainer.children.forEach(element => {
                 if(element._text == "Terms" || element._text == "of" || element._text == "Use") {
                     element.interactive = true
                     element.buttonMode = true
                     element.on('pointerdown', function(){
-                        loadingIcon.alpha = 1
                         userInterface.showQuote("01")
                     })
                 }
@@ -3563,7 +3626,6 @@ class UIBuilder extends PIXI.Container {
                     element.interactive = true
                     element.buttonMode = true
                     element.on('pointerdown', function(){
-                        loadingIcon.alpha = 1
                         userInterface.showQuote("01")
                     })
                 }
@@ -3574,9 +3636,10 @@ class UIBuilder extends PIXI.Container {
             
             this.ageGate.resize(window.innerWidth, window.innerHeight)
             this.addChild(this.ageGate)
-            this.addChild(this.loadingIcon)
+            
 
         }
+
         
 
         
@@ -3617,6 +3680,8 @@ class UIBuilder extends PIXI.Container {
             anchor: PUXI.FastLayoutOptions.CENTER_ANCHOR,
         }))
 
+
+
         this.connectionTextTagged = new TaggedText("Connecting to <bold>BIAS ONLINE</bold>", {
             "default": {
                 fontFamily: 'Trade Gothic Next',
@@ -3624,16 +3689,37 @@ class UIBuilder extends PIXI.Container {
                 fontWeight: 300,
                 fontSize: "18px", 
                 align: "center",
-                lineHeight: 40,
+                valign: "top",
+                lineHeight: 30,
                 wordWrap: true, 
+                letterSpacing: 0,
                 wordWrapWidth: 500
             },
             "bold": {
                 fontWeight: 700,
-                letterSpacing: 1
+                letterSpacing: 3,
+            },
+            "small": {
+                fontSize: "16px", 
+                valign: "middle",
+                letterSpacing: 0,
+                lineHeight: 50,
+                fontWeight: 300,
             }
             
         })
+
+
+
+
+
+
+
+        
+
+
+        
+
         const connectedTextTagged = this.connectionTextTagged
         let connectionCounter = 0;
         
@@ -3692,10 +3778,6 @@ class UIBuilder extends PIXI.Container {
 
     resize(){
 
-
-       
-        
-
         if(this.ageGate.visible == true) {
             this.ageGate.resize(window.innerWidth, window.innerHeight)
         }
@@ -3713,10 +3795,24 @@ class UIBuilder extends PIXI.Container {
             this.joinModal.resize(window.innerWidth, window.innerHeight)
         }
 
+        if(this.achievementStageOn) {
+            this.achievementStage.resize(window.innerWidth, window.innerHeight)
+            this.achievementStage.stage.hitArea = new PIXI.Rectangle(0, 0, 0, 0)
+        }
+
         this.connectionScreen.resize(window.innerWidth, window.innerHeight)
     
 
         this.chatIconStage.resize(window.innerWidth, window.innerHeight)
+        this.chatIconWrapper.setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 25,
+                height: 25,
+                x: window.innerWidth - 50,
+                y: window.innerHeight - 6,
+                anchor: new PIXI.Point(1,1)
+            }),
+        )
         let chatIconBounds = this.chatIconWrapper.contentContainer.getBounds()
         this.chatIconStage.stage.hitArea = new PIXI.Rectangle(
             chatIconBounds.x,
@@ -3732,7 +3828,16 @@ class UIBuilder extends PIXI.Container {
         }
         if(this.miniMapOn == true) {
             this.miniMapStage.resize(window.innerWidth, window.innerHeight)
-            const miniMapBounds = this.miniMapBackground.getBounds()
+            this.miniMapWrapper.setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: 25,
+                    height: 25,
+                    x: window.innerWidth - 20,
+                    y: window.innerHeight - 20,
+                    anchor: new PIXI.Point(1,1)
+                }),
+            )
+            let miniMapBounds = this.miniMapBackground.getBounds()
             this.miniMapStage.stage.hitArea = new PIXI.Rectangle(
                 miniMapBounds.x,
                 miniMapBounds.y,
@@ -3760,17 +3865,7 @@ class UIBuilder extends PIXI.Container {
        
 
        
-        //Interactive Stages
-        if(this.quoteStageOn == true) {           
-            this.quoteStage.resize(window.innerWidth, window.innerHeight)
-            const quoteBounds = this.quoteWrapperBackground.getBounds()
-            this.quoteStage.stage.hitArea = new PIXI.Rectangle(
-                quoteBounds.x,
-                quoteBounds.y,
-                quoteBounds.width,
-                quoteBounds.height
-            )
-        }
+       
 
         if(this.notificationStageOn == true) {
             this.notificationStage.resize(window.innerWidth, window.innerHeight)
@@ -3806,1235 +3901,63 @@ class UIBuilder extends PIXI.Container {
         }
 
         this.resizeText()
-        
 
-
-    }
-
-
-    confirmAge(){
-         window.localStorage.setItem('over18', true);
-
-         let userInterface = this
-         let ageGate = this.ageGate
-         let joinModal = this.joinModal
-
-         if(ageGate) {
-            ease.add(ageGate, {alpha: 0}, {duration: 1000, ease: "easeOutExpo"})
-         
-            setTimeout(function(){
-               userInterface.removeChild(ageGate)
-               joinModal.visible = true
-               ease.add(joinModal, {alpha: 1}, {duration: 500, ease: "easeOutExpo"})
-            }, 1000)
-
-         }
-
-        
-         
-     }
-
-
-    //MiniMap Functions
-    setPlayerPositionMiniMap(id, x, y) {
-        if(this.miniMapOn == true) {
-            if(this.miniMap.getChildByName(""+id+"")) {
-                const thePlayer = this.miniMap.getChildByName(""+id+"")
-                //if(x > -400 && x < 5000 && y > -250 && y < 3500) {
-                    thePlayer.x = (x / 25) + 10
-                    thePlayer.y = (y / 25) + 10
-                //}
-            } else {
-                const newPerson = new Graphics()
-                newPerson.name = ""+id+""
-                newPerson.lineStyle(0)
-                newPerson.beginFill(0x00FFFF, 1, true)
-                newPerson.drawCircle(0, 0, 1)
-                newPerson.endFill()
-                this.miniMap.addChild(newPerson)
-            }
+         //Interactive Stages
+         if(this.quoteStageOn == true) {           
+            this.quoteStage.resize(window.innerWidth, window.innerHeight)
+            const quoteBounds = this.quoteWrapperBackground.getBounds()
+            this.quoteStage.stage.hitArea = new PIXI.Rectangle(
+                quoteBounds.x,
+                quoteBounds.y,
+                quoteBounds.width,
+                quoteBounds.height
+            )
         }
-    }
-
-    setOwnPlayerPositionMiniMap(x, y) {
-        if(this.miniMapOn == true) {
-            this.miniMapPlayerPosition.alpha = 1
-            if(x > 0 && x < 5000 && y > 0 && y < 3500) {
-                this.miniMapPlayerPosition.x = (x / 25) + 10
-                this.miniMapPlayerPosition.y = (y / 25) + 10
-            }
-            
-        }
-    }
-
-    buildMiniMap(design){
-        
-        if(this.miniMapOn == true) {
-       
-            let worldDesign = JSON.parse(design)
-
-            worldDesign.rooms.forEach(room => {
-                let miniRoom = new PIXI.Graphics()
-            
-                let miniRoomWidth = room.width / 25
-                let miniRoomHeight = room.height / 25
-
-                miniRoom.x = (room.x / 50) + 5
-                miniRoom.y = (room.y / 50) + 5
-
-
-                //console.log(miniRoom.x, miniRoom.y, miniRoomWidth, miniRoomHeight)
-                
-                const roomColor = PIXI.utils.string2hex(room.floorColor)
-
-                miniRoom.beginFill(roomColor, 0.2)
-                miniRoom.drawRect(miniRoom.x, miniRoom.y, miniRoomWidth, miniRoomHeight)
-                miniRoom.endFill()
-
-                this.miniMap.addChild(miniRoom)
-            });
-
-
-                let miniRoom = new PIXI.Graphics()
-            
-                let miniRoomWidth = 35
-                let miniRoomHeight = 35
-
-                miniRoom.x = 47.5
-                miniRoom.y = 30.5
-                
-                const roomColor = PIXI.utils.string2hex("#998675")
-
-                miniRoom.beginFill(roomColor, 0.2)
-                miniRoom.drawRect(miniRoom.x, miniRoom.y, miniRoomWidth, miniRoomHeight)
-                miniRoom.rotation = 0.785
-                miniRoom.endFill()
-
-                this.miniMap.addChild(miniRoom)
-
-                let sprite = new PIXI.Sprite.from("images/jo-room-map.svg")
-                sprite.width = 55
-                sprite.height = 55
-                sprite.x = 136
-                sprite.y = 80
-                sprite.alpha = 0.5
-                this.miniMap.addChild(sprite)
-
-                
-
-
-            
-            worldDesign.art.forEach(artwork => {
-                let artShape = new Graphics()
-                
-
-                let artWidth = artwork.width / 25
-                let artHeight = artwork.height / 25
-                artShape.x = (artwork.x / 50) + 5
-                artShape.y = (artwork.y / 50) + 5
-
-                let color = PIXI.utils.string2hex("#FFFFFF")
-                artShape.lineStyle(0)
-                artShape.beginFill(color, 1.0, true)
-                
-
-                if(artwork.type == "circle") {
-                    artShape.drawCircle(artShape.x + artWidth/2 + 2, artShape.y +artHeight/2, artWidth/2)
-
-                } else if (artwork.type == "triangle") {
-
-
-                    artShape.x = 55
-                    artShape.y = 110
-
-                    artShape.pivot.set(artWidth/2,artHeight/2)
-                    //console.log(artWidth/2, artHeight/2)
-                   
-                    artShape.moveTo(0, 0);
-                    artShape.lineTo(artWidth, 0);
-                    artShape.lineTo(artWidth/2, artHeight+3); 
-                    
-                    
-                } else {
-                    artShape.drawRect(artShape.x, artShape.y, artWidth, artHeight)
-                }
-                
-               
-                
-                artShape.endFill()
-                this.miniMap.addChild(artShape)
-                if(artwork.type == "triangle") {
-                    this.noahArt = artShape
-                }
- 
-            });
-
-            
-
-
-
-        }
-
-    }
-
-
-    getAvatar() {
-        let background = this.avatarImageWrapper.children[0]._texture.textureCacheIds[0]
-        background = background.split("-")[2][0]
-        background = "avatarBackground"+background
-
-        let middleground = this.avatarImageWrapper.children[1]._texture.textureCacheIds[0]
-        middleground = middleground.split("-")[2][0]
-        middleground = "avatarMiddleground"+middleground
-
-        let middleground2 = this.avatarImageWrapper.children[2]._texture.textureCacheIds[0]
-        middleground2 = middleground2.split("-")[2][0]
-        middleground2 = "avatarMiddleground"+middleground2
-
-        let foreground = this.avatarImageWrapper.children[3]._texture.textureCacheIds[0]
-        foreground = foreground.split("-")[2][0]
-        foreground = "avatarForeground"+foreground
-
-
-        let avatar = [
-            background,
-            this.avatarImageWrapper.children[0].rotation,
-            middleground,
-            this.avatarImageWrapper.children[1].rotation,
-            middleground2,
-            this.avatarImageWrapper.children[2].rotation,
-            foreground,
-            this.avatarImageWrapper.children[3].rotation,
-        ]
-
-        return avatar
-    }
-
-    updateColor(color) {
-        this.color = color
-    }
-
-    getArtnumber(){
-        return this.artNumber
-    }
-
-    showQuoteButton(art, type, x, y) {
-
-        //console.log('checker')
-
-        //console.log(art)
-        this.artNumber = art
-        
-        
-        let buttonPos = renderer.toLocalCoordinates(x, y)
-        //console.log(buttonPos)
-
-        this.viewInfoButton.visible = true
-        this.viewInfoButtonWrapper.setLayoutOptions(
-        new PUXI.FastLayoutOptions({
-            width: 21,
-            height: 21,
-            x: buttonPos.x,
-            y: buttonPos.y,
-            anchor: new PIXI.Point(0.5, 0.5)
-        }))
-
-        this.viewInfoButton.resize(window.innerWidth, window.innerHeight)
-        const viewInfoBounds = this.buttonOutline.getBounds()
-        this.viewInfoButton.stage.hitArea = new PIXI.Rectangle(
-            viewInfoBounds.x,
-            viewInfoBounds.y, 
-            viewInfoBounds.width,
-            viewInfoBounds.height
-        )
-
-    }
-
-
-    showStartArtButton(art, direction, directionHorizontal, directionVertical){
-    
-       // console.log(art)
-
-        var artNumber = 0
-        if(art == "<bold>CLASSES</bold>\nLibby Heaney") {
-            artNumber = 1
-        } else if (art == "<bold>STEAL UR FEELINGS</bold>\nNoah Levenson"){
-            artNumber = 2
-        } else if (art == "<bold>DARK MATTERS</bold>\nJohann Diedrick") {
-            artNumber = 3
-        } else {
-            artNumber = 4
-        }
-
-        this.artNumber = artNumber
-        
         
 
-        if(directionHorizontal == 1)  {
-            this.viewArtButton.visible = true
-            this.viewArtButtonWrapper.setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 80,
-                height: 30,
-                x: window.innerWidth/2 + 100,
-                y: 0.5,
-                anchor: new PIXI.Point(0.5, 0.5)
-            }))
-        }
-
-        if(directionHorizontal == 2)  {
-            this.viewArtButton.visible = true
-            this.viewArtButtonWrapper.setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 80,
-                height: 30,
-                x: window.innerWidth/2 - 100,
-                y: 0.5,
-                anchor: new PIXI.Point(0.5, 0.5)
-            }))
-        }
-
-        if(directionVertical == 2)  {
-            this.viewArtButton.visible = true
-            this.viewArtButtonWrapper.setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 80,
-                height: 30,
-                x: 0.5,
-                y: window.innerHeight/2 - 70,
-                anchor: new PIXI.Point(0.5, 0.5)
-            }))
-        }
-
-        
-
-        if(directionVertical == 1)  {
-            this.viewArtButton.visible = true
-            this.viewArtButtonWrapper.setLayoutOptions(
-            new PUXI.FastLayoutOptions({
-                width: 80,
-                height: 30,
-                x: 0.5,
-                y: window.innerHeight/2 + 70,
-                anchor: new PIXI.Point(0.5, 0.5)
-            }))
-        }
-
-
-
-        this.viewArtButton.resize(window.innerWidth, window.innerHeight)
-        const viewArtBounds = this.viewArtButtonOutline.getBounds()
-        this.viewArtButton.stage.hitArea = new PIXI.Rectangle(
-            viewArtBounds.x,
-            viewArtBounds.y, 
-            viewArtBounds.width,
-            viewArtBounds.height
-        )
-        
-    }
-
-    hideStartArtButton(){
-        //console.log(this.artNumber)
-        this.viewArtButton.visible = false
-        //this.artNumber == null
-    }
-
-    getColor(){
-        return this.color
-    }
-
-    toggleGlitch(boolean){
-        this.glitchOn = boolean
-    }
-
-
-    drawGridBackground(width, height) {
-
-        if(width <= 500) {
-            this.gridGap = 25
-            this.gridLine = 0.2
-        } else if (width <= 960) {
-            this.gridGap = 50
-            this.gridLine = 0.5
-        } else if (width <= 1240) {
-            this.gridGap = 75
-            this.gridLine = 1
-        } else {
-            this.gridGap = 100
-            this.gridLine = 1
-        }
-
-        this.gridOffset = this.gridGap/2
-        width = width + this.gridGap*2
-        height = height + this.gridGap*2
-        
-        
-        this.gridBackground = new PIXI.Container();
-        this.gridNumberOfLinesHorizontal = width / this.gridGap
-        this.gridBackground.x = -this.gridOffset
-        this.gridBackground.y = -this.gridOffset
-
-        for (var i = 0; i < this.gridNumberOfLinesHorizontal; i++) {           
-            let line = new PIXI.Graphics()
-            line.lineStyle(this.gridLine, this.black, 0.5)
-            line.moveTo(i * this.gridGap, 0)
-            line.lineTo(i * this.gridGap, height)
-            this.gridBackground.addChild(line)
-        }
-
-        this.numberOfLinesVertical = height / this.gridGap
-            
-        for (var i = 0; i < this.numberOfLinesVertical; i++) { 
-            let line = new PIXI.Graphics()
-            line.lineStyle(this.gridLine, this.black, 0.5)
-            line.moveTo(0, i * this.gridGap)
-            line.lineTo(width, i * this.gridGap)
-            this.gridBackground.addChild(line)
-        }
-        /*if(this.joinModalWrapper.contentContainer.children == 0) {
-            this.joinModalWrapper.contentContainer.addChildAt(this.gridBackground, 0)
-            this.joinModal.addChild(this.joinModalWrapper)
-        } else {
-            this.joinModalWrapper.contentContainer.removeChildAt(0)
-            this.joinModalWrapper.contentContainer.addChildAt(this.gridBackground, 0)
-        }*/
-
-
-        
-    }
-
-    /*teleporting(area) {
-       
-        if(this.transitionScreenOn == true) {
-
-            this.transitionTextTagged.text = area
-            this.transitionScreen.visible = true
-            
-
-            ease.add(this.transitionScreenTextWrapper, {alpha: 1}, { duration: 250, ease: 'easeOutExpo'})
-            this.transitionScreen.resize(window.innerWidth, window.innerHeight)
-
-            const transitionScreen = this.transitionScreen
-            const transitionScreenTextWrapper = this.transitionScreenTextWrapper
-            setTimeout(function(){
-                ease.add(transitionScreenTextWrapper, {alpha: 0}, { duration: 650, ease: 'easeOutExpo'})
-            }, 1700)
-            setTimeout(function(){
-                transitionScreen.visible = false
-            }, 2200)
-            
-        }
-       
-    }*/
-
-    joinSession(){
-       
-        if(!this.mainMenuStage.visible) {
-            this.removeChild(this.joinModal)
-            this.mainMenuStage.visible = true
-            this.miniMapStage.visible = true
-            this.statusStage.visible = true
-            if(window.innerWidth <= 500) {
-
-            } else {
-                this.textBox.visible = true
-                this.emojiStage.visible = true
-                ease.add(this.textBox, {alpha: 1}, { duration: 500, wait: 500 })
-                ease.add(this.emojiStage, {alpha: 1}, { duration: 500, wait: 700 })
-            }
-           
-            ease.add(this.mainMenuStage, {alpha: 1}, { duration: 500 })
-            ease.add(this.miniMapStage, {alpha: 1}, { duration: 500 })
-            
-        }
-       
-         
-    }
-
-
-    leaveSession(){
-        this.addChild(this.joinModal)
-    }
-
-    getText() {
-        return this.nameFieldInput.value;
-    }
-
-    clearText() {
-        this.nameFieldInput.value = ""
-        this.nameFieldInput.blur()
-    }
-
-    joinPeer() {
-        /*const text = new MultiStyleText("<dot>●</dot> Device ID: "+peerID+"", {
-            "default": {
-                fontFamily: "Monaco",
-                fontSize: "10px",
-                fill: "#ececec",
-                align: "left"
-            },
-            "dot": {
-                fontSize: "15px",
-                fill: "#0000ff"
-            }
-        });
-        renderer.stage.addChild(text);
-        text.x = 10;
-        text.y = 10;*/
 
     }
-
-    joinCall(){
-        /*const text = new MultiStyleText("<dot>●</dot> Connected With: "+call.peer +" (ID:"+connectionId+")", {
-            "default": {
-                fontFamily: "Monaco",
-                fontSize: "10px",
-                fill: "#ececec",
-                align: "left"
-            },
-            "dot": {
-                fontSize: "15px",
-                fill: "#00ff00"
-            }
-        });
-        renderer.stage.addChild(text);
-        text.x = 10;
-        text.y = 30;*/
-    }
-
-    setName() {
-        this.nameGiven = true
-    }
-
-    getMessageText() {
-        return this.mockInput.value;
-    }
-
-    clearMessageText() {
-        this.mockInput.value = ""
-        this.mockInput.blur()
-        this.mockInput.focus()
-    }
-
-    updateWorldTime(time) {
-       var currentWorldTime = new Date(time * 1000).toISOString().substr(11, 8)
-       this.currentTime.text = currentWorldTime
-    }
-
-    updateTotalUsers(number) {
-        if(number < 9) {
-            this.numberOfPeopleCounter.text = "0"+number
-        } else {
-            this.numberOfPeopleCounter.text = number
-        }
-       
-    }
-
-    updateActiveUsers(number) {
-        if(number < 9) {
-            this.totalNumberOfPeopleCounter.text = "00"+number
-        } else if(number < 99) {
-            this.totalNumberOfPeopleCounter.text = "0"+number
-        } else {
-            this.totalNumberOfPeopleCounter.text = number
-        }
-       
-    }
-
-    showNotification(option, type) {
-        
-        if(this.notificationStageOn == true) {
-
-       
-        //console.log(option)
-        let message = this.notifications[option].text
-        let theUI = this
-        let notificationStage = this.notificationStage
-
-        let notificationSettings = window.localStorage.getItem('notificationSettings')
-        notificationSettings = JSON.parse(notificationSettings)
-
-        /*this.notificationTaggedText.text = message
-        if(notificationSettings.text) {
-            if(notificationSettings.text == message) {
-                return
-            }
-        }*/
-        
-        this.notificationTaggedText.textContainer.children.forEach(element => {
-            if(element._text == "here") {
-                element.interactive = true
-                element.buttonMode = true
-                element.on('pointerdown', function(){
-                    theUI.showQuote("14")
-                    ease.add(notificationStage, {alpha: 0}, { duration: 250, ease: 'easeOutExpo'})
-                    setTimeout(function(){
-                        notificationStage.visible = false
-                    }, 250)
-                })
-            }
-        })
-        notificationStage.visible = true
-        ease.add(this.notificationStage, {alpha: 1}, { duration: 250, ease: 'easeOutExpo' })
-
-        }
-    }
-
-    showAchievement(option, type) {
-        if(this.achievementStage.alpha <= 0) {
-            //console.log(this.achievementStage.alpha)
-            let message = this.achievements[option].text
-            this.achievementTaggedText.text = message
-            ease.add(this.achievementStage, {alpha: 1}, { duration: 250, ease: 'easeOutExpo' })
-            ease.add(this.achievementStage, {alpha: 0}, { duration: 250, ease: 'easeOutExpo', wait: 3500 })
-        }
-    }
-
-    hideArt(){
-
-        //this.textBox.visible = true
-       // this.statusStage.visible = true
-       
-       this.showAchievement(""+this.artCount+"")
-       this.artCount++
-        
-       // this.emojiStage.visible = true
-       this.transitionTextTagged.text = ""
-        
-        this.viewArtButton.visible = false
-
-        if(this.scoreStageOn) {
-            this.scoreStage.visible = true
-        }
-        if(this.miniMapOn) {
-            this.miniMapStage.visible = true
-        }
-        if(this.mainMenuOn) {
-            this.mainMenuStage.visible = true
-        }
-        if(this.chatStageOn) {
-            this.textBox.visible = true
-        }
-
-        let allKids = this.children.length - 1
-       
-
-        const transitionScreen = this.transitionScreen
-        const overlay = document.getElementById('overlay');
-        const transitionScreenWrapper = this.transitionScreenWrapper
-        ease.add(transitionScreenWrapper, {alpha: 1}, { duration: 300, ease: 'easeOutExpo'})
-        
-        overlay.classList.remove('show')
-
-        setTimeout(()=> {
-            ease.add(transitionScreenWrapper, {alpha: 0}, { duration: 2000, ease: 'easeOutExpo'})
-            document.body.removeChild(overlay)
-        }, 700) 
-        setTimeout(()=> {
-            this.children[allKids].visible = true
-            this.connectionScreen.visible = false
-            transitionScreen.visible = false
-            this.viewArtButton.alpha = 1
-            sound.toggleMuteAll()
-        }, 1300)
-    }
-    
-
-    showArt(art) {
-
-        if(this.chatStageOn) {
-            this.textBox.visible = false
-        }
-        if(this.statusStageOn) {
-            this.statusStage.visible = false
-        }
-        if(this.emojiStageOn) {
-            this.emojiStage.visible = false
-        }
-
-        if(this.scoreStageOn) {
-            this.scoreStage.visible = false
-        }
-
-        this.viewArtButton.visible = false
-
-        
-        let allKids = this.children.length - 1
-        this.children[allKids].visible = false
-       
-
-        if(this.miniMapOn) {
-            this.miniMapStage.visible = false
-        }
-        if(this.mainMenuOn) {
-            this.mainMenuStage.visible = false
-        }
-       
-        
-
-        sound.toggleMuteAll()
-
-        if(art == 1) {
-            this.transitionTextTagged.text = "<bold>CLASSES</bold>\nLibby Heaney"
-        } else if (art == 2) {
-            this.transitionTextTagged.text = "<bold>STEAL UR FEELINGS</bold>\nNoah Levenson"
-        } else if (art == 3) {
-            this.transitionTextTagged.text = "<bold>DARK MATTERS</bold>\nJohann Diedrick"
-        } else {
-            this.transitionTextTagged.text = "<bold>NORMALIZI.NG</bold>\nMushon Zer-Aviv"
-        }
-
-        //this.transitionTextTagged.text = 
-
-        this.transitionScreen.visible = true
-        ease.add(this.transitionScreen, {alpha: 1}, { duration: 500, ease: 'easeOutExpo'})
-        ease.add(this.transitionScreenWrapper, {alpha: 1}, { duration: 1000, ease: 'easeOutExpo'})
-        this.transitionScreen.resize(window.innerWidth, window.innerHeight)
-
-        let video
-        const userInterface = this
-
-        //console.log(art)
-
-        setTimeout(function(){
-
-            if(art == 1) {
-                var overlay = document.createElement('div');
-                overlay.style = "position:fixed;height:100vh;width:100%;background-color:rgba(0,0,0,0.6);top:0;left:0;"
-                overlay.id = "overlay"
-                var close = document.createElement('a');
-                close.id = "back-to-bias"
-                var backTo = document.createTextNode('← return')
-                close.style = "cursor:pointer;position:absolute;top:0;width:100%;letter-spacing:2px;left:1.5%;top:1.5%;font-size:14px;text-transform:uppercase;color:#00b140;width:100%;z-index:4"
-                close.appendChild(backTo)
-                document.body.appendChild(close);
-                video = document.createElement('video');
-                
-                const videoWrapper = document.createElement('div')
-                const videoWrapperWrapper = document.createElement('div')
-                videoWrapperWrapper.style = "position:absolute;top:50%;left:50%;transform:translateX(-50%) translateY(-50%);width:100%;"
-                videoWrapper.style = "position:relative;padding-bottom:56.25%;height:0;z-index:5;max-width:95%;margin:0 auto"
-        
-                video.src = "/video/CLASSES.mp4"
-                video.width = window.innerWidth
-                video.height = window.innerHeight
-                video.controls = true
-                video.style = "position:absolute;top:0%;left:0%;width:100%;height:100%;"
-                videoWrapper.appendChild(video)
-                videoWrapperWrapper.appendChild(videoWrapper)
-        
-                overlay.appendChild(close)
-                overlay.appendChild(videoWrapperWrapper)
-
-                close.addEventListener('pointerdown', (event) => {
-                
-                    overlay.classList.remove("show") 
-                    userInterface.hideArt()
-        
-                })
-        
-                document.body.appendChild(overlay);
-
-            } else {
-
-                var overlay = document.createElement('div');
-                overlay.style = "position:fixed;height:100vh;width:100%;background-color:rgba(0,0,0,0.6);top:0;left:0;"
-                overlay.id = "overlay"
-                var close = document.createElement('div');
-                close.id = "back-to-bias"
-                var backTo = document.createTextNode('← return')
-                close.style = "cursor:pointer;position:absolute;top:0;width:100%;left:2.5%;top:1.5%;font-size:14px;text-transform:uppercase;color:#00b140;width:100%;letter-spacing:2px;z-index:4"
-                close.appendChild(backTo)
-                document.body.appendChild(close);
-                var iframe = document.createElement('iframe');
-                
-                const videoWrapper = document.createElement('div')
-                const videoWrapperWrapper = document.createElement('div')
-                videoWrapperWrapper.style = "position:absolute;top:50%;left:50%;transform:translateX(-50%) translateY(-50%);width:100%;"
-                videoWrapper.style = "position:relative;padding-bottom:56.25%;height:0;z-index:5;max-width:95%;margin:0 auto"
-
-                var loading = document.createTextNode("Loading...")
-                var loadingDiv = document.createElement('div')
-                loadingDiv.style = "position:absolute;top:52.5%;left:50%;transform:translateX(-50%)translateY(-50%);color:white"
-                loadingDiv.appendChild(loading)
-                videoWrapper.appendChild(loadingDiv)
-
-               
-
-
-                iframe.width = window.innerWidth
-                iframe.height = window.innerHeight
-                iframe.allow = "camera"
-                if(art == 2) {
-                    iframe.src = "https://stealingurfeelin.gs/"
-                } else if (art == 3) {
-                    iframe.src = "https://darkmatters.ml/"
-                } else if (art == 4) {
-                    iframe.src = "https://normalizi.ng/"
-                }
-                
-                iframe.style = "position:absolute;top:0%;left:0%;width:100%;height:100%;border:0"
-                videoWrapper.appendChild(iframe)
-                videoWrapperWrapper.appendChild(videoWrapper)
-        
-                overlay.appendChild(close)
-                overlay.appendChild(videoWrapperWrapper)
-
-                var openNewWindow = document.createTextNode("Open in new tab →")
-                var openNewWindowDiv = document.createElement('div')
-                openNewWindowDiv.style = "position:relative;width:100%;text-align:right;color:white;right:2.5%;top:10px;opacity:0.5;text-transform:uppercase;letter-spacing:0.05em;font-size:14px;cursor:pointer"
-                openNewWindowDiv.appendChild(openNewWindow)
-                videoWrapperWrapper.appendChild(openNewWindowDiv)
-
-                openNewWindowDiv.addEventListener('pointerdown', (event) => {
-                
-                    window.open(iframe.src, '_blank').focus();
-        
-                })
-
-                close.addEventListener('pointerdown', (event) => {
-                
-                    overlay.classList.remove("show") 
-                    userInterface.hideArt()
-        
-                })
-        
-                document.body.appendChild(overlay);
-
-            }
-            
-        }, 1000)
-        setTimeout(function(){
-            overlay.classList.add("show") 
-        }, 1100)
-        
-        if(art == 1) {
-            setTimeout(function(){
-                video.play()
-            }, 1500)
-        }
-       
-
-    }
-
-    showQuote(quote) {
-
-        if(this.quoteStageOn == true) {
-            
-            let quoteNumber = Number(quote)
-
-            let theQuote = this.quotesToShow
-            let taggedText = this.connectedText
-            let userInterface = this
-            let quoteWrapper = this.quoteWrapper
-            let scrollContent = this.scrollContent
-            let quoteBackground = this.quoteWrapperBackground
-            let loadingIcon = this.loadingIcon
-            let loadingText = this.loadingText
-            let colorBlue = this.blue
-            //this.connectedText.text = "Loading..."
-
-            this.addChild(this.quoteStage)
-            this.quoteWrapper.contentContainer.alpha = 1
-
-            this.quoteBackground.setLayoutOptions(
-                new PUXI.FastLayoutOptions({
-                    width: window.innerWidth,
-                    height: window.innerHeight,
-                    x: 0.5,
-                    y: 0.5,
-                    anchor: new PIXI.Point(0.5, 0.5)
-                }),
-            ).setBackground(0x000000).setBackgroundAlpha(0.5)
-            //ease.add(loadingIcon, { alpha: 1 }, { duration: 250 })
-
-            if(this.showingQuote == false) {
-
-                    setTimeout(function(){
-
-                        let newTaggedText = '<gap>\n</gap><boldtitle>' + theQuote[quoteNumber].title +'</boldtitle>\n'
-                        if(theQuote[quoteNumber].subtitle.length) {
-                            newTaggedText += "<subtitle>" + theQuote[quoteNumber].subtitle + "</subtitle><gap>\n</gap><gap>\n</gap>"
-                        }
-                        if(theQuote[quoteNumber].paragraph.length) {
-                            newTaggedText +=  "" + theQuote[quoteNumber].paragraph + ""
-                        }
-                        if(theQuote[quoteNumber].credit.length) {
-                            newTaggedText +=  "<extrasmall>" + theQuote[quoteNumber].credit + "</extrasmall>"
-                        }
-                        taggedText.text = newTaggedText
-                        taggedText.update()
-                        taggedText.alpha = 1
-                        loadingText.alpha = 0
-
-                        //console.log(newTaggedText)
-                        userInterface.resizeText()
-
-                        quoteWrapper.contentContainer.addChildAt(quoteBackground,0)   
-                        
-                        //taggedText.alpha = 1
-                        scrollContent.forcePctPosition('y', 0)
-                        scrollContent.scrollBars[0].percentValue = 0
-
-                        userInterface.showingQuote = true
-
-                        taggedText.textContainer.children.forEach(element => {
-                            //console.log(element)
-                            if(element._style._fill == "#1dcfff") {
-                                element.interactive = true
-                                element.buttonMode = true
-                                let underline = new PIXI.Graphics()
-                                underline.beginFill(colorBlue)
-                                underline.drawRect(0, element.height - 8, element.width, 1)
-                                underline.endFill()
-                                element.on('pointerover', function(){                                
-                                    element.addChild(underline)
-                                })
-                                element.on('pointerout', function(){
-                                    element.removeChild(underline)
-                                })
-                                //console.log('link')
-                            }
-                            if(element._text == "mushon.com") {
-                                //console.log('link!')
-                                element.interactive = true
-                                element.buttonMode = true
-                                element.on('pointerdown', function(){
-                                    window.open('http://mushon.com', '_blank').focus();
-                                })
-                            }
-                            if(element._text == "@mushon") {
-                                //console.log('mushon')
-                                element.interactive = true
-                                element.buttonMode = true
-                                element.on('pointerdown', function(){
-                                    window.open('https://instagram.com/mushon', '_blank').focus();
-                                })
-                            }
-                            if(element._text == "darkmatters.ml") {
-                            // console.log('link!')
-                                element.interactive = true
-                                element.buttonMode = true
-                                element.on('pointerdown', function(){
-                                    window.open('http://darkmatters.ml', '_blank').focus();
-                                })
-                            }
-                            if(element._text == "@johanndiedrick") {
-                                //console.log('link!')
-                                element.interactive = true
-                                element.buttonMode = true
-                                element.on('pointerdown', function(){
-                                    window.open('https://instagram.com/johanndiedrick', '_blank').focus();
-                                })
-                            }
-                            if(element._text == "libbyheaney.co.uk") {
-                            // console.log('link!')
-                                element.interactive = true
-                                element.buttonMode = true
-                                element.on('pointerdown', function(){
-                                    window.open('http://libbyheaney.co.uk', '_blank').focus();
-                                })
-                            }
-                            if(element._text == "@libby_heaney_") {
-                                //console.log('link!')
-                                element.interactive = true
-                                element.buttonMode = true
-                                element.on('pointerdown', function(){
-                                    window.open('https://instagram.com/libby_heaney_', '_blank').focus();
-                                })
-                            }
-                            if(element._text == "noahlevenson.com") {
-                            // console.log('link!')
-                                element.interactive = true
-                                element.buttonMode = true
-                                element.on('pointerdown', function(){
-                                    window.open('http://noahlevenson.com', '_blank').focus();
-                                })
-                            }
-                            if(element._text == "@noahlevenson") {
-                                //console.log('link!')
-                                element.interactive = true
-                                element.buttonMode = true
-                                element.on('pointerdown', function(){
-                                    window.open('https://instagram.com/noahlevenson', '_blank').focus();
-                                })
-                            }
-
-                            if(element._text === "feedback") {
-                                // console.log('link!')
-                                    element.interactive = true
-                                    element.buttonMode = true
-                                    element.on('pointerdown', function(){
-                                        window.open('https://docs.google.com/spreadsheets/d/1dL6Ww7MfUqFtbeY8mQCkxf2ZoZ5QOWG6jDVeoiAZGKo/edit#gid=0', '_blank').focus();
-                                    })
-                                    //window.open('mailto:info@dublin.sciencegallery.com', '_blank').focus();
-                                    //info@dublin.sciencegallery.com?subject=BIAS online feedback
-                                }
-
-
-
-                            if(element._text == "info@dublin.sciencegallery.com") {
-                                element.interactive = true
-                                element.buttonMode = true
-                                element.on('pointerdown', function(){
-                                    window.open('mailto:info@dublin.sciencegallery.com', '_blank').focus();
-                                })
-                            }
-                        });
-
-                        userInterface.quoteStage.resize(window.innerWidth, window.innerHeight)
-                        //userInterface.resize()
-                        //ease.add(loadingIcon, { alpha: 0 }, { duration: 250, wait: 250 })
-                        //
-
-                    }, 50)
-                        
-                 
-                    
-                //}
-            }
-
-        }
-
-    }
-
-
-    closeModal() {
-
-        this.quoteWrapper.contentContainer.alpha = 0
-        this.connectedText.alpha = 0
-
-        this.loadingText.alpha = 1
-
-        const quoteStage = this.quoteStage
-        const userInterface = this
-        
-        setTimeout(function(){
-            userInterface.removeChild(quoteStage)
-            userInterface.setShowingQuote()
-        }, 0)
-
-        
-    }
-
-    setShowingQuote(){
-        this.showingQuote = false
-    }
-
-
-    personLeft(name) {
-        /*var joinText = "<reddot>—</reddot> "+ name +" left"
-        var textBox = this.statusLayout.contentContainer.children[1];
-        var currentText = textBox.text
-        textBox.text = joinText + "\n" + currentText
-        //console.log(textBox.y)
-        if(textBox.y > -180) {
-            textBox.y = textBox.y - 18
-        }*/
-    }
-
-    increaseScore(token) {
-        if(token == "quote") {
-            const score = this.talkingScoreText
-            var currentScore = Number(score.text.slice(0,1))
-            var newScore = currentScore + 1     
-            var newScoreText = newScore + "/10";
-            if(this.talkingScore.isComplete == false) {
-                score.text = newScoreText
-                if(newScore == 10) {
-                    score.x = 16
-                    this.talkingScore.isComplete = true
-                    this.talkingScoreTextBackground.tint = this.yellow
-                }
-            }
-        }
-        if(token == "talking") {
-            const score = this.talkingScoreText
-            var currentScore = Number(score.text.slice(0,1))
-            var newScore = currentScore + 1     
-            var newScoreText = newScore + "/10";
-            if(this.talkingScore.isComplete == false) {
-                score.text = newScoreText
-                const background = this.talkingScoreTextBackground
-                background.tint = this.yellow
-                let white = this.white
-                setTimeout(function(){
-                    background.tint = white
-                }, 250)
-                if(newScore == 10) {
-                    score.x = 16
-                    this.talkingScore.isComplete = true
-                    let yellow = this.yellow
-                    setTimeout(function(){
-                        background.tint = yellow
-                    }, 250)
-                   
-                }
-            }
-        } else if (token == "robot") {
-            const score = this.robotScoreText
-            var currentScore = Number(score.text.slice(0,1))
-            var newScore = currentScore + 1     
-            var newScoreText = newScore + "/10";
-            if(this.robotScore.isComplete == false) {
-                score.text = newScoreText
-                const background = this.robotScoreTextBackground
-                background.tint = this.yellow
-                let white = this.white
-                setTimeout(function(){
-                    background.tint = white
-                }, 250)
-                if(newScore == 10) {
-                    score.x = 16
-                    this.robotScore.isComplete = true
-                    let yellow = this.yellow
-                    setTimeout(function(){
-                        background.tint = yellow
-                    }, 250)
-                   
-                }
-            }
-           
-        } else if (token == "dial") {
-            const score = this.dialScoreText
-            var currentScore = Number(score.text.slice(0,1))
-            var newScore = currentScore + 1     
-            var newScoreText = newScore + "/10";
-            if(this.dialScore.isComplete == false) {
-                score.text = newScoreText
-                const background = this.dialScoreTextBackground
-                background.tint = this.yellow
-                let white = this.white
-                setTimeout(function(){
-                    background.tint = white
-                }, 250)
-                if(newScore == 10) {
-                    score.x = 16
-                    this.dialScore.isComplete = true
-                    let yellow = this.yellow
-                    setTimeout(function(){
-                        background.tint = yellow
-                    }, 250)
-                }
-            }
-           
-        } else if (token == "face") {
-            const score = this.faceScoreText
-            var currentScore = Number(score.text.slice(0,1))
-            var newScore = currentScore + 1     
-            var newScoreText = newScore + "/10";
-            if(this.faceScore.isComplete == false) {
-                score.text = newScoreText
-                const background = this.faceScoreTextBackground
-                background.tint = this.yellow
-                let white = this.white
-                setTimeout(function(){
-                    background.tint = white
-                }, 250)
-                if(newScore == 10) {
-                    score.x = 16
-                    this.faceScore.isComplete = true
-                    let yellow = this.yellow
-                    setTimeout(function(){
-                        background.tint = yellow
-                    }, 250)
-                   
-                }
-            }
-            
-        }
-
-       
-        
-    }
-
-    personJoined(name) {
-        
-        ease.add(this.updateText.contentContainer, {alpha: 0.6}, {duration: 100 })
-        ease.add(this.updateText.contentContainer, {alpha: 0}, {duration: 250, wait: 3000})
-        this.updateText.text = name +" joined"
-
-        let currentText = this.updateText.text
-        let length = (currentText.match(/\n/g)||[]).length
-        console.log(length)
-
-        if(length > 5) {
-            let current = this.updateText.text 
-            let currentList = current.split("\n")
-            currentList.pop()
-            let currentMinusOne = currentList.join("\n")
-            this.updateText.text = name +" joined\n" + currentMinusOne
-        } else {
-            let max = 6
-            let count = max - length
-            let current = this.updateText.text 
-            let text = ""
-            for(var x=0; x<count;x++) {
-                text += "\n"
-            }            
-            this.updateText.text = text + name +" joined\n" + current
-        }     
-       
-        
-        
-    }
-
-
-
-    updateConnection(value, boolean){
-        //
-        if(boolean == true) {
-            this.wasConnected = true
-            this.connectionScreen.visible = false
-        } else {
-            if(this.wasConnected == true) {
-                this.connectionTextTagged.text = "Disconnected from <bold>BIAS ONLINE</bold>\nPlease refresh the page"
-            } else {
-                this.connectionTextTagged.text = "Unable to connect to <bold>BIAS ONLINE</bold>\nPlease Try Again Later"
-            }
-            this.connectionScreen.visible = true
-            
-            sound.muteAll()
-
-            if(this.chatStageOn) {
-                this.textBox.visible = false
-            }
-            if(this.statusStageOn) {
-                this.statusStage.visible = false
-            }
-            if(this.emojiStageOn) {
-                this.emojiStage.visible = false
-            }
-            
-            this.mainMenuStage.visible = false
-            this.viewArtButton.visible = false
-
-            if(this.scoreStageOn) {
-                this.scoreStage.visible = false
-            }
-
-            if(this.introScreenOn) {
-                this.introScreen.visible = false
-            }
-            
-            if(this.miniMapOn) {
-                this.miniMapStage.visible = false
-            }
-            
-            if(this.notificationStageOn) {
-                this.notificationStage.visible = false
-            }
-        }
-       
-        
-        
-    }
-    
 
     resizeText() {
         
         const width = window.innerWidth
         let ageGate = this.ageGate
+
+
+        if(width <= 320) {
+
+            this.connectedText.setStyleForTag("img", {
+                fontSize: "260px",
+            })
+
+        }  else if (width <= 375) {
+            
+            this.connectedText.setStyleForTag("img", {
+                fontSize: "320px",
+            })
+
+        }  else if (width <= 414) {
+            
+            this.connectedText.setStyleForTag("img", {
+                fontSize: "360px",
+            })
+
+        } else if (width <= 500) { 
+
+            this.connectedText.setStyleForTag("img", {
+                fontSize: "450px",
+            })
+
+        } else { 
+
+            this.connectedText.setStyleForTag("img", {
+                fontSize: "680px",
+                lineHeight: 0,
+                leading: 0,
+                padding: 0
+            })
+
+        }
 
         if(width <= 375) {
 
@@ -5133,9 +4056,7 @@ class UIBuilder extends PIXI.Container {
                 wordWrapWidth: 240
             })
 
-            this.connectedText.setStyleForTag("img", {
-                fontSize: "285px",
-            })
+
 
             this.connectedText.setStyleForTag("gap", {
                 fontSize: "8px",
@@ -5227,8 +4148,6 @@ class UIBuilder extends PIXI.Container {
                 this.quoteWrapperBackground.drawRoundedRect(0, 0, window.innerWidth - 40, window.innerHeight - 25, 0)
 
             }
-            
-
 
         }  else if (width <= 720) {
 
@@ -5470,6 +4389,16 @@ class UIBuilder extends PIXI.Container {
             })
 
             let connectedText = this.connectedText
+
+            this.quoteBackground.setLayoutOptions(
+                new PUXI.FastLayoutOptions({
+                    width: window.innerWidth,
+                    height: window.innerHeight,
+                    x: 0.5,
+                    y: 0.5,
+                    anchor: new PIXI.Point(0.5, 0.5)
+                })
+            )
             
             if(this.connectedText.parent.height < window.innerHeight ) {
                 this.quoteWrapper.setLayoutOptions(
@@ -5505,10 +4434,1305 @@ class UIBuilder extends PIXI.Container {
             }
 
 
-        } 
+        }
+        
+        let taggedText = this.connectedText
+        let colorBlue = this.blue
+
+        taggedText.textContainer.children.forEach(element => {
+            //console.log(element)
+            if(element._style._fill == "#1dcfff") {
+                element.interactive = true
+                element.buttonMode = true
+                let underline = new PIXI.Graphics()
+                underline.beginFill(colorBlue)
+                underline.drawRect(0, element.height - 8, element.width, 1)
+                underline.endFill()
+                element.on('pointerover', function(){                                
+                    element.addChild(underline)
+                })
+                element.on('pointerout', function(){
+                    element.removeChild(underline)
+                })
+                //console.log('link')
+            }
+            if(element._text == "mushon.com") {
+                //console.log('link!')
+                element.interactive = true
+                element.buttonMode = true
+                element.on('pointerdown', function(){
+                    window.open('http://mushon.com', '_blank').focus();
+                })
+            }
+            if(element._text == "@mushon") {
+                //console.log('mushon')
+                element.interactive = true
+                element.buttonMode = true
+                element.on('pointerdown', function(){
+                    window.open('https://instagram.com/mushon', '_blank').focus();
+                })
+            }
+            if(element._text == "darkmatters.ml") {
+            // console.log('link!')
+                element.interactive = true
+                element.buttonMode = true
+                element.on('pointerdown', function(){
+                    window.open('http://darkmatters.ml', '_blank').focus();
+                })
+            }
+            if(element._text == "@johanndiedrick") {
+                //console.log('link!')
+                element.interactive = true
+                element.buttonMode = true
+                element.on('pointerdown', function(){
+                    window.open('https://instagram.com/johanndiedrick', '_blank').focus();
+                })
+            }
+            if(element._text == "libbyheaney.co.uk") {
+            // console.log('link!')
+                element.interactive = true
+                element.buttonMode = true
+                element.on('pointerdown', function(){
+                    window.open('http://libbyheaney.co.uk', '_blank').focus();
+                })
+            }
+            if(element._text == "@libby_heaney_") {
+                //console.log('link!')
+                element.interactive = true
+                element.buttonMode = true
+                element.on('pointerdown', function(){
+                    window.open('https://instagram.com/libby_heaney_', '_blank').focus();
+                })
+            }
+            if(element._text == "noahlevenson.com") {
+            // console.log('link!')
+                element.interactive = true
+                element.buttonMode = true
+                element.on('pointerdown', function(){
+                    window.open('http://noahlevenson.com', '_blank').focus();
+                })
+            }
+            if(element._text == "github.com") {
+                // console.log('link!')
+                    element.interactive = true
+                    element.buttonMode = true
+                    element.on('pointerdown', function(){
+                        window.open('https://github.com/jamesdelaneyie/BIAS', '_blank').focus();
+                    })
+                }
+            if(element._text == "@noahlevenson") {
+                //console.log('link!')
+                element.interactive = true
+                element.buttonMode = true
+                element.on('pointerdown', function(){
+                    window.open('https://instagram.com/noahlevenson', '_blank').focus();
+                })
+            }
+
+            if(element._text === "feedback") {
+                // console.log('link!')
+                    element.interactive = true
+                    element.buttonMode = true
+                    element.on('pointerdown', function(){
+                        window.open('https://docs.google.com/spreadsheets/d/1dL6Ww7MfUqFtbeY8mQCkxf2ZoZ5QOWG6jDVeoiAZGKo/edit#gid=0', '_blank').focus();
+                    })
+                    //window.open('mailto:info@dublin.sciencegallery.com', '_blank').focus();
+                    //info@dublin.sciencegallery.com?subject=BIAS online feedback
+                }
+
+
+
+            if(element._text == "info@dublin.sciencegallery.com") {
+                element.interactive = true
+                element.buttonMode = true
+                element.on('pointerdown', function(){
+                    window.open('mailto:info@dublin.sciencegallery.com', '_blank').focus();
+                })
+            }
+        });
 
 
     }
+
+
+    confirmAge(){
+         window.localStorage.setItem('over18', true);
+
+         let userInterface = this
+         let ageGate = this.ageGate
+         let joinModal = this.joinModal
+
+         if(ageGate) {
+            ease.add(ageGate, {alpha: 0}, {duration: 1000, ease: "easeOutExpo"})
+         
+            setTimeout(function(){
+               userInterface.removeChild(ageGate)
+               joinModal.visible = true
+               ease.add(joinModal, {alpha: 1}, {duration: 500, ease: "easeOutExpo"})
+            }, 1000)
+
+         }
+
+        
+         
+     }
+
+
+    //MiniMap Functions
+    setPlayerPositionMiniMap(id, x, y) {
+        if(this.miniMapOn == true) {
+            if(this.miniMap.getChildByName(""+id+"")) {
+                const thePlayer = this.miniMap.getChildByName(""+id+"")
+                //if(x > -400 && x < 5000 && y > -250 && y < 3500) {
+                    thePlayer.x = (x / 25) + 10
+                    thePlayer.y = (y / 25) + 10
+                //}
+            } else {
+                const newPerson = new Graphics()
+                newPerson.name = ""+id+""
+                newPerson.lineStyle(0)
+                newPerson.beginFill(0x00FFFF, 1, true)
+                newPerson.drawCircle(0, 0, 1)
+                newPerson.endFill()
+                this.miniMap.addChild(newPerson)
+            }
+        }
+    }
+
+    setOwnPlayerPositionMiniMap(x, y) {
+        if(this.miniMapOn == true) {
+            this.miniMapPlayerPosition.alpha = 1
+            if(x > 0 && x < 5000 && y > 0 && y < 3500) {
+                this.miniMapPlayerPosition.x = (x / 25) + 10
+                this.miniMapPlayerPosition.y = (y / 25) + 10
+            }
+            
+        }
+    }
+
+    buildMiniMap(design){
+        
+        if(this.miniMapOn == true) {
+       
+            let worldDesign = JSON.parse(design)
+
+            worldDesign.rooms.forEach(room => {
+                let miniRoom = new PIXI.Graphics()
+            
+                let miniRoomWidth = room.width / 25
+                let miniRoomHeight = room.height / 25
+
+                miniRoom.x = (room.x / 50) + 5
+                miniRoom.y = (room.y / 50) + 5
+
+
+                //console.log(miniRoom.x, miniRoom.y, miniRoomWidth, miniRoomHeight)
+                
+                const roomColor = PIXI.utils.string2hex(room.floorColor)
+
+                miniRoom.beginFill(roomColor, 0.2)
+                miniRoom.drawRect(miniRoom.x, miniRoom.y, miniRoomWidth, miniRoomHeight)
+                miniRoom.endFill()
+
+                this.miniMap.addChild(miniRoom)
+            });
+
+
+                let miniRoom = new PIXI.Graphics()
+            
+                let miniRoomWidth = 35
+                let miniRoomHeight = 35
+
+                miniRoom.x = 47.5
+                miniRoom.y = 30.5
+                
+                const roomColor = PIXI.utils.string2hex("#998675")
+
+                miniRoom.beginFill(roomColor, 0.2)
+                miniRoom.drawRect(miniRoom.x, miniRoom.y, miniRoomWidth, miniRoomHeight)
+                miniRoom.rotation = 0.785
+                miniRoom.endFill()
+
+                this.miniMap.addChild(miniRoom)
+
+                let sprite = new PIXI.Sprite.from("images/jo-room-map.svg")
+                sprite.width = 55
+                sprite.height = 55
+                sprite.x = 136
+                sprite.y = 80
+                sprite.alpha = 0.5
+                this.miniMap.addChild(sprite)
+
+                
+
+
+            
+            worldDesign.art.forEach(artwork => {
+                let artShape = new Graphics()
+                
+
+                let artWidth = artwork.width / 25
+                let artHeight = artwork.height / 25
+                artShape.x = (artwork.x / 50) + 5
+                artShape.y = (artwork.y / 50) + 5
+
+                let color = PIXI.utils.string2hex("#FFFFFF")
+                artShape.lineStyle(0)
+                artShape.beginFill(color, 1.0, true)
+                
+
+                if(artwork.type == "circle") {
+                    artShape.drawCircle(artShape.x + artWidth/2 + 2, artShape.y +artHeight/2, artWidth/2)
+
+                } else if (artwork.type == "triangle") {
+
+
+                    artShape.x = 55
+                    artShape.y = 110
+
+                    artShape.pivot.set(artWidth/2,artHeight/2)
+                    //console.log(artWidth/2, artHeight/2)
+                   
+                    artShape.moveTo(0, 0);
+                    artShape.lineTo(artWidth, 0);
+                    artShape.lineTo(artWidth/2, artHeight+3); 
+                    
+                    
+                } else {
+                    artShape.drawRect(artShape.x, artShape.y, artWidth, artHeight)
+                }
+                
+               
+                
+                artShape.endFill()
+                this.miniMap.addChild(artShape)
+                if(artwork.type == "triangle") {
+                    this.noahArt = artShape
+                }
+ 
+            });
+
+            
+
+
+
+        }
+
+    }
+
+
+    getAvatar() {
+        let background = this.avatarImageWrapper.children[0]._texture.textureCacheIds[0]
+        background = background.split("-")[2][0]
+        background = "avatarBackground"+background
+
+        let middleground = this.avatarImageWrapper.children[1]._texture.textureCacheIds[0]
+        middleground = middleground.split("-")[2][0]
+        middleground = "avatarMiddleground"+middleground
+
+        let middleground2 = this.avatarImageWrapper.children[2]._texture.textureCacheIds[0]
+        middleground2 = middleground2.split("-")[2][0]
+        middleground2 = "avatarMiddleground"+middleground2
+
+        let foreground = this.avatarImageWrapper.children[3]._texture.textureCacheIds[0]
+        foreground = foreground.split("-")[2][0]
+        foreground = "avatarForeground"+foreground
+
+
+        let avatar = [
+            background,
+            this.avatarImageWrapper.children[0].rotation,
+            middleground,
+            this.avatarImageWrapper.children[1].rotation,
+            middleground2,
+            this.avatarImageWrapper.children[2].rotation,
+            foreground,
+            this.avatarImageWrapper.children[3].rotation,
+        ]
+
+        return avatar
+    }
+
+    updateColor(color) {
+        this.color = color
+    }
+
+    getArtnumber(){
+        return this.artNumber
+    }
+
+    showQuoteButton(art, type, x, y) {
+       
+        this.artNumber = art
+        
+        let buttonPos = renderer.toLocalCoordinates(x, y)
+       
+
+        this.viewInfoButton.visible = true
+        this.viewInfoButtonWrapper.setLayoutOptions(
+        new PUXI.FastLayoutOptions({
+            width: 21,
+            height: 21,
+            x: buttonPos.x,
+            y: buttonPos.y,
+            anchor: new PIXI.Point(0.5, 0.5)
+        }))
+
+        this.viewInfoButton.resize(window.innerWidth, window.innerHeight)
+        const viewInfoBounds = this.buttonOutline.getBounds()
+        this.viewInfoButton.stage.hitArea = new PIXI.Rectangle(
+            viewInfoBounds.x,
+            viewInfoBounds.y, 
+            viewInfoBounds.width,
+            viewInfoBounds.height
+        )
+
+    }
+
+
+    showStartArtButton(art, direction, directionHorizontal, directionVertical){
+    
+       // console.log(art)
+
+        var artNumber = 0
+        if(art == "<bold>CLASSES</bold>\nLibby Heaney") {
+            artNumber = 1
+        } else if (art == "<bold>STEAL UR FEELINGS</bold>\nNoah Levenson"){
+            artNumber = 2
+        } else if (art == "<bold>DARK MATTERS</bold>\nJohann Diedrick") {
+            artNumber = 3
+        } else {
+            artNumber = 4
+        }
+
+        this.artNumber = artNumber
+        
+        
+
+        if(directionHorizontal == 1)  {
+            this.viewArtButton.visible = true
+            this.viewArtButtonWrapper.setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 80,
+                height: 30,
+                x: window.innerWidth/2 + 100,
+                y: 0.5,
+                anchor: new PIXI.Point(0.5, 0.5)
+            }))
+        }
+
+        if(directionHorizontal == 2)  {
+            this.viewArtButton.visible = true
+            this.viewArtButtonWrapper.setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 80,
+                height: 30,
+                x: window.innerWidth/2 - 100,
+                y: 0.5,
+                anchor: new PIXI.Point(0.5, 0.5)
+            }))
+        }
+
+        if(directionVertical == 2)  {
+            this.viewArtButton.visible = true
+            this.viewArtButtonWrapper.setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 80,
+                height: 30,
+                x: 0.5,
+                y: window.innerHeight/2 - 70,
+                anchor: new PIXI.Point(0.5, 0.5)
+            }))
+        }
+
+        
+
+        if(directionVertical == 1)  {
+            this.viewArtButton.visible = true
+            this.viewArtButtonWrapper.setLayoutOptions(
+            new PUXI.FastLayoutOptions({
+                width: 80,
+                height: 30,
+                x: 0.5,
+                y: window.innerHeight/2 + 70,
+                anchor: new PIXI.Point(0.5, 0.5)
+            }))
+        }
+
+
+
+        this.viewArtButton.resize(window.innerWidth, window.innerHeight)
+        const viewArtBounds = this.viewArtButtonOutline.getBounds()
+        this.viewArtButton.stage.hitArea = new PIXI.Rectangle(
+            viewArtBounds.x,
+            viewArtBounds.y, 
+            viewArtBounds.width,
+            viewArtBounds.height
+        )
+        
+    }
+
+    hideStartArtButton(){
+        //console.log(this.artNumber)
+        this.viewArtButton.visible = false
+        //this.artNumber == null
+    }
+
+    getColor(){
+        return this.color
+    }
+
+    toggleGlitch(boolean){
+        this.glitchOn = boolean
+    }
+
+
+    drawGridBackground(width, height) {
+
+        if(width <= 500) {
+            this.gridGap = 25
+            this.gridLine = 0.2
+        } else if (width <= 960) {
+            this.gridGap = 50
+            this.gridLine = 0.5
+        } else if (width <= 1240) {
+            this.gridGap = 75
+            this.gridLine = 1
+        } else {
+            this.gridGap = 100
+            this.gridLine = 1
+        }
+
+        this.gridOffset = this.gridGap/2
+        width = width + this.gridGap*2
+        height = height + this.gridGap*2
+        
+        
+        this.gridBackground = new PIXI.Container();
+        this.gridNumberOfLinesHorizontal = width / this.gridGap
+        this.gridBackground.x = -this.gridOffset
+        this.gridBackground.y = -this.gridOffset
+
+        for (var i = 0; i < this.gridNumberOfLinesHorizontal; i++) {           
+            let line = new PIXI.Graphics()
+            line.lineStyle(this.gridLine, this.black, 0.5)
+            line.moveTo(i * this.gridGap, 0)
+            line.lineTo(i * this.gridGap, height)
+            this.gridBackground.addChild(line)
+        }
+
+        this.numberOfLinesVertical = height / this.gridGap
+            
+        for (var i = 0; i < this.numberOfLinesVertical; i++) { 
+            let line = new PIXI.Graphics()
+            line.lineStyle(this.gridLine, this.black, 0.5)
+            line.moveTo(0, i * this.gridGap)
+            line.lineTo(width, i * this.gridGap)
+            this.gridBackground.addChild(line)
+        }
+        /*if(this.joinModalWrapper.contentContainer.children == 0) {
+            this.joinModalWrapper.contentContainer.addChildAt(this.gridBackground, 0)
+            this.joinModal.addChild(this.joinModalWrapper)
+        } else {
+            this.joinModalWrapper.contentContainer.removeChildAt(0)
+            this.joinModalWrapper.contentContainer.addChildAt(this.gridBackground, 0)
+        }*/
+
+
+        
+    }
+
+    /*teleporting(area) {
+       
+        if(this.transitionScreenOn == true) {
+
+            this.transitionTextTagged.text = area
+            this.transitionScreen.visible = true
+            
+
+            ease.add(this.transitionScreenTextWrapper, {alpha: 1}, { duration: 250, ease: 'easeOutExpo'})
+            this.transitionScreen.resize(window.innerWidth, window.innerHeight)
+
+            const transitionScreen = this.transitionScreen
+            const transitionScreenTextWrapper = this.transitionScreenTextWrapper
+            setTimeout(function(){
+                ease.add(transitionScreenTextWrapper, {alpha: 0}, { duration: 650, ease: 'easeOutExpo'})
+            }, 1700)
+            setTimeout(function(){
+                transitionScreen.visible = false
+            }, 2200)
+            
+        }
+       
+    }*/
+
+    joinSession(){
+       
+        if(!this.mainMenuStage.visible) {
+
+            this.removeChild(this.joinModal)
+
+            this.mainMenuStage.visible = true
+            this.miniMapStage.visible = true
+            this.statusStage.visible = true
+           
+
+            ease.add(this.mainMenuStage, {alpha: 1}, { duration: 500 })
+            ease.add(this.miniMapStage, {alpha: 1}, { duration: 500 })
+
+            if(window.innerWidth > 500) {
+
+                ease.add(this.statusStage, {alpha: 1}, { duration: 500, wait: 0 })
+
+                this.textBox.visible = true
+                this.emojiStage.visible = true
+                ease.add(this.textBox, {alpha: 1}, { duration: 500, wait: 500 })
+                ease.add(this.emojiStage, {alpha: 1}, { duration: 500, wait: 700 })
+                
+            } 
+            
+        }
+       
+         
+    }
+
+
+    leaveSession(){
+        this.addChild(this.joinModal)
+    }
+
+    getText() {
+        return this.nameFieldInput.value;
+    }
+
+    clearText() {
+        this.nameFieldInput.value = ""
+        this.nameFieldInput.blur()
+    }
+
+    joinPeer() {
+        /*const text = new MultiStyleText("<dot>●</dot> Device ID: "+peerID+"", {
+            "default": {
+                fontFamily: "Monaco",
+                fontSize: "10px",
+                fill: "#ececec",
+                align: "left"
+            },
+            "dot": {
+                fontSize: "15px",
+                fill: "#0000ff"
+            }
+        });
+        renderer.stage.addChild(text);
+        text.x = 10;
+        text.y = 10;*/
+
+    }
+
+    joinCall(){
+        /*const text = new MultiStyleText("<dot>●</dot> Connected With: "+call.peer +" (ID:"+connectionId+")", {
+            "default": {
+                fontFamily: "Monaco",
+                fontSize: "10px",
+                fill: "#ececec",
+                align: "left"
+            },
+            "dot": {
+                fontSize: "15px",
+                fill: "#00ff00"
+            }
+        });
+        renderer.stage.addChild(text);
+        text.x = 10;
+        text.y = 30;*/
+    }
+
+    setName() {
+        this.nameGiven = true
+    }
+
+    getMessageText() {
+        return this.mockInput.value;
+    }
+
+    clearMessageText() {
+        this.mockInput.value = ""
+        this.mockInput.blur()
+        this.mockInput.focus()
+    }
+
+    updateWorldTime(time) {
+       var currentWorldTime = new Date(time * 1000).toISOString().substr(11, 8)
+       this.currentTime.text = currentWorldTime
+    }
+
+    updateTotalUsers(number) {
+        if(number < 9) {
+            this.numberOfPeopleCounter.text = "0"+number
+        } else {
+            this.numberOfPeopleCounter.text = number
+        }
+       
+    }
+
+    updateActiveUsers(number) {
+        if(number < 9) {
+            this.totalNumberOfPeopleCounter.text = "00"+number
+        } else if(number < 99) {
+            this.totalNumberOfPeopleCounter.text = "0"+number
+        } else {
+            this.totalNumberOfPeopleCounter.text = number
+        }
+       
+    }
+
+    showNotification(option, type) {
+        
+        if(this.notificationStageOn == true) {
+
+       
+        //console.log(option)
+        let message = this.notifications[option].text
+        let theUI = this
+        let notificationStage = this.notificationStage
+
+        let notificationSettings = window.localStorage.getItem('notificationSettings')
+        notificationSettings = JSON.parse(notificationSettings)
+
+        /*this.notificationTaggedText.text = message
+        if(notificationSettings.text) {
+            if(notificationSettings.text == message) {
+                return
+            }
+        }*/
+        
+        this.notificationTaggedText.textContainer.children.forEach(element => {
+            if(element._text == "here") {
+                element.interactive = true
+                element.buttonMode = true
+                element.on('pointerdown', function(){
+                    theUI.showQuote("14")
+                    ease.add(notificationStage, {alpha: 0}, { duration: 250, ease: 'easeOutExpo'})
+                    setTimeout(function(){
+                        notificationStage.visible = false
+                    }, 250)
+                })
+            }
+        })
+        notificationStage.visible = true
+        ease.add(this.notificationStage, {alpha: 1}, { duration: 250, ease: 'easeOutExpo' })
+
+        }
+    }
+
+    showAchievement(option, type) {
+        if(this.achievementStage.alpha <= 0) {
+            //console.log(this.achievementStage.alpha)
+            let message = this.achievements[option].text
+            this.achievementTaggedText.text = message
+            ease.add(this.achievementStage, {alpha: 1}, { duration: 250, ease: 'easeOutExpo' })
+            ease.add(this.achievementStage, {alpha: 0}, { duration: 250, ease: 'easeOutExpo', wait: 3500 })
+        }
+    }
+
+    hideArt(artNumber){
+
+        //this.textBox.visible = true
+       // this.statusStage.visible = true
+       
+       this.showAchievement(""+this.artCount+"")
+       this.increaseScore("robot")
+
+       window.localStorage.setItem("art"+artNumber+"", true)
+        
+       // this.emojiStage.visible = true
+       this.transitionTextTagged.text = ""
+        
+        this.viewArtButton.visible = false
+
+        if(this.scoreStageOn) {
+            this.scoreStage.visible = true
+        }
+        if(this.miniMapOn) {
+            this.miniMapStage.visible = true
+        }
+        if(this.mainMenuOn) {
+            this.mainMenuStage.visible = true
+        }
+        if(this.chatStageOn) {
+            this.textBox.visible = true
+        }
+
+        let allKids = this.children.length - 1
+       
+
+        const transitionScreen = this.transitionScreen
+        const overlay = document.getElementById('overlay');
+        const transitionScreenWrapper = this.transitionScreenWrapper
+        ease.add(transitionScreenWrapper, {alpha: 1}, { duration: 300, ease: 'easeOutExpo'})
+        
+        overlay.classList.remove('show')
+
+        setTimeout(()=> {
+            ease.add(transitionScreenWrapper, {alpha: 0}, { duration: 2000, ease: 'easeOutExpo'})
+            document.body.removeChild(overlay)
+        }, 700) 
+        setTimeout(()=> {
+            this.children[allKids].visible = true
+            this.connectionScreen.visible = false
+            transitionScreen.visible = false
+            this.viewArtButton.alpha = 1
+            sound.toggleMuteAll()
+        }, 1300)
+    }
+    
+
+    showArt(art) {
+
+        if(this.chatStageOn) {
+            this.textBox.visible = false
+        }
+        if(this.statusStageOn) {
+            this.statusStage.visible = false
+        }
+        if(this.emojiStageOn) {
+            this.emojiStage.visible = false
+        }
+
+        if(this.scoreStageOn) {
+            this.scoreStage.visible = false
+        }
+
+        this.viewArtButton.visible = false
+
+        
+        let allKids = this.children.length - 1
+        this.children[allKids].visible = false
+       
+
+        if(this.miniMapOn) {
+            this.miniMapStage.visible = false
+        }
+        if(this.mainMenuOn) {
+            this.mainMenuStage.visible = false
+        }
+       
+        
+
+        sound.toggleMuteAll()
+
+        if(art == 1) {
+            this.transitionTextTagged.text = "<bold>CLASSES</bold>\nLibby Heaney"
+        } else if (art == 2) {
+            this.transitionTextTagged.text = "<bold>STEAL UR FEELINGS</bold>\nNoah Levenson"
+        } else if (art == 3) {
+            this.transitionTextTagged.text = "<bold>DARK MATTERS</bold>\nJohann Diedrick"
+        } else {
+            this.transitionTextTagged.text = "<bold>NORMALIZI.NG</bold>\nMushon Zer-Aviv"
+        }
+
+        //this.transitionTextTagged.text = 
+
+        this.transitionScreen.visible = true
+        ease.add(this.transitionScreen, {alpha: 1}, { duration: 500, ease: 'easeOutExpo'})
+        ease.add(this.transitionScreenWrapper, {alpha: 1}, { duration: 1000, ease: 'easeOutExpo'})
+        this.transitionScreen.resize(window.innerWidth, window.innerHeight)
+
+        let video
+        const userInterface = this
+
+        //console.log(art)
+
+        setTimeout(function(){
+
+            if(art == 1) {
+                var overlay = document.createElement('div');
+                overlay.style = "position:fixed;height:100vh;width:100%;background-color:rgba(0,0,0,0.6);top:0;left:0;"
+                overlay.id = "overlay"
+                var close = document.createElement('a');
+                close.id = "back-to-bias"
+                var backTo = document.createTextNode('← return')
+                close.style = "cursor:pointer;position:absolute;top:0;width:100%;letter-spacing:2px;left:1.5%;top:1.5%;font-size:14px;text-transform:uppercase;color:#00b140;width:100%;z-index:4"
+                close.appendChild(backTo)
+                document.body.appendChild(close);
+                video = document.createElement('video');
+                
+                const videoWrapper = document.createElement('div')
+                const videoWrapperWrapper = document.createElement('div')
+                videoWrapperWrapper.style = "position:absolute;top:50%;left:50%;transform:translateX(-50%) translateY(-50%);width:100%;"
+                videoWrapper.style = "position:relative;padding-bottom:56.25%;height:0;z-index:5;max-width:95%;margin:0 auto"
+        
+                video.src = "/video/CLASSES.mp4"
+                video.width = window.innerWidth
+                video.height = window.innerHeight
+                video.controls = true
+                video.style = "position:absolute;top:0%;left:0%;width:100%;height:100%;"
+                videoWrapper.appendChild(video)
+                videoWrapperWrapper.appendChild(videoWrapper)
+        
+                overlay.appendChild(close)
+                overlay.appendChild(videoWrapperWrapper)
+
+                close.addEventListener('pointerdown', (event) => {
+                
+                    overlay.classList.remove("show") 
+                    userInterface.hideArt(1)
+        
+                })
+        
+                document.body.appendChild(overlay);
+
+            } else {
+
+                var overlay = document.createElement('div');
+                overlay.style = "position:fixed;height:100vh;width:100%;background-color:rgba(0,0,0,0.6);top:0;left:0;"
+                overlay.id = "overlay"
+                var close = document.createElement('div');
+                close.id = "back-to-bias"
+                var backTo = document.createTextNode('← return')
+                close.style = "cursor:pointer;position:absolute;top:0;width:100%;left:2.5%;top:1.5%;font-size:14px;text-transform:uppercase;color:#00b140;width:100%;letter-spacing:2px;z-index:4"
+                close.appendChild(backTo)
+                document.body.appendChild(close);
+                var iframe = document.createElement('iframe');
+                
+                const videoWrapper = document.createElement('div')
+                const videoWrapperWrapper = document.createElement('div')
+                videoWrapperWrapper.style = "position:absolute;top:50%;left:50%;transform:translateX(-50%) translateY(-50%);width:100%;"
+                videoWrapper.style = "position:relative;padding-bottom:56.25%;height:0;z-index:5;max-width:95%;margin:0 auto"
+
+                var loading = document.createTextNode("Loading...")
+                var loadingDiv = document.createElement('div')
+                loadingDiv.style = "position:absolute;top:52.5%;left:50%;transform:translateX(-50%)translateY(-50%);color:white"
+                loadingDiv.appendChild(loading)
+                videoWrapper.appendChild(loadingDiv)
+
+               
+
+
+                iframe.width = window.innerWidth
+                iframe.height = window.innerHeight
+                iframe.allow = "camera"
+                if(art == 2) {
+                    iframe.src = "https://stealingurfeelin.gs/"
+                } else if (art == 3) {
+                    iframe.src = "https://darkmatters.ml/"
+                } else if (art == 4) {
+                    iframe.src = "https://normalizi.ng/"
+                }
+                
+                iframe.style = "position:absolute;top:0%;left:0%;width:100%;height:100%;border:0"
+                videoWrapper.appendChild(iframe)
+                videoWrapperWrapper.appendChild(videoWrapper)
+        
+                overlay.appendChild(close)
+                overlay.appendChild(videoWrapperWrapper)
+
+                var openNewWindow = document.createTextNode("Open in new tab →")
+                var openNewWindowDiv = document.createElement('div')
+                openNewWindowDiv.style = "position:relative;width:100%;text-align:right;color:white;right:2.5%;top:10px;opacity:0.5;text-transform:uppercase;letter-spacing:0.05em;font-size:14px;cursor:pointer"
+                openNewWindowDiv.appendChild(openNewWindow)
+                videoWrapperWrapper.appendChild(openNewWindowDiv)
+
+                openNewWindowDiv.addEventListener('pointerdown', (event) => {
+                
+                    window.open(iframe.src, '_blank').focus();
+        
+                })
+
+                close.addEventListener('pointerdown', (event) => {
+                
+                    overlay.classList.remove("show") 
+                    userInterface.hideArt(art)
+        
+                })
+        
+                document.body.appendChild(overlay);
+
+            }
+            
+        }, 1000)
+        setTimeout(function(){
+            overlay.classList.add("show") 
+        }, 1100)
+        
+        if(art == 1) {
+            setTimeout(function(){
+                video.play()
+            }, 1500)
+        }
+       
+
+    }
+
+    showQuote(quote) {
+
+        if(this.quoteStageOn == true) {
+            
+            let quoteNumber = Number(quote)
+
+            let theQuote = this.quotesToShow
+            let taggedText = this.connectedText
+            let userInterface = this
+            let quoteWrapper = this.quoteWrapper
+            let scrollContent = this.scrollContent
+            let quoteBackground = this.quoteWrapperBackground
+            let loadingIcon = this.loadingIcon
+            let loadingText = this.loadingText
+            let colorBlue = this.blue
+            //this.connectedText.text = "Loading..."
+            //console.log()
+
+
+            let top = userInterface.children.length//this.children.length 
+            this.addChildAt(this.quoteStage, top - 2)
+            //this.quoteWrapper.contentContainer.alpha = 1
+
+            //userInterface.quoteStage.resize(window.innerWidth, window.innerHeight)
+            
+            
+            ease.add(loadingIcon, { alpha: 1 }, { duration: 250 })
+
+            if(this.showingQuote == false) {
+
+                    setTimeout(function(){
+
+                        let newTaggedText = '<gap>\n</gap><boldtitle>' + theQuote[quoteNumber].title +'</boldtitle>\n'
+                        if(theQuote[quoteNumber].subtitle.length) {
+                            newTaggedText += "<subtitle>" + theQuote[quoteNumber].subtitle + "</subtitle><gap>\n</gap><gap>\n</gap>"
+                        }
+                        if(theQuote[quoteNumber].paragraph.length) {
+                            newTaggedText +=  "" + theQuote[quoteNumber].paragraph + ""
+                        }
+                        if(theQuote[quoteNumber].credit.length) {
+                            newTaggedText +=  "<extrasmall>" + theQuote[quoteNumber].credit + "</extrasmall>"
+                        }
+                        taggedText.text = newTaggedText
+                        taggedText.update()
+                        taggedText.alpha = 1
+                        taggedText.x = 5
+                        taggedText.y = 10
+                        loadingText.alpha = 0
+
+                        quoteWrapper.contentContainer.addChildAt(quoteBackground,0)   
+                        
+                        scrollContent.forcePctPosition('y', 0)
+                        scrollContent.scrollBars[0].percentValue = 0
+
+                        userInterface.showingQuote = true
+
+                        taggedText.textContainer.children.forEach(element => {
+                            //console.log(element)
+                            if(element._style._fill == "#1dcfff") {
+                                element.interactive = true
+                                element.buttonMode = true
+                                let underline = new PIXI.Graphics()
+                                underline.beginFill(colorBlue)
+                                underline.drawRect(0, element.height - 8, element.width, 1)
+                                underline.endFill()
+                                element.on('pointerover', function(){                                
+                                    element.addChild(underline)
+                                })
+                                element.on('pointerout', function(){
+                                    element.removeChild(underline)
+                                })
+                                //console.log('link')
+                            }
+                            if(element._text == "mushon.com") {
+                                //console.log('link!')
+                                element.interactive = true
+                                element.buttonMode = true
+                                element.on('pointerdown', function(){
+                                    window.open('http://mushon.com', '_blank').focus();
+                                })
+                            }
+                            if(element._text == "@mushon") {
+                                //console.log('mushon')
+                                element.interactive = true
+                                element.buttonMode = true
+                                element.on('pointerdown', function(){
+                                    window.open('https://instagram.com/mushon', '_blank').focus();
+                                })
+                            }
+                            if(element._text == "darkmatters.ml") {
+                            // console.log('link!')
+                                element.interactive = true
+                                element.buttonMode = true
+                                element.on('pointerdown', function(){
+                                    window.open('http://darkmatters.ml', '_blank').focus();
+                                })
+                            }
+                            if(element._text == "@johanndiedrick") {
+                                //console.log('link!')
+                                element.interactive = true
+                                element.buttonMode = true
+                                element.on('pointerdown', function(){
+                                    window.open('https://instagram.com/johanndiedrick', '_blank').focus();
+                                })
+                            }
+                            if(element._text == "libbyheaney.co.uk") {
+                            // console.log('link!')
+                                element.interactive = true
+                                element.buttonMode = true
+                                element.on('pointerdown', function(){
+                                    window.open('http://libbyheaney.co.uk', '_blank').focus();
+                                })
+                            }
+                            if(element._text == "@libby_heaney_") {
+                                //console.log('link!')
+                                element.interactive = true
+                                element.buttonMode = true
+                                element.on('pointerdown', function(){
+                                    window.open('https://instagram.com/libby_heaney_', '_blank').focus();
+                                })
+                            }
+                            if(element._text == "noahlevenson.com") {
+                            // console.log('link!')
+                                element.interactive = true
+                                element.buttonMode = true
+                                element.on('pointerdown', function(){
+                                    window.open('http://noahlevenson.com', '_blank').focus();
+                                })
+                            }
+                            if(element._text == "@noahlevenson") {
+                                //console.log('link!')
+                                element.interactive = true
+                                element.buttonMode = true
+                                element.on('pointerdown', function(){
+                                    window.open('https://instagram.com/noahlevenson', '_blank').focus();
+                                })
+                            }
+
+                            if(element._text === "feedback") {
+                                // console.log('link!')
+                                    element.interactive = true
+                                    element.buttonMode = true
+                                    element.on('pointerdown', function(){
+                                        window.open('https://docs.google.com/spreadsheets/d/1dL6Ww7MfUqFtbeY8mQCkxf2ZoZ5QOWG6jDVeoiAZGKo/edit#gid=0', '_blank').focus();
+                                    })
+                                    //window.open('mailto:info@dublin.sciencegallery.com', '_blank').focus();
+                                    //info@dublin.sciencegallery.com?subject=BIAS online feedback
+                                }
+
+
+
+                            if(element._text == "info@dublin.sciencegallery.com") {
+                                element.interactive = true
+                                element.buttonMode = true
+                                element.on('pointerdown', function(){
+                                    window.open('mailto:info@dublin.sciencegallery.com', '_blank').focus();
+                                })
+                            }
+                        });
+
+                        userInterface.quoteStage.resize(window.innerWidth, window.innerHeight)
+                        userInterface.resize()
+                        ease.add(quoteWrapper.contentContainer, {alpha: 1}, { duration: 250 })
+                        //
+                        ease.add(loadingIcon, { alpha: 0 }, { duration: 250, wait: 0 })
+                        
+                        //
+
+                        
+
+                        
+
+                    }, 400)
+
+                
+                 
+                    
+                //}
+            }
+
+        }
+
+    }
+
+
+    closeModal() {
+
+        this.quoteWrapper.contentContainer.alpha = 0
+        this.connectedText.alpha = 0
+
+        this.loadingText.alpha = 1
+
+        const quoteStage = this.quoteStage
+        const userInterface = this
+        
+        setTimeout(function(){
+            userInterface.removeChild(quoteStage)
+            userInterface.setShowingQuote()
+        }, 0)
+
+        
+    }
+
+    setShowingQuote(){
+        this.showingQuote = false
+    }
+
+
+    personLeft(name) {
+        /*var joinText = "<reddot>—</reddot> "+ name +" left"
+        var textBox = this.statusLayout.contentContainer.children[1];
+        var currentText = textBox.text
+        textBox.text = joinText + "\n" + currentText
+        //console.log(textBox.y)
+        if(textBox.y > -180) {
+            textBox.y = textBox.y - 18
+        }*/
+    }
+
+    increaseScore(token) {
+        ease.add(this.scoreWrapper.contentContainer, { x: 0 }, { duration: 1000 })
+
+        if(token == "quote") {
+            const score = this.talkingScoreText
+            var currentScore = Number(score.text.slice(0,1))
+            var newScore = currentScore + 1     
+            var newScoreText = newScore + "/10";
+            if(this.talkingScore.isComplete == false) {
+                score.text = newScoreText
+                if(newScore == 10) {
+                    score.x = 16
+                    this.talkingScore.isComplete = true
+                    this.talkingScoreTextBackground.tint = this.yellow
+                }
+            }
+        }
+        if(token == "talking") {
+            const score = this.talkingScoreText
+            var currentScore = Number(score.text.slice(0,1))
+            if(currentScore == 4) {
+                return
+            }
+            var newScore = currentScore + 1     
+            var newScoreText = newScore + "/4";
+            if(this.talkingScore.isComplete == false) {
+                score.text = newScoreText
+                
+            }
+        } else if (token == "robot") {
+            const score = this.robotScoreText
+            var currentScore = Number(score.text.slice(0,1))
+            if(currentScore == 4) {
+                return
+            }
+            var newScore = currentScore + 1     
+            var newScoreText = newScore + "/4";
+            if(this.robotScore.isComplete == false) {
+                score.text = newScoreText
+                
+            }
+           
+        } else if (token == "dial") {
+            const score = this.dialScoreText
+            var currentScore = Number(score.text.slice(0,1))
+            var newScore = currentScore + 1     
+            var newScoreText = newScore + "/4";
+            if(this.dialScore.isComplete == false) {
+                score.text = newScoreText
+                
+            }
+           
+        } 
+        ease.add(this.scoreWrapper.contentContainer, { x: 200 }, { duration: 1000, wait: 5000 })
+       
+        
+    }
+
+    personJoined(name) {
+                
+        let current = this.statusTextTagged.text 
+        current = current.replace("<fade0>","").replace("</fade0>","")
+        current = current.replace("<fade1>","").replace("</fade1>","")
+        current = current.replace("<fade2>","").replace("</fade2>","")
+        current = current.replace("<fade3>","").replace("</fade3>","")
+        current = current.replace("<fade4>","").replace("</fade4>","")
+        let currentList = current.split("\n")
+        
+        currentList.shift()
+ 
+        for(var i = 0; i < 2; i++) {
+            currentList[i] = "<fade"+(i+1)+">" + currentList[i] +"</fade"+(i+1)+">";
+        }
+        
+        let currentMinusOne = currentList.join("\n")
+        this.statusTextTagged.text = "" + currentMinusOne + "<fade3>" + name +" joined</fade3>\n" 
+        this.statusTextTagged.update()
+
+        console.log(currentList)
+
+    }
+
+
+
+    updateConnection(value, boolean){
+        
+        if(boolean == true) {
+
+            this.wasConnected = true
+
+            this.connectionScreen.visible = false
+
+            ease.add(this.updateText.contentContainer, { alpha: 0.6 }, { duration: 100 })
+        
+            this.statusTextTagged.text = "\n\n<bold>Connected</bold>\n"
+
+            //ease.add(this.updateText.contentContainer, {alpha: 0}, {duration: 250, wait: 3000})
+
+        } else {
+
+            if(this.wasConnected == true) {
+
+                this.connectionTextTagged.text = "<bold>DISCONNECTED</bold>\n[<small> please refresh the page </small>]"
+
+            } else {
+
+                this.connectionTextTagged.text = "Unable to connect to <bold>BIAS ONLINE</bold>\nPlease Try Again Later"
+
+            }
+
+            this.connectionScreen.visible = true
+            
+            sound.muteAll()
+
+            if(this.chatStageOn) {
+                this.textBox.visible = false
+            }
+            if(this.statusStageOn) {
+                this.statusStage.visible = false
+            }
+            if(this.emojiStageOn) {
+                this.emojiStage.visible = false
+            }
+            
+            this.mainMenuStage.visible = false
+            this.viewArtButton.visible = false
+
+            if(this.scoreStageOn) {
+                this.scoreStage.visible = false
+            }
+
+            if(this.introScreenOn) {
+                this.introScreen.visible = false
+            }
+            
+            if(this.miniMapOn) {
+                this.miniMapStage.visible = false
+            }
+            
+            if(this.notificationStageOn) {
+                this.notificationStage.visible = false
+            }
+        }
+       
+        
+        
+    }
+    
+
+
 
 
  
@@ -5520,10 +5744,11 @@ class UIBuilder extends PIXI.Container {
             this.noahArt.rotation += 0.01
         }
        
-
+        let loadingCurrent = this.loadingIcon.rotation
+        this.loadingIcon.rotation = loadingCurrent + 0.08 + Math.sin(delta)
+       
         if(this.ageGate.visible == true) {
-            let loadingCurrent = this.loadingIcon.rotation
-            this.loadingIcon.rotation = loadingCurrent + 0.08 + Math.sin(delta)
+            
         }
         
         

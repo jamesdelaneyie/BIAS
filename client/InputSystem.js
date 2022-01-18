@@ -69,12 +69,27 @@ class InputSystem {
                     })
 
                     renderer.UIBuilder.mainMenuStage.children.forEach((element, index) => {
+                        
                         if(index == 0) {
                             return;
                         }
+                        if(index == 10) {
+                            return;
+                        }
+                        if(index == 9) {
+                            return;
+                        }
+                        if(index == 11) {
+                            return;
+                        }
+                        if(index == 12) {
+                            return;
+                        }
                         element.on('pointerdown', function(){
+                            console.log(index)
                             client.addCommand(new ToggleCommand(true, "headphones"))
                         })
+                        
                     })
 
                    
@@ -160,40 +175,42 @@ class InputSystem {
 
             document.addEventListener('keydown', event => {
                                
-                if(!renderer.UIBuilder.mockInput._isFocused) {
+                if(renderer.UIBuilder) {
+                    if(!renderer.UIBuilder.mockInput._isFocused) {
 
-                    if (event.keyCode === 87 || event.keyCode === 38) {
-                        this.currentState.w = true
-                        this.frameState.w = true
-                        if(!footstep.isPlaying) {
-                            footstep.play()
+                        if (event.keyCode === 87 || event.keyCode === 38) {
+                            this.currentState.w = true
+                            this.frameState.w = true
+                            if(!footstep.isPlaying) {
+                                footstep.play()
+                            }
                         }
-                    }
-                    // a or left arrow
-                    if (event.keyCode === 65 || event.keyCode === 37) {
-                        this.currentState.a = true
-                        this.frameState.a = true
-                        if(!footstep.isPlaying) {
-                            footstep.play()
+                        // a or left arrow
+                        if (event.keyCode === 65 || event.keyCode === 37) {
+                            this.currentState.a = true
+                            this.frameState.a = true
+                            if(!footstep.isPlaying) {
+                                footstep.play()
+                            }
                         }
-                    }
-                    // s or down arrow
-                    if (event.keyCode === 83 || event.keyCode === 40) {
-                        this.currentState.s = true
-                        this.frameState.s = true
-                        if(!footstep.isPlaying) {
-                            footstep.play()
+                        // s or down arrow
+                        if (event.keyCode === 83 || event.keyCode === 40) {
+                            this.currentState.s = true
+                            this.frameState.s = true
+                            if(!footstep.isPlaying) {
+                                footstep.play()
+                            }
                         }
-                    }
-                    // d or right arrow
-                    if (event.keyCode === 68 || event.keyCode === 39) {
-                        this.currentState.d = true
-                        this.frameState.d = true
-                        if(!footstep.isPlaying) {
-                            footstep.play()
+                        // d or right arrow
+                        if (event.keyCode === 68 || event.keyCode === 39) {
+                            this.currentState.d = true
+                            this.frameState.d = true
+                            if(!footstep.isPlaying) {
+                                footstep.play()
+                            }
                         }
-                    }
 
+                    }
                 }
 
 

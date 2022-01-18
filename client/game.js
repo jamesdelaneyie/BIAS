@@ -36,7 +36,7 @@ const create = () => {
         infoPanels: new Map()
     }
 
-    const renderer = new PIXIRenderer(state)
+    const renderer = new PIXIRenderer(client, state)
     window.renderer = renderer
 
     let input = new InputSystem(renderer, client)
@@ -109,10 +109,14 @@ const create = () => {
             trail.scale.set(0.2)
             ease.add(trail, {alpha: 0, scale: 4}, {duration: 2000})
             
-        } else {
-            trail.beginFill(color, 0.2)
+        } else if(message.x < 2450 && message.y > 1760) {
+            trail.beginFill(0x000000, 0.1)
             trail.drawCircle(message.x, message.y, 3)
             trail.endFill()
+        } else if (message.y < 1700 && message.x > 1950) {
+            
+        } else {
+
         }
        
 
@@ -412,9 +416,50 @@ const create = () => {
             let userInterface = renderer.UIBuilder
             if(userInterface) {
                 if(placed == false) {
-                    renderer.UIBuilder.updateConnection(null, true);
+                    renderer.UIBuilder.updateConnection(state.name, true);
                     placed == true
+
+                    if(handshake.quote1) {
+                        renderer.UIBuilder.increaseScore("talking")
+                        state.myRawEntity.quoteNumber++
+                        renderer.floorQuote1.seen = true
+                    } 
+                    if(handshake.quote2) {
+                        renderer.UIBuilder.increaseScore("talking")
+                        state.myRawEntity.quoteNumber++
+                        renderer.floorQuote2.seen = true
+                    } 
+                    if(handshake.quote3) {
+                        renderer.UIBuilder.increaseScore("talking")
+                        state.myRawEntity.quoteNumber++
+                        renderer.floorQuote3.seen = true
+                    } 
+                    if(handshake.quote4) {
+                        renderer.UIBuilder.increaseScore("talking")
+                        state.myRawEntity.quoteNumber++
+                        renderer.floorQuote4.seen = true
+                    } 
+
+                    if(handshake.art1) {
+                        renderer.UIBuilder.increaseScore("robot")
+                        state.myRawEntity.artNumber++
+                    } 
+                    if(handshake.art2) {
+                        renderer.UIBuilder.increaseScore("robot")
+                        state.myRawEntity.artNumber++
+                    } 
+                    if(handshake.art3) {
+                        renderer.UIBuilder.increaseScore("robot")
+                        state.myRawEntity.artNumber++
+                    } 
+                    if(handshake.art4) {
+                        renderer.UIBuilder.increaseScore("robot")
+                        state.myRawEntity.artNumber++
+                    } 
+
                     clearInterval(placeStick)
+
+                    
                 }
             }
         }, 200 )
@@ -445,17 +490,20 @@ const create = () => {
     handshake.x = inviteX
     handshake.y = inviteY
     handshake.floor = inviteFloor
+    
 
     if(!inviteFloor) {
         handshake.floor = 0;
     }
 
     //wss://bias.jamesdelaney.ie/test
-    client.connect('ws://localhost:8079', handshake)
+    //client.connect('ws://localhost:8079', handshake)
     
-    //client.connect('wss://bias.jamesdelaney.ie/test', handshake)
+    client.connect('wss://bias.jamesdelaney.ie/test', handshake)
 
     let connectionCounter = 0
+
+    
 
     const update = (delta, tick, now) => {
 
@@ -468,9 +516,11 @@ const create = () => {
             connectionCounter++
         }
 
-        if(connectionCounter > 50) {
+        if(connectionCounter > 200) {
             renderer.UIBuilder.updateConnection(null, false);
         }
+
+        
 
 
         if(state.mySmoothEntity) {
@@ -488,7 +538,7 @@ const create = () => {
                 if(!renderer.floorQuote1.seen) {
                     if(c < 500) {
 
-                        let alpha = (500 - c) / 100
+                        let alpha = (600 - c) / 100
 
                         renderer.floorQuote1.alpha = alpha
                         let displacement = c - 150
@@ -510,6 +560,8 @@ const create = () => {
                     state.myRawEntity.quoteNumber++
                     renderer.floorQuote1.seen = true
                     renderer.UIBuilder.showAchievement("5", "test")
+                    renderer.UIBuilder.increaseScore("talking")
+                    window.localStorage.setItem('quote1', true);
                     if(state.myRawEntity.quoteNumber == 4) {
                         //alert('all quotes')
                     }
@@ -552,6 +604,8 @@ const create = () => {
                     state.myRawEntity.quoteNumber++
                     renderer.floorQuote2.seen = true
                     renderer.UIBuilder.showAchievement("5", "test")
+                    renderer.UIBuilder.increaseScore("talking")
+                    window.localStorage.setItem('quote2', true);
                     if(state.myRawEntity.quoteNumber == 4) {
                         //alert('all quotes')
                     }
@@ -594,6 +648,8 @@ const create = () => {
                     state.myRawEntity.quoteNumber++
                     renderer.floorQuote3.seen = true
                     renderer.UIBuilder.showAchievement("5", "test")
+                    renderer.UIBuilder.increaseScore("talking")
+                    window.localStorage.setItem('quote3', true);
                     if(state.myRawEntity.quoteNumber == 4) {
                         //alert('all quotes')
                     }
@@ -636,6 +692,8 @@ const create = () => {
                     state.myRawEntity.quoteNumber++
                     renderer.floorQuote4.seen = true
                     renderer.UIBuilder.showAchievement("5", "test")
+                    window.localStorage.setItem('quote4', true);
+                    renderer.UIBuilder.increaseScore("talking")
                     //console.log('')
                     if(state.myRawEntity.quoteNumber == 4) {
                         //alert('all quotes')

@@ -33,33 +33,21 @@ const emojiBlast = (layer, message) => {
         var endingPositionX = emoji.x - Math.floor(Math.random() * 200) + 100
 
         const fadeInStyles = { y: endingPositionY, x: endingPositionX, alpha: 1, scale: 1}
+        const fadeOutStyles = { y: endingPositionY - 5, x: endingPositionX, alpha: 0, scale: 0}
         const fadeInSettings = { duration: 1000, ease: 'easeOutExpo', wait: 0 }
+        const fadeOutSettings = { duration: 500, ease: 'easeOutExpo', wait: 3000 }
 
         ease.add(emoji, fadeInStyles, fadeInSettings)
-
-        var id = setInterval(frame, 10)
-        function frame() {
-            if (emoji.alpha > 1) { 
-                clearInterval(id);
-            } else {
-                emoji.y = emoji.y - 0.5
-                emoji.alpha = emoji.alpha + 0.1
-            }
-        }
+        ease.add(emoji, fadeOutStyles, fadeOutSettings)
 
         setTimeout(() => {
-            layer.children.forEach(emoji => {
-                if(emoji.isEmoji) {
-                    emoji.destroy({
-                        children: true,
-                        texture: true,
-                        baseTexture: true
-                    })
-                    layer.removeChild(emoji)
-                }
-            });
-
-        }, 2000)
+            emoji.destroy({
+                children: true,
+                texture: true,
+                baseTexture: true
+            })
+            layer.removeChild(emoji)
+        }, 3000)
 
     }
 

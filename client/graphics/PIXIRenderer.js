@@ -11,6 +11,8 @@ import TaggedText from 'pixi-tagged-text'
 import { Graphics } from 'pixi.js'
 import { GlowFilter } from '@pixi/filter-glow'
 import { Sound, filters } from '@pixi/sound'
+import FireCommand from '../../common/command/FireCommand.js'
+
 
 
 
@@ -33,7 +35,7 @@ function opacityRatio(image) {
 
 class PIXIRenderer {
 
-    constructor(client) {
+    constructor(client, state) {
         this.canvas = document.getElementById('main-canvas')
         this.entities = new Map()
         this.collection = []
@@ -267,8 +269,20 @@ class PIXIRenderer {
 
 
 
-        PIXI.Loader.shared.add({ name: "music", url: "audio/MoseyForSomeMimosas.wav" })
-        PIXI.Loader.shared.add({ name: "vines", url: "audio/Vines3[2].wav" })        
+        PIXI.Loader.shared.add({ name: "noahMusic", url: "audio/MoseyForSomeMimosas.wav" })
+        PIXI.Loader.shared.add({ name: "lobbyMusic", url: "audio/TheMost.wav" })
+
+
+        PIXI.Loader.shared.add({ name: "vines1", url: "audio/Vines1.wav" })       
+        PIXI.Loader.shared.add({ name: "vines2", url: "audio/Vines2.wav" })       
+        PIXI.Loader.shared.add({ name: "vines3", url: "audio/Vines3.wav" })       
+        PIXI.Loader.shared.add({ name: "vines4", url: "audio/Vines4.wav" })       
+        PIXI.Loader.shared.add({ name: "vines5", url: "audio/Vines5.wav" })       
+        PIXI.Loader.shared.add({ name: "vines6", url: "audio/Vines6.wav" })       
+        PIXI.Loader.shared.add({ name: "vines7", url: "audio/Vines7.wav" })       
+        PIXI.Loader.shared.add({ name: "vines8", url: "audio/Vines8.wav" })       
+        PIXI.Loader.shared.add({ name: "vines9", url: "audio/Vines9.wav" })       
+
         PIXI.Loader.shared.add({ name: "slap", url: "audio/StickerSlap.wav" }) 
         PIXI.Loader.shared.add({ name: "slapLaugh", url: "audio/StickerSlapGiggle.wav" })        
        
@@ -301,12 +315,14 @@ class PIXIRenderer {
 
         const Stage = this.stage
 
+        this.faces = []
+
         PIXI.Loader.shared.onComplete.once(() => {
 
             this.loadingText.text = "100% Complete";
 
            
-            this.UIBuilder = new UIBuilder(this.renderer, client)
+            this.UIBuilder = new UIBuilder(this.renderer, state)
             this.UIBuilder.alpha = 0
             this.stage.addChild(this.UIBuilder) 
 
@@ -322,6 +338,12 @@ class PIXIRenderer {
                 Stage.removeChild(this.loadingBar)
             }, 500)
 
+
+
+            let music = PIXI.Loader.shared.resources.lobbyMusic.sound
+            music.volume = 0.01
+            music.loop = true
+            music.play()
             
 
 
@@ -342,35 +364,36 @@ class PIXIRenderer {
                     fontSize: "54px",
                     lineHeight: 32,
                     leading: 1,
-                    letterSpacing: 30,
+                    letterSpacing: 33,
                     wordWrap: true,
                     wordWrapWidth: 200
                 }
             })
 
-            this.libbyTitle.x = 1282,
-            this.libbyTitle.y = 1057
+            this.libbyTitle.x = 1220,
+            this.libbyTitle.y = 1092
             
             let glow = new GlowFilter({distance: 10, outerStrength: 2, color: 0x00ff02})
             this.libbyTitle.filters = [glow]
 
-            this.background.addChild(this.libbyTitle)
+            this.foreforeground.addChild(this.libbyTitle)
 
             
             
-            this.mushonTitle = new TaggedText("Normalizi.ng\n<title>HOW DO <bold>NORMAL</bold> PEOPLE LOOK LIKE?</title>", {
+            this.mushonTitle = new TaggedText("Normalizi.ng\n<title> HOW DO <bold>NORMAL</bold> PEOPLE LOOK LIKE?</title>", {
                 "default": {
                     fontFamily: 'American Typewriter,monospace',
                     fill: 0x6b378f, 
                     fontWeight: 400,
                     fontSize: "32px",
-                    lineHeight: 32,
+                    lineHeight: 35,
                     leading: 1,
+                    letterSpacing: 0.2,
                     wordWrap: true,
-                    wordWrapWidth: 200
+                    wordWrapWidth: 210
                 },"title": {
                     fontFamily: "sans-serif",
-                    fill: 0x000000,
+                    fill: 0xffffff,
                     fontSize: "10px"
                 }, "bold": {
                     fontWeight: 700
@@ -378,8 +401,11 @@ class PIXIRenderer {
             })
 
             this.mushonTitle.x = 3280,
-            this.mushonTitle.y = 1020
+            this.mushonTitle.y = 1150
             this.background.addChild(this.mushonTitle)
+
+
+
 
             var verticalNoRepeat = {
                 fill: ['#ff4d5f','#70108e'],
@@ -404,12 +430,12 @@ class PIXIRenderer {
 
 
             //Jo's Quote
-            this.floorQuote1 = new TaggedText("We need to normalize the idea that technology itself is not neutral\n\n                   - Mutale Nkonde", {
+            this.floorQuote1 = new TaggedText("We need to normalize the idea that technology itself is not neutral\n\n                   — Mutale Nkonde", {
                 "default": {
                     fontFamily: 'Trade Gothic Next',
                     fill: 0xFFFFFF, 
                     fontWeight: 700,
-                    fontSize: "30px",
+                    fontSize: "27px",
                     lineHeight: 32,
                     leading: 1,
                     align: "center",
@@ -427,7 +453,7 @@ class PIXIRenderer {
 
 
             // Libby Quote
-            this.floorQuote2 = new TaggedText("Zeros and ones, if we are not careful, could deepen the divides between haves and have-nots, between the deserving and the undeserving – rusty value judgments embedded in shiny new systems \n\n                                       — Ruha Benjamin", {
+            this.floorQuote2 = new TaggedText("Zeros and ones, if we are not careful, could deepen the divides between haves and have-nots, between the deserving and the undeserving – rusty value judgments embedded in shiny new systems \n\n                                      — Ruha Benjamin", {
                 "default": {
                     fontFamily: 'Trade Gothic Next',
                     fill: 0xFFFFFF, 
@@ -477,7 +503,7 @@ class PIXIRenderer {
 
 
             // Noah Quote
-            this.floorQuote4 = new TaggedText("There is no such thing as an innocent reading, we must ask what reading we are guilty of \n\n                                       ― Louis Althusser", {
+            this.floorQuote4 = new TaggedText("There is no such thing as an innocent reading, we must ask what reading we are guilty of \n\n                                       — Louis Althusser", {
                 "default": {
                     fontFamily: 'Trade Gothic Next',
                     fill: 0xFFFFFF, 
@@ -499,119 +525,110 @@ class PIXIRenderer {
             this.floorQuote4.filters = [this.displacementFilterText1]
 
 
-            for(let x=1; x<13; x++) {
+            
+
+            for(let x=0; x<40; x++) {
+
+                let randomX = Math.floor(Math.random() * 16)
+                let randomY = Math.floor(Math.random() * 14)
+
+                let randomFace1 = Math.floor(Math.random() * 18) + 6
+                let randomFace2 = Math.floor(Math.random() * 18) + 6
+
+                let faceContainer = new PIXI.Container()
+                faceContainer.buttonMode = true
+                faceContainer.interactive = true
+                faceContainer.x = 2904 + ( randomX * 58.99 )
+                faceContainer.y = 294 + ( randomY * 58.99 )
+    
+                let sprite = new PIXI.Sprite.from("https://normalizing-us-files.fra1.cdn.digitaloceanspaces.com/feature-tiles/0/faces/8/"+randomFace1+"/"+randomFace2+"")
+                sprite.width = 118.1
+                sprite.height = 118.1
+                sprite.x = -25
+                sprite.y = -20
+               
+                faceContainer.addChild(sprite)
+            
                 let squareGraphic = new Graphics()
-                let randomWidth = Math.floor(Math.random() * 10)
-                squareGraphic.lineStyle(randomWidth, 0xFFFFFF)
-                squareGraphic.drawRect(0,0,45,45)
-                let randomX = Math.floor(Math.random() * 12) + 1
-                let randomY = Math.floor(Math.random() * 12) + 1
-                squareGraphic.x = 2910 + (randomX* 59)
-                squareGraphic.y = 300 + (randomY* 59)
-                this.background.addChild(squareGraphic)
-    
-                let randomFace1 = Math.floor(Math.random() * 10)
-                let randomFace2 = Math.floor(Math.random() * 10)
-    
-                let sprite = new PIXI.Sprite.from("https://normalizing-us-files.fra1.cdn.digitaloceanspaces.com/feature-tiles/3/faces/8/"+randomFace1+"/"+randomFace2+"")
-               
+                let randomWidth = Math.floor(Math.random() * 10) + 5
 
-                var img2 = new Image();
-                img2.crossOrigin='anonymous'
-                img2.src="https://normalizing-us-files.fra1.cdn.digitaloceanspaces.com/feature-tiles/3/faces/8/"+randomFace1+"/"+randomFace2+"";
+                squareGraphic.lineStyle(randomWidth, 0xFFFFFF, 1, 0)
+                squareGraphic.drawRect(0,0,60,60)
+                squareGraphic.x = 4
+                squareGraphic.y = 9
+                faceContainer.addChild(squareGraphic)
 
-                setTimeout(function(){
-                    let isImage = opacityRatio(img2)
-                    //console.log("image: "+isImage)
-                }, 1000)
+                let glow = new GlowFilter({distance: 10, outerStrength: 3, color: 0x9c67c6})
+                faceContainer.filters = [glow]
 
-                
-    
-                sprite.width = 45
-                sprite.height = 45
-                sprite.x = 2910 + (randomX* 59)
-                sprite.y = 300 + (randomY* 59)
-                this.background.addChild(sprite)
+                this.faces.push(faceContainer)
+                this.background.addChild(faceContainer)
 
-                if(x == 7) {
-                    this.spriteShader = new PIXI.Graphics()
-                    this.spriteShader.x = 2910 + (randomX* 59)
-                    this.spriteShader.y = 300 + (randomY* 59)
-                    this.spriteShader.width = 55
-                    this.spriteShader.height = 55
-                    this.spriteShader.beginFill(0xFFFFFF)
-                    this.spriteShader.drawRect(0,0,45,45)
-                    this.spriteShader.endFill()
-                    this.spriteShader.alpha = 0
-                    this.background.addChild(this.spriteShader)
-                }
-                
-            }
-    
-            for(let x=1; x<13; x++) {
-
-                let randomX = Math.floor(Math.random() * 12) + 1
-                let randomY = Math.floor(Math.random() * 12) + 1
-                
-                if(randomX > 6 && randomX < 10) {
-                    ///console.log('skipping')
-                    continue
-                }
-
-
-                let squareGraphic = new Graphics()
-                let randomWidth = Math.floor(Math.random() * 10)
-                squareGraphic.lineStyle(randomWidth, 0xFFFFFF)
-                squareGraphic.drawRect(0,0,45,45)
-               
-                squareGraphic.x = 2910 + (randomX* 59)
-                squareGraphic.y = 300 + (randomY* 59)
-                this.background.addChild(squareGraphic)
-    
-                let randomFace1 = Math.floor(Math.random() * 10)
-                let randomFace2 = Math.floor(Math.random() * 10)
-    
-                let sprite = new PIXI.Sprite.from("https://normalizing-us-files.fra1.cdn.digitaloceanspaces.com/feature-tiles/3/faces/8/"+randomFace1+"/"+randomFace2+"")
-               
-
-                var img2 = new Image();
-                img2.crossOrigin='anonymous'
-                img2.src="https://normalizing-us-files.fra1.cdn.digitaloceanspaces.com/feature-tiles/3/faces/8/"+randomFace1+"/"+randomFace2+"";
-
-                setTimeout(function(){
-                    let isImage = opacityRatio(img2)
-                    //console.log("image: "+isImage)
-                }, 1000)
-
-                
-    
-                sprite.width = 45
-                sprite.height = 45
-                sprite.x = 2910 + (randomX* 59)
-                sprite.y = 300 + (randomY* 59)
-                this.background.addChild(sprite)
-
-                if(x == 7 || x == 8) {
-                    this.spriteShader = new PIXI.Graphics()
-                    this.spriteShader.x = 2910 + (randomX* 59)
-                    this.spriteShader.y = 300 + (randomY* 59)
-                    this.spriteShader.width = 55
-                    this.spriteShader.height = 55
-                    this.spriteShader.beginFill(0xFFFFFF)
-                    this.spriteShader.drawRect(0,0,45,45)
-                    this.spriteShader.endFill()
-                    this.spriteShader.alpha = 0
-                    this.background.addChild(this.spriteShader)
-                }
-                
             }
 
+            this.faces.forEach(element => {
+                element.on('pointerdown', function(){
+                    ease.add(element, {alpha: 0}, { duration: 250, ease: 'easeOutExpo'})
+
+                    console.log(element.children[0].texture.textureCacheIds)
+                    client.addCommand(new FireCommand(element.x, element.y, ""+element.children[0].texture.textureCacheIds+""))
+
+                    setTimeout(function(){
+                        let randomX = Math.floor(Math.random() * 12) + 1
+                        let randomY = Math.floor(Math.random() * 12) + 1
+    
+                        element.x = 2904 + ( randomX * 58.99 )
+                        element.y = 294 + ( randomY * 58.99 )
+                    }, 400)
+
+                    ease.add(element, {alpha: 1}, { duration: 550, ease: 'easeOutExpo', wait: 1500})
 
 
+
+                })
+            });
             
         })
 
+        
+
+        let faces = this.faces 
+        setInterval(function(){
+
+            let randomFace1 = Math.floor(Math.random() * 15)
+            let randomFace2 = Math.floor(Math.random() * 15)
+
+            let randomX = Math.floor(Math.random() * 12) + 1
+            let randomY = Math.floor(Math.random() * 12) + 1
+
+            faces[randomFace1].x = 2904 + ( randomX * 58.99 )
+            faces[randomFace1].y = 294 + ( randomY * 58.99 )
+           
+            faces[randomFace1].removeChildAt(0)
+            let sprite = new PIXI.Sprite.from("https://normalizing-us-files.fra1.cdn.digitaloceanspaces.com/feature-tiles/0/faces/8/"+randomFace1+"/"+randomFace2+"")
+            sprite.width = 118.1
+            sprite.height = 118.1
+            sprite.x = -25
+            sprite.y = -20
+               
+            faces[randomFace1].addChildAt(sprite, 0)
+
+            ease.add(faces[randomFace2].children[0], {alpha: 1}, { duration: 150, ease: 'easeOutExpo'})
+            ease.add(faces[randomFace2].children[0], {alpha: 0}, { duration: 150, ease: 'easeOutExpo', wait: 150})
+            ease.add(faces[randomFace2].children[0], {alpha: 1}, { duration: 150, ease: 'easeOutExpo', wait: 300})
+            ease.add(faces[randomFace2].children[0], {alpha: 0}, { duration: 150, ease: 'easeOutExpo', wait: 450})
+            ease.add(faces[randomFace2].children[0], {alpha: 1}, { duration: 150, ease: 'easeOutExpo', wait: 600})
+            setTimeout(function(){
+                faces[randomFace2].x = 2904 + ( randomX * 58.99 )
+                faces[randomFace2].y = 294 + ( randomY * 58.99 )
+            }, 600)
+
+
+        }, 4000)
+
         PIXI.Loader.shared.load();
+
+        
 
         
 
@@ -661,7 +678,7 @@ class PIXIRenderer {
 
         let lobbyFloor = new PIXI.Sprite.from('/images/lobby-background.svg')
         lobbyFloor.x = 1481
-        lobbyFloor.y = 1180
+        lobbyFloor.y = 1187
         this.backbackground.addChild(lobbyFloor)
 
 

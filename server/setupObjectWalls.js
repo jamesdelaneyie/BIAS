@@ -13,7 +13,8 @@ export default (instance, world, room, boxes) => {
     const roomWidth = room.width
     const roomHeight = room.height
     const borderWidth = room.wallThickness
-
+    
+    //console.log(room)
     let holes = room.holes
     let index = 0
 
@@ -55,7 +56,7 @@ export default (instance, world, room, boxes) => {
                 })
                 instance.addEntity(topWall2)
                 world.addBody(topWall2.body)
-                boxes.set(topWall2.nid, topWall1)
+                boxes.set(topWall2.nid, topWall2)
 
 
             } else if (index == 1) {
@@ -180,7 +181,7 @@ export default (instance, world, room, boxes) => {
 
             }
 
-        } else {
+        } else if (hole.width == 0) {
             if(index == 0) {
                 let topWall = new Box({ 
                     x: roomX - borderWidth - 1, 
@@ -227,6 +228,7 @@ export default (instance, world, room, boxes) => {
             } else if (index == 3) {
                 let leftWall = new Box({ 
                     name: 'leftWall', 
+                    type: "leftWall",
                     x: roomX - borderWidth - 1, 
                     y: roomY, 
                     width: borderWidth, 
@@ -238,6 +240,7 @@ export default (instance, world, room, boxes) => {
                 instance.addEntity(leftWall)
                 world.addBody(leftWall.body)
                 boxes.set(leftWall.nid, leftWall)
+                //console.log(leftWall)
 
             }
             
