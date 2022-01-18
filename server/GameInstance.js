@@ -454,7 +454,7 @@ class GameInstance {
             thisInstance.addEntity(heartPump)
             thisWorld.addBody(heartPump.body)
             thisBoxes.set(heartPump.nid, heartPump)
-        }, 2000)
+        }, 50000)
 
 
 
